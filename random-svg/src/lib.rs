@@ -1,6 +1,36 @@
 use rand::Rng;
-
 mod pattern;
+
+fn gen(width: usize, height: usize) {
+  // 使用上述结构进行主要的转换
+  let layer_count = random_int(6, 6) as _;
+  let segment_count = rand::thread_rng().gen::<usize>() % 10 + 5;
+  // let ico_n = rand::thread_rng().gen::<u8>() % 4 + 4;
+  let wave = Wave::new(Properties {
+    width, // 此处的 width 和 height 应该是已定义的变量
+    height,
+    segment_count,
+    layer_count,
+    variance: rand::random::<f32>() * 10.0 + 0.1,
+    stroke_width: 0.0,
+    stroke_color: "none".to_string(),
+  });
+
+  let mut svg = wave.generate_svg();
+  // let mut path = vec![];
+  let opstep = 0.5 / layer_count as f32;
+  svg.path.reverse();
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test() {
+    gen(300, 600);
+  }
+}
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Properties {
@@ -9,10 +39,10 @@ pub struct Properties {
   segment_count: usize,
   layer_count: usize,
   variance: f32,
-  fill_color: String,
+  // fill_color: String,
   stroke_color: String,
   stroke_width: f32,
-  transform: String,
+  // transform: String,
 }
 
 #[derive(Clone, Debug)]
@@ -24,18 +54,18 @@ pub struct Svg {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct Wavery {
+pub struct Wave {
   properties: Properties,
   points: Vec<Vec<Point>>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct PathAttributes {
-  fill: String,
+  // fill: String,
   stroke_color: String,
   stroke_width: f32,
   d: String,
-  transform: String,
+  // transform: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Copy)]
@@ -111,10 +141,10 @@ pub fn generate_closed_path(
   curve_points: &[Point],
   left_corner_point: Point,
   right_corner_point: Point,
-  fill_color: &str,
+  // fill_color: &str,
   stroke_color: &str,
   stroke_width: f32,
-  transform: &str,
+  // transform: &str,
 ) -> PathAttributes {
   let x_points: Vec<_> = curve_points.iter().map(|p| p.x).collect();
   let y_points: Vec<_> = curve_points.iter().map(|p| p.y).collect();
@@ -157,17 +187,16 @@ pub fn generate_closed_path(
   );
 
   PathAttributes {
-    fill: fill_color.to_string(),
+    // fill: fill_color.to_string(),
     stroke_color: stroke_color.to_string(),
     stroke_width,
     d: path,
-    transform: transform.to_string(),
+    // transform: transform.to_string(),
   }
 }
 
 fn random_int(base: u8, offset: u8) -> u8 {
-  let rng = rand::thread_rng();
-  let n = rng.gen::<u8>() % base;
+  let n = rand::thread_rng().gen::<u8>() % base;
   n + offset
 }
 
@@ -183,13 +212,7 @@ fn random_color(base: u8) -> String {
   n = n / (3.0 * base as f32);
   r = r
     .iter()
-    .map(|&val| {
-      let mut new_val = (val as f64 / n).round() as u8;
-      if new_val > 255 {
-        new_val = 255;
-      }
-      new_val
-    })
+    .map(|&val| (val as f32 / n).round() as u8)
     .collect();
 
   format!("{:02x}{:02x}{:02x}", r[0], r[1], r[2])
@@ -276,7 +299,7 @@ fn generate_points(
   points
 }
 
-impl Wavery {
+impl Wave {
   pub fn new(properties: Properties) -> Self {
     let points = generate_points(
       properties.width,
@@ -286,7 +309,7 @@ impl Wavery {
       properties.variance,
     );
 
-    Wavery { properties, points }
+    Wave { properties, points }
   }
 
   pub fn generate_svg(&self) -> Svg {
@@ -303,10 +326,10 @@ impl Wavery {
           x: self.properties.width,
           y: self.properties.height,
         },
-        &self.properties.fill_color,
+        // &self.properties.fill_color,
         &self.properties.stroke_color,
         self.properties.stroke_width,
-        &self.properties.transform,
+        // &self.properties.transform,
       );
       path_list.push(path_data);
     }
