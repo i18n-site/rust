@@ -1,3 +1,5 @@
+use rand::Rng;
+
 mod pattern;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -161,6 +163,36 @@ pub fn generate_closed_path(
     d: path,
     transform: transform.to_string(),
   }
+}
+
+fn random_int(base: u8, offset: u8) -> u8 {
+  let rng = rand::thread_rng();
+  let n = rng.gen::<u8>() % base;
+  n + offset
+}
+
+fn random_color(base: u8) -> String {
+  let mut i = 0;
+  let mut r = Vec::new();
+  let mut n = 0.0;
+  while i < 3 {
+    r.push(random_int(255, 0));
+    n += r[i] as f64;
+    i += 1;
+  }
+  n = n / base / 3.0;
+  r = r
+    .iter()
+    .map(|&val| {
+      let mut new_val = (val as f64 / n).round() as u8;
+      if new_val > 255 {
+        new_val = 255;
+      }
+      new_val
+    })
+    .collect();
+
+  format!("{:02x}{:02x}{:02x}", r[0], r[1], r[2])
 }
 
 fn compute_animated_path(
