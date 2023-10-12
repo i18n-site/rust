@@ -177,10 +177,10 @@ fn random_color(base: u8) -> String {
   let mut n = 0.0;
   while i < 3 {
     r.push(random_int(255, 0));
-    n += r[i] as f64;
+    n += r[i] as f32;
     i += 1;
   }
-  n = n / base / 3.0;
+  n = n / (3.0 * base as f32);
   r = r
     .iter()
     .map(|&val| {
