@@ -1,10 +1,12 @@
 use rand::Rng;
 mod pattern;
+use pattern::PATTERN;
 
 fn gen(width: usize, height: usize) {
+  let mut rng = rand::thread_rng();
   // 使用上述结构进行主要的转换
   let layer_count = random_int(6, 6) as _;
-  let segment_count = rand::thread_rng().gen::<usize>() % 10 + 5;
+  let segment_count = rng.gen::<usize>() % 10 + 5;
   // let ico_n = rand::thread_rng().gen::<u8>() % 4 + 4;
   let wave = Wave::new(Properties {
     width, // 此处的 width 和 height 应该是已定义的变量
@@ -17,9 +19,94 @@ fn gen(width: usize, height: usize) {
   });
 
   let mut svg = wave.generate_svg();
-  // let mut path = vec![];
   let opstep = 0.5 / layer_count as f32;
   svg.path.reverse();
+  // Assuming svg is some struct containing a field path that is a Vec<Path>
+  // and Path is a struct containing a field 'd' of type String
+
+  let mut n = 0;
+  let mut opacity = 0.5;
+  let mut path = vec![];
+
+  for i in &svg.path {
+    let path_string = format!(
+      r#"<path d="{}" stroke-dasharray="{}" stroke="rgba({},{},{},{})" stroke-width="{}px" fill="url(#bg{})" fill-opacity="{}" transform="rotate({} {} {})"></path>"#,
+      i.d,
+      random_int(20, 0),
+      random_int(255, 0),
+      random_int(255, 0),
+      random_int(255, 0),
+      random_int(30, 0) as f32 / 100.0,
+      random_int(3, 0),
+      n % 4,
+      opacity,
+      if n % 2 == 0 { 0 } else { 180 },
+      width / 2,
+      height / 2
+    );
+
+    path.push(path_string);
+    opacity -= opstep;
+    n += 1;
+  }
+
+  let path = path.join("");
+
+  let (psize, pattern) = PATTERN[rng.gen::<usize>() % PATTERN.len()];
+  let mut color = [random_color(70), random_color(225)];
+
+  if rand::random::<u8>() % 2 != 0 {
+    color.reverse();
+  }
+  let ico_scale = random_int(10, 5) as f32 / 100.0;
+  let p_scale = random_int(100, 0) as f32 / 25.0 + 0.5;
+  let p_rotate = rng.gen::<u16>() % 360;
+
+  let rect_opacity = random_int(30, 0) as f32 / 100.0;
+
+  let xml = format!(
+    r###"<svg viewBox="0 0 {} {}" xmlns="http://www.w3.org/2000/svg"><defs>
+<linearGradient id="bg0" x1="50%" y1="0" x2="50%" y2="100%">
+<stop offset="0%" stop-color="#{}"></stop>
+<stop offset="100%" stop-color="#{}"></stop>
+</linearGradient>
+<linearGradient id="bg1" x1="0%" y1="50%" x2="100%" y2="50%">
+<stop offset="100%" stop-color="#{}"></stop>
+<stop offset="0%" stop-color="#{}"></stop>
+</linearGradient>
+<linearGradient id="bg2" x1="0%" y1="0" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#{}"></stop>
+<stop offset="100%" stop-color="#{}"></stop>
+</linearGradient>
+<pattern id="ico" patternTransform="scale({})" width="1024px" height="1024px" patternUnits="userSpaceOnUse">
+<path fill="{}" d="M322.56 400.32c25.6-70.4-18.88-190.4-37.44-234.56a17.28 17.28 0 0 0-24-8.64c-42.56 22.08-153.6 85.44-179.2 155.84a128 128 0 1 0 240.64 87.68z m196.16 32C448 469.44 265.6 573.44 224 689.28A210.56 210.56 0 1 0 619.52 832c42.24-115.84-32-313.28-61.44-385.92a28.48 28.48 0 0 0-39.36-12.8zM893.76 64a21.44 21.44 0 0 0-29.76-9.6c-52.8 27.52-192 105.92-224 192a160 160 0 1 0 298.88 108.8c32.96-86.08-22.4-235.2-45.12-291.2z"></path>
+</pattern>
+<pattern id="p" patternTransform="scale({}) rotate({})" width="{}px" height="{}px" patternUnits="userSpaceOnUse">
+<path fill="url(#bg2)" d="{}"></path>
+</pattern>
+</defs>
+<rect fill-opacity="{}" height="100%" width="100%" fill="url(#p)"></rect>
+{}
+</svg>"###,
+    width,
+    height,
+    color[0],
+    color[1],
+    color[0],
+    color[1],
+    color[0],
+    color[1],
+    ico_scale,
+    color[0],
+    p_scale,
+    p_rotate,
+    psize,
+    psize,
+    pattern,
+    rect_opacity,
+    path
+  );
+  print!("{xml}");
 }
 
 #[cfg(test)]
