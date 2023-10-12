@@ -1,0 +1,13 @@
+[workspace]
+members = ["random-svg"]
+resolver = "2"
+
+[profile.release]
+lto = true
+opt-level = 3
+incremental = true
+codegen-units = 1
+overflow-checks = false
+panic = 'abort'
+debug-assertions = false
+strip = true
