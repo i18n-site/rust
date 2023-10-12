@@ -3,7 +3,8 @@
 DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 
-name=${1:-rsrv}
+name=$1
+# name=${1:-rsrv}
 # name=$(dasel package.name -f Cargo.toml)
 # name=${name//\'/}
 
@@ -18,4 +19,6 @@ if [ -f "$exe" ]; then
   pkill -9 $name || true
   echo -e "\n${GREEN}❯ $exe$NC\n"
   exec $exe
+else
+  ./$name/test.sh
 fi
