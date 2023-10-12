@@ -2,7 +2,7 @@ use rand::Rng;
 mod pattern;
 use pattern::PATTERN;
 
-fn gen(width: usize, height: usize) {
+pub fn gen(width: usize, height: usize) {
   let mut rng = rand::thread_rng();
   // 使用上述结构进行主要的转换
   let layer_count = random_int(6, 6) as _;
@@ -134,9 +134,6 @@ pub struct Properties {
 
 #[derive(Clone, Debug)]
 pub struct Svg {
-  width: usize,
-  height: usize,
-  xmlns: String,
   path: Vec<PathAttributes>,
 }
 
@@ -222,8 +219,6 @@ pub fn compute_control_points(k: &[usize]) -> ControlPoints {
   ControlPoints { p1, p2 }
 }
 
-const SVGNS: &str = "http://www.w3.org/2000/svg";
-
 pub fn generate_closed_path(
   curve_points: &[Point],
   left_corner_point: Point,
@@ -305,55 +300,6 @@ fn random_color(base: u8) -> String {
   format!("{:02x}{:02x}{:02x}", r[0], r[1], r[2])
 }
 
-fn compute_animated_path(
-  points: &Vec<Point>,
-  left_corner_point: &Point,
-  right_corner_point: &Point,
-  x_points: &[usize],
-) -> String {
-  let ani_x_points: Vec<_> = points.iter().map(|p| p.x).collect();
-  let ani_y_points: Vec<_> = points.iter().map(|p| p.y).collect();
-
-  let ani_x_control_points = compute_control_points(&ani_x_points);
-  let ani_y_control_points = compute_control_points(&ani_y_points);
-
-  let mut animated_path = format!(
-    "M {},{} C {},{} {},{} {},{} ",
-    left_corner_point.x,
-    left_corner_point.y,
-    left_corner_point.x,
-    left_corner_point.y,
-    ani_x_points[0],
-    ani_y_points[0],
-    ani_x_points[0],
-    ani_y_points[0]
-  );
-
-  for i in 0..x_points.len() - 1 {
-    animated_path += &format!(
-      "C {},{} {},{} {},{} ",
-      ani_x_control_points.p1[i],
-      ani_y_control_points.p1[i],
-      ani_x_control_points.p2[i],
-      ani_y_control_points.p2[i],
-      ani_x_points[i + 1],
-      ani_y_points[i + 1]
-    );
-  }
-
-  animated_path += &format!(
-    "C {},{} {},{} {},{} Z",
-    ani_x_points[x_points.len() - 1],
-    ani_y_points[x_points.len() - 1],
-    right_corner_point.x,
-    right_corner_point.y,
-    right_corner_point.x,
-    right_corner_point.y
-  );
-
-  animated_path
-}
-
 fn generate_points(
   width: usize,
   height: usize,
@@ -421,11 +367,6 @@ impl Wave {
       path_list.push(path_data);
     }
 
-    Svg {
-      width: self.properties.width,
-      height: self.properties.height,
-      xmlns: SVGNS.to_string(),
-      path: path_list,
-    }
+    Svg { path: path_list }
   }
 }
