@@ -7,7 +7,7 @@ use crate::{
 
 pub fn gen(width: u32, height: u32) -> (String, [Flag; N]) {
   let mut rng = rand::thread_rng();
-  let layer_count = random_int(4, 4) as _;
+  let layer_count = random_int(3, 4) as _;
   let segment_count = rng.gen::<u32>() % 10 + 5;
   let wave = Wave::new(Properties {
     width, // 此处的 width 和 height 应该是已定义的变量
