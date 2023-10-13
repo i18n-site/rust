@@ -24,7 +24,7 @@ pub fn gen(width: u32, height: u32) -> (String, [Flag; N]) {
 
   let mut path = vec![];
 
-  for (n, i) in &svg.path.iter().enumerate() {
+  for (n, i) in svg.path.iter().enumerate() {
     let path_string = format!(
       r#"<path d="{}" stroke-dasharray="{}" stroke="rgba({},{},{},{})" stroke-width="{}px" fill="url(#bg{})" fill-opacity="{}" transform="rotate({} {} {})"></path>"#,
       i.d,
