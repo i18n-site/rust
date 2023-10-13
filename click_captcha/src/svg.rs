@@ -32,7 +32,7 @@ pub fn gen(width: u32, height: u32) -> (String, [Flag; N]) {
       random_int(200, 50),
       random_int(200, 50),
       random_int(200, 50),
-      random_int(30, 0) as f32 / 100.0,
+      random_int(20, 0) as f32 / 100.0,
       random_int(5, 0),
       n % 4,
       opacity,
@@ -58,7 +58,7 @@ pub fn gen(width: u32, height: u32) -> (String, [Flag; N]) {
     color.reverse();
   }
   let ico_scale = random_int(8, 3) as f32 / 100.0;
-  let p_scale = random_int(100, 0) as f32 / 25.0 + 0.5;
+  let p_scale = random_int(125, 25) as f32 / 25.0;
   let p_rotate = rng.gen::<u16>() % 360;
 
   let rect_opacity = random_int(20, 10) as f32 / 100.0;
