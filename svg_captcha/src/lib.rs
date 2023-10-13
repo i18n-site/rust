@@ -61,7 +61,7 @@ pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 4]>) {
   });
 
   let mut svg = wave.generate_svg();
-  let mut opacity = rng.gen_range::<u16, _>(200..500) as f32 / 1000.0;
+  let mut opacity = rng.gen_range::<u16, _>(200..400) as f32 / 1000.0;
   let opstep = opacity / layer_count as f32;
   svg.path.reverse();
 
@@ -97,7 +97,7 @@ pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 4]>) {
   let path = path.join("");
 
   let (psize, pattern) = PATTERN[rng.gen_range(0..PATTERN.len())];
-  let mut color = [random_color(185), random_color(245)];
+  let mut color = [random_color(230), random_color(245)];
 
   if rand::random::<u8>() % 2 != 0 {
     color.reverse();
