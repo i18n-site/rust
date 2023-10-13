@@ -22,10 +22,9 @@ pub fn gen(width: u32, height: u32) -> (String, [Flag; N]) {
   let opstep = opacity / layer_count as f32;
   svg.path.reverse();
 
-  let mut n = 0;
   let mut path = vec![];
 
-  for i in &svg.path {
+  for (n, i) in &svg.path.iter().enumerate() {
     let path_string = format!(
       r#"<path d="{}" stroke-dasharray="{}" stroke="rgba({},{},{},{})" stroke-width="{}px" fill="url(#bg{})" fill-opacity="{}" transform="rotate({} {} {})"></path>"#,
       i.d,
@@ -44,7 +43,6 @@ pub fn gen(width: u32, height: u32) -> (String, [Flag; N]) {
 
     path.push(path_string);
     opacity -= opstep;
-    n += 1;
   }
 
   let (flag_li, flag_path) = flag_li(width, height);
