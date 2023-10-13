@@ -232,8 +232,6 @@ pub fn generate_closed_path(
   curve_points: &[Point],
   left_corner_point: Point,
   right_corner_point: Point,
-  // fill_color: &str,
-  // transform: &str,
 ) -> PathAttributes {
   let x_points: Vec<_> = curve_points.iter().map(|p| p.x).collect();
   let y_points: Vec<_> = curve_points.iter().map(|p| p.y).collect();
@@ -275,10 +273,7 @@ pub fn generate_closed_path(
     right_corner_point.y
   );
 
-  PathAttributes {
-    d: path,
-    // transform: transform.to_string(),
-  }
+  PathAttributes { d: path }
 }
 
 fn random_int(base: u8, offset: u8) -> u8 {
