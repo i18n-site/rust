@@ -24,8 +24,8 @@ li.sort()
 write(
   join(
     dirname ROOT
-    'src/D.js'
+    'src/flag.rs'
   )
-  'export default '+JSON.stringify(li)
+  """pub const FLAG: [&'static str;#{li.length}] = """+JSON.stringify(li)+';'
 )
 

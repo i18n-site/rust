@@ -1,3 +1,4 @@
+mod flag;
 use rand::Rng;
 mod pattern;
 use pattern::PATTERN;

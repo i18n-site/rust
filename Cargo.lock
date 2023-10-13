@@ -62,7 +62,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "random-svg"
+name = "svg_captcha"
 version = "0.1.0"
 dependencies = [
  "rand",
