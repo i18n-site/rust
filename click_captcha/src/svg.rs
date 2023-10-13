@@ -52,7 +52,7 @@ pub fn gen(width: u32, height: u32) -> (String, [Flag; N]) {
   let path = path.join("");
 
   let (psize, pattern) = PATTERN[rng.gen_range(0..PATTERN.len())];
-  let mut color = [random_color(230), random_color(245)];
+  let mut color = [random_color(90), random_color(245)];
 
   if rand::random::<u8>() % 2 != 0 {
     color.reverse();

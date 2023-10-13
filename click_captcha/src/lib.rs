@@ -9,5 +9,5 @@ use crate::flag_li::{Flag, N};
 
 pub fn gen(width: u32, height: u32) -> Result<(Box<[u8]>, [Flag; N]), svg2webp::Error> {
   let (xml, flag_li) = svg::gen(width, height);
-  Ok((svg2webp(xml, 30.0)?, flag_li))
+  Ok((svg2webp(xml, 20.0)?, flag_li))
 }
