@@ -28,7 +28,7 @@ fn test() {
     file.write_all(g.0.as_bytes()).unwrap();
     let mut idset = HashSet::new();
     for i in &g.1 {
-      idset.insert(i[0]);
+      idset.insert(i.pos);
     }
     assert_eq!(idset.len(), 3);
 
