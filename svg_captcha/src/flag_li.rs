@@ -45,7 +45,7 @@ pub fn flag_li(width: u32, height: u32) -> (Vec<[u32; 4]>, String) {
   {
     let size = size_li[pos];
     let p = ico_pos[pos];
-    svg.push( format!("<svg viewBox=\"0 0 1024 1024\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"><path d=\"{}\" fill=\"url(#ico)\" fill-opacity=\".5\" transform=\"skewX({}) skewY({})\"></path></svg>",
+    svg.push( format!("<svg viewBox=\"0 0 1024 1024\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"><path d=\"{}\" fill=\"url(#ico)\" fill-opacity=\".4\" transform=\"skewX({}) skewY({})\"></path></svg>",
                 x, y, size, size, FLAG[p], rng.gen_range(-5..5), rng.gen_range(-5..5)));
     size_pos.push([p as u32, size, x, y])
   }
