@@ -17,7 +17,6 @@ fn unicode_n(n: usize) -> Vec<usize> {
     let mut flag_pos = flag_pos.borrow_mut();
     for i in 0..n {
       let j = rng.gen_range(i..FLAG.len());
-      // std::mem::swap(flag_pos[i], flag_pos[j]);
       flag_pos.swap(i, j);
       result.push(flag_pos[i]);
     }
