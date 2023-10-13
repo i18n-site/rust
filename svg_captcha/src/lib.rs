@@ -176,7 +176,7 @@ pub struct ControlPoints {
 
 /// Computes control points given knots k.
 pub fn compute_control_points(k: &[u32]) -> ControlPoints {
-  let k: Vec<_> = k.into_iter().map(|i| *i as f32).collect();
+  let k: Vec<_> = k.iter().map(|i| *i as f32).collect();
   let n = k.len() - 1;
 
   // Initial vectors
@@ -301,7 +301,7 @@ fn random_color(base: u8) -> String {
     n += r[i] as f32;
     i += 1;
   }
-  n = n / (3.0 * base as f32);
+  n /= 3.0 * base as f32;
   r = r
     .iter()
     .map(|&val| (val as f32 / n).round() as u8)
@@ -325,10 +325,10 @@ fn generate_points(
 
   let mut points: Vec<Vec<Point>> = Vec::new();
 
-  for y in (cell_height as u32..height as u32).step_by(cell_height as _) {
+  for y in (cell_height as u32..height).step_by(cell_height as _) {
     let mut points_per_layer: Vec<Point> = Vec::new();
     points_per_layer.push(Point { x: 0, y });
-    for x in (cell_width as u32..width as u32).step_by(cell_width as _) {
+    for x in (cell_width as u32..width).step_by(cell_width as _) {
       let varietal_y = y as f32 - move_limit_y / 2.0 + rand::random::<f32>() * move_limit_y;
       let varietal_x = x as f32 - move_limit_x / 2.0 + rand::random::<f32>() * move_limit_x;
       points_per_layer.push(Point {
