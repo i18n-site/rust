@@ -34,7 +34,7 @@ fn test_svg() -> anyhow::Result<()> {
 
     println!("{i} {:?}", g.1);
   }
-  for i in 0..10 {
+  for i in 0..100 {
     let file_path = target_dir.join(format!("{i}.webp"));
     let mut file = fs::File::create(file_path).unwrap();
     let g = gen(500, 500)?;
