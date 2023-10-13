@@ -1,4 +1,4 @@
-use std::{borrow::BorrowMut, cmp::min};
+use std::cmp::min;
 
 use rand::{thread_rng, Rng};
 
