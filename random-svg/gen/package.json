@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@w5/extract": "^0.0.1"
+  }
+}
