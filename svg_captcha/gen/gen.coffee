@@ -36,7 +36,7 @@ write(
     dirname ROOT
     'src/flag.rs'
   )
-  """pub const FLAG: [&'static str;#{li.length}] = """+li+';'
+  """pub const FLAG: [&'static str;#{n}] = """+li+';'
 )
 
 write(

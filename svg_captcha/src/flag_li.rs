@@ -8,9 +8,8 @@ pub fn flag_li(height: u32) -> (Vec<[u32; 3]>, String) {
   let box_x = rng.gen_range(0..height - size);
   let box_y = rng.gen_range(0..height - size);
   let n = rng.gen_range(0..FLAG.len());
-  let mut path: Vec<String> = Vec::new();
   let svg = format!("<svg viewBox=\"0 0 1024 1024\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"><path d=\"{}\" fill=\"url(#ico)\" fill-opacity=\".65\" transform=\"skewX({}) skewY({})\"></path></svg>",
-        box_x, box_y, size, size, FLAG[n], rng.gen_range(-10..20), rng.gen_range(-10..20));
+        box_x, box_y, size, size, FLAG[n], rng.gen_range(-10..10), rng.gen_range(-10..10));
   //
   // path.insert(layer_count / 2, svg);
   //

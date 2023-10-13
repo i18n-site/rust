@@ -8,11 +8,34 @@ use rand::Rng;
 
 #[cfg(test)]
 mod tests {
+  use std::{env, fs, io::Write};
+
   use super::*;
 
   #[test]
   fn test() {
-    gen(500, 500);
+    let current_exe_path = env::current_exe().unwrap();
+    let target_dir = current_exe_path
+      .parent()
+      .unwrap()
+      .parent()
+      .unwrap()
+      .parent()
+      .unwrap()
+      .join("svg");
+
+    println!("svg → {}", target_dir.to_string_lossy());
+    // 2. 检查并创建目录
+    if !target_dir.exists() {
+      fs::create_dir(&target_dir).unwrap();
+    }
+
+    // 3. 写入文件
+    for i in 0..100 {
+      let file_path = target_dir.join(format!("{i}.svg"));
+      let mut file = fs::File::create(file_path).unwrap();
+      file.write_all(gen(500, 500).0.as_bytes()).unwrap();
+    }
   }
 }
 
@@ -76,7 +99,7 @@ pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 3]>) {
   if rand::random::<u8>() % 2 != 0 {
     color.reverse();
   }
-  let ico_scale = random_int(10, 5) as f32 / 100.0;
+  let ico_scale = random_int(5, 3) as f32 / 100.0;
   let p_scale = random_int(100, 0) as f32 / 25.0 + 0.5;
   let p_rotate = rng.gen::<u16>() % 360;
 
@@ -102,7 +125,6 @@ pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 3]>) {
     rect_opacity,
     path
   );
-  print!("{xml}\n");
   (xml, flag_li)
 }
 
