@@ -7,3 +7,6 @@ edition = "2021"
 [dependencies]
 rand = "0.8.5"
 svg2webp = { version = "0.1.2", path = "../svg2webp" }
+
+[dev-dependencies]
+anyhow = "1.0.75"

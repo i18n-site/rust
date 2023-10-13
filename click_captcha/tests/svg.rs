@@ -1,9 +1,9 @@
 use std::{collections::HashSet, env, fs, io::Write};
 
-use click_captcha::svg::gen;
+use click_captcha::{gen, svg::gen as svg_gen};
 
 #[test]
-fn test() {
+fn test_svg() -> anyhow::Result<()> {
   let current_exe_path = env::current_exe().unwrap();
   let target_dir = current_exe_path
     .parent()
@@ -21,10 +21,10 @@ fn test() {
   }
 
   // 3. 写入文件
-  for i in 0..500 {
+  for i in 0..10 {
     let file_path = target_dir.join(format!("{i}.svg"));
     let mut file = fs::File::create(file_path).unwrap();
-    let g = gen(500, 500);
+    let g = svg_gen(500, 500);
     file.write_all(g.0.as_bytes()).unwrap();
     let mut idset = HashSet::new();
     for i in &g.1 {
@@ -34,4 +34,13 @@ fn test() {
 
     println!("{i} {:?}", g.1);
   }
+  for i in 0..10 {
+    let file_path = target_dir.join(format!("{i}.webp"));
+    let mut file = fs::File::create(file_path).unwrap();
+    let g = gen(500, 500)?;
+    file.write_all(&g.0).unwrap();
+
+    println!("{i} {:?}", g.1);
+  }
+  Ok(())
 }
