@@ -1,6 +1,7 @@
 {
   "type": "module",
   "dependencies": {
-    "@w5/extract": "^0.0.1"
+    "@w5/extract": "^0.0.1",
+    "@w5/write": "^0.0.1"
   }
 }

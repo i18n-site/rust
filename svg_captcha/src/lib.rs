@@ -1,7 +1,10 @@
 mod flag;
-use rand::Rng;
+mod flag_li;
 mod pattern;
+
+use flag_li::flag_li;
 use pattern::PATTERN;
+use rand::Rng;
 
 #[cfg(test)]
 mod tests {
@@ -13,11 +16,11 @@ mod tests {
   }
 }
 
-pub fn gen(width: usize, height: usize) {
+pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 3]>) {
   let mut rng = rand::thread_rng();
   // 使用上述结构进行主要的转换
   let layer_count = random_int(6, 6) as _;
-  let segment_count = rng.gen::<usize>() % 10 + 5;
+  let segment_count = rng.gen::<u32>() % 10 + 5;
   // let ico_n = rand::thread_rng().gen::<u8>() % 4 + 4;
   let wave = Wave::new(Properties {
     width, // 此处的 width 和 height 应该是已定义的变量
@@ -61,9 +64,13 @@ pub fn gen(width: usize, height: usize) {
     n += 1;
   }
 
+  let (flag_li, flag_path) = flag_li(height);
+
+  path.insert(path.len() / 2, flag_path);
+
   let path = path.join("");
 
-  let (psize, pattern) = PATTERN[rng.gen::<usize>() % PATTERN.len()];
+  let (psize, pattern) = PATTERN[rng.gen_range(0..PATTERN.len())];
   let mut color = [random_color(70), random_color(225)];
 
   if rand::random::<u8>() % 2 != 0 {
@@ -96,14 +103,15 @@ pub fn gen(width: usize, height: usize) {
     path
   );
   print!("{xml}\n");
+  (xml, flag_li)
 }
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Properties {
-  width: usize,
-  height: usize,
-  segment_count: usize,
-  layer_count: usize,
+  width: u32,
+  height: u32,
+  segment_count: u32,
+  layer_count: u32,
   variance: f32,
   // fill_color: String,
   stroke_color: String,
@@ -133,8 +141,8 @@ pub struct PathAttributes {
 
 #[derive(Debug, Clone, PartialEq, Copy)]
 pub struct Point {
-  pub x: usize,
-  pub y: usize,
+  pub x: u32,
+  pub y: u32,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -144,7 +152,7 @@ pub struct ControlPoints {
 }
 
 /// Computes control points given knots k.
-pub fn compute_control_points(k: &[usize]) -> ControlPoints {
+pub fn compute_control_points(k: &[u32]) -> ControlPoints {
   let k: Vec<_> = k.into_iter().map(|i| *i as f32).collect();
   let n = k.len() - 1;
 
@@ -280,10 +288,10 @@ fn random_color(base: u8) -> String {
 }
 
 fn generate_points(
-  width: usize,
-  height: usize,
-  segment_count: usize,
-  layer_count: usize,
+  width: u32,
+  height: u32,
+  segment_count: u32,
+  layer_count: u32,
   variance: f32,
 ) -> Vec<Vec<Point>> {
   // let layer_count = layer_count.unwrap_or(2);
@@ -294,10 +302,10 @@ fn generate_points(
 
   let mut points: Vec<Vec<Point>> = Vec::new();
 
-  for y in (cell_height as usize..height as usize).step_by(cell_height as usize) {
+  for y in (cell_height as u32..height as u32).step_by(cell_height as _) {
     let mut points_per_layer: Vec<Point> = Vec::new();
     points_per_layer.push(Point { x: 0, y });
-    for x in (cell_width as usize..width as usize).step_by(cell_width as usize) {
+    for x in (cell_width as u32..width as u32).step_by(cell_width as _) {
       let varietal_y = y as f32 - move_limit_y / 2.0 + rand::random::<f32>() * move_limit_y;
       let varietal_x = x as f32 - move_limit_x / 2.0 + rand::random::<f32>() * move_limit_x;
       points_per_layer.push(Point {

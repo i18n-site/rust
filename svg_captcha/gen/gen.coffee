@@ -10,22 +10,39 @@
 ROOT = uridir(import.meta)
 
 li = []
+n = 0
 for await f from await opendir ROOT
-  if f.isFile() and f.name.endsWith('.svg')
+  {name} = f
+  if f.isFile() and name.endsWith('.svg')
+    console.log n++, name
     fp = join ROOT,f.name
-    console.log fp
     xml = read fp
     t = [...extractLi xml,'d="','"']
     t.sort (a,b)=>b.length-a.length
-    li.push t[0]
+    d = t[0]
+    write fp, [
+      '<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 1024 1024">'
+      '<path fill="#000" stroke="#000" stroke-width="4" d="'
+      d
+      '"/>'
+      '</svg>'
+    ].join('')
+    li.push d
 
-li.sort()
+li = JSON.stringify(li)
 
 write(
   join(
     dirname ROOT
     'src/flag.rs'
   )
-  """pub const FLAG: [&'static str;#{li.length}] = """+JSON.stringify(li)+';'
+  """pub const FLAG: [&'static str;#{li.length}] = """+li+';'
 )
 
+write(
+  join(
+    dirname ROOT
+    'flag.js'
+  )
+  """export default """+li+';'
+)
