@@ -1,4 +1,4 @@
-use std::cmp::min;
+use std::{borrow::BorrowMut, cmp::min};
 
 use rand::{thread_rng, Rng};
 
@@ -13,13 +13,15 @@ fn unicode_n(n: usize) -> Vec<usize> {
   let mut rng = rand::thread_rng();
   let mut result = Vec::with_capacity(n);
 
-  for i in 0..n {
-    let j = rng.gen_range(i..FLAG.len());
-    unsafe {
-      std::mem::swap(&mut FLAG_POS[i], &mut FLAG_POS[j]);
+  FLAG_POS.with(|flag_pos| {
+    let mut flag_pos = flag_pos.borrow_mut();
+    for i in 0..n {
+      let j = rng.gen_range(i..FLAG.len());
+      // std::mem::swap(flag_pos[i], flag_pos[j]);
+      flag_pos.swap(i, j);
+      result.push(flag_pos[i]);
     }
-    result.push(unsafe { FLAG_POS[i] });
-  }
+  });
 
   result
 }
@@ -44,7 +46,7 @@ pub fn flag_li(width: u32, height: u32) -> (Vec<[u32; 3]>, String) {
   {
     let size = size_li[pos];
     svg.push( format!("<svg viewBox=\"0 0 1024 1024\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"><path d=\"{}\" fill=\"url(#ico)\" fill-opacity=\".65\" transform=\"skewX({}) skewY({})\"></path></svg>",
-            x, y, size, size, FLAG[ico_pos[pos]], rng.gen_range(-5..5), rng.gen_range(-5..5)));
+                x, y, size, size, FLAG[ico_pos[pos]], rng.gen_range(-5..5), rng.gen_range(-5..5)));
     size_pos.push([size, x, y])
   }
   //

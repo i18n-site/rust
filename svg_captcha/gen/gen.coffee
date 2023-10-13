@@ -38,8 +38,12 @@ write(
     dirname ROOT
     'src/flag.rs'
   )
-  """
-pub static mut FLAG_POS: [usize;#{n}] = #{JSON.stringify flag_pos};
+  """use std::cell::RefCell;
+
+thread_local! {
+  pub static FLAG_POS: RefCell<[usize;#{n}]> = RefCell::new(#{JSON.stringify flag_pos});
+}
+
 pub const FLAG: [&'static str;#{n}] = """+li+';'
 )
 
