@@ -1,6 +1,7 @@
 mod flag;
 mod flag_li;
 mod pattern;
+mod random_pos;
 
 use flag_li::flag_li;
 use pattern::PATTERN;
@@ -87,7 +88,7 @@ pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 3]>) {
     n += 1;
   }
 
-  let (flag_li, flag_path) = flag_li(height);
+  let (flag_li, flag_path) = flag_li(width, height);
 
   path.insert(path.len() / 2, flag_path);
 
