@@ -2,6 +2,16 @@ use rand::Rng;
 mod pattern;
 use pattern::PATTERN;
 
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test() {
+    gen(500, 500);
+  }
+}
+
 pub fn gen(width: usize, height: usize) {
   let mut rng = rand::thread_rng();
   // 使用上述结构进行主要的转换
@@ -84,17 +94,7 @@ pub fn gen(width: usize, height: usize) {
     rect_opacity,
     path
   );
-  print!("{xml}");
-}
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn test() {
-    gen(300, 600);
-  }
+  print!("{xml}\n");
 }
 
 #[derive(Clone, Debug, PartialEq)]
