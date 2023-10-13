@@ -33,7 +33,6 @@ pub fn svg2webp(svg: impl AsRef<str>, quality: f32) -> Result<Box<[u8]>, Error> 
       let encoder = Encoder::from_rgba(img, width, height);
       let encoded_webp = encoder.encode(quality);
       let b = encoded_webp.as_bytes();
-      dbg!(&b);
       return Ok(b.into());
     }
   } else {
