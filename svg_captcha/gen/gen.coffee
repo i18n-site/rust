@@ -11,9 +11,11 @@ ROOT = uridir(import.meta)
 
 li = []
 n = 0
+flag_pos = []
 for await f from await opendir ROOT
   {name} = f
   if f.isFile() and name.endsWith('.svg')
+    flag_pos.push n
     console.log n++, name
     fp = join ROOT,f.name
     xml = read fp
@@ -36,7 +38,9 @@ write(
     dirname ROOT
     'src/flag.rs'
   )
-  """pub const FLAG: [&'static str;#{n}] = """+li+';'
+  """
+pub static mut FLAG_POS: [usize;#{n}] = #{JSON.stringify flag_pos};
+pub const FLAG: [&'static str;#{n}] = """+li+';'
 )
 
 write(
