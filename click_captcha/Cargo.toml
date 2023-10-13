@@ -1,5 +1,5 @@
 [package]
-name = "svg_captcha"
+name = "click_captcha"
 version = "0.1.0"
 edition = "2021"
 

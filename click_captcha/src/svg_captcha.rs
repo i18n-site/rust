@@ -1,11 +1,6 @@
-mod flag;
-mod flag_li;
-mod pattern;
-mod random_pos;
-
-use flag_li::flag_li;
-use pattern::PATTERN;
 use rand::Rng;
+
+use crate::{flag_li::flag_li, pattern::PATTERN};
 
 #[cfg(test)]
 mod tests {
