@@ -1,8 +1,11 @@
 use rand::Rng;
 
-use crate::{flag_li::flag_li, pattern::PATTERN};
+use crate::{
+  flag_li::{flag_li, Flag, N},
+  pattern::PATTERN,
+};
 
-pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 4]>) {
+pub fn gen(width: u32, height: u32) -> (String, [Flag; N]) {
   let mut rng = rand::thread_rng();
   let layer_count = random_int(4, 4) as _;
   let segment_count = rng.gen::<u32>() % 10 + 5;

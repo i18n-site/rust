@@ -13,9 +13,9 @@ pub enum Error {
   RESVG,
 }
 
-pub fn svg2webp(svg: &[u8], quality: f32) -> Result<Box<[u8]>, Error> {
+pub fn svg2webp(svg: impl AsRef<str>, quality: f32) -> Result<Box<[u8]>, Error> {
   let opt = usvg::Options::default();
-  if let Ok(rtree) = usvg::Tree::from_data(svg.as_ref(), &opt) {
+  if let Ok(rtree) = usvg::Tree::from_data(svg.as_ref().as_bytes(), &opt) {
     let rtree = resvg::Tree::from_usvg(&rtree);
     let pixmap_size = rtree.size;
     let width = pixmap_size.width() as u32;
