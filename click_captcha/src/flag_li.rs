@@ -1,4 +1,4 @@
-use std::{cmp::min, mem::MaybeUninit};
+use std::cmp::min;
 
 use rand::{thread_rng, Rng};
 
@@ -44,7 +44,8 @@ pub fn flag_li(width: u32, height: u32) -> ([Flag; N], String) {
     size_li.push(rng.gen_range(base / 10..1 + base / 8));
   }
 
-  let mut size_pos: [Flag; N] = unsafe { MaybeUninit::uninit().assume_init() };
+  let mut size_pos: [Flag; N] =
+    unsafe { std::mem::transmute([0u8; std::mem::size_of::<[Flag; N]>()]) };
 
   let mut svg = Vec::with_capacity(N);
   let ico_pos = unicode_n(N);
