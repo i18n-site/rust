@@ -50,18 +50,18 @@ mod tests {
 
 pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 4]>) {
   let mut rng = rand::thread_rng();
-  let layer_count = random_int(12, 6) as _;
+  let layer_count = random_int(4, 4) as _;
   let segment_count = rng.gen::<u32>() % 10 + 5;
   let wave = Wave::new(Properties {
     width, // 此处的 width 和 height 应该是已定义的变量
     height,
     segment_count,
     layer_count,
-    variance: rng.gen_range(0..20) as f32 + 0.1,
+    variance: rng.gen_range(0..15) as f32 + 0.1,
   });
 
   let mut svg = wave.generate_svg();
-  let mut opacity = rng.gen_range::<u16, _>(200..400) as f32 / 1000.0;
+  let mut opacity = rng.gen_range::<u16, _>(200..300) as f32 / 1000.0;
   let opstep = opacity / layer_count as f32;
   svg.path.reverse();
 
@@ -72,12 +72,12 @@ pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 4]>) {
     let path_string = format!(
       r#"<path d="{}" stroke-dasharray="{}" stroke="rgba({},{},{},{})" stroke-width="{}px" fill="url(#bg{})" fill-opacity="{}" transform="rotate({} {} {})"></path>"#,
       i.d,
-      random_int(20, 0),
-      random_int(255, 0),
-      random_int(255, 0),
-      random_int(255, 0),
+      random_int(30, 0),
+      random_int(200, 50),
+      random_int(200, 50),
+      random_int(200, 50),
       random_int(30, 0) as f32 / 100.0,
-      random_int(3, 0),
+      random_int(5, 0),
       n % 4,
       opacity,
       if n % 2 == 0 { 0 } else { 180 },
@@ -102,7 +102,7 @@ pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 4]>) {
   if rand::random::<u8>() % 2 != 0 {
     color.reverse();
   }
-  let ico_scale = random_int(5, 3) as f32 / 100.0;
+  let ico_scale = random_int(8, 3) as f32 / 100.0;
   let p_scale = random_int(100, 0) as f32 / 25.0 + 0.5;
   let p_rotate = rng.gen::<u16>() % 360;
 
