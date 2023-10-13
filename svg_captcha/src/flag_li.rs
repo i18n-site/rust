@@ -25,7 +25,7 @@ fn unicode_n(n: usize) -> Vec<usize> {
   result
 }
 
-pub fn flag_li(width: u32, height: u32) -> (Vec<[u32; 3]>, String) {
+pub fn flag_li(width: u32, height: u32) -> (Vec<[u32; 4]>, String) {
   let mut rng = thread_rng();
 
   let base = min(width, height);
@@ -44,24 +44,11 @@ pub fn flag_li(width: u32, height: u32) -> (Vec<[u32; 3]>, String) {
     .enumerate()
   {
     let size = size_li[pos];
+    let p = ico_pos[pos];
     svg.push( format!("<svg viewBox=\"0 0 1024 1024\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"><path d=\"{}\" fill=\"url(#ico)\" fill-opacity=\".65\" transform=\"skewX({}) skewY({})\"></path></svg>",
-                x, y, size, size, FLAG[ico_pos[pos]], rng.gen_range(-5..5), rng.gen_range(-5..5)));
-    size_pos.push([size, x, y])
+                x, y, size, size, FLAG[p], rng.gen_range(-5..5), rng.gen_range(-5..5)));
+    size_pos.push([p as u32, size, x, y])
   }
-  //
-  // path.insert(layer_count / 2, svg);
-  //
-  // let rect = format!(
-  //   "<rect fill-opacity=\"{}\" height=\"100%\" width=\"100%\" fill=\"url(#bg2)\"></rect>",
-  //   random_int(0, 30) as f32 / 100.0
-  // );
-  //
-  // path.push(rect);
-  //
-  // // For demonstration purposes, print the path vector
-  // for item in &path {
-  //   println!("{}", item);
-  // }
 
   (size_pos, svg.join(""))
 }

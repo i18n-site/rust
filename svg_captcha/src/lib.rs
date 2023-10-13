@@ -9,7 +9,7 @@ use rand::Rng;
 
 #[cfg(test)]
 mod tests {
-  use std::{env, fs, io::Write};
+  use std::{collections::HashSet, env, fs, io::Write};
 
   use super::*;
 
@@ -35,35 +35,37 @@ mod tests {
     for i in 0..500 {
       let file_path = target_dir.join(format!("{i}.svg"));
       let mut file = fs::File::create(file_path).unwrap();
-      file.write_all(gen(500, 500).0.as_bytes()).unwrap();
+      let g = gen(500, 500);
+      file.write_all(g.0.as_bytes()).unwrap();
+      let mut idset = HashSet::new();
+      for i in &g.1 {
+        idset.insert(i[0]);
+      }
+      assert_eq!(idset.len(), 3);
+
+      println!("{i} {:?}", g.1);
     }
   }
 }
 
-pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 3]>) {
+pub fn gen(width: u32, height: u32) -> (String, Vec<[u32; 4]>) {
   let mut rng = rand::thread_rng();
-  // 使用上述结构进行主要的转换
-  let layer_count = random_int(6, 6) as _;
+  let layer_count = random_int(12, 6) as _;
   let segment_count = rng.gen::<u32>() % 10 + 5;
-  // let ico_n = rand::thread_rng().gen::<u8>() % 4 + 4;
   let wave = Wave::new(Properties {
     width, // 此处的 width 和 height 应该是已定义的变量
     height,
     segment_count,
     layer_count,
-    variance: rand::random::<f32>() * 10.0 + 0.1,
-    stroke_width: 0.0,
-    stroke_color: "none".to_string(),
+    variance: rng.gen_range(0..20) as f32 + 0.1,
   });
 
   let mut svg = wave.generate_svg();
-  let opstep = 0.5 / layer_count as f32;
+  let mut opacity = rng.gen_range::<u16, _>(200..500) as f32 / 1000.0;
+  let opstep = opacity / layer_count as f32;
   svg.path.reverse();
-  // Assuming svg is some struct containing a field path that is a Vec<Path>
-  // and Path is a struct containing a field 'd' of type String
 
   let mut n = 0;
-  let mut opacity = 0.5;
   let mut path = vec![];
 
   for i in &svg.path {
@@ -137,8 +139,6 @@ pub struct Properties {
   layer_count: u32,
   variance: f32,
   // fill_color: String,
-  stroke_color: String,
-  stroke_width: f32,
   // transform: String,
 }
 
@@ -156,8 +156,6 @@ pub struct Wave {
 #[derive(Debug, Clone, PartialEq)]
 pub struct PathAttributes {
   // fill: String,
-  stroke_color: String,
-  stroke_width: f32,
   d: String,
   // transform: String,
 }
@@ -234,8 +232,6 @@ pub fn generate_closed_path(
   left_corner_point: Point,
   right_corner_point: Point,
   // fill_color: &str,
-  stroke_color: &str,
-  stroke_width: f32,
   // transform: &str,
 ) -> PathAttributes {
   let x_points: Vec<_> = curve_points.iter().map(|p| p.x).collect();
@@ -279,9 +275,6 @@ pub fn generate_closed_path(
   );
 
   PathAttributes {
-    // fill: fill_color.to_string(),
-    stroke_color: stroke_color.to_string(),
-    stroke_width,
     d: path,
     // transform: transform.to_string(),
   }
@@ -370,8 +363,6 @@ impl Wave {
           y: self.properties.height,
         },
         // &self.properties.fill_color,
-        &self.properties.stroke_color,
-        self.properties.stroke_width,
         // &self.properties.transform,
       );
       path_list.push(path_data);
