@@ -31,7 +31,7 @@ mod tests {
     }
 
     // 3. 写入文件
-    for i in 0..100 {
+    for i in 0..500 {
       let file_path = target_dir.join(format!("{i}.svg"));
       let mut file = fs::File::create(file_path).unwrap();
       file.write_all(gen(500, 500).0.as_bytes()).unwrap();
