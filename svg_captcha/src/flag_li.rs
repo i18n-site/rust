@@ -14,7 +14,7 @@ pub fn flag_li(width: u32, height: u32) -> (Vec<[u32; 3]>, String) {
   let mut size_li = Vec::with_capacity(N);
 
   for _ in 0..N {
-    size_li.push(rng.gen_range(base / 20..1 + base / 10));
+    size_li.push(rng.gen_range(base / 15..1 + base / 10));
   }
 
   let mut size_pos = Vec::with_capacity(N);
