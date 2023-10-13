@@ -1,0 +1,16 @@
+[package]
+name = "svg2webp"
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/3TiSite/rust/tree/main/svg2webp"
+license = "MIT"
+description = "convert svg to webp"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+image = "0.24.7"
+resvg = "0.36.0"
+thiserror = "1.0.49"
+tiny-skia = "0.11.2"
+usvg = "0.36.0"
+webp = "0.2.6"
