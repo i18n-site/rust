@@ -26,7 +26,7 @@ pub fn flag_li(width: u32, height: u32) -> (Vec<[u32; 3]>, String) {
     let n = rng.gen_range(0..FLAG.len());
     let size = size_li[pos];
     svg.push( format!("<svg viewBox=\"0 0 1024 1024\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"><path d=\"{}\" fill=\"url(#ico)\" fill-opacity=\".65\" transform=\"skewX({}) skewY({})\"></path></svg>",
-            x, y, size, size, FLAG[n], rng.gen_range(-10..10), rng.gen_range(-10..10)));
+            x, y, size, size, FLAG[n], rng.gen_range(-5..5), rng.gen_range(-5..5)));
     size_pos.push([size, x, y])
   }
   //
