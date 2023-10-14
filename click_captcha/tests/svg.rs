@@ -12,9 +12,9 @@ fn test_svg() -> anyhow::Result<()> {
     .unwrap()
     .parent()
     .unwrap()
-    .join("svg");
+    .join("img");
 
-  println!("svg → {}", target_dir.to_string_lossy());
+  println!("img → {}", target_dir.to_string_lossy());
   // 2. 检查并创建目录
   if !target_dir.exists() {
     fs::create_dir(&target_dir).unwrap();
@@ -34,7 +34,7 @@ fn test_svg() -> anyhow::Result<()> {
 
     println!("{i} {:?}", g.1);
   }
-  for i in 0..100 {
+  for i in 10..100 {
     let file_path = target_dir.join(format!("{i}.webp"));
     let mut file = fs::File::create(file_path).unwrap();
     let g = gen(500, 500)?;
