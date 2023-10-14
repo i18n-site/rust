@@ -44,5 +44,3 @@ pub fn random_pos(container_width: u32, container_height: u32, size_li: &[u32]) 
 
   selected_coords
 }
-
-// You'll need to add the `rand` crate to your `Cargo.toml`.
