@@ -3,7 +3,7 @@ name = "click_captcha"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/3TiSite/rust/tree/main/click_captcha"
-license = "BSL"
+license = "BUSL-1.1"
 description = "gen click captcha"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
