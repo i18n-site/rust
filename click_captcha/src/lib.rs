@@ -22,14 +22,12 @@ pub fn verify(x_y_size: &[u32], click_x_y: &[u32]) -> bool {
     return false;
   }
 
-  for (pos, (x, y, size)) in x_y_size.iter().chunks(3).enumerate() {
+  for (pos, xys) in x_y_size.chunks(3).enumerate() {
     let pos = pos * 2;
     let cx = click_x_y[pos] as f32;
     let cy = click_x_y[pos + 1] as f32;
-    let size = (size as f32) / 2.0;
-    let x = x + size;
-    let y = y + size;
-    if distance(x + size, y + size, cx, cy) > size {
+    let size = (*xys[2] as f32) / 2.0;
+    if distance(*xys[0] as f32 + size, *xys[1] as f32 + size, cx, cy) > size {
       return false;
     }
   }
