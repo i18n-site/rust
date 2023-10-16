@@ -3,6 +3,7 @@ pub mod flag_li;
 pub mod pattern;
 pub mod random_pos;
 pub mod svg;
+pub use flag::FLAG;
 pub use svg2webp::svg2webp;
 
 pub use crate::flag_li::{Flag, N};
