@@ -1,5 +1,5 @@
 # click_captcha
 
-gen click click captcha
+gen click captcha
 
 run `./test.sh` , see `../target/img`
