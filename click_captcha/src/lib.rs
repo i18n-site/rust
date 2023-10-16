@@ -12,3 +12,26 @@ pub fn gen(width: u32, height: u32) -> Result<(Box<[u8]>, [Flag; N]), svg2webp::
   let (xml, flag_li) = svg::gen(width, height);
   Ok((svg2webp(xml, 40.0)?, flag_li))
 }
+
+pub fn distance(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {
+  ((x2 - x1).powi(2) + (y2 - y1).powi(2)).sqrt()
+}
+
+pub fn verify(x_y_size: &[u32], click_x_y: &[u32]) -> bool {
+  if (click_x_y.len() * 3) != (2 * x_y_size.len()) {
+    return false;
+  }
+
+  for (pos, (x, y, size)) in x_y_size.iter().chunks(3).enumerate() {
+    let pos = pos * 2;
+    let cx = click_x_y[pos] as f32;
+    let cy = click_x_y[pos + 1] as f32;
+    let size = (size as f32) / 2.0;
+    let x = x + size;
+    let y = y + size;
+    if distance(x + size, y + size, cx, cy) > size {
+      return false;
+    }
+  }
+  true
+}
