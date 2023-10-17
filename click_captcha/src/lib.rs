@@ -27,12 +27,6 @@ pub fn verify(flag_x_y_size: &[u64], click_x_y: &[u64], scale: u64) -> bool {
     let cx = (click_x_y[pos] * scale) as f32;
     let cy = (click_x_y[pos + 1] * scale) as f32;
     let size = (xys[2] as f32) / 2.0;
-    dbg!(
-      xys,
-      cx,
-      cy,
-      distance(xys[0] as f32 + size, xys[1] as f32 + size, cx, cy)
-    );
     if distance(xys[0] as f32 + size, xys[1] as f32 + size, cx, cy) > size {
       return false;
     }
