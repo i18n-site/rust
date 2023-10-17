@@ -1,6 +1,6 @@
 [package]
 name = "click_captcha"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 repository = "https://github.com/3TiSite/rust/tree/main/click_captcha"
 license = "BUSL-1.1"

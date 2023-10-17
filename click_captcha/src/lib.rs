@@ -1,10 +1,10 @@
-pub mod flag;
-pub mod flag_li;
-pub mod pattern;
-pub mod random_pos;
-pub mod svg;
+mod flag;
+mod flag_li;
+mod pattern;
+mod random_pos;
+mod svg;
 pub use flag::FLAG;
-pub use svg2webp::svg2webp;
+use svg2webp::svg2webp;
 
 pub use crate::flag_li::{Flag, N};
 
@@ -22,7 +22,7 @@ pub fn verify(flag_x_y_size: &[u32], click_x_y: &[u32]) -> bool {
     return false;
   }
 
-  for (pos, xys) in x_y_size.chunks(3).enumerate() {
+  for (pos, xys) in flag_x_y_size.chunks(3).enumerate() {
     let pos = pos * 2;
     let cx = click_x_y[pos] as f32;
     let cy = click_x_y[pos + 1] as f32;
