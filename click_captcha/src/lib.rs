@@ -13,7 +13,7 @@ pub fn gen(width: u32, height: u32) -> Result<(Box<[u8]>, [Flag; N]), svg2webp::
   Ok((svg2webp(xml, 40.0)?, flag_li))
 }
 
-pub fn distance(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {
+fn distance(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {
   ((x2 - x1).powi(2) + (y2 - y1).powi(2)).sqrt()
 }
 
