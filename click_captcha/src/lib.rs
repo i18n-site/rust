@@ -17,8 +17,8 @@ pub fn distance(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {
   ((x2 - x1).powi(2) + (y2 - y1).powi(2)).sqrt()
 }
 
-pub fn verify(x_y_size: &[u32], click_x_y: &[u32]) -> bool {
-  if (click_x_y.len() * 3) != (2 * x_y_size.len()) {
+pub fn verify(flag_x_y_size: &[u32], click_x_y: &[u32]) -> bool {
+  if (click_x_y.len() * 3) != (2 * flag_x_y_size.len()) {
     return false;
   }
 
