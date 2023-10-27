@@ -1,10 +1,11 @@
 [package]
 name = "mreplace"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/3TiSite/rust.git"
 homepage = "https://github.com/3TiSite/rust/tree/main/mreplace"
+description = "use daachorse::CharwiseDoubleArrayAhoCorasick for multiple string replace"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
