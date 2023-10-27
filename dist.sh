@@ -9,7 +9,7 @@ if ! [ -x "$(command -v cargo-v)" ]; then
 fi
 
 cd $1
-rm Cargo.lock
+rm -rf Cargo.lock
 ln -s ../Cargo.lock
 cargo v patch -y
 rm Cargo.lock
