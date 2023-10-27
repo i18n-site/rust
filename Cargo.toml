@@ -1,5 +1,5 @@
 [workspace]
-members = ["click_captcha", "svg2webp"]
+members = ["click_captcha", "svg2webp", "mreplace"]
 resolver = "2"
 
 [profile.release]
