@@ -9,5 +9,11 @@ if ! [ -x "$(command -v cargo-v)" ]; then
 fi
 
 cd $1
-cargo-v patch -y
-cargo publish --allow-dirty --registry crates-io || true
+rm Cargo.lock
+ln -s ../Cargo.lock
+cargo v patch -y
+rm Cargo.lock
+git add -u
+git commit -m.
+git push
+cargo publish --registry crates-io || true
