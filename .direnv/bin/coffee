@@ -11,5 +11,5 @@ fi
 
 exec node --trace-uncaught \
   --expose-gc \
-  --loader "@w5/loader" \
+  --import "@3-/loader" \
   --unhandled-rejections=strict $filepath ${@:2:$#}
