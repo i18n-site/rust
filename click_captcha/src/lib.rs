@@ -2,7 +2,7 @@ mod flag;
 mod flag_li;
 mod pattern;
 mod random_pos;
-mod svg;
+pub mod svg;
 pub use flag::FLAG;
 use svg2webp::svg2webp;
 

@@ -1,1 +1,13 @@
-{ "type": "module", "dependencies": { "@w5/coffee_plus": "^0.0.17", "@w5/jsext": "^0.0.1", "@w5/loader": "^0.0.3", "@w5/mdt": "^0.0.16", "@w5/pool": "^0.0.6", "@w5/uridir": "^0.0.1", "@w5/walk": "^0.0.1", "zx": "^7.2.3" } }
+{
+  "type": "module",
+  "dependencies": {
+    "@3-/coffee_plus": "^0.0.5",
+    "@3-/jsext": "^0.0.5",
+    "@3-/loader": "^0.0.2",
+    "@3-/mdt": "^0.0.3",
+    "@3-/pool": "^0.0.3",
+    "@3-/uridir": "^0.0.2",
+    "@3-/walk": "^0.0.1",
+    "zx": "^7.2.3"
+  }
+}
