@@ -1,0 +1,21 @@
+[package]
+name = "aerr"
+version = "0.1.11"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/aerr"
+description = "error like anyhow for axum"
+
+[dependencies]
+anyhow = "1.0.76"
+axum = "0.7.2"
+bytes = "1.5.0"
+prost = { version = "0.12.3" }
+serde = { version = "1.0.193", features = ["derive"] }
+sonic-rs = "0.2.6"
+tracing = "0.1.40"
+
+[features]
+
+[dev-dependencies]

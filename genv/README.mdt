@@ -1,0 +1,7 @@
+# genv
+
+global static var from environment
+
+```rust
+<+ ./tests/main.rs>
+```

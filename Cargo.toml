@@ -1,0 +1,40 @@
+[workspace]
+members = [
+  "xstr",
+  "tp",
+  "xhash",
+  "trt",
+  "sts",
+  "xmail",
+  "svg2webp",
+  "cookiestr",
+  "loginit",
+  "click_captcha",
+  "xtld",
+  "mreplace",
+  "radix_str",
+  "aerr",
+  "wxpush",
+  "genv",
+  "xsmtp",
+  "jarg",
+  "set_header",
+  "amid",
+  "apart",
+  "preq",
+  "getc",
+]
+resolver = "2"
+
+[profile.release]
+lto = true
+opt-level = 3
+incremental = true
+codegen-units = 1
+overflow-checks = false
+panic = 'abort'
+debug-assertions = false
+strip = true
+
+[profile.dev]
+split-debuginfo = "unpacked"

@@ -1,0 +1,7 @@
+# mreplace
+
+use [daachorse::CharwiseDoubleArrayAhoCorasick](https://github.com/daac-tools/daachorse) for multiple string replace
+
+```rust
+<+ ./tests/main.rs>
+```

@@ -1,0 +1,25 @@
+[package]
+name = "xsmtp"
+version = "0.1.2"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/xsmtp"
+description = "smtp send mail"
+
+[dependencies]
+anyhow = "1.0.76"
+genv = "0.1.5"
+mail-builder = "0.3.1"
+mail-send = "0.4.3"
+static_init = { version = "1.0.3", features = [
+  "lock_statistics",
+  "parking_lot",
+  "parking_lot_core"
+] }
+tracing = "0.1.40"
+trt = "0.1.21"
+
+[dev-dependencies]
+
+[features]
