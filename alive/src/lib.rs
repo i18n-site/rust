@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
 use aok::{Result, OK};
-use enum_dispatch::enum_dispatch;
 use mysql_macro::mysql_async::prelude::FromRow;
 use static_init::dynamic;
 use xhash::{HashMap, HashSet};

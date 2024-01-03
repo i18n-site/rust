@@ -89,7 +89,6 @@ name = "alive"
 version = "0.1.0"
 dependencies = [
  "aok",
- "enum_dispatch",
  "mysql_async",
  "mysql_macro",
  "phf",
@@ -856,18 +855,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5ffccbb6966c05b32ef8fbac435df276c4ae4d3dc55a8cd0eb9745e6c12f546a"
 dependencies = [
  "heck",
- "proc-macro2",
- "quote",
- "syn 2.0.46",
-]
-
-[[package]]
-name = "enum_dispatch"
-version = "0.3.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f33313078bb8d4d05a2733a94ac4c2d8a0df9a2b84424ebf4f33bfc224a890e"
-dependencies = [
- "once_cell",
  "proc-macro2",
  "quote",
  "syn 2.0.46",
