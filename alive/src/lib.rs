@@ -8,7 +8,8 @@ pub struct Kind {
   pub id: u64,
   pub host_id: u64,
   pub duration: u32,
-  pub min_warn_err: u8,
+  #[allow(non_snake_case)]
+  pub warnErr: u8,
   pub v: String,
 }
 
@@ -43,7 +44,19 @@ pub async fn next() -> Result<()> {
       url_set.insert(w.url_id);
     }
   });
+  dbg!(li);
 
+  let sql = format!(
+    "SELECT id,host_id,duration,warnErr,v FROM kind WHERE id IN ({})",
+    kind_set
+      .clone()
+      .into_iter()
+      .map(|i| i.to_string())
+      .collect::<Vec<String>>()
+      .join(",")
+  );
+
+  dbg!(&sql);
   let kind_li: Vec<Kind> = m::q!(format!(
     "SELECT id,host_id,duration,warnErr,v FROM kind WHERE id IN ({})",
     kind_set
@@ -53,6 +66,6 @@ pub async fn next() -> Result<()> {
       .join(",")
   ));
 
-  dbg!(li);
+  dbg!(kind_li);
   OK
 }
