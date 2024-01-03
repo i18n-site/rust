@@ -16,7 +16,7 @@ macro_rules! dberr {
     let err_type = stringify!($type);
     let msg = format!("DB ERROR {} : {}",err_type,err);
     tracing::warn!(msg);
-    trt::bg(hi::send(err_type,err.clone(),"https://atomgit.com/3ti/rust/blob/main/alive/src/lib.rs#L13"));
+    hi::send(err_type,err.clone(),"https://atomgit.com/3ti/rust/blob/main/alive/src/lib.rs#L13").await;
   }};
 }
 
@@ -52,6 +52,7 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
 
 pub async fn next() -> Result<()> {
   let now = sts::sec();
+  dberr!(WatchMissKind "watch id={} kind_id={}", 3, 1);
 
   let li: Vec<Watch> = q!(
     "SELECT id,host_id,kind_id,dns_type,err,url_id FROM watch WHERE ts<=?",
@@ -121,6 +122,5 @@ pub async fn next() -> Result<()> {
       dberr!(WatchMissKind "watch id={} kind_id={}", i.id, i.kind_id);
     }
   }
-  dberr!(WatchMissKind "watch id={} kind_id={}", 3, 1);
   OK
 }
