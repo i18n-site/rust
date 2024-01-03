@@ -66,7 +66,8 @@ pub async fn errlog(
   let err_count = watch.err + 1;
   let alive = if err_count > 1 {
     todo!();
-    format!(", 持续 5 分钟")
+    let n = 1;
+    format!(", 持续 {n} 分钟")
   } else {
     "".to_owned()
   };
