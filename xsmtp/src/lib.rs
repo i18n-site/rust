@@ -24,7 +24,7 @@ pub async fn async_send(
   subject: impl Into<String>,
   txt: impl Into<String>,
   htm: impl Into<String>,
-) {
+) -> Result<(), mail_send::Error> {
   let subject = subject.into();
   let txt = txt.into();
   let htm = htm.into();
@@ -43,6 +43,7 @@ pub async fn async_send(
   }
   let mut smtp = SMTP.connect().await?;
   smtp.send(mail).await;
+  Ok(())
 }
 
 pub fn send(
