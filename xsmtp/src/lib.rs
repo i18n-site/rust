@@ -20,16 +20,16 @@ pub static SMTP: SmtpClientBuilder<String> = {
 };
 
 pub async fn send(
-  from_name: impl Into<String>,
+  from_name: impl AsRef<str>,
   to: impl Into<Address<'static>>,
-  subject: impl Into<String>,
-  txt: impl Into<String>,
-  htm: impl Into<String>,
+  subject: impl AsRef<str>,
+  txt: impl AsRef<str>,
+  htm: impl AsRef<str>,
 ) -> Result<(), mail_send::Error> {
-  let subject = subject.into();
-  let txt = txt.into();
-  let htm = htm.into();
-  let from_name = from_name.into();
+  let from_name = from_name.as_ref();
+  let subject = subject.as_ref();
+  let txt = txt.as_ref();
+  let htm = htm.as_ref();
   let to = to.into();
 
   let mut mail = MessageBuilder::new()
