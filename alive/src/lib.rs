@@ -6,10 +6,10 @@ use static_init::dynamic;
 use xhash::{HashMap, HashSet};
 use xstr::join;
 
+mod m;
+
 #[dynamic]
 static KIND_HOOK: HashMap<u64, String> = HashMap::from_iter([]);
-
-mod m;
 
 #[derive(Debug, Clone, FromRow)]
 pub struct Kind {
