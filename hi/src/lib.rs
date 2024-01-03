@@ -1,4 +1,4 @@
-use std::string::ToString;
+pub mod lark;
 
 use aok::{Result, OK};
 
@@ -11,7 +11,6 @@ pub async fn send(
   url: impl AsRef<str>,
 ) -> Result<()> {
   let from_name = from_name.as_ref();
-  let to = to.to_string();
   let title = title.as_ref();
   let txt = txt.as_ref();
   let url = url.as_ref();
@@ -19,7 +18,7 @@ pub async fn send(
   let result_li = tokio::join!(
     xsmtp::send(
       from_name,
-      to,
+      TO_MAIL.as_ref(),
       title,
       if url.is_empty() {
         url.to_owned() + "\n\n" + txt
