@@ -1,6 +1,14 @@
 use std::time::Duration;
 
-use reqwest::{Body, Client, IntoUrl, RequestBuilder, StatusCode, Version};
+use aok::Result;
+use reqwest::{Body, Client, IntoUrl, RequestBuilder, StatusCode, Url, Version};
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum ReqError {
+  #[error("{0} {1} {2}")]
+  Status(StatusCode, Url, String),
+}
 
 #[static_init::dynamic]
 pub static REQ: Client = Client::builder()
@@ -10,25 +18,29 @@ pub static REQ: Client = Client::builder()
   .build()
   .unwrap();
 
-pub async fn req(req: RequestBuilder) -> reqwest::Result<String> {
+pub async fn req(url: Url, req: RequestBuilder) -> Result<String> {
   let res = req.version(Version::HTTP_3).send().await?;
   let status = res.status();
   let txt = res.text().await?;
   if status != StatusCode::OK {
-    return Err(reqwest::Error::from((status, txt)));
+    Err(ReqError::Status(status, url, txt).into())
+  } else {
+    Ok(txt)
   }
-  Ok(txt)
 }
 
-pub async fn get(url: impl IntoUrl) -> reqwest::Result<String> {
-  req(REQ.get(url)).await
+pub async fn get(url: impl IntoUrl) -> Result<String> {
+  let url = url.into_url()?;
+  req(url.clone(), REQ.get(url)).await
 }
 
 macro_rules! method {
   ($($method: ident),*) => {
     $(
-    pub async fn $method(url: impl IntoUrl, body:impl Into<Body>) -> reqwest::Result<String> {
-      req(REQ.$method(url).body(body)).await
+    pub async fn $method(url: impl IntoUrl, body:impl Into<Body>) -> Result<String> {
+      let url = url.into_url()?;
+      let r = REQ.$method(url.clone()).body(body);
+      req(url,r).await
     }
     )*
   };
