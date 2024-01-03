@@ -6,8 +6,8 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum ReqError {
-  #[error("{0} {1} {2}")]
-  Status(StatusCode, String, String),
+  #[error("{0} {1}")]
+  Status(StatusCode, String),
 }
 
 #[static_init::dynamic]
@@ -22,7 +22,7 @@ pub async fn req(url: Url, req: RequestBuilder) -> Result<String> {
   let status = res.status();
   let txt = res.text().await?;
   if status != StatusCode::OK {
-    Err(ReqError::Status(status, url.into(), txt).into())
+    Err(ReqError::Status(status, txt).into())
   } else {
     Ok(txt)
   }
