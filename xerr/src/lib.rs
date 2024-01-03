@@ -1,10 +1,15 @@
+pub use tracing;
+
 #[macro_export]
 macro_rules! log {
-  ($($r:expr),*$(,)?) => {{
-    $(
-      if let Err(err) = $r {
-        $create::tracing::error!("{}", err);
-      }
-    )*
+  ($result:expr) => {{
+    if let Err(err) = $result {
+      $crate::tracing::error!("{}", err);
+    }
   }};
+  ($($result:expr),+$(,)?) => {{
+    $(
+      $crate::log!($result);
+    )+
+  }}
 }

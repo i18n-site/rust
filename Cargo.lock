@@ -1370,6 +1370,7 @@ version = "0.1.0"
 dependencies = [
  "aok",
  "tokio",
+ "tracing",
  "wxpush",
  "xerr",
  "xsmtp",
@@ -4703,7 +4704,7 @@ dependencies = [
 
 [[package]]
 name = "xerr"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "tracing",
 ]
