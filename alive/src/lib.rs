@@ -167,7 +167,7 @@ pub async fn next() -> Result<()> {
   let host_map = id_v("host", host_set).await?;
   let url_map = id_v("url", url_set).await?;
 
-  let ing = FuturesUnordered::new();
+  let mut ing = FuturesUnordered::new();
 
   for i in li {
     if let Some(host) = host_map.get(&i.host_id) {
@@ -201,6 +201,8 @@ pub async fn next() -> Result<()> {
       dberr!(WatchMissHost "watch id={} host_id={}", i.id, i.host_id);
     }
   }
-  ing.collect::<Vec<_>>().await;
+
+  while let Some(()) = ing.next().await {}
+
   OK
 }
