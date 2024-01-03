@@ -41,6 +41,12 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
   Ok(HashMap::from_iter(li.into_iter()))
 }
 
+macro_rules! dberr {
+  ($($t:ty),*) => {{
+    tracing::warn!($($t)*);
+  }};
+}
+
 pub async fn next() -> Result<()> {
   let now = sts::sec();
 
@@ -81,7 +87,7 @@ pub async fn next() -> Result<()> {
 
   for i in li {
     if let Some(host) = host_map.get(&i.host_id) {
-      tracing::error!("WatchMissHost: watch id={} host_id={}", i.id, i.host_id);
+      dberr!("WatchMissHost: watch id={} host_id={}", i.id, i.host_id);
     } else {
       continue;
     }
@@ -100,7 +106,7 @@ pub async fn next() -> Result<()> {
         let url = format!("https://{kind_url}/{}/{watch_url}", i.dns_type);
         dbg!(url);
       } else {
-        tracing::error!(
+        dberr!(
           "MissKindUrl: watch id={} kind_id={} url_id={}",
           i.id,
           i.kind_id,
@@ -108,7 +114,7 @@ pub async fn next() -> Result<()> {
         );
       }
     } else {
-      tracing::error!("MissKind: watch id={} kind_id={}", i.id, i.kind_id);
+      dberr!("MissKind: watch id={} kind_id={}", i.id, i.kind_id);
     }
   }
   OK
