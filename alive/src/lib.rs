@@ -3,6 +3,7 @@
 use aok::{Result, OK};
 use mysql_macro::mysql_async::prelude::FromRow;
 use xhash::HashSet;
+use xstr::join;
 
 mod m;
 
@@ -50,11 +51,7 @@ pub async fn next() -> Result<()> {
 
   let kind_li: Vec<Kind> = m::q!(format!(
     "SELECT id,host_id,duration,warnErr,v FROM kind WHERE id IN ({})",
-    kind_set
-      .into_iter()
-      .map(|i| i.to_string())
-      .collect::<Vec<String>>()
-      .join(",")
+    join(kind_set.into_iter())
   ));
 
   dbg!(kind_li);
