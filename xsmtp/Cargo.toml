@@ -21,6 +21,7 @@ tracing = "0.1.40"
 trt = "0.1.21"
 
 [dev-dependencies]
+anyhow = "1.0.79"
 tokio = { version = "1.35.1", features = ["macros", "rt", "rt-multi-thread", "time", "sync"] }
 
 [features]
