@@ -63,7 +63,9 @@ pub async fn errlog(
   let url = url.as_ref();
 
   let err_count = watch.err + 1;
-  if err_count > kind.warnErr as _ {
+  let warn_err = kind.warnErr as _;
+  if err_count > warn_err {
+    let should_error = err_count - warn_err;
     let alive = if err_count > 1 {
       todo!();
       let n = 1;
