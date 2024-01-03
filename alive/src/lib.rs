@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-use std::collections::HashMap;
-
 use aok::{Result, OK};
 use mysql_macro::mysql_async::prelude::FromRow;
 use xhash::{HashMap, HashSet};
@@ -75,7 +73,14 @@ pub async fn next() -> Result<()> {
   dbg!(&host_map, &url_map, &kind_map);
 
   for i in li {
-    dbg!(&i, host_map.get(&i.url_id), kind_map.get(&i.kind_id));
+    if let Some(kind) = kind_map.get(&i.kind_id) {
+      let url = if i.url_id == 0 {
+        url_map.get(&i.url_id).unwrap_or("")
+      } else {
+        ""
+      };
+      dbg!(&i, url, kind);
+    }
   }
   OK
 }
