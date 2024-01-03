@@ -77,7 +77,6 @@ pub async fn send(
     .await?;
 
   let text = res.text().await?;
-  dbg!(&text);
   let response: Response = sonic_rs::from_str(&text)?;
   if response.code != SUCCESS {
     return Err(WxPushError::Response(response))?;

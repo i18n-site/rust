@@ -1369,7 +1369,6 @@ name = "hi"
 version = "0.1.0"
 dependencies = [
  "aok",
- "genv 0.1.5",
  "wxpush",
  "xsmtp",
 ]
@@ -4676,7 +4675,7 @@ dependencies = [
 
 [[package]]
 name = "wxpush"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "anyhow",
  "const-str",

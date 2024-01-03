@@ -9,7 +9,6 @@ description = "hi with mail & wxpusher"
 
 [dependencies]
 aok = { version = "0.1.2", path = "../aok" }
-genv = { version = "0.1.5", path = "../genv" }
 wxpush = { version = "0.1.6", path = "../wxpush" }
 xsmtp = { version = "0.1.2", path = "../xsmtp" }
 
