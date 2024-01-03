@@ -7,29 +7,9 @@ use static_init::dynamic;
 use xhash::{HashMap, HashSet};
 use xstr::join;
 
+mod hook;
+use hook::hook;
 mod m;
-
-pub async fn smtp() -> Result<()> {
-  OK
-}
-
-macro_rules! run {
-  ($($fn:ident),*) => {
-    pub async fn run(name: &str) -> Result<bool> {
-      match name {
-        $(
-          stringify!($fn) => {
-            $fn().await?;
-            Ok(true)
-          }
-        ),*
-        _ => Ok(false),
-      }
-    }
-  };
-}
-
-run!(smtp);
 
 #[derive(Debug, Clone, FromRow)]
 pub struct Kind {
