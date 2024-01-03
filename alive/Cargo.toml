@@ -9,7 +9,7 @@ description = "use mysql to check is service alive"
 
 [dependencies]
 aok = { version = "0.1.2", path = "../aok" }
-hi = { version = "0.1.6", path = "../hi" }
+hi = { version = "0.1.7", path = "../hi" }
 mysql_async = "0.33.0"
 mysql_macro = { version = "0.1.6", path = "../mysql_macro" }
 reqwest = { version = "0.11.23", features = ["http3"] }
