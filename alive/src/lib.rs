@@ -2,6 +2,7 @@
 
 use aok::{Result, OK};
 use hook::hook;
+use ireq::ReqError;
 use mysql_macro::{mysql_async::prelude::FromRow, q};
 use xhash::{HashMap, HashSet};
 use xstr::join;
@@ -103,8 +104,14 @@ pub async fn next() -> Result<()> {
 
         if let Some(kind_url) = url_map.get(&kind.url_id) {
           let url = format!("https://{kind_url}/{}/{host}/{watch_url}", i.dns_type);
-          let r = ireq::get(&url).await?;
-          dbg!((url, r));
+          // todo 并发
+          if let Err(err) = ireq::get(&url).await {
+            if let Some(ReqError::Status(code, url, txt)) = err.downcast_ref::<ReqError>() {
+              dbg!(code, url, txt);
+            } else {
+              dbg!((url, err));
+            }
+          }
         } else {
           dberr!(
             KindMissUrl
