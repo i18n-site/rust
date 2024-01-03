@@ -4,7 +4,7 @@ async fn test() -> anyhow::Result<()> {
   while title.len() < 4000 {
     title.push_str(title.clone().as_str());
   }
-  let mut body = "正文\n测试\n".to_owned();
+  let mut body = "12正文\n测试\n".to_owned();
   while body.len() < 999999 {
     body.push_str(body.clone().as_str());
   }
