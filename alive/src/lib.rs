@@ -16,7 +16,7 @@ macro_rules! dberr {
     let err_type = stringify!($type);
     let msg = format!("DB ERROR {} : {}",err_type,err);
     tracing::warn!(msg);
-    xerr::log(hi::send(err_type,err.clone(),"https://atomgit.com/3ti/rust/blob/main/alive/src/lib.rs#L13").await);
+    hi::send(err_type,err.clone(),"https://atomgit.com/3ti/rust/blob/main/alive/src/lib.rs#L13").await;
   }};
 }
 
