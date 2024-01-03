@@ -1,6 +1,9 @@
+#![allow(non_snake_case)]
+
 use aok::{Result, OK};
 use mysql_macro::mysql_async::prelude::FromRow;
 use xhash::HashSet;
+
 mod m;
 
 #[derive(Debug, Clone, FromRow)]
@@ -8,7 +11,6 @@ pub struct Kind {
   pub id: u64,
   pub host_id: u64,
   pub duration: u32,
-  #[allow(non_snake_case)]
   pub warnErr: u8,
   pub v: String,
 }
