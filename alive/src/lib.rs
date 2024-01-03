@@ -75,7 +75,7 @@ pub async fn next() -> Result<()> {
   for i in li {
     if let Some(kind) = kind_map.get(&i.kind_id) {
       let url = if i.url_id == 0 {
-        url_map.get(&i.url_id).unwrap_or("")
+        url_map.get(&i.url_id).map(|i| i.as_str()).unwrap_or("")
       } else {
         ""
       };
