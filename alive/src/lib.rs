@@ -105,6 +105,7 @@ pub async fn errlog(
   let watch_id = watch.id;
 
   let mut title = format!("❌ {kind_v} {host} ( IPV{dns_type} 第 {err_count} 次");
+
   if should_send(err_count, kind.warnErr) {
     let alive = alive(err_count, watch_id).await?;
     title = format!("{title}{alive} )");
