@@ -12,6 +12,7 @@ aok = { version = "0.1.2", path = "../aok" }
 mysql_async = "0.33.0"
 mysql_macro = { version = "0.1.6", path = "../mysql_macro" }
 sts = { version = "0.1.13", path = "../sts" }
+tracing = "0.1.40"
 xhash = { version = "0.1.3", path = "../xhash" }
 xstr = { version = "0.1.4", path = "../xstr" }
 

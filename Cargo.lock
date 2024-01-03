@@ -93,6 +93,7 @@ dependencies = [
  "mysql_macro",
  "sts",
  "tokio",
+ "tracing",
  "xhash",
  "xstr 0.1.6",
 ]
