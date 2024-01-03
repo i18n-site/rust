@@ -42,7 +42,7 @@ pub async fn async_send(
     mail = mail.html_body(htm);
   }
   let mut smtp = SMTP.connect().await?;
-  smtp.send(mail).await;
+  smtp.send(mail).await?;
   Ok(())
 }
 
@@ -53,5 +53,10 @@ pub fn send(
   txt: impl Into<String>,
   htm: impl Into<String>,
 ) {
+  let subject = subject.into();
+  let txt = txt.into();
+  let htm = htm.into();
+  let from_name = from_name.into();
+  let to = to.into();
   trt::bg(async_send(from_name, to, subject, txt, htm));
 }
