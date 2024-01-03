@@ -32,6 +32,6 @@ pub async fn send(
   let msg = json!({"msg_type":"post","content":{"post":{"zh_cn":{"title":title,"content":[li]}}}});
 
   let url: &str = LARK_BOT.as_ref();
-  let res = ireq::post(url, to_string(&msg)?).await?;
+  ireq::post(url, to_string(&msg)?).await?;
   OK
 }

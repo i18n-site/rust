@@ -12,10 +12,8 @@ pub static REQ: Client = Client::builder()
 
 pub async fn req(req: RequestBuilder) -> reqwest::Result<String> {
   let res = req.version(Version::HTTP_3).send().await?;
-  let status = res.status();
-  let txt = res.text().await?;
-  if status != StatusCode::OK {}
-  Ok(txt)
+  let res = res.error_for_status()?;
+  Ok(res.text().await?)
 }
 
 pub async fn get(url: impl IntoUrl) -> reqwest::Result<String> {
