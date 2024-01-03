@@ -1,9 +1,4 @@
-/*
-#[test]
-fn test() {
+#[tokio::test]
+async fn test() {
+  async_send().await;
 }
-
-#[cfg(feature = "macro")]
-mod test_macro {
-}
-*/

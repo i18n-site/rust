@@ -18,7 +18,7 @@ pub static SMTP: SmtpClientBuilder<String> = {
     .credentials((smtp_user, smtp_password))
 };
 
-pub fn send(
+pub async fn async_send(
   from_name: impl Into<String>,
   to: impl Into<Address<'static>>,
   subject: impl Into<String>,
@@ -30,18 +30,27 @@ pub fn send(
   let htm = htm.into();
   let from_name = from_name.into();
   let to = to.into();
-  trt::bg(async move {
-    let mut mail = MessageBuilder::new()
-      .from((from_name.as_str(), SMTP_FROM.as_str()))
-      .to(to)
-      .subject(subject);
-    if !txt.is_empty() {
-      mail = mail.text_body(txt);
-    }
-    if !htm.is_empty() {
-      mail = mail.html_body(htm);
-    }
-    let mut smtp = SMTP.connect().await?;
-    smtp.send(mail).await
-  });
+
+  let mut mail = MessageBuilder::new()
+    .from((from_name.as_str(), SMTP_FROM.as_str()))
+    .to(to)
+    .subject(subject);
+  if !txt.is_empty() {
+    mail = mail.text_body(txt);
+  }
+  if !htm.is_empty() {
+    mail = mail.html_body(htm);
+  }
+  let mut smtp = SMTP.connect().await?;
+  smtp.send(mail).await;
+}
+
+pub fn send(
+  from_name: impl Into<String>,
+  to: impl Into<Address<'static>>,
+  subject: impl Into<String>,
+  txt: impl Into<String>,
+  htm: impl Into<String>,
+) {
+  trt::bg(async_send(from_name, to, subject, txt, htm));
 }
