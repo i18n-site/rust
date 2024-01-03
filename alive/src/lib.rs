@@ -2,8 +2,12 @@
 
 use aok::{Result, OK};
 use mysql_macro::mysql_async::prelude::FromRow;
+use static_init::dynamic;
 use xhash::{HashMap, HashSet};
 use xstr::join;
+
+#[dynamic]
+static KIND_HOOK: HashMap<u64, String> = HashMap::from_iter([]);
 
 mod m;
 

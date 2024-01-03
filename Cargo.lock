@@ -91,6 +91,7 @@ dependencies = [
  "aok",
  "mysql_async",
  "mysql_macro",
+ "static_init",
  "sts",
  "tokio",
  "tracing",
