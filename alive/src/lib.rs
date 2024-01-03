@@ -52,7 +52,6 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
 
 pub async fn next() -> Result<()> {
   let now = sts::sec();
-  dberr!(WatchMissKind "watch id={} kind_id={}", 3, 1);
 
   let li: Vec<Watch> = q!(
     "SELECT id,host_id,kind_id,dns_type,err,url_id FROM watch WHERE ts<=?",
@@ -87,10 +86,10 @@ pub async fn next() -> Result<()> {
   let kind_map = HashMap::<u64, Kind>::from_iter(kind_li.into_iter().map(|k| (k.id, k)));
   let host_map = id_v("host", host_set).await?;
   let url_map = id_v("url", url_set).await?;
-  dbg!(&host_map, &url_map, &kind_map);
 
   for i in li {
     if let Some(host) = host_map.get(&i.host_id) {
+      dbg!((&i.kind_id, &kind_map, kind_map.get(&i.kind_id)));
       if let Some(kind) = kind_map.get(&i.kind_id) {
         let watch_url = if i.url_id > 0 {
           url_map.get(&i.url_id).map(|i| i.as_str()).unwrap_or("")
