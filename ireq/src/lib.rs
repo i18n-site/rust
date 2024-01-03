@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use reqwest::{Body, Client, IntoUrl, Response, Version};
+use reqwest::{Body, Client, IntoUrl, Request, RequestBuilder, Response, Version};
 
 #[static_init::dynamic]
 pub static REQ: Client = Client::builder()
@@ -10,17 +10,21 @@ pub static REQ: Client = Client::builder()
   .build()
   .unwrap();
 
-pub async fn get(url: impl IntoUrl) -> reqwest::Result<Response> {
-  REQ.get(url).version(Version::HTTP_3).send().await
+pub async fn req(req: RequestBuilder) -> reqwest::Result<String> {
+  let res = req.version(Version::HTTP_3).send().await?;
+  let txt = res.text().await?;
+  Ok(txt)
 }
+
+pub async fn get(url: impl IntoUrl) -> reqwest::Result<String> {
+  req(REQ.get(url)).await
+}
+
 macro_rules! method {
   ($($method: ident),*) => {
     $(
-    pub async fn $method(url: impl IntoUrl, body:impl Into<Body>) -> reqwest::Result<Response> {
-      REQ.$method(url).body(body)
-        .version(Version::HTTP_3)
-        .send()
-        .await
+    pub async fn $method(url: impl IntoUrl, body:impl Into<Body>) -> reqwest::Result<String> {
+      req(REQ.$method(url).body(body)).await
     }
     )*
   };
