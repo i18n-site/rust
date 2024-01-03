@@ -31,6 +31,9 @@ pub struct Watch {
 }
 
 pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, String>> {
+  if id_set.is_empty() {
+    return Ok(Default::default());
+  }
   let li: Vec<(u64, String)> = m::q!(format!(
     "SELECT id,v FROM {table} WHERE id IN ({})",
     join(id_set)
@@ -78,7 +81,7 @@ pub async fn next() -> Result<()> {
 
   for i in li {
     if let Some(kind) = kind_map.get(&i.kind_id) {
-      let url = if i.url_id > 0 {
+      let watch_url = if i.url_id > 0 {
         url_map.get(&i.url_id).map(|i| i.as_str()).unwrap_or("")
       } else {
         ""
@@ -88,7 +91,17 @@ pub async fn next() -> Result<()> {
         continue;
       }
 
-      dbg!((&i, url, kind));
+      if let Some(kind_url) = url_map.get(&kind.url_id) {
+        let url = format!("https://{kind_url}/{}/{watch_url}", i.dns_type);
+        dbg!(url);
+      } else {
+        tracing::error!(
+          "MissKindUrl: watch id={} kind_id={} url_id={}",
+          i.id,
+          i.kind_id,
+          i.url_id
+        );
+      }
     } else {
       tracing::error!("MissKind: watch id={} kind_id={}", i.id, i.kind_id);
     }
