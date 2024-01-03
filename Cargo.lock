@@ -1369,6 +1369,7 @@ name = "hi"
 version = "0.1.1"
 dependencies = [
  "aok",
+ "reqwest",
  "tokio",
  "tracing",
  "wxpush",
