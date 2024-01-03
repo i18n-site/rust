@@ -45,15 +45,20 @@ pub enum WxPushError {
 
 pub const SUCCESS: i64 = 1000;
 
-fn cut(s: &str, max_length: usize) -> String {
+fn cut(s: impl AsRef<str>, max_length: usize) -> String {
+  let s = s.as_ref();
   if s.len() > max_length {
-    s[..max_length].into()
+    s.chars().into_iter().take(max_length).collect::<String>()
   } else {
-    s.into()
+    s.to_owned()
   }
 }
 
-pub async fn send(url: &str, subject: &str, content: &str) -> Result<()> {
+pub async fn send(
+  url: impl AsRef<str>,
+  subject: impl AsRef<str>,
+  content: impl AsRef<str>,
+) -> Result<()> {
   let content = cut(content, 40000);
   let subject = cut(subject, 100);
   let url = cut(url, 400);

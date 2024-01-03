@@ -1,17 +1,17 @@
 #[tokio::test]
 async fn test() -> anyhow::Result<()> {
-  let mut title = "测试推送";
+  let mut title = "测试推送".to_owned();
   while title.len() < 4000 {
-    title += title.as_str();
+    title.push(title);
   }
-  let mut body = "正文\n测试";
+  let mut body = "正文\n测试\n".to_owned();
   while body.len() < 999999 {
-    body += body.as_str();
+    body.push(body);
   }
 
-  let mut url = "https://atomgit.com/3ti";
+  let mut url = "https://atomgit.com/3ti".to_owned();
   while url.len() < 4000 {
-    url += url.as_str();
+    url.push("123456790");
   }
-  Ok(wxpush::send(url, title, body).await?)
+  Ok(wxpush::send(&url, &title, &body).await?)
 }
