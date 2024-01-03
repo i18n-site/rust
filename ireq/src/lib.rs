@@ -13,15 +13,15 @@ pub enum ReqError {
 #[static_init::dynamic]
 pub static REQ: Client = Client::builder()
   .timeout(Duration::from_secs(60))
-  .http3_prior_knowledge()
   .danger_accept_invalid_certs(true)
   .build()
   .unwrap();
 
 pub async fn req(url: Url, req: RequestBuilder) -> Result<String> {
-  let res = req.version(Version::HTTP_3).send().await?;
+  let res = req.send().await?;
   let status = res.status();
   let txt = res.text().await?;
+  dbg!(status);
   if status != StatusCode::OK {
     Err(ReqError::Status(status, url, txt).into())
   } else {

@@ -103,8 +103,8 @@ pub async fn next() -> Result<()> {
 
         if let Some(kind_url) = url_map.get(&kind.url_id) {
           let url = format!("https://{kind_url}/{}/{host}/{watch_url}", i.dns_type);
-          let r = ireq::get(&url).await;
-          dbg!(url);
+          let r = ireq::get(&url).await?;
+          dbg!((url, r));
         } else {
           dberr!(
             KindMissUrl
