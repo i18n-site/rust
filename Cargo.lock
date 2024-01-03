@@ -1369,7 +1369,6 @@ name = "hi"
 version = "0.1.1"
 dependencies = [
  "aok",
- "genv 0.1.5",
  "tokio",
  "tracing",
  "wxpush",
