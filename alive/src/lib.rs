@@ -136,6 +136,7 @@ pub async fn next() -> Result<()> {
   if li.is_empty() {
     return OK;
   }
+
   let mut kind_set = HashSet::default();
   let mut host_set = HashSet::default();
   let mut url_set = HashSet::default();
