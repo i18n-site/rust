@@ -1,8 +1,10 @@
 #![allow(non_snake_case)]
 
+use std::collections::HashMap;
+
 use aok::{Result, OK};
 use mysql_macro::mysql_async::prelude::FromRow;
-use xhash::HashSet;
+use xhash::{HashMap, HashSet};
 use xstr::join;
 
 mod m;
@@ -10,7 +12,7 @@ mod m;
 #[derive(Debug, Clone, FromRow)]
 pub struct Kind {
   pub id: u64,
-  pub host_id: u64,
+  pub url_id: u64,
   pub duration: u32,
   pub warnErr: u8,
   pub v: String,
@@ -24,6 +26,14 @@ pub struct Watch {
   pub dns_type: u8,
   pub err: u32,
   pub url_id: u64,
+}
+
+pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, String>> {
+  let li: Vec<(u64, String)> = m::q!(format!(
+    "SELECT id,v FROM {table} WHERE id IN ({})",
+    join(id_set)
+  ));
+  Ok(HashMap::from_iter(li.into_iter()))
 }
 
 pub async fn next() -> Result<()> {
@@ -47,19 +57,25 @@ pub async fn next() -> Result<()> {
       url_set.insert(w.url_id);
     }
   });
-  dbg!(li);
 
   let kind_li: Vec<Kind> = m::q!(format!(
-    "SELECT id,host_id,duration,warnErr,v FROM kind WHERE id IN ({})",
+    "SELECT id,url_id,duration,warnErr,v FROM kind WHERE id IN ({})",
     join(kind_set)
   ));
 
   kind_li.iter().for_each(|k| {
-    if k.host_id != 0 {
-      host_set.insert(k.host_id);
+    if k.url_id != 0 {
+      url_set.insert(k.url_id);
     }
   });
 
-  dbg!(kind_li);
+  let kind_map = HashMap::<u64, Kind>::from_iter(kind_li.into_iter().map(|k| (k.id, k)));
+  let host_map = id_v("host", host_set).await?;
+  let url_map = id_v("url", url_set).await?;
+  dbg!(&host_map, &url_map, &kind_map);
+
+  for i in li {
+    dbg!(&i, host_map.get(&i.url_id), kind_map.get(&i.kind_id));
+  }
   OK
 }
