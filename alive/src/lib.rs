@@ -2,7 +2,7 @@
 
 use aok::{Result, OK};
 use hook::hook;
-use mysql_macro::mysql_async::prelude::FromRow;
+use mysql_macro::{mysql_async::prelude::FromRow, q};
 use xhash::{HashMap, HashSet};
 use xstr::join;
 
