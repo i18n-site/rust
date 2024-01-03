@@ -48,17 +48,6 @@ pub async fn next() -> Result<()> {
   });
   dbg!(li);
 
-  let sql = format!(
-    "SELECT id,host_id,duration,warnErr,v FROM kind WHERE id IN ({})",
-    kind_set
-      .clone()
-      .into_iter()
-      .map(|i| i.to_string())
-      .collect::<Vec<String>>()
-      .join(",")
-  );
-
-  dbg!(&sql);
   let kind_li: Vec<Kind> = m::q!(format!(
     "SELECT id,host_id,duration,warnErr,v FROM kind WHERE id IN ({})",
     kind_set

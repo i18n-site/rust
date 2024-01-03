@@ -48,3 +48,7 @@ pub fn truncate(input: impl Into<String>, n: usize) -> String {
 pub fn truncate255(input: impl Into<String>) -> String {
   truncate(input, 255)
 }
+
+pub fn join<S: std::string::ToString>(li: impl Iterator<Item = String>) -> String {
+  li.map(|i| i.to_string()).collect::<Vec<String>>().join(",")
+}
