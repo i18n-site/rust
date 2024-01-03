@@ -35,8 +35,6 @@ pub async fn send(
       url
     )
   );
-  for i in result_li {
-    dbg!(i);
-  }
+  xerr::log!(result_li.0, result_li.1);
   OK
 }
