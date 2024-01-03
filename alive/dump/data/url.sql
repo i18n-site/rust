@@ -21,7 +21,7 @@
 
 LOCK TABLES `url` WRITE;
 /*!40000 ALTER TABLE `url` DISABLE KEYS */;
-INSERT INTO `url` VALUES (9,'3ti.site.s2-web.dogedns.com/u-01.eu.org'),(10,'i18n.site.a.bdydns.com/user0.cf');
+INSERT INTO `url` VALUES (9,_binary '3ti.site.s2-web.dogedns.com/u-01.eu.org'),(10,_binary 'i18n.site.a.bdydns.com/user0.cf');
 /*!40000 ALTER TABLE `url` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -34,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-03 13:53:51
+-- Dump completed on 2024-01-03 14:52:46
