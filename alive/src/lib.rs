@@ -58,7 +58,6 @@ pub async fn errlog(
   txt: impl AsRef<str>,
   url: impl AsRef<str>,
 ) {
-  let kind_v = kind.v;
   let host = host.as_ref();
   let txt = txt.as_ref();
   let url = url.as_ref();
