@@ -3,6 +3,7 @@
 use std::string::ToString;
 
 use aok::{Result, OK};
+use futures::{stream::FuturesUnordered, StreamExt};
 use hook::hook;
 use ireq::ReqError;
 use mysql_macro::{mysql_async::prelude::FromRow, q};
@@ -102,7 +103,7 @@ pub async fn errlog(
 
 pub async fn curl(
   kind: &Kind,
-  watch: &Watch,
+  watch: Watch,
   host: impl ToString,
   kind_url: impl ToString,
   watch_url: impl ToString,
@@ -166,6 +167,8 @@ pub async fn next() -> Result<()> {
   let host_map = id_v("host", host_set).await?;
   let url_map = id_v("url", url_set).await?;
 
+  let ing = FuturesUnordered::new();
+
   for i in li {
     if let Some(host) = host_map.get(&i.host_id) {
       if let Some(kind) = kind_map.get(&i.kind_id) {
@@ -181,7 +184,7 @@ pub async fn next() -> Result<()> {
         }
 
         if let Some(kind_url) = url_map.get(&kind.url_id) {
-          curl(&kind, &i, host, kind_url, watch_url).await;
+          ing.push(curl(&kind, i, host, kind_url, watch_url));
         } else {
           dberr!(
             KindMissUrl
@@ -198,5 +201,6 @@ pub async fn next() -> Result<()> {
       dberr!(WatchMissHost "watch id={} host_id={}", i.id, i.host_id);
     }
   }
+  ing.collect::<Vec<_>>().await;
   OK
 }

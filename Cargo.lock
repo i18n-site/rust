@@ -89,6 +89,7 @@ name = "alive"
 version = "0.1.0"
 dependencies = [
  "aok",
+ "futures",
  "hi",
  "ireq",
  "loginit",
