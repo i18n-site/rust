@@ -1,3 +1,5 @@
+use aok::{Result, OK};
+
 pub async fn smtp() -> Result<()> {
   OK
 }
