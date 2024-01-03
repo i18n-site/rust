@@ -4647,7 +4647,7 @@ dependencies = [
 
 [[package]]
 name = "xmail"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "punycode",
  "xstr 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
