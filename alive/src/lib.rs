@@ -104,13 +104,15 @@ pub async fn errlog(
   let err_count = watch.err + 1;
   let watch_id = watch.id;
 
-  let title = format!("❌ {kind_v} {host} ( IPV{dns_type} 第 {err_count} 次");
-  tracing::warn!("{title} )\n{url}\n{txt}\n",);
+  let mut title = format!("❌ {kind_v} {host} ( IPV{dns_type} 第 {err_count} 次");
   if should_send(err_count, kind.warnErr) {
     let alive = alive(err_count, watch_id).await?;
-    let title = format!("{title}{alive} )");
+    title = format!("{title}{alive} )");
     hi::send(title, txt, url).await;
+  } else {
+    title += " )";
   }
+  tracing::warn!("{title}\n{url}\n{txt}\n",);
   exe!(format!("UPDATE watch SET err=err+1 WHERE id={watch_id}"));
   OK
 }
