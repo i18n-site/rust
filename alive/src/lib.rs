@@ -53,7 +53,10 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
 
 pub fn should_send(err_count: u32, warn_err: u8) -> bool {
   let warn_err = warn_err as _;
-  if err_count > warn_err {}
+  if err_count > warn_err {
+    true
+  }
+  false
 }
 
 pub async fn errlog(
