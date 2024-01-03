@@ -50,7 +50,7 @@ pub fn word_reverse(input: &str, split: &str) -> String {
 //   truncate(input, 255)
 // }
 
-pub fn cut255<'a>(s: &'a str, max_length: usize) -> &'a str {
+pub fn cut255<'a>(s: &'a str) -> &'a str {
   cut(s, 255)
 }
 
