@@ -9,7 +9,7 @@ pub async fn send(
   txt: impl AsRef<str>,
   url: impl AsRef<str>,
 ) -> Result<()> {
-  let name = NAME.as_ref();
+  let name: &str = NAME.as_ref();
   let title = title.as_ref();
   let txt = txt.as_ref();
   let url = url.as_ref();
