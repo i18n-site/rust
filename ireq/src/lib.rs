@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use reqwest::{Body, Client, IntoUrl, RequestBuilder, Version};
+use reqwest::{Body, Client, IntoUrl, RequestBuilder, StatusCode, Version};
 
 #[static_init::dynamic]
 pub static REQ: Client = Client::builder()
@@ -12,8 +12,9 @@ pub static REQ: Client = Client::builder()
 
 pub async fn req(req: RequestBuilder) -> reqwest::Result<String> {
   let res = req.version(Version::HTTP_3).send().await?;
+  let status = res.status();
   let txt = res.text().await?;
-  if res.status() != StatusCode::OK {}
+  if status != StatusCode::OK {}
   Ok(txt)
 }
 
