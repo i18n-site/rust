@@ -121,5 +121,6 @@ pub async fn next() -> Result<()> {
       dberr!(WatchMissKind "watch id={} kind_id={}", i.id, i.kind_id);
     }
   }
+  dberr!(WatchMissKind "watch id={} kind_id={}", 3, 1);
   OK
 }
