@@ -6,7 +6,7 @@ mod hook;
 use hook::hook;
 mod m;
 
-use aok::{anyhow, Result, OK};
+use aok::{Result, OK};
 use mysql_macro::mysql_async::prelude::FromRow;
 use xhash::{HashMap, HashSet};
 use xstr::join;
