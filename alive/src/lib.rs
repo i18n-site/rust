@@ -9,9 +9,14 @@ use xstr::join;
 
 mod m;
 
+pub async fn smtp() {}
+
 pub async fn run(name: &str) -> Result<bool> {
   match name {
-    "smtp" => Ok(true),
+    "smtp" => {
+      smtp().await?;
+      Ok(true)
+    }
     _ => Ok(false),
   }
 }
