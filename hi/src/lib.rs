@@ -10,7 +10,7 @@ pub async fn send(
   let txt = txt.as_ref().to_owned();
   let url = url.as_ref();
 
-  tokio::join!(
+  let result_li = tokio::join!(
     xsmtp::send(
       from_name,
       title,
@@ -21,6 +21,14 @@ pub async fn send(
       },
       "",
     ),
-    wxpush::send(title, txt, url)
-  )
+    wxpush::send(
+      if from_name.is_empty() {
+        title.to_owned()
+      } else {
+        from_name.to_owned() + " " + title
+      },
+      txt,
+      url
+    )
+  );
 }
