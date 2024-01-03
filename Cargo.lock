@@ -96,7 +96,7 @@ dependencies = [
  "tokio",
  "tracing",
  "xhash",
- "xstr 0.1.6",
+ "xstr 0.1.8",
 ]
 
 [[package]]
@@ -4705,7 +4705,7 @@ name = "xmail"
 version = "0.1.6"
 dependencies = [
  "punycode",
- "xstr 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "xstr 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "xtld",
 ]
 
@@ -4743,14 +4743,14 @@ version = "0.1.8"
 name = "xstr"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6ea03f3e0e05d57f11eed54ef461147c6a50b903150d87d364570eb83d307770"
+checksum = "8a34eb9fc7fa6f164a26e6f054299ecfd720dd0d52f941fa4afd06c6dc288d1e"
 
 [[package]]
 name = "xtld"
 version = "0.1.1"
 dependencies = [
  "psl",
- "xstr 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "xstr 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

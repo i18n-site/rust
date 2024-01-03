@@ -1,20 +1,20 @@
 #![feature(let_chains)]
-use xstr::truncate255 as truncate;
+use xstr::cut255 as cut;
 
 pub fn user_host(mail: impl AsRef<str>) -> (String, String) {
   let mail = mail.as_ref();
   let user;
 
   if let Some(p) = mail.find('@') {
-    user = truncate(mail[..p].to_owned());
+    user = cut(&mail[..p]).to_owned();
     if mail.len() > p {
-      return (user, truncate(&mail[p + 1..]));
+      return (user, cut(&mail[p + 1..]).into());
     }
   } else {
     user = "".to_owned();
   }
 
-  (user, truncate(mail))
+  (user, cut(mail).into())
 }
 
 pub fn norm_user_host(mail: impl AsRef<str>) -> (String, String) {
