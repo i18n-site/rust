@@ -84,7 +84,7 @@ pub async fn errlog(
   let url = url.as_ref();
   let dns_type = watch.dns_type;
 
-  tracing::warn!("❌ {} {} IPV{}\n{}\n{}", kind_v, host, dns_type, url, txt);
+  tracing::warn!("❌ IPV{} {} {}\n{}\n{}", dns_type, kind_v, host, url, txt);
   // errlog(kind, host, watch, txt, url);
   let err_count = watch.err + 1;
   if should_send(err_count, kind.warnErr) {
