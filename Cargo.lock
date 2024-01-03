@@ -92,7 +92,6 @@ dependencies = [
  "mysql_async",
  "mysql_macro",
  "phf",
- "static_init",
  "sts",
  "tokio",
  "tracing",

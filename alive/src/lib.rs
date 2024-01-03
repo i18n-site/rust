@@ -2,7 +2,6 @@
 
 use aok::{Result, OK};
 use mysql_macro::mysql_async::prelude::FromRow;
-use static_init::dynamic;
 use xhash::{HashMap, HashSet};
 use xstr::join;
 
