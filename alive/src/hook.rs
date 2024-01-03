@@ -10,7 +10,7 @@ macro_rules! hook {
       match name {
         $(
           stringify!($fn) => {
-            watch($fn().await).await;
+            create::watch($fn().await).await;
             true
           }
         ),*
