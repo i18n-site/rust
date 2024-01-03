@@ -51,6 +51,27 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
   Ok(HashMap::from_iter(li.into_iter()))
 }
 
+pub async fn errlog(
+  watch: &Watch,
+  title: impl AsRef<str>,
+  txt: impl AsRef<str>,
+  url: impl AsRef<str>,
+) {
+  let title = title.as_ref();
+  let txt = txt.as_ref();
+  let url = url.as_ref();
+
+  let err_count = watch.err + 1;
+  let alive = if err_count > 1 {
+    format!("持续 5 分钟")
+  } else {
+    "".to_owned()
+  };
+
+  let title = format!("❌ 第 {err_count} 次{alive} : {title}");
+  dbg!((title, url, txt));
+}
+
 pub async fn next() -> Result<()> {
   let now = sts::sec();
 
@@ -109,15 +130,9 @@ pub async fn next() -> Result<()> {
           let url = format!("https://{kind_url}/{}/{host}/{watch_url}", dns_type);
           // todo 并发
           if let Err(err) = ireq::get(&url).await {
-            let err_count = i.err + 1;
-            let alive = if err_count > 1 {
-              format!("持续 5 分钟")
-            } else {
-              "".to_owned()
-            };
-            let title = format!("❌ 第 {err_count} 次{alive} : {host} {kind_v} IPV{dns_type}");
+            let title = format!("{host} {kind_v} IPV{dns_type}");
             if let Some(ReqError::Status(code, url, txt)) = err.downcast_ref::<ReqError>() {
-              dbg!((title, code, url, txt));
+              errlog(&i, title, txt, url).await;
             } else {
               dbg!((title, url, err));
             }
