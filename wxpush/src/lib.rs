@@ -67,7 +67,6 @@ pub async fn send(
   content: impl AsRef<str>,
 ) -> Result<()> {
   let content = cut(content.as_ref(), 40000);
-  dbg!(content.len());
   let subject = cut(subject.as_ref(), 100);
   let url = cut(url.as_ref(), 400);
 
