@@ -51,12 +51,17 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
   Ok(HashMap::from_iter(li.into_iter()))
 }
 
+pub fn is_power_of_two(n: u32) -> bool {
+  (n != 0) && ((n & (n - 1)) == 0)
+}
+
 pub fn should_send(err_count: u32, warn_err: u8) -> bool {
   let warn_err = warn_err as _;
   if err_count > warn_err {
-    true
+    is_power_of_two(err_count - warn_err)
+  } else {
+    false
   }
-  false
 }
 
 pub async fn errlog(
