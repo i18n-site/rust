@@ -82,7 +82,11 @@ pub async fn next() -> Result<()> {
         url_map.get(&i.url_id).map(|i| i.as_str()).unwrap_or("")
       } else {
         ""
+      };
+      if hook(&kind.v).await? {
+        continue;
       }
+
       dbg!((&i, url, kind));
     } else {
       tracing::error!("MissKind: watch id={} kind_id={}", i.id, i.kind_id);
