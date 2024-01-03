@@ -3,10 +3,8 @@
 mod watch;
 use watch::watch;
 mod hook;
-use hook::hook;
-mod m;
-
 use aok::{Result, OK};
+use hook::hook;
 use mysql_macro::mysql_async::prelude::FromRow;
 use xhash::{HashMap, HashSet};
 use xstr::join;
@@ -45,7 +43,7 @@ macro_rules! dberr {
   ($type:ident $s:expr $(,$t:expr)*) => {{
     let err = format!($s,$($t),*);
     let err_type = stringify!($type);
-    trt::bg(hi::send(err_type,err,""));
+    trt::bg(hi::send(err_type,err.clone(),""));
     let err = format!("DB ERROR {} : {}",err_type,err);
     tracing::warn!(err);
   }};
