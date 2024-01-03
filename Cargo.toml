@@ -25,7 +25,7 @@ members = [
   "preq",
   "getc",
   "i18",
-  "rany", "alive", "aok",
+  "rany", "alive", "aok", "hi",
 ]
 resolver = "2"
 
