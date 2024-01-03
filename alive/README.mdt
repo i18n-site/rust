@@ -1,0 +1,5 @@
+# alive : use mysql to check is service alive
+
+```rust
+<+ ./tests/main.rs>
+```

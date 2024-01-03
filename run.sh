@@ -20,5 +20,6 @@ if [ -f "$exe" ]; then
   echo -e "\n${GREEN}❯ $exe$NC\n"
   exec $exe
 else
-  cargo test -p $name -- --nocapture
+  cd $name
+  exec direnv exec . cargo test -p $name -- --nocapture
 fi

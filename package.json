@@ -1,7 +1,7 @@
 {
   "type": "module",
   "dependencies": {
-    "@3-/coffee_plus": "^0.0.6",
+    "@3-/coffee_plus": "^0.1.2",
     "@3-/jsext": "^0.0.5",
     "@3-/loader": "^0.0.2",
     "@3-/mdt": "^0.1.1",

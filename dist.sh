@@ -2,12 +2,13 @@
 
 DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
-set -ex
 
 if [ $# -eq 0 ]; then
-  echo miss project
+  echo "usage: $0 <project>"
   exit 1
 fi
+
+set -ex
 
 if ! [ -x "$(command -v cargo-v)" ]; then
   cargo install cargo-v

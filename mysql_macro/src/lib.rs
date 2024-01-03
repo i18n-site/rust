@@ -11,19 +11,24 @@ pub use trt::bg;
 
 pub const MYSQL_DEFAULT_PORT: u16 = 3306;
 
-def!(DB_HOST: String | "127.0.0.1".to_owned());
-def!(DB_PORT:u16 | MYSQL_DEFAULT_PORT);
-def!(DB_USER, DB_PASSWORD, DB_NAME);
+def!(MYSQL_HOST: String | "127.0.0.1".to_owned());
+def!(MYSQL_PORT:u16 | MYSQL_DEFAULT_PORT);
+def!(MYSQL_USER, MYSQL_PWD, MYSQL_DB);
+def!(MYSQL_COMPRESS:u8 | 0);
 
 #[static_init::dynamic]
 pub static POOL: Pool = Pool::new({
-  OptsBuilder::default()
-    .compression(mysql_async::Compression::fast())
-    .ip_or_hostname(DB_HOST())
-    .tcp_port(DB_PORT())
-    .user(Some(DB_USER::<String>()))
-    .pass(Some(DB_PASSWORD::<String>()))
-    .db_name(Some(DB_NAME::<String>()))
+  let mut build = OptsBuilder::default()
+    .ip_or_hostname(MYSQL_HOST())
+    .tcp_port(MYSQL_PORT())
+    .user(Some(MYSQL_USER::<String>()))
+    .pass(Some(MYSQL_PWD::<String>()))
+    .db_name(Some(MYSQL_DB::<String>()));
+  let compress = MYSQL_COMPRESS();
+  if compress > 0 {
+    build = build.compression(mysql_async::Compression::new(compress as _));
+  }
+  build
 });
 
 #[macro_export]

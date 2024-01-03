@@ -1,0 +1,29 @@
+#[allow(non_snake_case,clippy::too_many_arguments)]
+mod r#fn {
+  pub use mysql_macro::*;
+
+pub async fn hostId(val:impl AsRef<str>)->Result<u64>{
+  Ok(q1!("SELECT hostId(?)",val.as_ref()))
+}
+
+#[macro_export]
+macro_rules! hostId {
+($val:expr) => {
+$crate::hostId($val).await?
+};
+}
+
+pub async fn urlId(val:impl AsRef<str>)->Result<u64>{
+  Ok(q1!("SELECT urlId(?)",val.as_ref()))
+}
+
+#[macro_export]
+macro_rules! urlId {
+($val:expr) => {
+$crate::urlId($val).await?
+};
+}
+
+}
+
+pub use r#fn::*;

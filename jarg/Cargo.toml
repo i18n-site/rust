@@ -9,7 +9,7 @@ description = "json parser with aerr::bad_reqesut"
 
 [dependencies]
 axum = "0.7.3"
-sonic-rs = "0.3.0"
+sonic-rs = "0.3.1"
 
 [dev-dependencies]
 
