@@ -52,13 +52,13 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
 }
 
 pub async fn errlog(
-  kind: impl AsRef<str>,
+  kind: &Kind,
   host: impl AsRef<str>,
   watch: &Watch,
   txt: impl AsRef<str>,
   url: impl AsRef<str>,
 ) {
-  let kind = kind.as_ref();
+  let kind_v = kind.v;
   let host = host.as_ref();
   let txt = txt.as_ref();
   let url = url.as_ref();
@@ -144,7 +144,7 @@ pub async fn next() -> Result<()> {
             } else {
               err.to_string()
             };
-            errlog(&kind_v, host, &i, txt, url).await;
+            errlog(&kind, host, &i, txt, url).await;
           }
         } else {
           dberr!(
