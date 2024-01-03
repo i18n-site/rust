@@ -108,7 +108,7 @@ pub async fn errlog(
   if should_send(err_count, kind.warnErr) {
     let alive = alive(err_count, watch_id).await?;
     title = format!("{title}{alive} )");
-    hi::send(title, txt, url).await;
+    hi::send(&title, txt, url).await;
   } else {
     title += " )";
   }
