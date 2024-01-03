@@ -133,12 +133,13 @@ pub async fn next() -> Result<()> {
           let url = format!("https://{kind_url}/{}/{host}/{watch_url}", dns_type);
           // todo 并发
           if let Err(err) = ireq::get(&url).await {
-            if let Some(ReqError::Status(code, url, txt)) = err.downcast_ref::<ReqError>() {
-              let code = format!("{code}\n{txt}");
-              errlog(&kind_v, host, &i, txt, url).await;
+            let txt = if let Some(ReqError::Status(code, url, txt)) = err.downcast_ref::<ReqError>()
+            {
+              format!("{code}\n{txt}")
             } else {
-              dbg!((url, err));
-            }
+              err.to_string()
+            };
+            errlog(&kind_v, host, &i, txt, url).await;
           }
         } else {
           dberr!(
