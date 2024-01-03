@@ -110,12 +110,12 @@ pub async fn next() -> Result<()> {
           // todo 并发
           if let Err(err) = ireq::get(&url).await {
             let err_count = i.err + 1;
-            let alive = if err_count != 1 {
+            let alive = if err_count > 1 {
               format!("持续 5 分钟")
             } else {
               "".to_owned()
             };
-            let title = format!("❌ 第 {err_count} 次{alive} : {kind_v} IPV{dns_type} {host}");
+            let title = format!("❌ 第 {err_count} 次{alive} : {host} {kind_v} IPV{dns_type}");
             if let Some(ReqError::Status(code, url, txt)) = err.downcast_ref::<ReqError>() {
               dbg!((title, code, url, txt));
             } else {
