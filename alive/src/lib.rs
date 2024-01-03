@@ -97,19 +97,24 @@ pub async fn next() -> Result<()> {
           ""
         };
 
-        if hook(&kind.v).await {
+        let kind_v = &kind.v;
+        if hook(kind_v).await {
           todo!();
           continue;
         }
 
+        let dns_type = i.dns_type;
+
         if let Some(kind_url) = url_map.get(&kind.url_id) {
-          let url = format!("https://{kind_url}/{}/{host}/{watch_url}", i.dns_type);
+          let url = format!("https://{kind_url}/{}/{host}/{watch_url}", dns_type);
           // todo 并发
           if let Err(err) = ireq::get(&url).await {
+            let err_count = i.err + 1;
+            let title = format!("❌ {err_count} : {kind_v} IPV{dns_type} {host}");
             if let Some(ReqError::Status(code, url, txt)) = err.downcast_ref::<ReqError>() {
-              dbg!(code, url, txt);
+              dbg!((title, code, url, txt));
             } else {
-              dbg!((url, err));
+              dbg!((title, url, err));
             }
           }
         } else {
