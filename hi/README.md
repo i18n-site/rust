@@ -1,15 +1,10 @@
 [‼️]: ✏️README.mdt
 
-# hi
+# hi: hi with mail & wxpusher
+
+https://wxpusher.zjiecode.com
 
 ```rust
-/*
-#[test]
-fn test_replace() {
-}
-
-#[cfg(feature = "macro")]
-mod test_macro {
-}
-*/
+#[tokio::test]
+async fn test() {}
 ```
