@@ -15,6 +15,7 @@ macro_rules! dberr {
     let err = format!($s,$($t),*);
     let err_type = stringify!($type);
     let msg = format!("DB ERROR {} : {}",err_type,err);
+    dbg!(&msg);
     tracing::warn!(msg);
     trt::bg(hi::send(err_type,err.clone(),"https://atomgit.com/3ti/rust/blob/main/alive/src/lib.rs#L13"));
   }};
