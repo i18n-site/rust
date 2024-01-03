@@ -10,11 +10,17 @@ pub async fn send(
   let txt = txt.as_ref().to_owned();
   let url = url.as_ref();
 
-  let mut mail_txt = txt;
-  if !url.is_empty() {
-    mail_txt = url + "\n" + txt;
-  }
-
-  xsmtp::async_send(from_name, title, mail_txt, "").await;
-  wxpush::send(title, txt, url)
+  tokio::join!(
+    xsmtp::send(
+      from_name,
+      title,
+      if url.is_empty() {
+        url.to_owned() + "\n\n" + &txt;
+      } else {
+        txt
+      },
+      "",
+    ),
+    wxpush::send(title, txt, url)
+  )
 }
