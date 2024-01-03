@@ -3,7 +3,7 @@ macro_rules! log {
   ($($r:expr),*$(,)?) => {{
     $(
       if let Err(err) = $r {
-        tracing::error!("{}", err);
+        $create::tracing::error!("{}", err);
       }
     )*
   }};
