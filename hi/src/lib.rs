@@ -1,14 +1,8 @@
 pub mod lark;
 
-use aok::{Result, OK};
-
 genv::s!(TO_MAIL, NAME);
 
-pub async fn send(
-  title: impl AsRef<str>,
-  txt: impl AsRef<str>,
-  url: impl AsRef<str>,
-) -> Result<()> {
+pub async fn send(title: impl AsRef<str>, txt: impl AsRef<str>, url: impl AsRef<str>) {
   let name: &str = NAME.as_ref();
   let title = title.as_ref();
   let txt = txt.as_ref();
@@ -32,5 +26,4 @@ pub async fn send(
     lark::send(&name_title, txt, url)
   );
   xerr::log!(result_li.0, result_li.1, result_li.2);
-  OK
 }
