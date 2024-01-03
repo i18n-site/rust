@@ -5,7 +5,7 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-genv::s!(WXPUSH_TOKEN, WXPUSH_ID, HOST);
+genv::s!(WXPUSH_TOKEN, WXPUSH_ID);
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Debug)]
@@ -61,7 +61,7 @@ pub async fn send(url: &str, subject: &str, content: &str) -> Result<()> {
   let message = Message {
     appToken: WXPUSH_TOKEN.clone(),
     topicIds: vec![WXPUSH_ID.clone()],
-    summary: format!("{} · {subject}", *HOST),
+    summary: format!("{subject}"),
     content: content.to_owned(),
     url: url.to_string(),
   };
