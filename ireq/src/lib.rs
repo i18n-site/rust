@@ -12,8 +12,8 @@ pub static REQ: Client = Client::builder()
 
 pub async fn req(req: RequestBuilder) -> reqwest::Result<String> {
   let res = req.version(Version::HTTP_3).send().await?;
-  dbg!(res.status());
   let txt = res.text().await?;
+  if res.status() != StatusCode::OK {}
   Ok(txt)
 }
 
