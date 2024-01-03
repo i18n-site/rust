@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "xstr",
+  "xerr",
   "tp",
   "xhash",
   "trt",
@@ -25,7 +26,10 @@ members = [
   "preq",
   "getc",
   "i18",
-  "rany", "alive", "aok", "hi",
+  "rany",
+  "alive",
+  "aok",
+  "hi",
 ]
 resolver = "2"
 

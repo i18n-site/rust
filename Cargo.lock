@@ -4701,6 +4701,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "xerr"
+version = "0.1.0"
+dependencies = [
+ "tracing",
+]
+
+[[package]]
 name = "xhash"
 version = "0.1.3"
 dependencies = [
