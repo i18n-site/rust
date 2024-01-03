@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use aok::Result;
-use reqwest::{Body, Client, IntoUrl, RequestBuilder, StatusCode, Url, Version};
+use reqwest::{Body, Client, IntoUrl, RequestBuilder, StatusCode, Url};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
