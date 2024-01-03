@@ -1,10 +1,12 @@
 #![allow(non_snake_case)]
 
+mod watch;
+use watch::watch;
 mod hook;
 use hook::hook;
 mod m;
 
-use aok::{Result, OK};
+use aok::{anyhow, Result, OK};
 use mysql_macro::mysql_async::prelude::FromRow;
 use xhash::{HashMap, HashSet};
 use xstr::join;
@@ -81,7 +83,8 @@ pub async fn next() -> Result<()> {
       } else {
         ""
       };
-      if hook(&kind.v).await? {
+
+      if hook(&kind.v).await {
         continue;
       }
 
