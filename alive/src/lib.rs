@@ -64,16 +64,19 @@ pub async fn errlog(
   let url = url.as_ref();
 
   let err_count = watch.err + 1;
-  let alive = if err_count > 1 {
-    todo!();
-    let n = 1;
-    format!(", 持续 {n} 分钟")
-  } else {
-    "".to_owned()
-  };
-  let dns_type = watch.dns_type;
-  let title = format!("❌ {kind} {host} IPV{dns_type} ( 第 {err_count} 次{alive} )");
-  dbg!((title, txt, url));
+  if err_count > kind.warnErr as _ {
+    let alive = if err_count > 1 {
+      todo!();
+      let n = 1;
+      format!(", 持续 {n} 分钟")
+    } else {
+      "".to_owned()
+    };
+    let kind_v = &kind.v;
+    let dns_type = watch.dns_type;
+    let title = format!("❌ {kind_v} {host} IPV{dns_type} ( 第 {err_count} 次{alive} )");
+    dbg!((title, txt, url));
+  }
 }
 
 pub async fn next() -> Result<()> {
