@@ -1,13 +1,13 @@
 #![allow(non_snake_case)]
 
+mod hook;
+use hook::hook;
+mod m;
+
 use aok::{Result, OK};
 use mysql_macro::mysql_async::prelude::FromRow;
 use xhash::{HashMap, HashSet};
 use xstr::join;
-
-mod hook;
-use hook::hook;
-mod m;
 
 #[derive(Debug, Clone, FromRow)]
 pub struct Kind {
