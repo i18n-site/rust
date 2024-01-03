@@ -86,7 +86,8 @@ pub async fn errlog(
   let dns_type = watch.dns_type;
   let err_count = watch.err + 1;
 
-  tracing::warn!("❌ {kind_v} {host} ( IPV{dns_type} 第 {err_count} 次 ) \n{url}\n{txt}\n",);
+  let title = format!("❌ {kind_v} {host} ( IPV{dns_type} 第 {err_count} 次");
+  tracing::warn!("{title} )\n{url}\n{txt}\n",);
   // errlog(kind, host, watch, txt, url);
   if should_send(err_count, kind.warnErr) {
     let alive = if err_count > 1 {
@@ -96,7 +97,7 @@ pub async fn errlog(
     } else {
       "".to_owned()
     };
-    let title = format!("❌ {kind_v} {host} ( IPV{dns_type} 第 {err_count} 次{alive} )");
+    let title = format!("{title}{alive} )");
     dbg!((title, txt, url));
   }
 }
