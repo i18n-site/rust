@@ -1,5 +1,3 @@
-use std::string::ToString;
-
 use aok::OK;
 use sonic_rs::{json, to_string, Value};
 
@@ -7,25 +5,33 @@ genv::s!(LARK_BOT);
 
 pub async fn send(
   title: impl AsRef<str>,
-  txt: impl ToString,
+  txt: impl AsRef<str>,
   url: impl AsRef<str>,
 ) -> aok::Result<()> {
   let title = title.as_ref();
-  let txt = txt.to_string() + "\n\n";
+  let txt = txt.as_ref();
   let url = url.as_ref();
 
   let mut li: Vec<Value> = Vec::with_capacity(2);
 
+  let txt = if !url.is_empty() {
+    li.push(json!({"tag":"a","text":url,"href":url}));
+    "\n".to_owned() + &txt + "\n"
+  } else {
+    txt.to_owned() + "\n"
+  };
+
   li.push(json!({"tag":"text","text":txt}));
 
-  if !url.is_empty() {
-    li.push(json!({"tag":"a","text":url,"href":url}));
-  }
+  li.push(json!({
+    "tag": "at",
+    "user_id": "all", //取值使用"all"来at所有人
+    "user_name": ""
+  }));
 
   let msg = json!({"msg_type":"post","content":{"post":{"zh_cn":{"title":title,"content":[li]}}}});
 
   let url: &str = LARK_BOT.as_ref();
   let res = ireq::post(url, to_string(&msg)?).await?;
-  dbg!(&res);
   OK
 }
