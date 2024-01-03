@@ -46,7 +46,8 @@ macro_rules! dberr {
     let err = format!($s,$($t),*);
     let err_type = stringify!($type);
     trt::bg(hi::send(err_type,err,""));
-    tracing::warn!(format!("DB ERROR {} : {}",err_type,err));
+    let err = format!("DB ERROR {} : {}",err_type,err);
+    tracing::warn!(err);
   }};
 }
 
