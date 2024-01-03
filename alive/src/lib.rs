@@ -6,7 +6,7 @@ use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
 use hook::hook;
 use ireq::ReqError;
-use mysql_macro::{mysql_async::prelude::FromRow, q, q01};
+use mysql_macro::{exe, mysql_async::prelude::FromRow, q, q01};
 use xhash::{HashMap, HashSet};
 use xstr::join;
 
@@ -112,6 +112,7 @@ pub async fn errlog(
     let title = format!("{title}{alive} )");
     dbg!((title, txt, url));
   }
+  exe!(format!("UPDATE SET err=err+1 WHERE id={watch_id}"));
   OK
 }
 
