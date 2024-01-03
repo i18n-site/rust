@@ -26,4 +26,4 @@ rm Cargo.lock
 git add -u
 git commit -m.
 git push
-cargo publish --registry crates-io || true
+RUSTFLAGS='--cfg reqwest_unstable' cargo publish --registry crates-io || true
