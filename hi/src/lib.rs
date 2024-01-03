@@ -2,9 +2,10 @@ use std::string::ToString;
 
 use aok::{Result, OK};
 
+genv::s!(TO_MAIL);
+
 pub async fn send(
   from_name: impl AsRef<str>,
-  to: impl ToString,
   title: impl AsRef<str>,
   txt: impl AsRef<str>,
   url: impl AsRef<str>,
