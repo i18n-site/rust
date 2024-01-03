@@ -60,7 +60,7 @@ pub fn should_send(err_count: u32, warn_err: u8) -> bool {
   if err_count > warn_err {
     let diff = err_count - warn_err;
     if diff > 86400 {
-      diff % 65536 == 0
+      diff % 86400 == 0
     } else {
       is_power_of_two(diff)
     }
