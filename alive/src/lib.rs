@@ -72,8 +72,6 @@ pub fn should_send(err_count: u32, warn_err: u8) -> bool {
   }
 }
 
-pub type StateTs = (u8, u32);
-
 pub async fn errlog(
   kind: &Kind,
   host: impl AsRef<str>,
@@ -98,7 +96,7 @@ pub async fn errlog(
         todo!();
         let n = 1;
 
-        if let Some(StateTs(state, ts)) = q01!(format!(
+        if let Some::<(u8, u32)>((state, ts)) = q01!(format!(
           "SELECT state,ts FROM log WHERE watch_id={watch_id} ORDER BY id DESC LIMIT 1"
         )) {
           format!(", 持续 {n} 分钟")
@@ -139,7 +137,7 @@ pub async fn curl(
     } else {
       err.to_string()
     };
-    errlog(&kind, host, &watch, txt, url).await;
+    xerr::log(errlog(&kind, host, &watch, txt, url).await);
   }
 }
 
