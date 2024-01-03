@@ -74,12 +74,12 @@ pub async fn next() -> Result<()> {
 
   for i in li {
     if let Some(kind) = kind_map.get(&i.kind_id) {
-      let url = if i.url_id == 0 {
+      let url = if i.url_id > 0 {
         url_map.get(&i.url_id).map(|i| i.as_str()).unwrap_or("")
       } else {
         ""
       };
-      dbg!(&i, url, kind);
+      dbg!((&i, url, kind));
     } else {
       tracing::error!("MissKind: watch id={} kind_id={}", i.id, i.kind_id);
     }
