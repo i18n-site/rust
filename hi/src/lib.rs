@@ -1,13 +1,16 @@
+use std::string::ToString;
+
 use aok::{Result, OK};
 
 pub async fn send(
   from_name: impl AsRef<str>,
-  to: impl AsRef<str>,
+  to: impl ToString,
   title: impl AsRef<str>,
   txt: impl AsRef<str>,
   url: impl AsRef<str>,
 ) -> Result<()> {
-  let to = to.into();
+  let from_name = from_name.as_ref();
+  let to = to.to_string();
   let title = title.as_ref();
   let txt = txt.as_ref();
   let url = url.as_ref();
