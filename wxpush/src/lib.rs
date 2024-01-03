@@ -46,22 +46,6 @@ pub enum WxPushError {
 
 pub const SUCCESS: i64 = 1000;
 
-fn cut<'a>(s: &'a str, max_length: usize) -> &'a str {
-  if s.len() > max_length {
-    let mut byte_count = 0;
-    for c in s.chars() {
-      let char_bytes = c.len_utf8();
-      let t = byte_count + char_bytes;
-      if t > max_length {
-        break;
-      }
-      byte_count = t;
-    }
-    return &s[..byte_count];
-  }
-  s
-}
-
 pub async fn send(
   subject: impl AsRef<str>,
   content: impl AsRef<str>,
