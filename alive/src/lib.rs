@@ -105,6 +105,9 @@ pub async fn curl(
   kind_url: impl ToString,
   watch_url: impl ToString,
 ) {
+  let host = host.to_string();
+  let kind_url = kind_url.to_string();
+  let watch_url = watch_url.to_string();
   let dns_type = watch.dns_type;
   let url = format!("https://{kind_url}/{}/{host}/{watch_url}", dns_type);
   // todo 并发
