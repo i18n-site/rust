@@ -1,13 +1,12 @@
 use aok::{Result, OK};
 
+genv::s!(TO_MAIL, NAME);
+
 pub async fn send(
-  from_name: impl AsRef<str>,
-  to: impl Into<String>,
   title: impl AsRef<str>,
   txt: impl AsRef<str>,
   url: impl AsRef<str>,
 ) -> Result<()> {
-  let from_name = from_name.as_ref();
   let to = to.into();
   let title = title.as_ref();
   let txt = txt.as_ref();
@@ -15,8 +14,8 @@ pub async fn send(
 
   let result_li = tokio::join!(
     xsmtp::send(
-      from_name,
-      to,
+      NAME,
+      TO_MAIL,
       title,
       if url.is_empty() {
         url.to_owned() + "\n\n" + txt
