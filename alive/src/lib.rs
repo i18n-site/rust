@@ -96,6 +96,31 @@ pub async fn errlog(
   }
 }
 
+pub async fn curl(
+  kind: &Kind,
+  watch: &Watch,
+  host: impl AsRef<str>,
+  kind_url: impl AsRef<str>,
+  watch_url: impl AsRef<str>,
+) {
+  let dns_type = watch.dns_type;
+  let url = format!("https://{kind_url}/{}/{host}/{watch_url}", dns_type);
+  // todo 并发
+  if let Err(err) = ireq::get(&url).await {
+    let txt = if let Some(ReqError::Status(code, txt)) = err.downcast_ref::<ReqError>() {
+      let mut t = code.to_string();
+      if !txt.is_empty() {
+        t.push('\n');
+        t.push_str(txt);
+      }
+      t
+    } else {
+      err.to_string()
+    };
+    errlog(&kind, host, &watch, txt, url).await;
+  }
+}
+
 pub async fn next() -> Result<()> {
   let now = sts::sec();
 
@@ -142,30 +167,13 @@ pub async fn next() -> Result<()> {
           ""
         };
 
-        let kind_v = &kind.v;
-        if hook(kind_v).await {
+        if hook(&kind.v).await {
           todo!();
           continue;
         }
 
-        let dns_type = i.dns_type;
-
         if let Some(kind_url) = url_map.get(&kind.url_id) {
-          let url = format!("https://{kind_url}/{}/{host}/{watch_url}", dns_type);
-          // todo 并发
-          if let Err(err) = ireq::get(&url).await {
-            let txt = if let Some(ReqError::Status(code, txt)) = err.downcast_ref::<ReqError>() {
-              let mut t = code.to_string();
-              if !txt.is_empty() {
-                t.push('\n');
-                t.push_str(txt);
-              }
-              t
-            } else {
-              err.to_string()
-            };
-            errlog(&kind, host, &i, txt, url).await;
-          }
+          curl(&kind, &i, host, kind_url, watch_url).await;
         } else {
           dberr!(
             KindMissUrl
