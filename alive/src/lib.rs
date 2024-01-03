@@ -74,13 +74,15 @@ pub fn should_send(err_count: u32, warn_err: u8) -> bool {
 
 pub async fn alive(err_count: u32, watch_id: u64) -> Result<String> {
   if err_count > 1 {
-    let n = 1;
-
-    if let Some::<(u8, u32)>((state, ts)) = q01!(format!(
+    if let Some::<(u8, u64)>((state, ts)) = q01!(format!(
       "SELECT state,ts FROM log WHERE watch_id={watch_id} ORDER BY id DESC LIMIT 1"
     )) {
       if state == 1 {
-        return Ok(format!(", 持续 {n} 分钟"));
+        let now = sts::sec();
+        if now > ts {
+          let n = (now - ts) / 60;
+          return Ok(format!(", 持续 {n} 分钟"));
+        }
       }
     }
   }
