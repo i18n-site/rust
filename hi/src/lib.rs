@@ -1,1 +1,7 @@
-pub async fn warn(title: impl AsRef<str>, body: impl AsRef<str>, url: impl AsRef<str>) {}
+use aok::Result;
+pub async fn send(
+  subject: impl AsRef<str>,
+  content: impl AsRef<str>,
+  url: impl AsRef<str>,
+) -> Result<()> {
+}
