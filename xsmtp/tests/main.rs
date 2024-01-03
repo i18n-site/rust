@@ -1,7 +1,7 @@
 #[tokio::test]
 async fn test() -> anyhow::Result<()> {
   Ok(
-    xsmtp::async_send(
+    xsmtp::send(
       "测试xsmtp",
       "i18n.site@gmail.com",
       "测试邮件",
