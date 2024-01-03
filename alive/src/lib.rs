@@ -91,35 +91,34 @@ pub async fn next() -> Result<()> {
 
   for i in li {
     if let Some(host) = host_map.get(&i.host_id) {
+      if let Some(kind) = kind_map.get(&i.kind_id) {
+        let watch_url = if i.url_id > 0 {
+          url_map.get(&i.url_id).map(|i| i.as_str()).unwrap_or("")
+        } else {
+          ""
+        };
+
+        if hook(&kind.v).await {
+          continue;
+        }
+
+        if let Some(kind_url) = url_map.get(&kind.url_id) {
+          let url = format!("https://{kind_url}/{}/{watch_url}", i.dns_type);
+          dbg!(url);
+        } else {
+          dberr!(
+            KindMissUrl
+            "watch id={} kind_id={} url_id={}",
+            i.id,
+            i.kind_id,
+            i.url_id
+          );
+        }
+      } else {
+        dberr!(WatchMissKind "watch id={} kind_id={}", i.id, i.kind_id);
+      }
+    } else {
       dberr!(WatchMissHost "watch id={} host_id={}", i.id, i.host_id);
-    } else {
-      continue;
-    }
-    if let Some(kind) = kind_map.get(&i.kind_id) {
-      let watch_url = if i.url_id > 0 {
-        url_map.get(&i.url_id).map(|i| i.as_str()).unwrap_or("")
-      } else {
-        ""
-      };
-
-      if hook(&kind.v).await {
-        continue;
-      }
-
-      if let Some(kind_url) = url_map.get(&kind.url_id) {
-        let url = format!("https://{kind_url}/{}/{watch_url}", i.dns_type);
-        dbg!(url);
-      } else {
-        dberr!(
-          KindMissUrl
-          "watch id={} kind_id={} url_id={}",
-          i.id,
-          i.kind_id,
-          i.url_id
-        );
-      }
-    } else {
-      dberr!(WatchMissKind "watch id={} kind_id={}", i.id, i.kind_id);
     }
   }
   OK
