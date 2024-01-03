@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use reqwest::{Body, Client, IntoUrl, RequestBuilder, StatusCode, Version};
+use reqwest::{Body, Client, IntoUrl, RequestBuilder, Version};
 
 #[static_init::dynamic]
 pub static REQ: Client = Client::builder()
