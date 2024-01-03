@@ -4682,6 +4682,7 @@ dependencies = [
  "static_init",
  "thiserror",
  "tokio",
+ "xstr 0.1.8",
 ]
 
 [[package]]

@@ -4,6 +4,7 @@ use anyhow::Result;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
+use xstr::cut;
 
 genv::s!(WXPUSH_TOKEN, WXPUSH_ID);
 

@@ -21,6 +21,7 @@ static_init = { version = "1.0.3", features = [
   "parking_lot_core",
 ] }
 thiserror = "1.0.56"
+xstr = { version = "0.1.8", path = "../xstr" }
 
 [dev-dependencies]
 anyhow = "1.0.79"
