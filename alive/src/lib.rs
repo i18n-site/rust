@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 
+use std::string::ToString;
+
 use aok::{Result, OK};
 use hook::hook;
 use ireq::ReqError;
@@ -99,9 +101,9 @@ pub async fn errlog(
 pub async fn curl(
   kind: &Kind,
   watch: &Watch,
-  host: impl AsRef<str>,
-  kind_url: impl AsRef<str>,
-  watch_url: impl AsRef<str>,
+  host: impl ToString,
+  kind_url: impl ToString,
+  watch_url: impl ToString,
 ) {
   let dns_type = watch.dns_type;
   let url = format!("https://{kind_url}/{}/{host}/{watch_url}", dns_type);
