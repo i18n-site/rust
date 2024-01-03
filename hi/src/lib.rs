@@ -15,6 +15,8 @@ pub async fn send(
   let txt = txt.as_ref();
   let url = url.as_ref();
 
+  let name_title = format!("{} · {}", from_name, title);
+
   let result_li = tokio::join!(
     xsmtp::send(
       from_name,
@@ -28,14 +30,11 @@ pub async fn send(
       "",
     ),
     wxpush::send(
-      if from_name.is_empty() {
-        title.to_owned()
-      } else {
-        from_name.to_owned() + " " + title
-      },
+      name_title,
       txt,
       url
     )
+    lark::send(name_title, txt, url)
   );
   xerr::log!(result_li.0, result_li.1);
   OK
