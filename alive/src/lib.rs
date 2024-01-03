@@ -51,6 +51,11 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
   Ok(HashMap::from_iter(li.into_iter()))
 }
 
+pub fn should_send(err_count: u32, warn_err: u8) -> bool {
+  let warn_err = warn_err as _;
+  if err_count > warn_err {}
+}
+
 pub async fn errlog(
   kind: &Kind,
   host: impl AsRef<str>,
@@ -63,9 +68,7 @@ pub async fn errlog(
   let url = url.as_ref();
 
   let err_count = watch.err + 1;
-  let warn_err = kind.warnErr as _;
-  if err_count > warn_err {
-    let should_error = err_count - warn_err;
+  if should_send(err_count, kind.warnErr) {
     let alive = if err_count > 1 {
       todo!();
       let n = 1;
