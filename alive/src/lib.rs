@@ -33,7 +33,7 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
   if id_set.is_empty() {
     return Ok(Default::default());
   }
-  let li: Vec<(u64, String)> = m::q!(format!(
+  let li: Vec<(u64, String)> = q!(format!(
     "SELECT id,v FROM {table} WHERE id IN ({})",
     join(id_set)
   ));
@@ -53,7 +53,7 @@ macro_rules! dberr {
 pub async fn next() -> Result<()> {
   let now = sts::sec();
 
-  let li: Vec<Watch> = m::q!(
+  let li: Vec<Watch> = q!(
     "SELECT id,host_id,kind_id,dns_type,err,url_id FROM watch WHERE ts<=?",
     now
   );
@@ -72,7 +72,7 @@ pub async fn next() -> Result<()> {
     }
   });
 
-  let kind_li: Vec<Kind> = m::q!(format!(
+  let kind_li: Vec<Kind> = q!(format!(
     "SELECT id,url_id,duration,warnErr,v FROM kind WHERE id IN ({})",
     join(kind_set)
   ));
