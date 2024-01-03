@@ -19,7 +19,7 @@ pub static SMTP: SmtpClientBuilder<String> = {
     .credentials((smtp_user, smtp_password))
 };
 
-pub async fn async_send(
+pub async fn send(
   from_name: impl Into<String>,
   to: impl Into<Address<'static>>,
   subject: impl Into<String>,
@@ -47,7 +47,7 @@ pub async fn async_send(
   Ok(())
 }
 
-pub fn send(
+pub fn send_bg(
   from_name: impl Into<String>,
   to: impl Into<Address<'static>>,
   subject: impl Into<String>,
