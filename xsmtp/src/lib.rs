@@ -33,7 +33,7 @@ pub async fn send(
   let to = to.into();
 
   let mut mail = MessageBuilder::new()
-    .from((from_name.as_str(), SMTP_FROM.as_str()))
+    .from((from_name, SMTP_FROM.as_str()))
     .to(to)
     .subject(subject);
   if !txt.is_empty() {
@@ -59,5 +59,5 @@ pub fn send_bg(
   let htm = htm.into();
   let from_name = from_name.into();
   let to = to.into();
-  trt::bg(async_send(from_name, to, subject, txt, htm));
+  trt::bg(send(from_name, to, subject, txt, htm));
 }
