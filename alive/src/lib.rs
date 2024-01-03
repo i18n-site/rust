@@ -52,24 +52,27 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
 }
 
 pub async fn errlog(
+  kind: impl AsRef<str>,
+  host: impl AsRef<str>,
   watch: &Watch,
-  title: impl AsRef<str>,
   txt: impl AsRef<str>,
   url: impl AsRef<str>,
 ) {
-  let title = title.as_ref();
+  let kind = kind.as_ref();
+  let host = host.as_ref();
   let txt = txt.as_ref();
   let url = url.as_ref();
 
   let err_count = watch.err + 1;
   let alive = if err_count > 1 {
+    todo!();
     format!("持续 5 分钟")
   } else {
     "".to_owned()
   };
-
-  let title = format!("❌ 第 {err_count} 次{alive} : {title}");
-  dbg!((title, url, txt));
+  let dns_type = watch.dns_type;
+  let title = format!("❌ 第 {err_count} 次{alive} : {kind} {host} IPV{dns_type}");
+  dbg!((title, txt, url));
 }
 
 pub async fn next() -> Result<()> {
@@ -130,11 +133,11 @@ pub async fn next() -> Result<()> {
           let url = format!("https://{kind_url}/{}/{host}/{watch_url}", dns_type);
           // todo 并发
           if let Err(err) = ireq::get(&url).await {
-            let title = format!("{host} {kind_v} IPV{dns_type}");
             if let Some(ReqError::Status(code, url, txt)) = err.downcast_ref::<ReqError>() {
-              errlog(&i, title, txt, url).await;
+              let code = format!("{code}\n{txt}");
+              errlog(&kind_v, host, &i, txt, url).await;
             } else {
-              dbg!((title, url, err));
+              dbg!((url, err));
             }
           }
         } else {
