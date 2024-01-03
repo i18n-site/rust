@@ -42,8 +42,8 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
 }
 
 macro_rules! dberr {
-  ($($t:ty),*) => {{
-    tracing::warn!($($t)*);
+  ($s:expr,$($t:expr),*) => {{
+    tracing::warn!($s,$($t)*);
   }};
 }
 
