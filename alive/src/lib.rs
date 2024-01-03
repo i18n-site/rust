@@ -51,8 +51,14 @@ pub async fn next() -> Result<()> {
 
   let kind_li: Vec<Kind> = m::q!(format!(
     "SELECT id,host_id,duration,warnErr,v FROM kind WHERE id IN ({})",
-    join(kind_set.into_iter())
+    join(kind_set)
   ));
+
+  kind_li.iter().for_each(|k| {
+    if k.host_id != 0 {
+      host_set.insert(k.host_id);
+    }
+  });
 
   dbg!(kind_li);
   OK
