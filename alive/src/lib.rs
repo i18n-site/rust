@@ -9,17 +9,27 @@ use xstr::join;
 
 mod m;
 
-pub async fn smtp() {}
-
-pub async fn run(name: &str) -> Result<bool> {
-  match name {
-    "smtp" => {
-      smtp().await?;
-      Ok(true)
-    }
-    _ => Ok(false),
-  }
+pub async fn smtp() -> Result<()> {
+  OK
 }
+
+macro_rules! run {
+  ($($fn:ident),*) => {
+    pub async fn run(name: &str) -> Result<bool> {
+      match name {
+        $(
+          stringify!($fn) => {
+            $fn().await?;
+            Ok(true)
+          }
+        ),*
+        _ => Ok(false),
+      }
+    }
+  };
+}
+
+run!(smtp);
 
 #[derive(Debug, Clone, FromRow)]
 pub struct Kind {
