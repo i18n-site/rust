@@ -29,11 +29,7 @@ pub async fn send(
       },
       "",
     ),
-    wxpush::send(
-      name_title,
-      txt,
-      url
-    )
+    wxpush::send(name_title, txt, url),
     lark::send(name_title, txt, url)
   );
   xerr::log!(result_li.0, result_li.1);
