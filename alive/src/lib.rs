@@ -55,16 +55,12 @@ pub fn is_power_of_two(n: u32) -> bool {
   (n != 0) && ((n & (n - 1)) == 0)
 }
 
-pub fn is_power_of_65536(num: u32) -> bool {
-  num == (num >> 16) << 16
-}
-
 pub fn should_send(err_count: u32, warn_err: u8) -> bool {
   let warn_err = warn_err as _;
   if err_count > warn_err {
     let diff = err_count - warn_err;
     if diff > 86400 {
-      is_power_of_65536(diff)
+      diff % 65536 == 0
     } else {
       is_power_of_two(diff)
     }
