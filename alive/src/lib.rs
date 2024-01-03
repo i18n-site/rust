@@ -1,12 +1,33 @@
 #![allow(non_snake_case)]
 
 use aok::{Result, OK};
+use enum_dispatch::enum_dispatch;
 use mysql_macro::mysql_async::prelude::FromRow;
 use static_init::dynamic;
 use xhash::{HashMap, HashSet};
 use xstr::join;
 
 mod m;
+
+#[enum_dispatch]
+pub trait Hooker {
+  async fn run(&self) -> Result<()>;
+}
+
+#[derive(Debug, Clone)]
+pub struct Smtp();
+
+impl Hooker for Smtp {
+  async fn run(&self) -> Result<()> {
+    todo!()
+  }
+}
+
+#[enum_dispatch(Hooker)]
+#[derive(Debug, Clone)]
+pub enum Hook {
+  Smtp,
+}
 
 #[dynamic]
 static KIND_HOOK: HashMap<u64, String> = HashMap::from_iter([]);
