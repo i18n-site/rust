@@ -112,7 +112,7 @@ pub async fn errlog(
     let title = format!("{title}{alive} )");
     dbg!((title, txt, url));
   }
-  exe!(format!("UPDATE SET err=err+1 WHERE id={watch_id}"));
+  exe!(format!("UPDATE watch SET err=err+1 WHERE id={watch_id}"));
   OK
 }
 
