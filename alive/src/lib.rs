@@ -83,7 +83,7 @@ pub async fn errlog(
   let kind_v = &kind.v;
   let url = url.as_ref();
 
-  tracing::warn!("{} {} {}", kind_v, url, txt);
+  tracing::warn!("❌ {} {}\n{}\n{}", kind_v, host, url, txt);
   // errlog(kind, host, watch, txt, url);
   let err_count = watch.err + 1;
   if should_send(err_count, kind.warnErr) {
