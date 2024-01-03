@@ -9,28 +9,12 @@ use xstr::join;
 
 mod m;
 
-#[enum_dispatch]
-pub trait Hooker {
-  async fn run(&self) -> Result<()>;
-}
-
-#[derive(Debug, Clone)]
-pub struct Smtp();
-
-impl Hooker for Smtp {
-  async fn run(&self) -> Result<()> {
-    todo!()
+pub async fn run(name: &str) -> Result<bool> {
+  match name {
+    "smtp" => Ok(true),
+    _ => Ok(false),
   }
 }
-
-#[enum_dispatch(Hooker)]
-#[derive(Debug, Clone)]
-pub enum Hook {
-  Smtp,
-}
-
-#[dynamic]
-static KIND_HOOK: HashMap<u64, String> = HashMap::from_iter([]);
 
 #[derive(Debug, Clone, FromRow)]
 pub struct Kind {
