@@ -10,7 +10,7 @@ description = "convert svg to webp"
 [dependencies]
 image = "0.24.7"
 resvg = "0.37.0"
-thiserror = "1.0.51"
+thiserror = "1.0.56"
 tiny-skia = "0.11.3"
 usvg = "0.37.0"
 webp = "0.2.6"

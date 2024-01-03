@@ -8,10 +8,10 @@ homepage = "https://github.com/3TiSite/rust/tree/main/xsmtp"
 description = "smtp send mail"
 
 [dependencies]
-anyhow = "1.0.76"
+anyhow = "1.0.79"
 genv = "0.1.5"
 mail-builder = "0.3.1"
-mail-send = "0.4.3"
+mail-send = "0.4.6"
 static_init = { version = "1.0.3", features = [
   "lock_statistics",
   "parking_lot",

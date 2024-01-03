@@ -9,7 +9,7 @@ description = "tokio global runtime"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
-anyhow = "1.0.76"
+anyhow = "1.0.79"
 static_init = { version = "1.0.3", features = [
   "lock_statistics",
   "parking_lot",

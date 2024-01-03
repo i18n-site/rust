@@ -8,8 +8,8 @@ homepage = "https://github.com/3TiSite/rust/tree/main/jarg"
 description = "json parser with aerr::bad_reqesut"
 
 [dependencies]
-axum = "0.7.2"
-sonic-rs = "0.2.6"
+axum = "0.7.3"
+sonic-rs = "0.3.0"
 
 [dev-dependencies]
 

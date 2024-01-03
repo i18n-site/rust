@@ -8,8 +8,8 @@ homepage = "https://github.com/3TiSite/rust/tree/main/apart"
 description = "from_request_parts for axum"
 
 [dependencies]
-anyhow = "1.0.76"
-axum = "0.7.2"
+anyhow = "1.0.79"
+axum = "0.7.3"
 tracing = "0.1.40"
 
 [dev-dependencies]

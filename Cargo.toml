@@ -9,6 +9,7 @@ members = [
   "svg2webp",
   "cookiestr",
   "loginit",
+  "mysql_macro",
   "click_captcha",
   "xtld",
   "mreplace",
@@ -23,6 +24,8 @@ members = [
   "apart",
   "preq",
   "getc",
+  "i18",
+  "rany",
 ]
 resolver = "2"
 

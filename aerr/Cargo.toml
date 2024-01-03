@@ -8,12 +8,12 @@ homepage = "https://github.com/3TiSite/rust/tree/main/aerr"
 description = "error like anyhow for axum"
 
 [dependencies]
-anyhow = "1.0.76"
-axum = "0.7.2"
+anyhow = "1.0.79"
+axum = "0.7.3"
 bytes = "1.5.0"
 prost = { version = "0.12.3" }
-serde = { version = "1.0.193", features = ["derive"] }
-sonic-rs = "0.2.6"
+serde = { version = "1.0.194", features = ["derive"] }
+sonic-rs = "0.3.0"
 tracing = "0.1.40"
 
 [features]
