@@ -42,7 +42,7 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
 }
 
 macro_rules! dberr {
-  ($type:ident, $s:expr $(,$t:expr)*) => {{
+  ($type:ident $s:expr $(,$t:expr)*) => {{
     let err = format!($s,$($t),*);
     let err = format!("DB ERROR {} : {}",stringify!($type),err);
     tracing::warn!(err);
@@ -89,7 +89,7 @@ pub async fn next() -> Result<()> {
 
   for i in li {
     if let Some(host) = host_map.get(&i.host_id) {
-      dberr!(WatchMissHost, "watch id={} host_id={}", i.id, i.host_id);
+      dberr!(WatchMissHost "watch id={} host_id={}", i.id, i.host_id);
     } else {
       continue;
     }
@@ -117,7 +117,7 @@ pub async fn next() -> Result<()> {
         );
       }
     } else {
-      dberr!(WatchMissKind, "watch id={} kind_id={}", i.id, i.kind_id);
+      dberr!(WatchMissKind "watch id={} kind_id={}", i.id, i.kind_id);
     }
   }
   OK
