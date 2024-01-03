@@ -103,7 +103,7 @@ pub async fn next() -> Result<()> {
         }
 
         if let Some(kind_url) = url_map.get(&kind.url_id) {
-          let url = format!("https://{kind_url}/{}/{watch_url}", i.dns_type);
+          let url = format!("https://{kind_url}/{}/{host}/{watch_url}", i.dns_type);
           dbg!(url);
         } else {
           dberr!(
