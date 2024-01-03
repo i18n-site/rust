@@ -80,6 +80,11 @@ pub async fn next() -> Result<()> {
   dbg!(&host_map, &url_map, &kind_map);
 
   for i in li {
+    if let Some(host) = host_map.get(&i.host_id) {
+      tracing::error!("WatchMissHost: watch id={} host_id={}", i.id, i.host_id);
+    } else {
+      continue;
+    }
     if let Some(kind) = kind_map.get(&i.kind_id) {
       let watch_url = if i.url_id > 0 {
         url_map.get(&i.url_id).map(|i| i.as_str()).unwrap_or("")
