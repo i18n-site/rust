@@ -1,9 +1,4 @@
-/*
-#[test]
-fn test() {
+#[tokio::test]
+async fn test() -> anyhow::Result<()> {
+  OK(send("https://atomgit.com/3ti", "测试推送", "正文\n测试").await?)
 }
-
-#[cfg(feature = "macro")]
-mod test_macro {
-}
-*/

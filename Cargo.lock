@@ -4627,6 +4627,7 @@ dependencies = [
  "sonic-rs",
  "static_init",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]
