@@ -62,9 +62,9 @@ fn cut<'a>(s: &'a str, max_length: usize) -> &'a str {
 }
 
 pub async fn send(
-  url: impl AsRef<str>,
   subject: impl AsRef<str>,
   content: impl AsRef<str>,
+  url: impl AsRef<str>,
 ) -> Result<()> {
   let content = cut(content.as_ref(), 40000);
   let subject = cut(subject.as_ref(), 100);
