@@ -134,7 +134,12 @@ pub async fn next() -> Result<()> {
           // todo 并发
           if let Err(err) = ireq::get(&url).await {
             let txt = if let Some(ReqError::Status(code, txt)) = err.downcast_ref::<ReqError>() {
-              format!("{code}\n{txt}")
+              let mut t = code.to_string();
+              if !txt.is_empty() {
+                t.push('\n');
+                t.push_str(txt);
+              }
+              t
             } else {
               err.to_string()
             };
