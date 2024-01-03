@@ -5,7 +5,7 @@
 ```rust
 /*
 #[test]
-fn test_replace() {
+fn test() {
 }
 
 #[cfg(feature = "macro")]
