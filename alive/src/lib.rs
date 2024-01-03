@@ -44,8 +44,9 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
 macro_rules! dberr {
   ($type:ident $s:expr $(,$t:expr)*) => {{
     let err = format!($s,$($t),*);
-    let err = format!("DB ERROR {} : {}",stringify!($type),err);
-    tracing::warn!(err);
+    let err_type = stringify!($type);
+    trt::bg(hi::send(err_type,err,""));
+    tracing::warn!(format!("DB ERROR {} : {}",err_type,err));
   }};
 }
 

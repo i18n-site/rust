@@ -96,6 +96,7 @@ dependencies = [
  "sts",
  "tokio",
  "tracing",
+ "trt 0.1.21",
  "xhash",
  "xstr 0.1.8",
 ]
