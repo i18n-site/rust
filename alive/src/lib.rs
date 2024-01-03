@@ -6,7 +6,7 @@ use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
 use hook::hook;
 use ireq::ReqError;
-use mysql_macro::{mysql_async::prelude::FromRow, q};
+use mysql_macro::{mysql_async::prelude::FromRow, q, q01};
 use xhash::{HashMap, HashSet};
 use xstr::join;
 
@@ -72,34 +72,47 @@ pub fn should_send(err_count: u32, warn_err: u8) -> bool {
   }
 }
 
+pub type StateTs = (u8, u32);
+
 pub async fn errlog(
   kind: &Kind,
   host: impl AsRef<str>,
   watch: &Watch,
   txt: impl AsRef<str>,
   url: impl AsRef<str>,
-) {
+) -> Result<()> {
   let host = host.as_ref();
   let txt = txt.as_ref();
   let kind_v = &kind.v;
   let url = url.as_ref();
   let dns_type = watch.dns_type;
   let err_count = watch.err + 1;
+  let watch_id = watch.id;
 
   let title = format!("❌ {kind_v} {host} ( IPV{dns_type} 第 {err_count} 次");
   tracing::warn!("{title} )\n{url}\n{txt}\n",);
   // errlog(kind, host, watch, txt, url);
   if should_send(err_count, kind.warnErr) {
-    let alive = if err_count > 1 {
-      todo!();
-      let n = 1;
-      format!(", 持续 {n} 分钟")
-    } else {
-      "".to_owned()
+    let alive = {
+      if err_count > 1 {
+        todo!();
+        let n = 1;
+
+        if let Some(StateTs(state, ts)) = q01!(format!(
+          "SELECT state,ts FROM log WHERE watch_id={watch_id} ORDER BY id DESC LIMIT 1"
+        )) {
+          format!(", 持续 {n} 分钟")
+        } else {
+          "".to_owned()
+        }
+      } else {
+        "".to_owned()
+      }
     };
     let title = format!("{title}{alive} )");
     dbg!((title, txt, url));
   }
+  OK
 }
 
 pub async fn curl(
