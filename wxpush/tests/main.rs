@@ -13,5 +13,5 @@ async fn test() -> anyhow::Result<()> {
   while url.len() < 4000 {
     url.push_str("123456790");
   }
-  Ok(wxpush::send(&url, &title, &body).await?)
+  Ok(wxpush::send(&title, &body, &url).await?)
 }

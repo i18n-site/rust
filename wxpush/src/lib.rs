@@ -8,13 +8,14 @@ use thiserror::Error;
 genv::s!(WXPUSH_TOKEN, WXPUSH_ID);
 
 #[allow(non_snake_case)]
+#[serde_with::skip_serializing_none]
 #[derive(Serialize, Debug)]
 struct Message {
   pub appToken: String,
   pub summary: String,
   pub content: String,
   pub topicIds: Vec<String>,
-  pub url: String,
+  pub url: Option<String>,
 }
 
 #[allow(non_snake_case)]
@@ -75,7 +76,11 @@ pub async fn send(
     topicIds: vec![WXPUSH_ID.clone()],
     summary: format!("{subject}"),
     content: content.to_owned(),
-    url: url.to_string(),
+    url: if url.is_empty() {
+      None
+    } else {
+      Some(url.into())
+    },
   };
   let client = Client::builder().timeout(Duration::from_secs(60)).build()?;
 
