@@ -143,6 +143,9 @@ pub async fn curl(
       err.to_string()
     };
     xerr::log!(errlog(&kind, host, &watch, txt, url).await);
+  } else {
+    // 更新 watch 的 ts ,加上 kind 的 duration
+    todo!();
   }
 }
 
