@@ -106,11 +106,10 @@ pub async fn errlog(
 
   let title = format!("❌ {kind_v} {host} ( IPV{dns_type} 第 {err_count} 次");
   tracing::warn!("{title} )\n{url}\n{txt}\n",);
-  // errlog(kind, host, watch, txt, url);
   if should_send(err_count, kind.warnErr) {
     let alive = alive(err_count, watch_id).await?;
     let title = format!("{title}{alive} )");
-    dbg!((title, txt, url));
+    hi::send(title, txt, url).await;
   }
   exe!(format!("UPDATE watch SET err=err+1 WHERE id={watch_id}"));
   OK
