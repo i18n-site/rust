@@ -40,6 +40,8 @@ pub trait Task {
 //   task: impl Task,
 // )
 
+pub const DNS_URL: &'static str = "https://atomgit.com/i18n-ops/conf/tree/main/dns";
+
 pub async fn watch<'a>(
   kind: &'a Kind,
   watch: &'a Watch,
@@ -75,25 +77,11 @@ pub async fn watch<'a>(
             }
           }
           if n == 0 {
-            errlog(
-              kind,
-              host,
-              watch,
-              format!("域名记录为空"),
-              "https://atomgit.com/i18n-ops/conf/tree/main/dns",
-            )
-            .await?;
+            errlog(kind, host, watch, format!("域名记录为空"), DNS_URL).await?;
           }
         }
         Err(err) => {
-          errlog(
-            kind,
-            host,
-            watch,
-            format!("域名解析失败 {err}"),
-            "https://atomgit.com/i18n-ops/conf/tree/main/dns",
-          )
-          .await?;
+          errlog(kind, host, watch, format!("域名解析失败 {err}"), DNS_URL).await?;
         }
       }
     };
