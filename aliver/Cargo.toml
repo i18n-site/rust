@@ -17,6 +17,7 @@ ireq = { version = "0.1.7", path = "../ireq" }
 loginit = { version = "0.1.4" }
 sonic-rs = "0.3.1"
 static_init = "1.0.3"
+sts = { version = "0.1.13", path = "../sts" }
 tokio = { version = "1.35.1", features = [
   "macros",
   "rt",
