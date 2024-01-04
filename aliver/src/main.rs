@@ -2,13 +2,13 @@ use std::net::SocketAddr;
 
 use aok::Result;
 use axum::{
-  body::{Body, Bytes},
+  body::Body,
   extract::Request,
-  http::{self, HeaderValue, StatusCode},
+  http::{self, HeaderValue},
   middleware,
   middleware::Next,
-  response::{IntoResponse, Response},
-  routing::{get, post},
+  response::IntoResponse,
+  routing::get,
   Router,
 };
 use tower::ServiceBuilder;
@@ -47,6 +47,7 @@ async fn index() -> aerr::msg!() {
 
   Ok(sonic_rs::to_string(&alive::status().await?)?)
 }
+
 pub const TEXT_JSON: HeaderValue = HeaderValue::from_static("text/json");
 
 async fn header(req: Request<Body>, next: Next) -> impl IntoResponse {
