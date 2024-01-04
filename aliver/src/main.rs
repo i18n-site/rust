@@ -45,7 +45,7 @@ async fn index() -> aerr::msg!() {
   //   aerr::err(status, ())
   // }
 
-  Ok("123".to_owned())
+  Ok(sonic_rs::to_string(&alive::status().await?)?)
 }
 pub const TEXT_JSON: HeaderValue = HeaderValue::from_static("text/json");
 
