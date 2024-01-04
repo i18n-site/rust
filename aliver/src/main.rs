@@ -43,31 +43,23 @@ async fn index() -> aerr::msg!() {
 
   Ok("123".to_owned())
 }
+pub const TEXT_JSON: HeaderValue = HeaderValue::from_static("text/json");
 
-async fn set_content_type(
-  content_type: HeaderValue,
-  req: Request<Body>,
-  next: Next,
-) -> Result<Response, http::Error> {
+async fn set_content_type(req: Request<Body>, next: Next) -> Result<Response, http::Error> {
   let mut res = next.run(req).await;
   res
     .headers_mut()
-    .insert(http::header::CONTENT_TYPE, content_type);
+    .insert(http::header::CONTENT_TYPE, TEXT_JSON);
   Ok(res)
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
   loginit::init();
-  let content_type = HeaderValue::from_static("text/json");
 
   let app = Router::new()
     .route("/", get(aerr::FnAny(index)))
-    .layer(
-      ServiceBuilder::new().layer(middleware::from_fn(move |req, next| {
-        set_content_type(content_type.clone(), req, next)
-      })),
-    );
+    .layer(ServiceBuilder::new().layer(middleware::from_fn(set_content_type)));
   let addr = SocketAddr::from(([0, 0, 0, 0], PORT()));
 
   tracing::info!("http://{}", addr);
