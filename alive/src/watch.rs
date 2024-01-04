@@ -1,6 +1,8 @@
+use std::net::SocketAddr;
+
 use aok::{Result, OK};
 use enum_dispatch::enum_dispatch;
-use hickory_proto::rr::record_type::RecordType;
+use hickory_proto::rr::{record_type::RecordType, RData};
 use hickory_resolver::{
   config::{ResolverConfig, ResolverOpts},
   TokioAsyncResolver,
@@ -62,8 +64,14 @@ pub async fn watch<'a>(
         .await
       {
         Ok(ip_li) => {
+          let mut n = 0;
           for ip in ip_li.records() {
-            dbg!(ip);
+            if let Some(ip) = ip.data() {
+              if let RData::A(ip) = ip {
+                dbg!(SocketAddr::new(std::net::IpAddr::V4(**ip), 589));
+                n += 1;
+              }
+            }
           }
           // todo 添加超时, 用 try join
           // match task.ping(kind, watch, host, kind_arg, watch_arg).await {
