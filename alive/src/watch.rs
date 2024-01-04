@@ -1,4 +1,4 @@
-use std::net::IpAddr;
+use std::{net::IpAddr, time::Duration};
 
 use aok::{Result, OK};
 use enum_dispatch::enum_dispatch;
@@ -34,7 +34,7 @@ pub trait Task {
 
 pub const DNS_URL: &str = "https://atomgit.com/i18n-ops/conf/tree/main/dns";
 
-pub async fn watch<'a>(
+pub async fn _watch<'a>(
   kind: &'a Kind,
   watch: &'a Watch,
   host: &'a str,
@@ -128,4 +128,35 @@ pub async fn watch<'a>(
     }
   }
   OK
+}
+
+pub const TIMEOUT: Duration = Duration::from_secs(180);
+
+pub async fn watch<'a>(
+  kind: &'a Kind,
+  watch: &'a Watch,
+  host: &'a str,
+  kind_arg: &'a str,
+  watch_arg: &'a str,
+  task: impl Task,
+) -> Result<()> {
+  match tokio::time::timeout(
+    TIMEOUT,
+    _watch(kind, watch, host, kind_arg, watch_arg, task),
+  )
+  .await
+  {
+    Err(_) => {
+      errlog(
+        kind,
+        host,
+        watch,
+        format!("运行超时 ( {} 分钟 )", TIMEOUT.as_secs() / 60),
+        "",
+      )
+      .await?;
+      OK
+    }
+    Ok(r) => r,
+  }
 }

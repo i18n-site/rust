@@ -1,0 +1,15 @@
+[package]
+name = "aliver"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/aliver"
+description = "aliver"
+
+[dependencies]
+alive = { version = "0.1.2", path = "../alive" }
+
+[dev-dependencies]
+
+[features]

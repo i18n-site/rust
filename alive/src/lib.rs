@@ -80,6 +80,13 @@ pub async fn next() -> Result<()> {
   for watch in &li {
     if let Some(host) = host_map.get(&watch.host_id) {
       if let Some(kind) = kind_map.get(&watch.kind_id) {
+        tracing::info!(
+          "{} {} IPV{} ERR {}",
+          kind.v,
+          host,
+          watch.dns_type,
+          watch.err
+        );
         macro_rules! arg {
           ($type:ident) => {
             if $type.arg_id > 0 {

@@ -12,7 +12,8 @@ pub enum ReqError {
 
 #[static_init::dynamic]
 pub static REQ: Client = Client::builder()
-  .timeout(Duration::from_secs(60))
+  .timeout(Duration::from_secs(120))
+  .connect_timeout(Duration::from_secs(16))
   .danger_accept_invalid_certs(true)
   .build()
   .unwrap();
