@@ -37,6 +37,7 @@ pub async fn watch<'a>(
 ) -> Result<()> {
   let dns_type = watch.dns_type;
   let watch_id = watch.id;
+  let kind_v = kind.v;
 
   match dns_type {
     4 | 6 => {
@@ -54,9 +55,10 @@ pub async fn watch<'a>(
         Ok(ip_li) => {
           dberr!(
             DNS_RESOLVER_ERROR
-            "{} IPV{} watch_id={}",
+            "{} IPV{} {} watch_id={}",
             host,
             dns_type,
+            kind_v,
             watch_id
           );
           // todo 添加超时, 用 try join
@@ -70,8 +72,8 @@ pub async fn watch<'a>(
         Err(err) => {
           dberr!(
             DNS_RESOLVER_ERROR
-            "{} IPV{} watch_id={} {}",
-            host, dns_type, watch_id, err
+            "{} IPV{} {} watch_id={} {}",
+            host, dns_type, kind_v, watch_id, err
           );
         }
       }
