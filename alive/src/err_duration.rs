@@ -1,3 +1,4 @@
+use aok::Result;
 use mysql_macro::q01;
 
 pub async fn err_duration(watch_id: u64) -> Result<String> {
