@@ -96,6 +96,7 @@ dependencies = [
  "hickory-resolver",
  "ireq",
  "loginit",
+ "mail-send",
  "mysql_async",
  "mysql_macro",
  "paste",

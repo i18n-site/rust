@@ -30,10 +30,10 @@ mod hook {
         host: &'a str,
         kind_arg: &'a str,
         watch_arg: &'a str,
-        addr: IpAddr,
+        ip: IpAddr,
       ) -> Result<()> {
         super::$type::ping(
-          kind,watch,host,kind_arg,watch_arg,addr
+          kind,watch,host,kind_arg,watch_arg,ip
         ).await
       }
     }
