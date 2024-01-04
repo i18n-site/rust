@@ -1,6 +1,5 @@
 use aok::{Result, OK};
 use ireq::ReqError;
-use mysql_macro::exe;
 
 use crate::{err::errlog, recover, Kind, Watch};
 
