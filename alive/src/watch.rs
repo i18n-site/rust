@@ -8,7 +8,7 @@ use crate::{
 
 #[enum_dispatch]
 pub trait Task {
-  async fn run(&self) -> Result<()>;
+  async fn ping(&self) -> Result<()>;
 }
 
 pub async fn watch(
@@ -17,7 +17,7 @@ pub async fn watch(
   host: impl AsRef<str>,
   task: impl Task,
 ) -> Result<()> {
-  match task.run().await {
+  match task.ping().await {
     Ok(_) => {
       // ok(kind, watch)
     }

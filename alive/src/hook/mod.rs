@@ -6,34 +6,32 @@ use crate::{
   watch::Task,
 };
 
-#[allow(non_camel_case_types)]
-#[enum_dispatch(Task)]
-enum Hook {
-  smtp,
-  mysql,
-}
-
-#[allow(non_camel_case_types)]
-pub struct smtp;
-
-impl Task for smtp {
-  async fn run(&self) -> Result<()> {
-    OK
-  }
-}
-
-#[allow(non_camel_case_types)]
-pub struct mysql;
-
-impl Task for mysql {
-  async fn run(&self) -> Result<()> {
-    OK
-  }
-}
-
 macro_rules! hook {
-  () => {};
+  ($($type:ident),*) => {
+    mod hook{
+      $(mod $type;)*
+    }
+
+    #[allow(non_camel_case_types)]
+    #[enum_dispatch(Task)]
+    enum Hook {
+      $($type,)*
+    }
+
+    $(
+    #[allow(non_camel_case_types)]
+    pub struct $type;
+
+    impl Task for $type {
+      async fn ping(&self) -> Result<()> {
+        OK
+      }
+    }
+    )*
+  };
 }
+
+hook!(smtp, mysql);
 
 pub fn hook<'a>(
   kind: &'a Kind,
