@@ -74,7 +74,7 @@ pub async fn watch<'a>(
               }
             }
           }
-          if n == 0 || true {
+          if n == 0 {
             errlog(
               kind,
               host,
