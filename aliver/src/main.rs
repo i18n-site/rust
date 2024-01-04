@@ -7,7 +7,7 @@ use axum::{
   http::{self, HeaderValue, StatusCode},
   middleware,
   middleware::Next,
-  response::Response,
+  response::{IntoResponse, Response},
   routing::{get, post},
   Router,
 };
@@ -45,12 +45,11 @@ async fn index() -> aerr::msg!() {
 }
 pub const TEXT_JSON: HeaderValue = HeaderValue::from_static("text/json");
 
-async fn set_content_type(req: Request<Body>, next: Next) -> Result<Response, http::Error> {
+async fn set_content_type(req: Request<Body>, next: Next) -> impl IntoResponse {
   let mut res = next.run(req).await;
   res
     .headers_mut()
-    .insert(http::header::CONTENT_TYPE, TEXT_JSON);
-  Ok(res)
+    .insert(http::header::CONTENT_TYPE, TEXT_JSON)
 }
 
 #[tokio::main]
