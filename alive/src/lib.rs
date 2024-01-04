@@ -145,7 +145,7 @@ pub async fn curl(
     xerr::log!(errlog(&kind, host, &watch, txt, url).await);
   } else {
     if watch.err != 0 {
-      // 恢复的通知
+      // 恢复的通知  ✅
     }
     // 更新 watch 的 ts ,加上 kind 的 duration, 设置 err = 0
     todo!();
