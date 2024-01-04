@@ -3,7 +3,7 @@ use mysql_macro::{exe, mysql_async::prelude::FromRow, q, q01};
 
 use crate::{
   db::{Kind, Watch},
-  should_send, 故障持续时间,
+  err_duration, should_send,
 };
 
 pub async fn errlog(
@@ -24,7 +24,11 @@ pub async fn errlog(
   let mut title = format!("❌ {kind_v} {host} ( IPV{dns_type} 第 {err_count} 次");
 
   if should_send(err_count, kind.warnErr) {
-    let alive = 故障持续时间(err_count, watch_id).await?;
+    let alive = if err_count > 1 {
+      err_duration(watch_id).await?
+    } else {
+      "".into()
+    };
     title = format!("{title}{alive} )");
     hi::send(&title, txt, url).await;
   } else {

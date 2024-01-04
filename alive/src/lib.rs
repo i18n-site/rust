@@ -32,17 +32,15 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
   Ok(HashMap::from_iter(li.into_iter()))
 }
 
-pub async fn 故障持续时间(err_count: u32, watch_id: u64) -> Result<String> {
-  if err_count > 1 {
-    if let Some::<(u8, u64)>((state, ts)) = q01!(format!(
-      "SELECT state,ts FROM log WHERE watch_id={watch_id} ORDER BY id DESC LIMIT 1"
-    )) {
-      if state == 1 {
-        let now = sts::sec();
-        if now > ts {
-          let n = (now - ts) / 60;
-          return Ok(format!(", 持续 {n} 分钟"));
-        }
+pub async fn err_duration(watch_id: u64) -> Result<String> {
+  if let Some::<(u8, u64)>((state, ts)) = q01!(format!(
+    "SELECT state,ts FROM log WHERE watch_id={watch_id} ORDER BY id DESC LIMIT 1"
+  )) {
+    if state == 1 {
+      let now = sts::sec();
+      if now > ts {
+        let n = (now - ts) / 60;
+        return Ok(format!(", 持续 {n} 分钟"));
       }
     }
   }
