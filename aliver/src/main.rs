@@ -49,7 +49,7 @@ async fn index() -> aerr::msg!() {
 }
 pub const TEXT_JSON: HeaderValue = HeaderValue::from_static("text/json");
 
-async fn set_content_type(req: Request<Body>, next: Next) -> impl IntoResponse {
+async fn header(req: Request<Body>, next: Next) -> impl IntoResponse {
   let mut res = next.run(req).await;
   res
     .headers_mut()
@@ -67,7 +67,7 @@ async fn main() -> Result<()> {
   let app = Router::new()
     .route("/", get(aerr::FnAny(index)))
     .layer(CompressionLayer::new().compress_when(predicate))
-    .layer(ServiceBuilder::new().layer(middleware::from_fn(set_content_type)));
+    .layer(ServiceBuilder::new().layer(middleware::from_fn(header)));
   let addr = SocketAddr::from(([0, 0, 0, 0], PORT()));
 
   tracing::info!("http://{}", addr);
