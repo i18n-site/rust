@@ -1,7 +1,7 @@
 use aok::{Result, OK};
 use ireq::ReqError;
 
-use crate::{err::errlog, recover, Kind, Watch};
+use crate::{errlog, recover, Kind, Watch};
 
 pub async fn curl(
   kind: &Kind,
@@ -32,7 +32,7 @@ pub async fn curl(
     }
     Ok(txt) => {
       let txt = "请求响应如下:\n".to_owned() + &txt;
-      recover(kind, watch, host, txt, url).await?;
+      recover(kind, watch, || (host, txt, url)).await?;
     }
   }
 

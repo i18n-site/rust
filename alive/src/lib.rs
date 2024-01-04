@@ -18,6 +18,7 @@ use watch::watch;
 mod should_send;
 use should_send::should_send;
 mod err;
+use err::errlog;
 mod hook;
 
 pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, String>> {
