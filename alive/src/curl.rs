@@ -31,8 +31,14 @@ pub async fn curl(
       xerr::log!(errlog(kind, host, &watch, txt, url).await);
     }
     Ok(txt) => {
-      let txt = "请求响应如下:\n".to_owned() + &txt;
-      ok(kind, &watch, || (host, txt, url)).await?;
+      ok(
+        kind,
+        &watch,
+        host,
+        || "请求响应如下:\n".to_owned() + &txt,
+        url,
+      )
+      .await?;
     }
   }
 
