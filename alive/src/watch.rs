@@ -12,7 +12,7 @@ use crate::{
 
 #[static_init::dynamic]
 pub static RESOLVER: Resolver =
-  Resolver::new(ResolverConfig::default(), ResolverOpts::default()).unwrap();
+  Resolver::new(ResolverConfig::cloudflare(), ResolverOpts::default()).unwrap();
 
 #[enum_dispatch]
 pub trait Task {
