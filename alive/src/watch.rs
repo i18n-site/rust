@@ -3,7 +3,7 @@ use enum_dispatch::enum_dispatch;
 use hickory_proto::rr::record_type::RecordType;
 use hickory_resolver::{
   config::{ResolverConfig, ResolverOpts},
-  Resolver,
+  TokioAsyncResolver,
 };
 
 use crate::{
@@ -12,8 +12,8 @@ use crate::{
 };
 
 #[static_init::dynamic]
-pub static RESOLVER: Resolver =
-  Resolver::new(ResolverConfig::cloudflare(), ResolverOpts::default()).unwrap();
+pub static RESOLVER: TokioAsyncResolver =
+  TokioAsyncResolver::new(TokioAsyncResolver::cloudflare(), Default::default()).unwrap();
 
 #[enum_dispatch]
 pub trait Task {
