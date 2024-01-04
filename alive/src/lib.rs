@@ -72,7 +72,8 @@ pub async fn next() -> Result<()> {
   let host_map = id_v("host", host_set).await?;
   let url_map = id_v("url", url_set).await?;
 
-  let mut ing = FuturesUnordered::new();
+  let mut ing_curl = FuturesUnordered::new();
+  let mut ing_hook = FuturesUnordered::new();
 
   for i in li {
     if let Some(host) = host_map.get(&i.host_id) {
@@ -84,12 +85,12 @@ pub async fn next() -> Result<()> {
         };
 
         if let Some(task) = hook(&kind.v) {
-          ing.push(task);
+          ing_hook.push(task);
           continue;
         }
 
         if let Some(kind_url) = url_map.get(&kind.url_id) {
-          ing.push(curl(kind, i, host, kind_url, watch_url));
+          ing_curl.push(curl(kind, i, host, kind_url, watch_url));
         } else {
           dberr!(
             KindMissUrl
@@ -106,10 +107,15 @@ pub async fn next() -> Result<()> {
       dberr!(WatchMissHost "watch id={} host_id={}", i.id, i.host_id);
     }
   }
-
-  while let Some(r) = ing.next().await {
-    xerr::log!(r);
+  macro_rules! log {
+    ($($ing:ident),*) => {
+      $(
+        while let Some(r) = $ing.next().await {
+          xerr::log!(r);
+        }
+      )*
+    };
   }
-
+  log!(ing_hook, ing_curl);
   OK
 }
