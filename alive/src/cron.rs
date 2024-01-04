@@ -5,9 +5,9 @@ use std::{
 
 use tokio::time::{interval, Duration};
 
-static START_TIME: AtomicU64 = AtomicU64::new(0);
-static RUNNING_DURATION: AtomicU64 = AtomicU64::new(0);
-static RUNNING_COUNT: AtomicU64 = AtomicU64::new(0);
+pub static START_TIME: AtomicU64 = AtomicU64::new(0);
+pub static RUNNING_DURATION: AtomicU64 = AtomicU64::new(0);
+pub static RUNNING_COUNT: AtomicU64 = AtomicU64::new(0);
 
 async fn run_your_function() {
   // 这里是你的函数实现
