@@ -168,6 +168,7 @@ dependencies = [
  "loginit 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "sonic-rs 0.3.1",
  "tokio",
+ "tower",
  "tracing",
 ]
 
