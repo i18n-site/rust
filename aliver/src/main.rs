@@ -48,7 +48,7 @@ async fn index() -> aerr::msg!() {
   Ok(sonic_rs::to_string(&alive::status().await?)?)
 }
 
-pub static TEXT_JSON: &'static str = "text/json";
+pub static TEXT_JSON: &str = "text/json";
 
 async fn header(req: Request<Body>, next: Next) -> impl IntoResponse {
   let mut res = next.run(req).await;
