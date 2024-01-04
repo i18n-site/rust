@@ -1,5 +1,7 @@
 use std::sync::atomic::Ordering::Relaxed;
 
+use aerr::err;
+use axum::http::StatusCode;
 use tokio::time::{sleep, Duration};
 
 pub async fn ping() -> aerr::msg!() {
@@ -13,7 +15,11 @@ pub async fn ping() -> aerr::msg!() {
       sleep(Duration::from_secs(3)).await;
       std::process::exit(1);
     });
+    err(
+      StatusCode::FAILED_DEPENDENCY,
+      "alive cron expire".to_owned(),
+    )?
   }
 
-  Ok(diff.to_string())
+  return Ok(diff.to_string());
 }
