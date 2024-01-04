@@ -10,6 +10,7 @@ description = "aliver"
 [dependencies]
 aerr = { version = "0.1.11", path = "../aerr" }
 alive = { version = "0.1.2", path = "../alive" }
+aok = { version = "0.1.2", path = "../aok" }
 axum = "0.7.3"
 genv = { version = "0.1.5", path = "../genv" }
 loginit = { version = "0.1.4", path = "../loginit" }

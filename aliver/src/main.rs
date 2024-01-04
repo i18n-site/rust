@@ -1,5 +1,6 @@
 use std::net::SocketAddr;
 
+use aok::Result;
 use axum::{body::Bytes, http::StatusCode, routing::post, Router};
 
 genv::def!(PORT:u16 | 5123);
@@ -29,11 +30,11 @@ async fn index(json: Bytes) -> aerr::msg!() {
   //   aerr::err(status, ())
   // }
 
-  "123"
+  Ok("123".to_owned())
 }
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn main() -> Result<()> {
   loginit::init();
   let app = Router::new().route("/", post(aerr::FnAny(index)));
   let addr = SocketAddr::from(([0, 0, 0, 0], PORT()));

@@ -115,6 +115,7 @@ version = "0.1.0"
 dependencies = [
  "aerr",
  "alive",
+ "aok 0.1.2",
  "axum",
  "genv 0.1.5",
  "loginit",
