@@ -31,15 +31,6 @@ pub trait Task {
   ) -> Result<()>;
 }
 
-// pub async fn watch<'a>(
-//   kind: &'a Kind,
-//   watch: &'a Watch,
-//   host: &'a str,
-//   kind_arg: &'a str,
-//   watch_arg: &'a str,
-//   task: impl Task,
-// )
-
 pub const DNS_URL: &'static str = "https://atomgit.com/i18n-ops/conf/tree/main/dns";
 
 pub async fn watch<'a>(
@@ -67,16 +58,15 @@ pub async fn watch<'a>(
     ($rec_type:ident, $v:ident) => {
       match RESOLVER.lookup(host, RecordType::$rec_type).await {
         Ok(ip_li) => {
-          let mut n = 0;
+          let mut addr_li = Vec::new();
           for ip in ip_li.records() {
             if let Some(ip) = ip.data() {
               if let RData::$rec_type(ip) = ip {
-                dbg!(std::net::IpAddr::$v(**ip));
-                n += 1;
+                addr_li.push(std::net::IpAddr::$v(**ip));
               }
             }
           }
-          if n == 0 {
+          if addr_li.is_empty() {
             errlog(kind, host, watch, format!("域名记录为空"), DNS_URL).await?;
           }
         }
