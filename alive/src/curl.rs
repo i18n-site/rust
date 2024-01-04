@@ -1,3 +1,4 @@
+use aok::{Result, OK};
 use ireq::ReqError;
 
 use crate::{err::errlog, Kind, Watch};
@@ -8,7 +9,7 @@ pub async fn curl(
   host: impl ToString,
   kind_url: impl ToString,
   watch_url: impl ToString,
-) {
+) -> Result<()> {
   let host = host.to_string();
   let kind_url = kind_url.to_string();
   let watch_url = watch_url.to_string();
@@ -29,6 +30,7 @@ pub async fn curl(
   } else {
     if watch.err != 0 {
       let kind_v = &kind.v;
+      let err_duration = crate::err_duration(watch.id).await?;
       let title = format!("✅ {kind_v} {host} ( IPV{dns_type} 恢复正常 )");
       // hi::send(title, txt, url).await?
       // 恢复的通知
@@ -36,4 +38,5 @@ pub async fn curl(
     // 更新 watch 的 ts ,加上 kind 的 duration, 设置 err = 0
     todo!();
   }
+  OK
 }
