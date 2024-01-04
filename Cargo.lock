@@ -169,12 +169,12 @@ dependencies = [
  "loginit 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "sonic-rs 0.3.1",
  "static_init",
- "sts 0.1.13",
+ "sts 0.1.14",
  "tokio",
  "tower",
  "tower-http",
  "tracing",
- "xerr 0.1.2",
+ "xerr 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
