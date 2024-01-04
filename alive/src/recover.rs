@@ -1,8 +1,7 @@
 use aok::{Result, OK};
-use ireq::ReqError;
 use mysql_macro::exe;
 
-use crate::{err::errlog, Kind, Watch};
+use crate::{Kind, Watch};
 
 pub async fn recover(
   kind: &Kind,
@@ -11,7 +10,7 @@ pub async fn recover(
   txt: impl AsRef<str>,
   url: impl AsRef<str>,
 ) -> Result<()> {
-  let host = txt.as_ref();
+  let host = host.as_ref();
   let txt = txt.as_ref();
   let url = url.as_ref();
   let dns_type = watch.dns_type;
