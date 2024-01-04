@@ -72,8 +72,12 @@ pub async fn watch<'a>(
             let mut ing = FuturesOrdered::from_iter(
               addr_li
                 .iter()
-                .map(|addr| task.ping(kind, watch, host, kind_arg, watch_arg, addr)),
+                .map(|addr| task.ping(kind, watch, host, kind_arg, watch_arg, *addr)),
             );
+            let mut n = 0;
+            while let Some(result) = ing.next().await {
+              n += 1;
+            }
           }
         }
         Err(err) => {
