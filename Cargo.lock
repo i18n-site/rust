@@ -4778,11 +4778,11 @@ dependencies = [
 
 [[package]]
 name = "xstr"
-version = "0.1.8"
+version = "0.1.9"
 
 [[package]]
 name = "xstr"
-version = "0.1.8"
+version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a34eb9fc7fa6f164a26e6f054299ecfd720dd0d52f941fa4afd06c6dc288d1e"
 
