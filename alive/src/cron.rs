@@ -5,9 +5,9 @@ use std::{
 
 use tokio::time::{interval, Duration};
 
-pub static START_TIME: AtomicU64 = AtomicU64::new(0);
-pub static RUNNING_DURATION: AtomicU64 = AtomicU64::new(0);
-pub static RUNNING_COUNT: AtomicU64 = AtomicU64::new(0);
+pub static TS: AtomicU64 = AtomicU64::new(0);
+pub static DURATION: AtomicU64 = AtomicU64::new(0);
+pub static COUNT: AtomicU64 = AtomicU64::new(0);
 
 async fn run_your_function() {
   // 这里是你的函数实现
@@ -20,14 +20,14 @@ async fn _run() {
     .duration_since(SystemTime::UNIX_EPOCH)
     .unwrap()
     .as_secs();
-  START_TIME.store(now, Ordering::Relaxed);
+  TS.store(now, Ordering::Relaxed);
 
   let start = Instant::now();
   run_your_function().await;
-  let function_running_duration = start.elapsed().as_secs();
+  let duration = start.elapsed().as_millis() as u64;
 
-  RUNNING_DURATION.fetch_add(function_running_duration, Ordering::Relaxed);
-  RUNNING_COUNT.fetch_add(1, Ordering::Relaxed);
+  DURATION.fetch_add(duration, Ordering::Relaxed);
+  COUNT.fetch_add(1, Ordering::Relaxed);
 }
 
 pub async fn run() {
