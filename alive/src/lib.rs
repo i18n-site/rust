@@ -125,7 +125,7 @@ pub async fn next() -> Result<()> {
       $(
         while let Some(r) = $ing.next().await {
           if let Err(err) = r {
-            let title = "未处理的异常";
+            let title = "出错了";
             tracing::error!("{title}:\n{err}");
             hi::send(title,err.to_string(),"https://atomgit.com/3ti/rust/blob/main/alive/src/lib.rs#L117").await;
           }
