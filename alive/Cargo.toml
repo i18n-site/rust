@@ -18,6 +18,7 @@ mysql_async = "0.33.0"
 mysql_macro = { version = "0.1.6", path = "../mysql_macro" }
 paste = "1.0.14"
 reqwest = { version = "0.11.23", features = ["http3"] }
+static_init = "1.0.3"
 sts = { version = "0.1.13", path = "../sts" }
 tracing = "0.1.40"
 trt = { version = "0.1.21", path = "../trt" }

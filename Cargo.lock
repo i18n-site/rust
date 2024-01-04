@@ -99,6 +99,7 @@ dependencies = [
  "mysql_macro",
  "paste",
  "reqwest",
+ "static_init",
  "sts",
  "tokio",
  "tracing",

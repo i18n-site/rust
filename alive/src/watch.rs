@@ -1,10 +1,18 @@
 use aok::{Result, OK};
 use enum_dispatch::enum_dispatch;
+use hickory_resolver::{
+  config::{ResolverConfig, ResolverOpts},
+  Resolver,
+};
 
 use crate::{
   db::{Kind, Watch},
   dberr, errlog, ok,
 };
+
+#[static_init::dynamic]
+pub static RESOLVER: Resolver =
+  Resolver::new(ResolverConfig::default(), ResolverOpts::default()).unwrap();
 
 #[enum_dispatch]
 pub trait Task {
