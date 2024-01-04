@@ -27,6 +27,7 @@ pub trait Task {
     host: &'a str,
     kind_arg: &'a str,
     watch_arg: &'a str,
+    addr: SocketAddr,
   ) -> Result<()>;
 }
 

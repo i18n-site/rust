@@ -8,6 +8,7 @@ $(mod $type;)*
 
 mod hook {
   use crate::db::{Kind, Watch};
+  use std::net::SocketAddr;
   use enum_dispatch::enum_dispatch;
   use aok::{Result};
   use crate::watch::Task;
@@ -29,8 +30,11 @@ mod hook {
         host: &'a str,
         kind_arg: &'a str,
         watch_arg: &'a str,
+        addr: SocketAddr,
       ) -> Result<()> {
-        super::$type::ping(kind,watch,host,kind_arg,watch_arg).await
+        super::$type::ping(
+          kind,watch,host,kind_arg,watch_arg,addr
+        ).await
       }
     }
   )*
