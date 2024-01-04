@@ -41,11 +41,12 @@ pub async fn status() -> Result<()> {
 
   for s in li {
     tracing::info!(
-      "{} {} ipv{} {}",
+      "{} {} ipv{} {} {}",
       KIND.get(&s.kind_id).map(|i| i.clone()).unwrap_or_default(),
       HOST.get(&s.host_id).map(|i| i.clone()).unwrap_or_default(),
       s.dns_type,
-      s.err
+      s.err,
+      s.ts
     );
   }
 
