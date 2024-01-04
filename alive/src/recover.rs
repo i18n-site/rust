@@ -12,12 +12,10 @@ pub async fn recover(
     String, // url
   ),
 ) -> Result<()> {
-  let dns_type = watch.dns_type;
-
   let mut sql = vec!["UPDATE watch SET "];
-
   if watch.err != 0 {
     let (host, txt, url) = msg();
+    let dns_type = watch.dns_type;
     let kind_v = &kind.v;
     let err_duration = crate::err_duration(watch.id).await?;
     let title = format!("✅ {kind_v} {host} ( IPV{dns_type} 恢复正常, 耗时 {err_duration})");
