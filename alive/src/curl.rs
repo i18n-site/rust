@@ -14,7 +14,6 @@ pub async fn curl(
   let watch_url = watch_url.to_string();
   let dns_type = watch.dns_type;
   let url = format!("https://{kind_url}/{}/{host}/{watch_url}", dns_type);
-  // todo 并发
   if let Err(err) = ireq::get(&url).await {
     let txt = if let Some(ReqError::Status(code, txt)) = err.downcast_ref::<ReqError>() {
       let mut t = code.to_string();
