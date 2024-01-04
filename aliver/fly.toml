@@ -9,7 +9,7 @@ primary_region = "fra"
 [build]
 
 [http_service]
-internal_port = 80
+internal_port = 5123
 force_https = true
 auto_stop_machines = false
 auto_start_machines = false
