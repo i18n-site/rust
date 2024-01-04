@@ -19,6 +19,10 @@ use tower_http::compression::{
 
 genv::def!(PORT:u16 | 5123);
 
+async fn ping() -> aerr::msg!() {
+  Ok("todo".to_owned())
+}
+
 // json: Bytes
 async fn index() -> aerr::msg!() {
   // let subject;
@@ -68,6 +72,7 @@ async fn main() -> Result<()> {
 
   let app = Router::new()
     .route("/", get(aerr::FnAny(index)))
+    .route("/ping", get(aerr::FnAny(ping)))
     .layer(CompressionLayer::new().compress_when(predicate))
     .layer(ServiceBuilder::new().layer(middleware::from_fn(header)));
   let addr = SocketAddr::from(([0, 0, 0, 0], PORT()));
