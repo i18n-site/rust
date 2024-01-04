@@ -8,6 +8,7 @@ use hickory_resolver::{
   config::{ResolverConfig, ResolverOpts},
   TokioAsyncResolver,
 };
+use xstr::Join;
 
 use crate::{
   db::{Kind, Watch},
@@ -31,7 +32,7 @@ pub trait Task {
   ) -> Result<()>;
 }
 
-pub const DNS_URL: &'static str = "https://atomgit.com/i18n-ops/conf/tree/main/dns";
+pub const DNS_URL: &str = "https://atomgit.com/i18n-ops/conf/tree/main/dns";
 
 pub async fn watch<'a>(
   kind: &'a Kind,
@@ -59,10 +60,8 @@ pub async fn watch<'a>(
         Ok(ip_li) => {
           let mut addr_li = Vec::new();
           for ip in ip_li.records() {
-            if let Some(ip) = ip.data() {
-              if let RData::$rec_type(ip) = ip {
-                addr_li.push(std::net::IpAddr::$v(**ip));
-              }
+            if let Some(RData::$rec_type(ip)) = ip.data() {
+              addr_li.push(std::net::IpAddr::$v(**ip));
             }
           }
           if addr_li.is_empty() {
@@ -84,14 +83,24 @@ pub async fn watch<'a>(
             }
 
             if !failed_addr.is_empty() {
+              let len = failed_addr.len();
               let txt = format!(
                 "{}\n域名解析总地址数 {}  / 出错的IP地址数 {}",
                 failed_addr.join("\n\n"),
                 addr_li.len(),
-                failed_addr.len(),
+                len,
               );
 
               errlog(kind, host, watch, txt, "").await?;
+            } else {
+              ok(
+                kind,
+                watch,
+                host,
+                || "IP地址:\n".to_owned() + &addr_li.join("\n"),
+                "",
+              )
+              .await?;
             };
           }
         }

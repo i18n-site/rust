@@ -86,7 +86,7 @@ dependencies = [
 
 [[package]]
 name = "alive"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "aok",
  "enum_dispatch",
@@ -107,7 +107,6 @@ dependencies = [
  "tracing",
  "trt 0.1.21",
  "xerr",
- "xhash",
  "xstr 0.1.9",
 ]
 

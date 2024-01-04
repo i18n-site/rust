@@ -25,12 +25,12 @@ pub async fn curl<'a>(
       } else {
         err.to_string()
       };
-      xerr::log!(errlog(kind, host, &watch, txt, url).await);
+      xerr::log!(errlog(kind, host, watch, txt, url).await);
     }
     Ok(txt) => {
       ok(
         kind,
-        &watch,
+        watch,
         host,
         || "请求响应如下:\n".to_owned() + &txt,
         url,

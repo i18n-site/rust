@@ -9,7 +9,6 @@ pub fn should_send(err_count: u32, warn_err: u8) -> bool {
     if diff > 1440 {
       diff % 1439 == 0
     } else {
-      dbg!(diff + 4, is_power_of_two(diff + 4));
       is_power_of_two(diff + 4)
     }
   } else {

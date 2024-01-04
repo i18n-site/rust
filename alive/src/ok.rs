@@ -18,7 +18,7 @@ pub async fn ok(
     let dns_type = watch.dns_type;
     let kind_v = &kind.v;
     let err_duration = crate::err_duration(watch.id).await?;
-    let title = format!("✅ {kind_v} {host} ( IPV{dns_type} 恢复正常, 耗时 {err_duration})");
+    let title = format!("{kind_v} ✅ {host} ( IPV{dns_type} 恢复正常, 耗时 {err_duration})");
     hi::send(title, txt, url).await;
     sql.push("err=0,");
   }

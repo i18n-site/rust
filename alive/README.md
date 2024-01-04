@@ -1,15 +1,19 @@
 [‼️]: ✏️README.mdt
 
-# alive
+# alive : use mysql to check is service alive
 
 ```rust
 /*
-#[test]
-fn test_replace() {
-}
 
 #[cfg(feature = "macro")]
 mod test_macro {
 }
 */
+
+#[tokio::test]
+async fn test() -> aok::Result<()> {
+  loginit::init();
+  alive::next().await?;
+  Ok(())
+}
 ```

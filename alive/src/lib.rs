@@ -1,11 +1,12 @@
 #![allow(non_snake_case)]
 
+use std::collections::{HashMap, HashSet};
+
 use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
 use hook::hook;
 use mysql_macro::q;
 use paste::paste;
-use xhash::{HashMap, HashSet};
 use xstr::Join;
 
 mod ok;
@@ -46,9 +47,9 @@ pub async fn next() -> Result<()> {
     return OK;
   }
 
-  let mut kind_set = HashSet::default();
-  let mut host_set = HashSet::default();
-  let mut arg_set = HashSet::default();
+  let mut kind_set = HashSet::new();
+  let mut host_set = HashSet::new();
+  let mut arg_set = HashSet::new();
 
   li.iter().for_each(|w| {
     kind_set.insert(w.kind_id);
@@ -76,8 +77,7 @@ pub async fn next() -> Result<()> {
   let mut ing_curl = FuturesUnordered::new();
   let mut ing_hook = FuturesUnordered::new();
 
-  for pos in 0..li.len() {
-    let watch = &li[pos];
+  for watch in &li {
     if let Some(host) = host_map.get(&watch.host_id) {
       if let Some(kind) = kind_map.get(&watch.kind_id) {
         macro_rules! arg {
@@ -108,7 +108,7 @@ pub async fn next() -> Result<()> {
         let kind_arg = arg!(kind);
         let watch_arg = arg!(watch);
 
-        if let Some(task) = hook(&kind, watch, host, kind_arg, watch_arg) {
+        if let Some(task) = hook(kind, watch, host, kind_arg, watch_arg) {
           ing_hook.push(task);
         } else {
           ing_curl.push(curl(kind, watch, host, kind_arg, watch_arg));

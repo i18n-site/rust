@@ -1,5 +1,5 @@
 use std::{
-  net::{IpAddr, SocketAddr},
+  net::{IpAddr},
   time::Duration,
 };
 
@@ -8,14 +8,13 @@ use mail_send::{smtp::tls::build_tls_connector, SmtpClientBuilder};
 
 use crate::{
   db::{Kind, Watch},
-  dberr,
 };
 
 pub const SMTP_PORT: u16 = 587;
 
 pub async fn ping<'a>(
-  kind: &'a Kind,
-  watch: &'a Watch,
+  _kind: &'a Kind,
+  _watch: &'a Watch,
   host: &'a str,
   _: &'a str, // kind_args: : &'a str,
   _: &'a str, // watch_arg: : &'a str,
@@ -24,7 +23,7 @@ pub async fn ping<'a>(
   let ip = ip.to_string();
   let smtp = SmtpClientBuilder {
     addr: format!("{}:{}", &ip, SMTP_PORT),
-    timeout: Duration::from_secs(60),
+    timeout: Duration::from_secs(30),
     tls_connector: build_tls_connector(false),
     tls_hostname: host,
     tls_implicit: false,
@@ -34,8 +33,7 @@ pub async fn ping<'a>(
     say_ehlo: true,
   };
 
-  let r = smtp.connect().await?.ehlo(host).await;
-
-  dbg!((ip, r));
+  let ehlo = smtp.connect().await?.ehlo(host).await?;
+  assert_eq!(ehlo.hostname, host);
   OK
 }
