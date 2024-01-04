@@ -27,6 +27,15 @@ pub trait Task {
   ) -> Result<()>;
 }
 
+// pub async fn watch<'a>(
+//   kind: &'a Kind,
+//   watch: &'a Watch,
+//   host: &'a str,
+//   kind_arg: &'a str,
+//   watch_arg: &'a str,
+//   task: impl Task,
+// )
+
 pub async fn watch<'a>(
   kind: &'a Kind,
   watch: &'a Watch,
@@ -53,16 +62,18 @@ pub async fn watch<'a>(
         .await
       {
         Ok(ip_li) => {
-          errlog(kind, host, watch, format!("DNS 解析失败"), "").await?;
-          // todo 添加超时, 用 try join
-          match task.ping(kind, watch, host, kind_arg, watch_arg).await {
-            Ok(_) => {
-              // ok(kind, watch)
-            }
-            Err(err) => {
-              dbg!("todo");
-            }
+          for ip in ip_li.records() {
+            dbg!(ip);
           }
+          // todo 添加超时, 用 try join
+          // match task.ping(kind, watch, host, kind_arg, watch_arg).await {
+          //   Ok(_) => {
+          //     // ok(kind, watch)
+          //   }
+          //   Err(err) => {
+          //     dbg!("todo");
+          //   }
+          // }
         }
         Err(err) => {
           errlog(kind, host, watch, format!("DNS 解析失败 {err}"), "").await?;
