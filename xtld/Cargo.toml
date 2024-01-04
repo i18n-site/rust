@@ -9,7 +9,7 @@ description = "xtld"
 
 [dependencies]
 psl = "2.1.13"
-xstr = { version = "0.1.8" }
+xstr = { version = "0.1.9" }
 
 [dev-dependencies]
 
