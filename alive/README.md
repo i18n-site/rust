@@ -2,9 +2,11 @@
 
 # alive : use mysql to check is service alive
 
-监控服务本身可以用 https://healthchecks.io 做状态监控
+mysql 免费数据库用 [aiven.io](https://aiven.io)
 
-cron-job.org 用来做每分钟触发
+监控服务本身可以用 [healthchecks.io](https://healthchecks.io) 做状态监控
+
+[cron-job.org](https://cron-job.org) 用来做每分钟触发
 
 导入配置的脚本
 https://atomgit.com/3ti/node/tree/main/alive/init
