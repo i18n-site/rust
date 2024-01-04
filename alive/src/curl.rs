@@ -15,29 +15,32 @@ pub async fn curl(
   let watch_url = watch_url.to_string();
   let dns_type = watch.dns_type;
   let url = format!("https://{kind_url}/{}/{host}/{watch_url}", dns_type);
-  if let Err(err) = ireq::get(&url).await {
-    let txt = if let Some(ReqError::Status(code, txt)) = err.downcast_ref::<ReqError>() {
-      let mut t = code.to_string();
-      if !txt.is_empty() {
-        t.push('\n');
-        t.push_str(txt);
-      }
-      t
-    } else {
-      err.to_string()
-    };
-    xerr::log!(errlog(&kind, host, &watch, txt, url).await);
-  } else {
-    if watch.err != 0 {
-      let kind_v = &kind.v;
-      let err_duration = crate::err_duration(watch.id).await?;
-      let title = format!("✅ {kind_v} {host} ( IPV{dns_type} 恢复正常, 耗时 {err_duration})");
-      let txt = url;
-      // hi::send(title, txt, url).await?
-      // 恢复的通知
+
+  match ireq::get(&url).await {
+    Err(err) => {
+      let txt = if let Some(ReqError::Status(code, txt)) = err.downcast_ref::<ReqError>() {
+        let mut t = code.to_string();
+        if !txt.is_empty() {
+          t.push('\n');
+          t.push_str(txt);
+        }
+        t
+      } else {
+        err.to_string()
+      };
+      xerr::log!(errlog(&kind, host, &watch, txt, url).await);
     }
-    // 更新 watch 的 ts ,加上 kind 的 duration, 设置 err = 0
-    todo!();
+    Ok(txt) => {
+      if watch.err != 0 {
+        let kind_v = &kind.v;
+        let err_duration = crate::err_duration(watch.id).await?;
+        let title = format!("✅ {kind_v} {host} ( IPV{dns_type} 恢复正常, 耗时 {err_duration})");
+        hi::send(title, txt, url).await?
+        // 恢复的通知
+      }
+      todo!();
+    }
   }
+
   OK
 }
