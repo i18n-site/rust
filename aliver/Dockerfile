@@ -21,18 +21,17 @@ ADD Cargo.toml .
 ADD ./sh/cpso.sh .
 ADD ./src ./src
 
-RUN \
-source $CARGO_HOME/env &&\
-mkdir -p out &&\
-TARGET=$(rustc -vV | sed -n 's|host: ||p') &&\
-export RUSTFLAGS="--cfg reqwest_unstable -Ctarget-feature=+crt-static $RUSTFLAGS" &&\
-cargo build \
-  --release \
-  --out-dir out \
-  -Z unstable-options \
-  --target=$TARGET &&\
-mv out/* m &&\
+RUN <<EOT bash
+set -ex
+source $CARGO_HOME/env 
+mkdir -p out 
+TARGET=$(rustc -vV | sed -n 's|host: ||p') 
+export RUSTFLAGS="--cfg reqwest_unstable -Ctarget-feature=+crt-static $RUSTFLAGS" 
+cargo build --release --out-dir out -Z unstable-options --target=$TARGET
+mv out/* m 
 ./cpso.sh m
+EOT
+
 
 # FROM ubuntu
 FROM scratch
