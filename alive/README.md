@@ -2,18 +2,37 @@
 
 # alive : use mysql to check is service alive
 
+导入配置的脚本
+https://atomgit.com/3ti/node/tree/main/alive/init
+
+mysql 数据库的表结构
+https://atomgit.com/3ti/rust/tree/main/alive/dump
+
+![](https://i-01.eu.org/2024/01/7mIDvw7.webp)
+
+需要配置的环境变量如下 , `NAME` 是邮箱发件人的名称
+
+```
+LARK_BOT
+MYSQL_COMPRESS
+MYSQL_CONN_LIMIT
+MYSQL_DB
+MYSQL_HOST
+MYSQL_PORT
+MYSQL_PWD
+MYSQL_SSL
+MYSQL_USER
+NAME
+RUST_LOG
+SMTP_FROM
+SMTP_HOST
+SMTP_PASSWORD
+SMTP_USER
+TO_MAIL
+WXPUSH_ID
+WXPUSH_TOKEN
+```
+
 ```rust
-/*
-
-#[cfg(feature = "macro")]
-mod test_macro {
-}
-*/
-
-#[tokio::test]
-async fn test() -> aok::Result<()> {
-  loginit::init();
-  alive::next().await?;
-  Ok(())
-}
+< ./tests/main.rs>
 ```
