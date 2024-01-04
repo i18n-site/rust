@@ -31,6 +31,10 @@ impl Task for mysql {
   }
 }
 
+macro_rules! hook {
+  () => {};
+}
+
 pub fn hook<'a>(
   kind: &'a Kind,
   watch: &'a Watch,
@@ -47,6 +51,6 @@ pub fn hook<'a>(
         _ => None,
       }
     }
-  };
+  }
   hook!(smtp, mysql)
 }
