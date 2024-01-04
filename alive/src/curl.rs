@@ -32,7 +32,7 @@ pub async fn curl(
     }
     Ok(txt) => {
       let txt = "请求响应如下:\n".to_owned() + &txt;
-      ok(kind, watch, || (host, txt, url)).await?;
+      ok(kind, &watch, || (host, txt, url)).await?;
     }
   }
 

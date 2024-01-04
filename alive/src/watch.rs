@@ -1,15 +1,20 @@
 use aok::{Result, OK};
 
-use crate::{errlog, ok};
+use crate::{
+  db::{Kind, Watch},
+  errlog, ok,
+};
 
-pub async fn watch(task: impl futures::Future<Output = Result<()>>) -> Result<()> {
-  // xerr::log!(
-  //   async move {
-  //     if let Err(err) = result {
-  //       dbg!(&err);
-  //     }
-  //   }
-  //   .await
-  // );
+pub async fn watch(
+  kind: &Kind,
+  watch: &Watch,
+  task: impl futures::Future<Output = Result<()>>,
+) -> Result<()> {
+  match task.await {
+    Ok(_) => {
+      // ok(kind, watch)
+    }
+    Err(err) => todo!(),
+  }
   OK
 }
