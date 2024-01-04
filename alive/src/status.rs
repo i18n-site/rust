@@ -1,17 +1,23 @@
-use std::collections::{HashMap, HashSet};
+use std::{
+  collections::{HashMap, HashSet},
+  sync::atomic::Ordering::Relaxed,
+};
 
 use aok::Result;
 use dashmap::DashMap;
 use mysql_macro as m;
 use sonic_rs::{Deserialize, Serialize};
 
-use crate::{db::Status, id_v};
+use crate::{cron, db::Status, id_v};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StatusLi(
   HashMap<u64, String>,          // host
   HashMap<u64, String>,          // kind
   Vec<(u64, u64, u8, u32, u64)>, // li
+  u64,                           // pre start
+  u64,                           // run times
+  u64,                           // run secs
 );
 
 #[static_init::dynamic]
@@ -65,5 +71,8 @@ pub async fn status() -> Result<StatusLi> {
     li.into_iter()
       .map(|i| (i.kind_id, i.host_id, i.dns_type, i.err, i.ts))
       .collect(),
+    cron::TS.load(Relaxed),
+    cron::COUNT.load(Relaxed),
+    (cron::DURATION.load(Relaxed) / 1000u128) as u64,
   ))
 }
