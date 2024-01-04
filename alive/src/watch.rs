@@ -1,4 +1,4 @@
-use std::net::SocketAddr;
+use std::net::IpAddr;
 
 use aok::{Result, OK};
 use enum_dispatch::enum_dispatch;
@@ -27,7 +27,7 @@ pub trait Task {
     host: &'a str,
     kind_arg: &'a str,
     watch_arg: &'a str,
-    addr: SocketAddr,
+    addr: IpAddr,
   ) -> Result<()>;
 }
 

@@ -1,4 +1,4 @@
-use std::net::SocketAddr;
+use std::net::IpAddr;
 
 use aok::{Result, OK};
 
@@ -11,9 +11,9 @@ pub async fn ping<'a>(
   kind: &'a Kind,
   watch: &'a Watch,
   host: &'a str,
-  _: &'a str,
-  _: &'a str,
-  addr: SocketAddr,
+  _: &'a str, // kind_args: : &'a str,
+  _: &'a str, // watch_arg: : &'a str,
+  addr: IpAddr,
 ) -> Result<()> {
   dbg!(host, watch.dns_type);
 
