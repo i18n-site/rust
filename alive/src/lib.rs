@@ -75,7 +75,8 @@ pub async fn next() -> Result<()> {
   let mut ing_curl = FuturesUnordered::new();
   let mut ing_hook = FuturesUnordered::new();
 
-  for i in li {
+  for pos in 0..li.len() {
+    let i = &li[pos];
     if let Some(host) = host_map.get(&i.host_id) {
       if let Some(kind) = kind_map.get(&i.kind_id) {
         let watch_url = if i.url_id > 0 {

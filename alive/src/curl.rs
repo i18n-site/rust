@@ -5,7 +5,7 @@ use crate::{errlog, ok, Kind, Watch};
 
 pub async fn curl(
   kind: &Kind,
-  watch: Watch,
+  watch: &Watch,
   host: impl ToString,
   kind_url: impl ToString,
   watch_url: impl ToString,
