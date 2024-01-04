@@ -114,10 +114,10 @@ pub async fn next() -> Result<()> {
           ing_curl.push(curl(kind, watch, host, kind_arg, watch_arg));
         }
       } else {
-        dberr!(WatchMissKind "watch id={} kind_id={}", watch.id, watch.kind_id);
+        dberr!(WatchMissKind "watch_id={} host={} kind_id={}", watch.id, host, watch.kind_id);
       }
     } else {
-      dberr!(WatchMissHost "watch id={} host_id={}", watch.id, watch.host_id);
+      dberr!(WatchMissHost "watch_id={} host_id={}", watch.id, watch.host_id);
     }
   }
   macro_rules! log {
