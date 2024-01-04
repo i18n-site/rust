@@ -3,7 +3,7 @@ use mysql_macro::mysql_async::prelude::FromRow;
 #[derive(Debug, Clone, FromRow)]
 pub struct Kind {
   pub id: u64,
-  pub url_id: u64,
+  pub arg_id: u64,
   pub duration: u32,
   pub warnErr: u8,
   pub v: String,
@@ -16,5 +16,5 @@ pub struct Watch {
   pub kind_id: u64,
   pub dns_type: u8,
   pub err: u32,
-  pub url_id: u64,
+  pub arg_id: u64,
 }

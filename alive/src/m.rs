@@ -13,14 +13,14 @@ $crate::hostId($val).await?
 };
 }
 
-pub async fn urlId(val:impl AsRef<str>)->Result<u64>{
-  Ok(q1!("SELECT urlId(?)",val.as_ref()))
+pub async fn argId(val:impl AsRef<str>)->Result<u64>{
+  Ok(q1!("SELECT argId(?)",val.as_ref()))
 }
 
 #[macro_export]
-macro_rules! urlId {
+macro_rules! argId {
 ($val:expr) => {
-$crate::urlId($val).await?
+$crate::argId($val).await?
 };
 }
 

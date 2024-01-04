@@ -38,7 +38,7 @@ pub async fn next() -> Result<()> {
   let now = sts::sec();
 
   let li: Vec<Watch> = q!(
-    "SELECT id,host_id,kind_id,dns_type,err,url_id FROM watch WHERE ts<=?",
+    "SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch WHERE ts<=?",
     now
   );
   if li.is_empty() {
@@ -47,30 +47,30 @@ pub async fn next() -> Result<()> {
 
   let mut kind_set = HashSet::default();
   let mut host_set = HashSet::default();
-  let mut url_set = HashSet::default();
+  let mut arg_set = HashSet::default();
 
   li.iter().for_each(|w| {
     kind_set.insert(w.kind_id);
     host_set.insert(w.host_id);
-    if w.url_id != 0 {
-      url_set.insert(w.url_id);
+    if w.arg_id != 0 {
+      arg_set.insert(w.arg_id);
     }
   });
 
   let kind_li: Vec<Kind> = q!(format!(
-    "SELECT id,url_id,duration,warnErr,v FROM kind WHERE id IN ({})",
+    "SELECT id,arg_id,duration,warnErr,v FROM kind WHERE id IN ({})",
     kind_set.join(",")
   ));
 
   kind_li.iter().for_each(|k| {
-    if k.url_id != 0 {
-      url_set.insert(k.url_id);
+    if k.arg_id != 0 {
+      arg_set.insert(k.arg_id);
     }
   });
 
   let kind_map = HashMap::<u64, Kind>::from_iter(kind_li.into_iter().map(|k| (k.id, k)));
   let host_map = id_v("host", host_set).await?;
-  let url_map = id_v("url", url_set).await?;
+  let arg_map = id_v("arg", arg_set).await?;
 
   let mut ing_curl = FuturesUnordered::new();
   let mut ing_hook = FuturesUnordered::new();
@@ -79,25 +79,25 @@ pub async fn next() -> Result<()> {
     let watch = &li[pos];
     if let Some(host) = host_map.get(&watch.host_id) {
       if let Some(kind) = kind_map.get(&watch.kind_id) {
-        let watch_url = if watch.url_id > 0 {
-          url_map.get(&watch.url_id).map(|i| i.as_str()).unwrap_or("")
+        let watch_arg = if watch.arg_id > 0 {
+          arg_map.get(&watch.arg_id).map(|i| i.as_str()).unwrap_or("")
         } else {
           ""
         };
 
-        if let Some(kind_url) = url_map.get(&kind.url_id) {
-          if let Some(task) = hook(&kind, watch, host, kind_url, watch_url) {
+        if let Some(kind_arg) = arg_map.get(&kind.arg_id) {
+          if let Some(task) = hook(&kind, watch, host, kind_arg, watch_arg) {
             ing_hook.push(task);
           } else {
-            ing_curl.push(curl(kind, watch, host, kind_url, watch_url));
+            ing_curl.push(curl(kind, watch, host, kind_arg, watch_arg));
           }
         } else {
           dberr!(
             KindMissUrl
-            "watch id={} kind_id={} url_id={}",
+            "watch id={} kind_id={} arg_id={}",
             watch.id,
             watch.kind_id,
-            watch.url_id
+            watch.arg_id
           );
         };
       } else {
