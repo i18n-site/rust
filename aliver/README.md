@@ -2,14 +2,10 @@
 
 # aliver
 
-```rust
-/*
-#[test]
-fn test_replace() {
-}
+第一次运行请用
 
-#[cfg(feature = "macro")]
-mod test_macro {
-}
-*/
 ```
+fly apps create NAME
+```
+
+其他参见 https://crates.io/crates/alive

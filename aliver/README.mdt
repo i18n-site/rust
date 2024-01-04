@@ -5,3 +5,5 @@
 ```
 fly apps create NAME
 ```
+
+其他参见 https://crates.io/crates/alive
