@@ -14,19 +14,5 @@ pub async fn ping<'a>(
 ) -> Result<()> {
   dbg!(host, watch.dns_type);
 
-  match watch.dns_type {
-    4 => {}
-    6 => {}
-    _ => {
-      dberr!(
-        DnsTypeNotSupported
-        "watch_id={} host={} dns_type={}",
-        watch.dns_type,
-        host,
-        watch.id
-      );
-      return OK;
-    }
-  }
   OK
 }
