@@ -47,7 +47,7 @@ pub fn should_send(err_count: u32, warn_err: u8) -> bool {
     let diff = err_count - warn_err;
     if diff == 1 {
       true
-    } else if diff > 6 {
+    } else if diff >= 4 {
       if diff > 86400 {
         diff % 86400 == 0
       } else {
