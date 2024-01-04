@@ -27,6 +27,7 @@ tokio = { version = "1.35.1", features = [
 tower = "0.4.13"
 tower-http = { version = "0.5.0", features = ["compression-full", "decompression-full"] }
 tracing = "0.1.40"
+xerr = { version = "0.1.2", path = "../xerr" }
 
 [dev-dependencies]
 

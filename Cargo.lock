@@ -173,6 +173,7 @@ dependencies = [
  "tower",
  "tower-http",
  "tracing",
+ "xerr 0.1.2",
 ]
 
 [[package]]
