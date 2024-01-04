@@ -9,7 +9,7 @@ description = "aliver"
 
 [dependencies]
 aerr = { version = "0.1.11" }
-alive = { version = "0.1.2" }
+alive = { version = "0.1.5" }
 aok = { version = "0.1.2" }
 axum = "0.7.3"
 genv = { version = "0.1.5" }

@@ -36,7 +36,22 @@ dependencies = [
  "bytes",
  "prost",
  "serde",
- "sonic-rs",
+ "sonic-rs 0.3.1",
+ "tracing",
+]
+
+[[package]]
+name = "aerr"
+version = "0.1.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0d075dfc5360b2042019836a4458dcc90e7a0ab28663b235b4e6a3bd6a739762"
+dependencies = [
+ "anyhow",
+ "axum",
+ "bytes",
+ "prost",
+ "serde",
+ "sonic-rs 0.2.6",
  "tracing",
 ]
 
@@ -96,13 +111,42 @@ dependencies = [
  "hickory-proto",
  "hickory-resolver",
  "ireq 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
- "loginit",
+ "loginit 0.1.4",
  "mail-send",
  "mysql_async",
  "mysql_macro 0.1.6",
  "paste",
  "serde",
- "sonic-rs",
+ "sonic-rs 0.3.1",
+ "static_init",
+ "sts 0.1.14",
+ "tokio",
+ "tracing",
+ "trt 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "xerr 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "xstr 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "alive"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d13d8785ba84b89a3ec25529b6222a0c6630a5c6ba710798f8966c25234cb6aa"
+dependencies = [
+ "aok 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "dashmap",
+ "enum_dispatch",
+ "futures",
+ "hi 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "hickory-proto",
+ "hickory-resolver",
+ "ireq 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "mail-send",
+ "mysql_async",
+ "mysql_macro 0.1.6",
+ "paste",
+ "serde",
+ "sonic-rs 0.3.1",
  "static_init",
  "sts 0.1.14",
  "tokio",
@@ -116,13 +160,13 @@ dependencies = [
 name = "aliver"
 version = "0.1.0"
 dependencies = [
- "aerr",
- "alive",
- "aok 0.1.2",
+ "aerr 0.1.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "alive 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "aok 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "axum",
- "genv 0.1.5",
- "loginit",
- "sonic-rs",
+ "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "loginit 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sonic-rs 0.3.1",
  "tokio",
  "tracing",
 ]
@@ -1434,7 +1478,7 @@ dependencies = [
  "genv 0.1.5",
  "ireq 0.1.7",
  "reqwest",
- "sonic-rs",
+ "sonic-rs 0.3.1",
  "static_init",
  "tokio",
  "tracing",
@@ -1453,7 +1497,7 @@ dependencies = [
  "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "ireq 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "reqwest",
- "sonic-rs",
+ "sonic-rs 0.3.1",
  "static_init",
  "tokio",
  "tracing",
@@ -1876,7 +1920,7 @@ name = "jarg"
 version = "0.1.6"
 dependencies = [
  "axum",
- "sonic-rs",
+ "sonic-rs 0.3.1",
 ]
 
 [[package]]
@@ -2019,6 +2063,16 @@ version = "0.1.4"
 dependencies = [
  "atty",
  "tracing-stackdriver",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "loginit"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e05d0c9903aab8079fa7a634d7d8a46ee956d80aab150b98b7b5e36a9060df5f"
+dependencies = [
+ "atty",
  "tracing-subscriber",
 ]
 
@@ -2389,6 +2443,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39e3200413f237f41ab11ad6d161bc7239c84dcb631773ccd7de3dfe4b5c267c"
 dependencies = [
  "autocfg",
+ "libm",
 ]
 
 [[package]]
@@ -2465,6 +2520,16 @@ name = "overload"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
+
+[[package]]
+name = "packed_simd"
+version = "0.3.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1f9f08af0c877571712e2e3e686ad79efad9657dbf0f7c3c8ba943ff6c38932d"
+dependencies = [
+ "cfg-if",
+ "num-traits",
+]
 
 [[package]]
 name = "page_size"
@@ -3666,6 +3731,26 @@ dependencies = [
 
 [[package]]
 name = "sonic-rs"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b55015e2b337ad56ebacbe73a5e37666c91938a1452e6760e41260a271b9a2d4"
+dependencies = [
+ "arrayref",
+ "bumpalo",
+ "bytes",
+ "cfg-if",
+ "faststr",
+ "itoa",
+ "packed_simd",
+ "ryu",
+ "serde",
+ "simdutf8",
+ "smallvec",
+ "thiserror",
+]
+
+[[package]]
+name = "sonic-rs"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "919ee6879a83eaaaf93db059cedb5de2a659c4eb489dbc7279020b4b6902ba98"
@@ -4824,7 +4909,7 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_with",
- "sonic-rs",
+ "sonic-rs 0.3.1",
  "static_init",
  "thiserror",
  "tokio",
@@ -4843,7 +4928,7 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_with",
- "sonic-rs",
+ "sonic-rs 0.3.1",
  "static_init",
  "thiserror",
  "xstr 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
