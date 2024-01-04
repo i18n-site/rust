@@ -70,9 +70,18 @@ pub fn cut<'a>(s: &'a str, max_length: usize) -> &'a str {
   s
 }
 
-pub fn join<S: std::string::ToString>(li: impl IntoIterator<Item = S>) -> String {
-  li.into_iter()
-    .map(|i| i.to_string())
-    .collect::<Vec<String>>()
-    .join(",")
+pub trait Join {
+  fn join(self, split: impl AsRef<str>) -> String;
+}
+
+impl<I: IntoIterator<Item = S>, S: std::string::ToString> Join for I {
+  fn join(self, split: impl AsRef<str>) -> String {
+    let mut r = String::new();
+    let split = split.as_ref();
+    for i in self {
+      r.push_str(&i.to_string());
+      r.push_str(split);
+    }
+    r[..r.len() - split.len()].into()
+  }
 }

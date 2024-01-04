@@ -7,7 +7,7 @@ use futures::{stream::FuturesUnordered, StreamExt};
 use hook::hook;
 use mysql_macro::{exe, mysql_async::prelude::FromRow, q, q01};
 use xhash::{HashMap, HashSet};
-use xstr::join;
+use xstr::Join;
 
 mod curl;
 use curl::curl;
@@ -27,7 +27,7 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
   }
   let li: Vec<(u64, String)> = q!(format!(
     "SELECT id,v FROM {table} WHERE id IN ({})",
-    join(id_set)
+    id_set.join(",")
   ));
   Ok(HashMap::from_iter(li.into_iter()))
 }
@@ -72,7 +72,7 @@ pub async fn next() -> Result<()> {
 
   let kind_li: Vec<Kind> = q!(format!(
     "SELECT id,url_id,duration,warnErr,v FROM kind WHERE id IN ({})",
-    join(kind_set)
+    kind_set.join(",")
   ));
 
   kind_li.iter().for_each(|k| {
