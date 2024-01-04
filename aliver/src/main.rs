@@ -2,7 +2,7 @@
 mod index;
 use index::index;
 mod ping;
-use std::{net::SocketAddr, sync::atomic::Ordering::Relaxed};
+use std::net::SocketAddr;
 
 use aok::Result;
 use axum::{
