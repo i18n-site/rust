@@ -1,10 +1,8 @@
 use std::net::SocketAddr;
 
 use axum::{body::Bytes, http::StatusCode, routing::post, Router};
-use dotenv::dotenv;
 mod mail;
 
-genv::s!(WARN_URL);
 genv::def!(PORT:u16 | 8080);
 
 async fn index(json: Bytes) -> aerr::msg!() {
@@ -36,8 +34,6 @@ async fn index(json: Bytes) -> aerr::msg!() {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-  dotenv().ok();
-
   loginit::init();
   let app = Router::new().route("/", post(aerr::FnAny(index)));
   let addr = SocketAddr::from(([0, 0, 0, 0], PORT()));
