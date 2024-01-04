@@ -1,3 +1,7 @@
 # aliver
 
-第一次运行请用 `fly apps create`
+第一次运行请用
+
+```
+fly apps create
+```
