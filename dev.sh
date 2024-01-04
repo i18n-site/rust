@@ -2,13 +2,22 @@
 
 DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
-set -ex
+
+if [ ${#1} -eq 0 ]; then
+  if [ -f ".dev" ]; then
+    arg=$(cat .dev)
+  else
+    echo "❯ $0 项目名"
+    exit 1
+  fi
+else
+  echo $@ >.dev
+  arg=$@
+fi
 
 source ./sh/pid.sh
 
-export RUST_BACKTRACE=short
-export RUSTFLAGS='--cfg reqwest_unstable'
-export RUST_LOG=$RUST_LOG,watchexec=off,watchexec_cli=off,globset=warn
+set -ex
 
 if ! [ -x "$(command -v dasel)" ]; then
   go install github.com/tomwright/dasel/v2/cmd/dasel@master
@@ -19,4 +28,4 @@ exec watchexec \
   --project-origin . -w . \
   --exts rs,toml \
   -r \
-  -- ./run.sh $@
+  -- ./run.sh $arg
