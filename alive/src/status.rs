@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{hash_map, HashMap, HashSet};
 
 use aok::{Result, OK};
 use dashmap::DashMap;
@@ -39,15 +39,16 @@ pub async fn status() -> Result<()> {
     }
   }
 
-  for s in li {
-    tracing::info!(
-      "{} {} ipv{} {} {}",
-      KIND.get(&s.kind_id).map(|i| i.clone()).unwrap_or_default(),
-      HOST.get(&s.host_id).map(|i| i.clone()).unwrap_or_default(),
-      s.dns_type,
-      s.err,
-      s.ts
-    );
+  let mut kind_map = HashMap::new();
+  let mut host_map = HashMap::new();
+
+  for i in li {
+    if let Some(v) = KIND.get(&i.kind_id).map(|i| i.clone()) {
+      kind_map.insert(i.kind_id, v);
+    }
+    if let Some(v) = HOST.get(&i.host_id).map(|i| i.clone()) {
+      host_map.insert(i.host_id, v);
+    }
   }
 
   OK
