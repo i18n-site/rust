@@ -1,5 +1,3 @@
 # aliver
 
-```rust
-<+ ./tests/main.rs>
-```
+第一次运行请用 `fly apps create`
