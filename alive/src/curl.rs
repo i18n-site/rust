@@ -35,7 +35,8 @@ pub async fn curl(
         let kind_v = &kind.v;
         let err_duration = crate::err_duration(watch.id).await?;
         let title = format!("✅ {kind_v} {host} ( IPV{dns_type} 恢复正常, 耗时 {err_duration})");
-        hi::send(title, txt, url).await?
+        let txt = "请求响应如下:\n".to_owned() + &txt;
+        hi::send(title, txt, url).await;
         // 恢复的通知
       }
       todo!();
