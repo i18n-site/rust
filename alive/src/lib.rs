@@ -10,7 +10,9 @@ use paste::paste;
 use xstr::Join;
 
 mod ok;
+mod status;
 use ok::ok;
+pub use status::status;
 mod curl;
 use curl::curl;
 mod db;
