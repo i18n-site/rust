@@ -1,3 +1,5 @@
+#![feature(async_closure)]
+
 use std::net::SocketAddr;
 
 use aok::Result;
@@ -18,6 +20,7 @@ use tower_http::compression::{
 };
 
 genv::def!(PORT:u16 | 5123);
+genv::s!(HEALTHCHECK);
 
 async fn ping() -> aerr::msg!() {
   Ok("todo".to_owned())
@@ -65,6 +68,14 @@ async fn header(req: Request<Body>, next: Next) -> impl IntoResponse {
 
 #[tokio::main]
 async fn main() -> Result<()> {
+  tokio::spawn(async {
+    let healthcheck = HEALTHCHECK.as_str();
+    alive::cron::run(async move || {
+      dbg!(healthcheck);
+    })
+    .await;
+  });
+
   loginit::init();
   let predicate = SizeAbove::new(256)
     .and(NotForContentType::GRPC)
