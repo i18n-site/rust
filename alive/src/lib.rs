@@ -76,34 +76,34 @@ pub async fn next() -> Result<()> {
   let mut ing_hook = FuturesUnordered::new();
 
   for pos in 0..li.len() {
-    let i = &li[pos];
-    if let Some(host) = host_map.get(&i.host_id) {
-      if let Some(kind) = kind_map.get(&i.kind_id) {
-        let watch_url = if i.url_id > 0 {
-          url_map.get(&i.url_id).map(|i| i.as_str()).unwrap_or("")
+    let watch = &li[pos];
+    if let Some(host) = host_map.get(&watch.host_id) {
+      if let Some(kind) = kind_map.get(&watch.kind_id) {
+        let watch_url = if watch.url_id > 0 {
+          url_map.get(&watch.url_id).map(|i| i.as_str()).unwrap_or("")
         } else {
           ""
         };
-        if let Some(task) = hook(&kind, &i) {
+        if let Some(task) = hook(&kind, watch) {
           ing_hook.push(task);
         } else {
           if let Some(kind_url) = url_map.get(&kind.url_id) {
-            ing_curl.push(curl(kind, i, host, kind_url, watch_url));
+            ing_curl.push(curl(kind, watch, host, kind_url, watch_url));
           } else {
             dberr!(
               KindMissUrl
               "watch id={} kind_id={} url_id={}",
-              i.id,
-              i.kind_id,
-              i.url_id
+              watch.id,
+              watch.kind_id,
+              watch.url_id
             );
           }
         };
       } else {
-        dberr!(WatchMissKind "watch id={} kind_id={}", i.id, i.kind_id);
+        dberr!(WatchMissKind "watch id={} kind_id={}", watch.id, watch.kind_id);
       }
     } else {
-      dberr!(WatchMissHost "watch id={} host_id={}", i.id, i.host_id);
+      dberr!(WatchMissHost "watch id={} host_id={}", watch.id, watch.host_id);
     }
   }
   macro_rules! log {
