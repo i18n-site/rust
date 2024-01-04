@@ -7,6 +7,8 @@ use mysql_macro::{q, q01};
 use xhash::{HashMap, HashSet};
 use xstr::Join;
 
+mod recover;
+use recover::recover;
 mod curl;
 use curl::curl;
 mod db;
