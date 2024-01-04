@@ -3,7 +3,7 @@ use enum_dispatch::enum_dispatch;
 
 use crate::{
   db::{Kind, Watch},
-  errlog, ok,
+  dberr, errlog, ok,
 };
 
 #[enum_dispatch]
@@ -26,6 +26,20 @@ pub async fn watch<'a>(
   watch_arg: &'a str,
   task: impl Task,
 ) -> Result<()> {
+  match watch.dns_type {
+    4 => {}
+    6 => {}
+    _ => {
+      dberr!(
+        DnsTypeNotSupported
+        "watch_id={} host={} dns_type={}",
+        watch.dns_type,
+        host,
+        watch.id
+      );
+      return OK;
+    }
+  }
   match task.ping(kind, watch, host, kind_arg, watch_arg).await {
     Ok(_) => {
       // ok(kind, watch)
