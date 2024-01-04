@@ -30,7 +30,7 @@ use err_duration::err_duration;
 mod id_v;
 use id_v::id_v;
 
-pub async fn next() -> Result<()> {
+pub async fn ping() -> Result<()> {
   let now = sts::sec();
 
   let li: Vec<Watch> = q!(
