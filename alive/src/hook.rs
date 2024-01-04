@@ -6,15 +6,14 @@ pub async fn smtp() -> Result<()> {
 
 macro_rules! hook {
   ($($fn:ident),*) => {
-    pub async fn hook(name: &str) -> bool {
+    pub fn hook(name: &str) -> bool {
       match name {
         $(
           stringify!($fn) => {
-            crate::watch($fn().await).await;
-            true
+            Some(crate::watch($fn()))
           }
         ),*
-        _ => false,
+        _ => None,
       }
     }
   };

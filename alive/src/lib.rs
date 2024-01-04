@@ -83,7 +83,8 @@ pub async fn next() -> Result<()> {
           ""
         };
 
-        if hook(&kind.v).await {
+        if let Some(task) = hook(&kind.v) {
+          ing.push(task);
           continue;
         }
 
