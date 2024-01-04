@@ -8,11 +8,11 @@ impl<'a> Rany<'a> {
     let alphabet = self.0;
     let len = alphabet.len();
     let mut result = 0;
-    for (i, c) in s.into_iter().rev().enumerate() {
+    for (i, c) in s.iter().rev().enumerate() {
       let digit = alphabet
         .iter()
         .position(|x| x == c)
-        .expect("invalid string") as usize;
+        .expect("invalid string");
       result += digit * len.pow(i as _);
     }
 
@@ -32,7 +32,7 @@ impl<'a> Rany<'a> {
       let mut result = Vec::new();
 
       while num != 0 {
-        let remainder = (num % len) as usize;
+        let remainder = (num % len);
         result.push(alphabet[remainder]);
         num /= len;
       }

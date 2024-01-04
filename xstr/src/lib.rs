@@ -50,11 +50,11 @@ pub fn word_reverse(input: &str, split: &str) -> String {
 //   truncate(input, 255)
 // }
 
-pub fn cut255<'a>(s: &'a str) -> &'a str {
+pub fn cut255(s: &str) -> &str {
   cut(s, 255)
 }
 
-pub fn cut<'a>(s: &'a str, max_length: usize) -> &'a str {
+pub fn cut(s: &str, max_length: usize) -> &str {
   if s.len() > max_length {
     let mut byte_count = 0;
     for c in s.chars() {

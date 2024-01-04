@@ -5,7 +5,7 @@ pub fn trim_start(s: impl AsRef<str>, trimer: impl Fn(char) -> bool) -> usize {
       return p;
     }
   }
-  return s.len();
+  s.len()
 }
 
 pub fn trim_end(s: impl AsRef<str>, trimer: impl Fn(char) -> bool) -> usize {
@@ -17,7 +17,7 @@ pub fn trim_end(s: impl AsRef<str>, trimer: impl Fn(char) -> bool) -> usize {
     }
     p = pos;
   }
-  return p;
+  p
 }
 
 pub fn chars(s: &str) -> impl Iterator<Item = (usize, char)> + '_ {

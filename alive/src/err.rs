@@ -1,5 +1,5 @@
 use aok::{Result, OK};
-use mysql_macro::{exe, mysql_async::prelude::FromRow, q, q01};
+use mysql_macro::{exe};
 
 use crate::{
   db::{Kind, Watch},

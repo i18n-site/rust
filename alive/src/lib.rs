@@ -1,11 +1,11 @@
 #![allow(non_snake_case)]
 
-use std::string::ToString;
+
 
 use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
 use hook::hook;
-use mysql_macro::{exe, mysql_async::prelude::FromRow, q, q01};
+use mysql_macro::{q, q01};
 use xhash::{HashMap, HashSet};
 use xstr::Join;
 
@@ -19,7 +19,7 @@ mod should_send;
 use should_send::should_send;
 mod err;
 mod hook;
-use err::errlog;
+
 
 pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, String>> {
   if id_set.is_empty() {
@@ -102,7 +102,7 @@ pub async fn next() -> Result<()> {
         }
 
         if let Some(kind_url) = url_map.get(&kind.url_id) {
-          ing.push(curl(&kind, i, host, kind_url, watch_url));
+          ing.push(curl(kind, i, host, kind_url, watch_url));
         } else {
           dberr!(
             KindMissUrl

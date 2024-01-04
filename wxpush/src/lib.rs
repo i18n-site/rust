@@ -59,7 +59,7 @@ pub async fn send(
   let message = Message {
     appToken: WXPUSH_TOKEN.clone(),
     topicIds: vec![WXPUSH_ID.clone()],
-    summary: format!("{subject}"),
+    summary: subject.to_string(),
     content: content.to_owned(),
     url: if url.is_empty() {
       None

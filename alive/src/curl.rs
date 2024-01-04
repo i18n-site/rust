@@ -29,7 +29,7 @@ pub async fn curl(
       } else {
         err.to_string()
       };
-      xerr::log!(errlog(&kind, host, &watch, txt, url).await);
+      xerr::log!(errlog(kind, host, &watch, txt, url).await);
     }
     Ok(txt) => {
       let mut sql = vec!["UPDATE watch SET "];
