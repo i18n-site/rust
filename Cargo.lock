@@ -96,6 +96,7 @@ dependencies = [
  "loginit",
  "mysql_async",
  "mysql_macro",
+ "paste",
  "reqwest",
  "sts",
  "tokio",

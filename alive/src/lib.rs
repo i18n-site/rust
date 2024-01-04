@@ -85,6 +85,28 @@ pub async fn next() -> Result<()> {
           ""
         };
 
+        macro_rules! arg {
+          ($type:ident) => {
+            paste! {
+              let kind_arg = if kind.arg_id > 0 {
+                if let Some(s) = arg_map.get(&kind.arg_id) {
+                  s.as_str()
+                } else {
+                  dberr!(
+                    KindMissArg
+                    "watch id={} kind_id={} arg_id={}",
+                    watch.id,
+                    watch.kind_id,
+                    watch.arg_id
+                  );
+                  continue;
+                }
+              } else {
+                ""
+              };
+            }
+          };
+        }
         let kind_arg = if kind.arg_id > 0 {
           if let Some(s) = arg_map.get(&kind.arg_id) {
             s.as_str()
