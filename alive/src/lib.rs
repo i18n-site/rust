@@ -9,6 +9,7 @@ use mysql_macro::q;
 use paste::paste;
 use xstr::Join;
 
+pub mod cron;
 mod ok;
 use ok::ok;
 mod status;
