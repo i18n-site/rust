@@ -3,7 +3,7 @@
 use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
 use hook::hook;
-use mysql_macro::{q, q01};
+use mysql_macro::q;
 use xhash::{HashMap, HashSet};
 use xstr::Join;
 
@@ -19,7 +19,9 @@ mod should_send;
 use should_send::should_send;
 mod err;
 use err::errlog;
+mod err_duration;
 mod hook;
+use err_duration::err_duration;
 
 pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, String>> {
   if id_set.is_empty() {
@@ -30,21 +32,6 @@ pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, Stri
     id_set.join(",")
   ));
   Ok(HashMap::from_iter(li.into_iter()))
-}
-
-pub async fn err_duration(watch_id: u64) -> Result<String> {
-  if let Some::<(u8, u64)>((state, ts)) = q01!(format!(
-    "SELECT state,ts FROM log WHERE watch_id={watch_id} ORDER BY id DESC LIMIT 1"
-  )) {
-    if state == 1 {
-      let now = sts::sec();
-      if now > ts {
-        let n = (now - ts) / 60;
-        return Ok(format!("{n} 分钟"));
-      }
-    }
-  }
-  Ok("".to_owned())
 }
 
 pub async fn next() -> Result<()> {
