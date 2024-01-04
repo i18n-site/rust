@@ -5,7 +5,6 @@ use std::string::ToString;
 use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
 use hook::hook;
-use ireq::ReqError;
 use mysql_macro::{exe, mysql_async::prelude::FromRow, q, q01};
 use xhash::{HashMap, HashSet};
 use xstr::join;

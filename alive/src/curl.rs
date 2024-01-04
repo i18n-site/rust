@@ -1,3 +1,7 @@
+use ireq::ReqError;
+
+use crate::{err::errlog, Kind, Watch};
+
 pub async fn curl(
   kind: &Kind,
   watch: Watch,
