@@ -11,8 +11,8 @@ pub async fn ping<'a>(
   kind: &'a Kind,
   watch: &'a Watch,
   host: &'a str,
-  _: &'a str,
-  _: &'a str,
+  _: &'a str, // kind_args: : &'a str,
+  _: &'a str, // watch_arg: : &'a str,
   addr: SocketAddr,
 ) -> Result<()> {
   dbg!(host, watch.dns_type);
