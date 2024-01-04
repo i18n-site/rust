@@ -11,7 +11,7 @@ pub async fn ok(
   url: impl AsRef<str>,
 ) -> Result<()> {
   let mut sql = vec!["UPDATE watch SET "];
-  if watch.err != 0 {
+  if watch.err > kind.warnErr {
     let host = host.as_ref();
     let url = url.as_ref();
     let txt = txt_gen();
