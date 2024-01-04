@@ -73,6 +73,6 @@ pub async fn status() -> Result<StatusLi> {
       .collect(),
     cron::TS.load(Relaxed),
     cron::COUNT.load(Relaxed),
-    (cron::DURATION.load(Relaxed) / 1000u128) as u64,
+    cron::DURATION.load(Relaxed),
   ))
 }
