@@ -12,7 +12,7 @@ pub async fn smtp() -> Result<()> {
 
 macro_rules! hook {
   ($($fn:ident),*) => {
-    pub fn hook(kind: &'a Kind, watch:&'a Watch) -> Option<impl futures::Future<Output=Result<()>>+'a> {
+    pub fn hook<'a>(kind: &'a Kind, watch:&'a Watch) -> Option<impl futures::Future<Output=Result<()>>+'a> {
       match kind.v.as_str() {
         $(
           stringify!($fn) => {
