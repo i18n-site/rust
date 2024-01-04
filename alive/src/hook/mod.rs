@@ -32,6 +32,8 @@ pub fn hook<'a>(
   kind: &'a Kind,
   watch: &'a Watch,
   host: &'a str,
+  kind_url: &'a str,
+  watch_url: &'a str,
 ) -> Option<impl futures::Future<Output = Result<()>> + 'a> {
   match kind.v.as_str() {
     $(

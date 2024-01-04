@@ -84,20 +84,21 @@ pub async fn next() -> Result<()> {
         } else {
           ""
         };
-        if let Some(task) = hook(&kind, watch, host) {
-          ing_hook.push(task);
-        } else {
-          if let Some(kind_url) = url_map.get(&kind.url_id) {
-            ing_curl.push(curl(kind, watch, host, kind_url, watch_url));
+
+        if let Some(kind_url) = url_map.get(&kind.url_id) {
+          if let Some(task) = hook(&kind, watch, host, kind_url, watch_url) {
+            ing_hook.push(task);
           } else {
-            dberr!(
-              KindMissUrl
-              "watch id={} kind_id={} url_id={}",
-              watch.id,
-              watch.kind_id,
-              watch.url_id
-            );
+            ing_curl.push(curl(kind, watch, host, kind_url, watch_url));
           }
+        } else {
+          dberr!(
+            KindMissUrl
+            "watch id={} kind_id={} url_id={}",
+            watch.id,
+            watch.kind_id,
+            watch.url_id
+          );
         };
       } else {
         dberr!(WatchMissKind "watch id={} kind_id={}", watch.id, watch.kind_id);
