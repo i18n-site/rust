@@ -8,6 +8,7 @@ use crate::{
 pub async fn watch(
   kind: &Kind,
   watch: &Watch,
+  host: impl AsRef<str>,
   task: impl futures::Future<Output = Result<()>>,
 ) -> Result<()> {
   match task.await {

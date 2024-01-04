@@ -84,7 +84,7 @@ pub async fn next() -> Result<()> {
         } else {
           ""
         };
-        if let Some(task) = hook(&kind, watch) {
+        if let Some(task) = hook(&kind, watch, host) {
           ing_hook.push(task);
         } else {
           if let Some(kind_url) = url_map.get(&kind.url_id) {
