@@ -9,5 +9,5 @@ pub async fn ping() -> aerr::msg!() {
     std::process::exit(1);
   }
 
-  Ok(diff)
+  Ok(diff.to_string())
 }
