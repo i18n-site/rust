@@ -25,7 +25,7 @@ RUN \
 source $CARGO_HOME/env &&\
 mkdir -p out &&\
 TARGET=$(rustc -vV | sed -n 's|host: ||p') &&\
-export RUSTFLAGS="-Ctarget-feature=+crt-static $RUSTFLAGS" &&\
+export RUSTFLAGS="--cfg reqwest_unstable -Ctarget-feature=+crt-static $RUSTFLAGS" &&\
 cargo build \
   --release \
   --out-dir out \
