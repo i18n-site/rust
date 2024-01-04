@@ -8,11 +8,11 @@ use sonic_rs::{Deserialize, Serialize};
 use crate::{db::Status, id_v};
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct StatusLi {
-  host: HashMap<u64, String>,
-  kind: HashMap<u64, String>,
-  li: Vec<Status>,
-}
+pub struct StatusLi(
+  HashMap<u64, String>,          // host
+  HashMap<u64, String>,          // kind
+  Vec<(u64, u64, u8, u32, u64)>, // li
+);
 
 #[static_init::dynamic]
 pub static HOST: DashMap<u64, String> = DashMap::new();
@@ -59,5 +59,11 @@ pub async fn status() -> Result<StatusLi> {
     }
   }
 
-  Ok(StatusLi { kind, host, li })
+  Ok(StatusLi(
+    kind,
+    host,
+    li.into_iter()
+      .map(|i| (i.kind_id, i.host_id, i.dns_type, i.err, i.ts))
+      .collect(),
+  ))
 }
