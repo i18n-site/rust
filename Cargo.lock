@@ -119,6 +119,7 @@ dependencies = [
  "loginit",
  "sonic-rs",
  "tokio",
+ "tracing",
 ]
 
 [[package]]
