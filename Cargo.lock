@@ -1619,6 +1619,10 @@ name = "i18"
 version = "0.1.1"
 
 [[package]]
+name = "i18n-site"
+version = "0.1.1"
+
+[[package]]
 name = "iana-time-zone"
 version = "0.1.59"
 source = "registry+https://github.com/rust-lang/crates.io-index"
