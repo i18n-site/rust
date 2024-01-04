@@ -32,7 +32,7 @@ impl<'a> Rany<'a> {
       let mut result = Vec::new();
 
       while num != 0 {
-        let remainder = (num % len);
+        let remainder = num % len;
         result.push(alphabet[remainder]);
         num /= len;
       }

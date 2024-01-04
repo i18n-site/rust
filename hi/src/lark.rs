@@ -16,7 +16,7 @@ pub async fn send(
 
   let txt = if !url.is_empty() {
     li.push(json!({"tag":"a","text":url,"href":url}));
-    "\n".to_owned() + &txt + "\n"
+    "\n".to_owned() + txt + "\n"
   } else {
     txt.to_owned() + "\n"
   };
