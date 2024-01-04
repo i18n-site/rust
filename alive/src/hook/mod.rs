@@ -7,6 +7,7 @@ macro_rules! hook {
 $(mod $type;)*
 
 mod hook {
+  use crate::db::{Kind, Watch};
   use enum_dispatch::enum_dispatch;
   use aok::{Result};
   use crate::watch::Task;
