@@ -1,3 +1,5 @@
+use std::net::SocketAddr;
+
 use aok::{Result, OK};
 
 use crate::{
@@ -11,6 +13,7 @@ pub async fn ping<'a>(
   host: &'a str,
   _: &'a str,
   _: &'a str,
+  addr: SocketAddr,
 ) -> Result<()> {
   dbg!(host, watch.dns_type);
 
