@@ -20,7 +20,7 @@ pub static HOST: DashMap<u64, String> = DashMap::new();
 #[static_init::dynamic]
 pub static KIND: DashMap<u64, String> = DashMap::new();
 
-pub async fn status() -> Result<()> {
+pub async fn status() -> Result<StatusLi> {
   let li: Vec<Status> =
     m::q!("SELECT kind_id,host_id,dns_type,err,ts FROM watch ORDER BY err DESC,kind_id,host_id");
 
@@ -47,17 +47,17 @@ pub async fn status() -> Result<()> {
     }
   }
 
-  let mut kind_map = HashMap::new();
-  let mut host_map = HashMap::new();
+  let mut kind = HashMap::new();
+  let mut host = HashMap::new();
 
-  for i in li {
+  for i in &li {
     if let Some(v) = KIND.get(&i.kind_id).map(|i| i.clone()) {
-      kind_map.insert(i.kind_id, v);
+      kind.insert(i.kind_id, v);
     }
     if let Some(v) = HOST.get(&i.host_id).map(|i| i.clone()) {
-      host_map.insert(i.host_id, v);
+      host.insert(i.host_id, v);
     }
   }
 
-  OK
+  Ok(StatusLi { kind, host, li })
 }
