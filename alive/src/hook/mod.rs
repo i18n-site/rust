@@ -22,8 +22,14 @@ mod hook {
     pub struct $type;
 
     impl Task for $type {
-      async fn ping(&self) -> Result<()> {
-        super::$type::ping().await
+      async fn ping(&self,
+        kind: &'a Kind,
+        watch: &'a Watch,
+        host: &'a str,
+        kind_arg: &'a str,
+        watch_arg: &'a str,
+      ) -> Result<()> {
+        super::$type::ping(kind,watch,host,kind_arg,watch_arg).await
       }
     }
   )*

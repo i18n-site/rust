@@ -8,7 +8,14 @@ use crate::{
 
 #[enum_dispatch]
 pub trait Task {
-  async fn ping(&self) -> Result<()>;
+  async fn ping(
+    &self,
+    kind: &'a Kind,
+    watch: &'a Watch,
+    host: &'a str,
+    kind_arg: &'a str,
+    watch_arg: &'a str,
+  ) -> Result<()>;
 }
 
 pub async fn watch(
