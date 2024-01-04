@@ -6,7 +6,7 @@ pub async fn smtp() -> Result<()> {
   OK
 }
 
-pub async fn test() -> Result<()> {
+pub async fn mysql() -> Result<()> {
   OK
 }
 
@@ -27,5 +27,5 @@ pub fn hook<'a>(
       }
     }
   };
-  hook!(smtp, test)
+  hook!(smtp, mysql)
 }
