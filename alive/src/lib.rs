@@ -4,6 +4,7 @@ use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
 use hook::hook;
 use mysql_macro::q;
+use paste::paste;
 use xhash::{HashMap, HashSet};
 use xstr::Join;
 
@@ -79,50 +80,32 @@ pub async fn next() -> Result<()> {
     let watch = &li[pos];
     if let Some(host) = host_map.get(&watch.host_id) {
       if let Some(kind) = kind_map.get(&watch.kind_id) {
-        let watch_arg = if watch.arg_id > 0 {
-          arg_map.get(&watch.arg_id).map(|i| i.as_str()).unwrap_or("")
-        } else {
-          ""
-        };
-
         macro_rules! arg {
           ($type:ident) => {
-            paste! {
-              let kind_arg = if kind.arg_id > 0 {
-                if let Some(s) = arg_map.get(&kind.arg_id) {
-                  s.as_str()
-                } else {
-                  dberr!(
-                    KindMissArg
-                    "watch id={} kind_id={} arg_id={}",
-                    watch.id,
-                    watch.kind_id,
-                    watch.arg_id
-                  );
-                  continue;
-                }
+            if $type.arg_id > 0 {
+              if let Some(s) = arg_map.get(&$type.arg_id) {
+                s.as_str()
               } else {
-                ""
-              };
+                paste! {
+                  dberr!(
+                    [< $type MissArg >]
+                    "watch id={} arg_id={} kind_id={} kind_arg_id={}",
+                    watch.id,
+                    watch.arg_id,
+                    watch.kind_id,
+                    kind.arg_id
+                  );
+                }
+                continue;
+              }
+            } else {
+              ""
             }
           };
         }
-        let kind_arg = if kind.arg_id > 0 {
-          if let Some(s) = arg_map.get(&kind.arg_id) {
-            s.as_str()
-          } else {
-            dberr!(
-              KindMissArg
-              "watch id={} kind_id={} arg_id={}",
-              watch.id,
-              watch.kind_id,
-              watch.arg_id
-            );
-            continue;
-          }
-        } else {
-          ""
-        };
+
+        let kind_arg = arg!(kind);
+        let watch_arg = arg!(watch);
 
         if let Some(task) = hook(&kind, watch, host, kind_arg, watch_arg) {
           ing_hook.push(task);
