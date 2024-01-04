@@ -1,4 +1,5 @@
 use mysql_macro::mysql_async::prelude::FromRow;
+use sonic_rs::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, FromRow)]
 pub struct Kind {
@@ -19,7 +20,7 @@ pub struct Watch {
   pub arg_id: u64,
 }
 
-#[derive(Debug, Clone, FromRow)]
+#[derive(Debug, Clone, FromRow, Serialize, Deserialize)]
 pub struct Status {
   pub host_id: u64,
   pub kind_id: u64,

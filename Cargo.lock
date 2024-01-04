@@ -101,6 +101,8 @@ dependencies = [
  "mysql_async",
  "mysql_macro 0.1.6",
  "paste",
+ "serde",
+ "sonic-rs",
  "static_init",
  "sts 0.1.14",
  "tokio",

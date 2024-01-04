@@ -20,6 +20,8 @@ mail-send = "0.4.6"
 mysql_async = "0.33.0"
 mysql_macro = { version = "0.1.6" }
 paste = "1.0.14"
+serde = "1.0.194"
+sonic-rs = "0.3.1"
 static_init = "1.0.3"
 sts = { version = "0.1.14" }
 tokio = { version = "1.35.1", features = [

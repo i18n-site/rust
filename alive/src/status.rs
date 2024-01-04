@@ -1,10 +1,18 @@
-use std::collections::{hash_map, HashMap, HashSet};
+use std::collections::{HashMap, HashSet};
 
 use aok::{Result, OK};
 use dashmap::DashMap;
 use mysql_macro as m;
+use sonic_rs::{Deserialize, Serialize};
 
 use crate::{db::Status, id_v};
+
+#[derive(Serialize, Deserialize)]
+pub struct StatusLi {
+  host: HashMap<u64, String>,
+  kind: HashMap<u64, String>,
+  li: Vec<Status>,
+}
 
 #[static_init::dynamic]
 pub static HOST: DashMap<u64, String> = DashMap::new();
