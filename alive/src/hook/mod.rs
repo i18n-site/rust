@@ -28,27 +28,21 @@ mod hook {
     }
   )*
 }
-  };
-}
-
-hook!(smtp, mysql);
-
 pub fn hook<'a>(
   kind: &'a Kind,
   watch: &'a Watch,
   host: &'a str,
 ) -> Option<impl futures::Future<Output = Result<()>> + 'a> {
-  macro_rules! hook {
-  ($($fn:ident),*) => {
-      match kind.v.as_str() {
-        $(
-          stringify!($fn) => {
-            Some(crate::watch(kind,watch,host,self::hook::Hook::$fn(self::hook::$fn)))
-          }
-        ),*
-        _ => None,
+  match kind.v.as_str() {
+    $(
+      stringify!($fn) => {
+        Some(crate::watch(kind,watch,host,self::hook::Hook::$type(self::hook::$type)))
       }
-    }
+    ),*
+    _ => None,
   }
-  hook!(smtp, mysql)
 }
+  };
+}
+
+hook!(smtp, mysql);
