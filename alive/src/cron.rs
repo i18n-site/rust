@@ -1,4 +1,5 @@
 use std::{
+  future::Future,
   sync::atomic::{AtomicU64, Ordering},
   time::{Instant, SystemTime},
 };
@@ -30,15 +31,15 @@ async fn _run() {
   COUNT.fetch_add(1, Ordering::Relaxed);
 }
 
-pub async fn run(next: impl FnOnce() + Send + 'static) {
+pub async fn run<Fut>(next: impl Fn() -> Fut)
+where
+  Fut: Future<Output = ()> + Send + 'static,
+{
   let mut interval = interval(Duration::from_secs(60));
 
   loop {
     interval.tick().await;
     _run().await;
-    tokio::task::spawn(async move {
-      next();
-    })
-    .detach();
+    tokio::task::spawn(next());
   }
 }
