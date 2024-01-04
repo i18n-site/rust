@@ -4,5 +4,4 @@
 
 ```
 fly apps create NAME
-flyctl ips allocate-v6
 ```
