@@ -8,7 +8,7 @@ homepage = "https://github.com/3TiSite/rust/tree/main/aliver"
 description = "aliver"
 
 [dependencies]
-aerr = { version = "0.1.11" }
+aerr = "0.1.11"
 alive = "0.1.6"
 aok = { version = "0.1.2" }
 axum = "0.7.3"
@@ -25,7 +25,7 @@ tokio = { version = "1.35.1", features = [
   "time",
   "sync",
 ] }
-tower = "0.4.13"
+tower = { version = "0.4.13", features = ["log", "timeout"] }
 tower-http = { version = "0.5.0", features = ["compression-full", "decompression-full"] }
 tracing = "0.1.40"
 xerr = { version = "0.1.2", path = "../xerr" }

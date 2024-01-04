@@ -2,18 +2,19 @@
 mod index;
 use index::index;
 mod ping;
-use std::net::SocketAddr;
+use std::{net::SocketAddr, time::Duration};
 
 use aok::Result;
 use axum::{
   body::Body,
+  error_handling::HandleErrorLayer,
   extract::Request,
-  http::{self, HeaderValue},
+  http::{self, HeaderValue, StatusCode},
   middleware,
   middleware::Next,
   response::IntoResponse,
   routing::get,
-  Router,
+  BoxError, Router,
 };
 use ping::ping;
 use tower::ServiceBuilder;
@@ -36,6 +37,8 @@ async fn header(req: Request<Body>, next: Next) -> impl IntoResponse {
   res
 }
 
+const TIMEOUT: u64 = 600;
+
 #[tokio::main]
 async fn main() -> Result<()> {
   tokio::spawn(async {
@@ -46,6 +49,20 @@ async fn main() -> Result<()> {
     .await;
   });
 
+  let middleware = ServiceBuilder::new()
+    .layer(HandleErrorLayer::new(|error: BoxError| async move {
+      if error.is::<tower::timeout::error::Elapsed>() {
+        Ok((StatusCode::REQUEST_TIMEOUT, "timeout"))
+      } else {
+        Err((
+          StatusCode::INTERNAL_SERVER_ERROR,
+          format!("Internal Error: {}", error),
+        ))
+      }
+    }))
+    .timeout(Duration::from_secs(TIMEOUT).into())
+    .layer(ServiceBuilder::new());
+
   loginit::init();
   let predicate = SizeAbove::new(256)
     .and(NotForContentType::GRPC)
@@ -54,6 +71,7 @@ async fn main() -> Result<()> {
   let app = Router::new()
     .route("/", get(aerr::FnAny(index)))
     .route("/ping", get(aerr::FnAny(ping)))
+    .layer(middleware)
     .layer(CompressionLayer::new().compress_when(predicate))
     .layer(ServiceBuilder::new().layer(middleware::from_fn(header)));
   let addr = SocketAddr::from(([0, 0, 0, 0], PORT()));
