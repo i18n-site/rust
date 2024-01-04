@@ -9,6 +9,7 @@ description = "use mysql to check is service alive"
 
 [dependencies]
 aok = { version = "0.1.2" }
+dashmap = "5.5.3"
 enum_dispatch = "0.3.12"
 futures = "0.3.30"
 hi = { version = "0.1.8" }
