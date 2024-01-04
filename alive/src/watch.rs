@@ -84,7 +84,13 @@ pub async fn watch<'a>(
             }
 
             if !failed_addr.is_empty() {
-              let txt = failed_addr.join("\n\n");
+              let txt = format!(
+                "{}\n域名解析总地址数 {}  / 出错的IP地址数 {}",
+                failed_addr.join("\n\n"),
+                addr_li.len(),
+                failed_addr.len(),
+              );
+
               errlog(kind, host, watch, txt, "").await?;
             };
           }
