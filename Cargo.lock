@@ -131,7 +131,7 @@ dependencies = [
 name = "alive"
 version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8aedd6325eac0012efa0a54b019b5b8b186c49fadeb8c24668d4a347eb53ea20"
+checksum = "80c580a45beea3b830d9c626da41de047fc3423405de9ee65daa00bfc30073a7"
 dependencies = [
  "aok 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "dashmap",
@@ -161,7 +161,7 @@ name = "aliver"
 version = "0.1.0"
 dependencies = [
  "aerr 0.1.11 (registry+https://github.com/rust-lang/crates.io-index)",
- "alive 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "alive 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "aok 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "axum",
  "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
