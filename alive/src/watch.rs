@@ -43,7 +43,6 @@ pub async fn watch<'a>(
 ) -> Result<()> {
   let dns_type = watch.dns_type;
   let watch_id = watch.id;
-  let kind_v = &kind.v;
   // todo 添加超时, 用 try join
   // match task.ping(kind, watch, host, kind_arg, watch_arg).await {
   //   Ok(_) => {
