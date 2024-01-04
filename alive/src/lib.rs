@@ -1,5 +1,4 @@
 #![allow(non_snake_case)]
-#![feature(integer_atomics)]
 
 use std::collections::{HashMap, HashSet};
 

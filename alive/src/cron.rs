@@ -1,6 +1,6 @@
 use std::{
   future::Future,
-  sync::atomic::{AtomicU128, AtomicU64, Ordering},
+  sync::atomic::{AtomicU64, Ordering},
   time::Instant,
 };
 
@@ -9,7 +9,7 @@ use tokio::time::{interval, Duration};
 use crate::ping;
 
 pub static TS: AtomicU64 = AtomicU64::new(0);
-pub static DURATION: AtomicU128 = AtomicU128::new(0);
+pub static DURATION: AtomicU64 = AtomicU64::new(0);
 pub static COUNT: AtomicU64 = AtomicU64::new(0);
 
 async fn _run() {
@@ -18,7 +18,7 @@ async fn _run() {
 
   let start = Instant::now();
   xerr::log!(ping().await);
-  let duration = start.elapsed().as_millis();
+  let duration = start.elapsed().as_millis() as u64;
   DURATION.fetch_add(duration, Ordering::Relaxed);
   COUNT.fetch_add(1, Ordering::Relaxed);
 }
