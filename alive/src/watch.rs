@@ -1,6 +1,6 @@
 use aok::Result;
 
-use crate::{errlog, recover};
+use crate::{errlog, ok};
 
 pub async fn watch(result: Result<()>) {
   // xerr::log!(
