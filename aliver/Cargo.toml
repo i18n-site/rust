@@ -8,14 +8,20 @@ homepage = "https://github.com/3TiSite/rust/tree/main/aliver"
 description = "aliver"
 
 [dependencies]
-aerr = { version = "0.1.11", path = "../aerr" }
-alive = { version = "0.1.2", path = "../alive" }
-aok = { version = "0.1.2", path = "../aok" }
+aerr = { version = "0.1.11" }
+alive = { version = "0.1.2" }
+aok = { version = "0.1.2" }
 axum = "0.7.3"
-genv = { version = "0.1.5", path = "../genv" }
-loginit = { version = "0.1.4", path = "../loginit" }
+genv = { version = "0.1.5" }
+loginit = { version = "0.1.4" }
 sonic-rs = "0.3.1"
-tokio = { version = "1.35.1", features = ["macros", "rt", "rt-multi-thread", "time", "sync"] }
+tokio = { version = "1.35.1", features = [
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "time",
+  "sync",
+] }
 tracing = "0.1.40"
 
 [dev-dependencies]
