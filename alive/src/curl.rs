@@ -28,8 +28,10 @@ pub async fn curl(
     xerr::log!(errlog(&kind, host, &watch, txt, url).await);
   } else {
     if watch.err != 0 {
-      hi::send(title, txt, url)
-      // 恢复的通知  ✅
+      let kind_v = &kind.v;
+      let title = format!("✅ {kind_v} {host} ( IPV{dns_type} 恢复正常 )");
+      // hi::send(title, txt, url).await?
+      // 恢复的通知
     }
     // 更新 watch 的 ts ,加上 kind 的 duration, 设置 err = 0
     todo!();
