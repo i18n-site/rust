@@ -1,4 +1,4 @@
-use aok::{Result, OK};
+use aok::Result;
 
 use crate::db::{Kind, Watch};
 
@@ -8,7 +8,7 @@ $(mod $type;)*
 
 mod hook {
   use enum_dispatch::enum_dispatch;
-  use aok::{Result, OK};
+  use aok::{Result};
   use crate::watch::Task;
 
   #[allow(non_camel_case_types)]
