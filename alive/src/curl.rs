@@ -3,16 +3,13 @@ use ireq::ReqError;
 
 use crate::{errlog, ok, Kind, Watch};
 
-pub async fn curl(
-  kind: &Kind,
-  watch: &Watch,
-  host: impl ToString,
-  kind_arg: impl ToString,
-  watch_arg: impl ToString,
+pub async fn curl<'a>(
+  kind: &'a Kind,
+  watch: &'a Watch,
+  host: &'a str,
+  kind_arg: &'a str,
+  watch_arg: &'a str,
 ) -> Result<()> {
-  let host = host.to_string();
-  let kind_arg = kind_arg.to_string();
-  let watch_arg = watch_arg.to_string();
   let dns_type = watch.dns_type;
   let url = format!("https://{kind_arg}/{}/{host}/{watch_arg}", dns_type);
 
