@@ -48,8 +48,7 @@ pub async fn curl(
         watch.id
       );
       sql.push(&wid);
-      let sql = xstr::join(sql);
-      exe!(sql);
+      exe!(xstr::join(sql));
     }
   }
 
