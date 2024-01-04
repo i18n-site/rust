@@ -15,7 +15,7 @@ pub async fn ping<'a>(
   _: &'a str, // watch_arg: : &'a str,
   addr: IpAddr,
 ) -> Result<()> {
-  dbg!(host, watch.dns_type);
+  dbg!(host, addr);
 
   OK
 }
