@@ -48,7 +48,8 @@ pub fn should_send(err_count: u32, warn_err: u8) -> bool {
     if diff > 86400 {
       diff % 86400 == 0
     } else {
-      is_power_of_two(diff)
+      // 1=4(W) 2=5 3=6 4=7 5=8(W)
+      is_power_of_two(diff + 3)
     }
   } else {
     false
