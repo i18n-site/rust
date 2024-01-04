@@ -1,7 +1,6 @@
 use std::net::SocketAddr;
 
 use axum::{body::Bytes, http::StatusCode, routing::post, Router};
-mod mail;
 
 genv::def!(PORT:u16 | 8080);
 

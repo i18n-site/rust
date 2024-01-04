@@ -114,6 +114,9 @@ name = "aliver"
 version = "0.1.0"
 dependencies = [
  "alive",
+ "axum",
+ "genv 0.1.5",
+ "sonic-rs",
 ]
 
 [[package]]
