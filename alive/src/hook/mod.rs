@@ -1,24 +1,23 @@
 use aok::{Result, OK};
-use enum_dispatch::enum_dispatch;
 
-use crate::{
-  db::{Kind, Watch},
-  watch::Task,
-};
+use crate::db::{Kind, Watch};
 
 macro_rules! hook {
   ($($type:ident),*) => {
-    mod hook{
-      $(mod $type;)*
-    }
+$(mod $type;)*
 
-    #[allow(non_camel_case_types)]
-    #[enum_dispatch(Task)]
-    enum Hook {
-      $($type,)*
-    }
+mod hook {
+  use enum_dispatch::enum_dispatch;
+  use aok::{Result, OK};
+  use crate::watch::Task;
 
-    $(
+  #[allow(non_camel_case_types)]
+  #[enum_dispatch(Task)]
+  pub enum Hook {
+    $($type,)*
+  }
+
+  $(
     #[allow(non_camel_case_types)]
     pub struct $type;
 
@@ -27,7 +26,8 @@ macro_rules! hook {
         OK
       }
     }
-    )*
+  )*
+}
   };
 }
 
@@ -43,7 +43,7 @@ pub fn hook<'a>(
       match kind.v.as_str() {
         $(
           stringify!($fn) => {
-            Some(crate::watch(kind,watch,host,Hook::$fn($fn)))
+            Some(crate::watch(kind,watch,host,self::hook::Hook::$fn(self::hook::$fn)))
           }
         ),*
         _ => None,
