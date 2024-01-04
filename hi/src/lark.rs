@@ -14,12 +14,7 @@ pub async fn send(
 
   let mut li: Vec<Value> = Vec::with_capacity(2);
 
-  let txt = if !url.is_empty() {
-    li.push(json!({"tag":"a","text":url,"href":url}));
-    "\n".to_owned() + txt + "\n"
-  } else {
-    txt.to_owned() + "\n"
-  };
+  let txt = txt.to_owned() + "\n";
 
   li.push(json!({"tag":"text","text":txt}));
 
@@ -28,6 +23,10 @@ pub async fn send(
     "user_id": "all", //取值使用"all"来at所有人
     "user_name": ""
   }));
+
+  if !url.is_empty() {
+    li.push(json!({"tag":"a","text":url,"href":url}));
+  };
 
   let msg = json!({"msg_type":"post","content":{"post":{"zh_cn":{"title":title,"content":[li]}}}});
 
