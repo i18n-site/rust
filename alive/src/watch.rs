@@ -59,30 +59,20 @@ pub async fn watch<'a>(
   //   }
   // }
 
-  match dns_type {
-    4 | 6 => {
-      match RESOLVER
-        .lookup(
-          host,
-          if watch.dns_type == 6 {
-            RecordType::AAAA
-          } else {
-            RecordType::A
-          },
-        )
-        .await
-      {
+  macro_rules! dns {
+    ($rec_type:ident, $v:ident) => {
+      match RESOLVER.lookup(host, RecordType::$rec_type).await {
         Ok(ip_li) => {
           let mut n = 0;
           for ip in ip_li.records() {
             if let Some(ip) = ip.data() {
-              if let RData::A(ip) = ip {
-                dbg!(SocketAddr::new(std::net::IpAddr::V4(**ip), 589));
+              if let RData::$rec_type(ip) = ip {
+                dbg!(std::net::IpAddr::$v(**ip));
                 n += 1;
               }
             }
           }
-          if n == 0 {
+          if n == 0 || true {
             errlog(
               kind,
               host,
@@ -104,6 +94,15 @@ pub async fn watch<'a>(
           .await?;
         }
       }
+    };
+  }
+
+  match dns_type {
+    4 => {
+      dns!(A, V4)
+    }
+    6 => {
+      dns!(AAAA, V6)
     }
     _ => {
       dberr!(
