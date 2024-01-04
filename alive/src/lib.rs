@@ -10,6 +10,8 @@ use mysql_macro::{exe, mysql_async::prelude::FromRow, q, q01};
 use xhash::{HashMap, HashSet};
 use xstr::join;
 
+mod db;
+use db::{Kind, Watch};
 mod watch;
 use watch::watch;
 mod hook;
@@ -22,25 +24,6 @@ macro_rules! dberr {
     tracing::warn!(msg);
     hi::send(err_type,err.clone(),"https://atomgit.com/3ti/rust/blob/main/alive/src/lib.rs#L13").await;
   }};
-}
-
-#[derive(Debug, Clone, FromRow)]
-pub struct Kind {
-  pub id: u64,
-  pub url_id: u64,
-  pub duration: u32,
-  pub warnErr: u8,
-  pub v: String,
-}
-
-#[derive(Debug, Clone, FromRow)]
-pub struct Watch {
-  pub id: u64,
-  pub host_id: u64,
-  pub kind_id: u64,
-  pub dns_type: u8,
-  pub err: u32,
-  pub url_id: u64,
 }
 
 pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, String>> {
