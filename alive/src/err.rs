@@ -11,12 +11,12 @@ pub async fn errlog(
   host: impl AsRef<str>,
   watch: &Watch,
   txt: impl AsRef<str>,
-  arg: impl AsRef<str>,
+  url: impl AsRef<str>,
 ) -> Result<()> {
   let host = host.as_ref();
   let txt = txt.as_ref();
   let kind_v = &kind.v;
-  let arg = arg.as_ref();
+  let url = url.as_ref();
   let dns_type = watch.dns_type;
   let err_count = watch.err + 1;
   let watch_id = watch.id;
@@ -35,11 +35,11 @@ pub async fn errlog(
       "".into()
     };
     title = format!("{title}{alive} )");
-    hi::send(&title, txt, arg).await;
+    hi::send(&title, txt, url).await;
   } else {
     title += " )";
   }
-  tracing::warn!("{title}\n{arg}\n{txt}\n",);
+  tracing::warn!("{title}\n{url}\n{txt}\n",);
   exe!(format!("UPDATE watch SET err=err+1 WHERE id={watch_id}"));
   OK
 }

@@ -14,9 +14,9 @@ pub async fn curl(
   let kind_arg = kind_arg.to_string();
   let watch_arg = watch_arg.to_string();
   let dns_type = watch.dns_type;
-  let arg = format!("https://{kind_arg}/{}/{host}/{watch_arg}", dns_type);
+  let url = format!("https://{kind_arg}/{}/{host}/{watch_arg}", dns_type);
 
-  match ireq::get(&arg).await {
+  match ireq::get(&url).await {
     Err(err) => {
       let txt = if let Some(ReqError::Status(code, txt)) = err.downcast_ref::<ReqError>() {
         let mut t = code.to_string();
@@ -28,7 +28,7 @@ pub async fn curl(
       } else {
         err.to_string()
       };
-      xerr::log!(errlog(kind, host, &watch, txt, arg).await);
+      xerr::log!(errlog(kind, host, &watch, txt, url).await);
     }
     Ok(txt) => {
       ok(
@@ -36,7 +36,7 @@ pub async fn curl(
         &watch,
         host,
         || "请求响应如下:\n".to_owned() + &txt,
-        arg,
+        url,
       )
       .await?;
     }
