@@ -94,7 +94,6 @@ pub async fn next() -> Result<()> {
         };
 
         if hook(&kind.v).await {
-          todo!();
           continue;
         }
 
