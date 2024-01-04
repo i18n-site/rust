@@ -52,8 +52,14 @@ pub async fn send(
   content: impl AsRef<str>,
   url: impl AsRef<str>,
 ) -> Result<()> {
-  let content = cut(content.as_ref(), 40000);
   let subject = cut(subject.as_ref(), 100);
+  let content = content.as_ref();
+  let content = if !subject.is_empty() {
+    subject.to_owned() + "\n" + content
+  } else {
+    content.to_owned()
+  };
+  let content = cut(content.as_ref(), 40000);
   let url = cut(url.as_ref(), 400);
 
   let message = Message {
