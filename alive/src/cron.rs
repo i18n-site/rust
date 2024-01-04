@@ -20,7 +20,7 @@ async fn _run() {
   TS.store(now, Ordering::Relaxed);
 
   let start = Instant::now();
-  ping().await;
+  xerr::log!(ping().await);
   let duration = start.elapsed().as_millis() as u64;
 
   DURATION.fetch_add(duration, Ordering::Relaxed);
