@@ -19,12 +19,13 @@ pub async fn ping<'a>(
     6 => {}
     _ => {
       dberr!(
-        UnknownDnsType
+        DnsTypeNotSupported
         "watch_id={} host={} dns_type={}",
         watch.dns_type,
         host,
         watch.id
       );
+      return OK;
     }
   }
   OK
