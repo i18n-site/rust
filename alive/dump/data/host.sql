@@ -21,7 +21,7 @@
 
 LOCK TABLES `host` WRITE;
 /*!40000 ALTER TABLE `host` DISABLE KEYS */;
-INSERT INTO `host` VALUES (3,_binary '3ti.site'),(2,_binary 'cname-flatten.fly.dev'),(1,_binary 'i18n.site');
+INSERT INTO `host` VALUES (3,_binary '3ti.site'),(1,_binary 'i18n.site');
 /*!40000 ALTER TABLE `host` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -34,4 +34,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-03 14:52:17
+-- Dump completed on 2024-01-04 13:42:00
