@@ -1,5 +1,6 @@
 use aok::{Result, OK};
 use ireq::ReqError;
+use mysql_macro::exe;
 
 use crate::{err::errlog, Kind, Watch};
 
@@ -48,7 +49,7 @@ pub async fn curl(
       );
       sql.push(&wid);
       let sql = xstr::join(sql);
-      dbg!(sql);
+      exe!(sql);
     }
   }
 
