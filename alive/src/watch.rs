@@ -13,7 +13,7 @@ use crate::{
 
 #[static_init::dynamic]
 pub static RESOLVER: TokioAsyncResolver =
-  TokioAsyncResolver::new(TokioAsyncResolver::cloudflare(), Default::default()).unwrap();
+  TokioAsyncResolver::tokio(ResolverConfig::cloudflare(), ResolverOpts::default());
 
 #[enum_dispatch]
 pub trait Task {
@@ -35,31 +35,55 @@ pub async fn watch<'a>(
   watch_arg: &'a str,
   task: impl Task,
 ) -> Result<()> {
-  match watch.dns_type {
-    4 => {
-      let ip = RESOLVER.lookup(host, RecordType::A);
-      dbg!(&ip);
-    }
-    6 => {
-      let ip = RESOLVER.lookup(host, RecordType::AAAA);
-      dbg!(&ip);
+  let dns_type = watch.dns_type;
+  let watch_id = watch.id;
+
+  match dns_type {
+    4 | 6 => {
+      match RESOLVER
+        .lookup(
+          host,
+          if watch.dns_type == 6 {
+            RecordType::AAAA
+          } else {
+            RecordType::A
+          },
+        )
+        .await
+      {
+        Ok(ip_li) => {
+          dberr!(
+            DNS_RESOLVER_ERROR
+            "{} IPV{} watch_id={}",
+            host,
+            dns_type,
+            watch_id
+          );
+          // todo 添加超时, 用 try join
+          match task.ping(kind, watch, host, kind_arg, watch_arg).await {
+            Ok(_) => {
+              // ok(kind, watch)
+            }
+            Err(err) => todo!(),
+          }
+        }
+        Err(err) => {
+          dberr!(
+            DNS_RESOLVER_ERROR
+            "{} IPV{} watch_id={} {}",
+            host, dns_type, watch_id, err
+          );
+        }
+      }
     }
     _ => {
       dberr!(
         DnsTypeNotSupported
-        "watch_id={} host={} dns_type={}",
-        watch.dns_type,
-        host,
-        watch.id
+        "dns_type={} watch_id={} {}",
+        dns_type,watch_id,host
       );
       return OK;
     }
-  }
-  match task.ping(kind, watch, host, kind_arg, watch_arg).await {
-    Ok(_) => {
-      // ok(kind, watch)
-    }
-    Err(err) => todo!(),
   }
   OK
 }
