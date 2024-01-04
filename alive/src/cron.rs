@@ -30,11 +30,15 @@ async fn _run() {
   COUNT.fetch_add(1, Ordering::Relaxed);
 }
 
-pub async fn run() {
+pub async fn run(next: impl FnOnce() + Send + 'static) {
   let mut interval = interval(Duration::from_secs(60));
 
   loop {
     interval.tick().await;
     _run().await;
+    tokio::task::spawn(async move {
+      next();
+    })
+    .detach();
   }
 }
