@@ -106,7 +106,9 @@ pub async fn next() -> Result<()> {
     }
   }
 
-  while ing.next().await.is_some() {}
+  while let Some(r) = ing.next().await {
+    xerr::log!(r);
+  }
 
   OK
 }
