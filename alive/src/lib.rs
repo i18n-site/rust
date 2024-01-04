@@ -89,7 +89,8 @@ pub async fn next() -> Result<()> {
                 paste! {
                   dberr!(
                     [< $type MissArg >]
-                    "watch_id={} {host} arg_id={} kind_id={} kind_arg_id={}",
+                    "{} watch_id={} arg_id={} kind_id={} kind_arg_id={}",
+                    host,
                     watch.id,
                     watch.arg_id,
                     watch.kind_id,
@@ -113,7 +114,7 @@ pub async fn next() -> Result<()> {
           ing_curl.push(curl(kind, watch, host, kind_arg, watch_arg));
         }
       } else {
-        dberr!(WatchMissKind "watch_id={} {host} kind_id={}", watch.id, watch.kind_id);
+        dberr!(WatchMissKind "{} watch_id={} kind_id={}",host, watch.id, watch.kind_id);
       }
     } else {
       dberr!(WatchMissHost "watch_id={} host_id={}", watch.id, watch.host_id);
