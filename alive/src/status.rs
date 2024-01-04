@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use aok::{Result, OK};
 use dashmap::DashMap;
-use mysql_macro::q;
+use mysql_macro as m;
 
 use crate::db::Status;
 
@@ -14,7 +14,7 @@ pub static KIND: DashMap<u64, String> = DashMap::new();
 
 pub async fn status() -> Result<()> {
   let li: Vec<Status> =
-    q!("SELECT kind_id,host_id,dns_type,err,ts FROM watch ORDER BY err DESC,kind_id,host_id");
+    m::q!("SELECT kind_id,host_id,dns_type,err,ts FROM watch ORDER BY err DESC,kind_id,host_id");
 
   let mut host_id_li = HashSet::new();
   let mut kind_id_li = HashSet::new();

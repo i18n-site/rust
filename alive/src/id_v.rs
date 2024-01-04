@@ -1,6 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
 use aok::Result;
+use mysql_macro::q;
 use xstr::Join;
 
 pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, String>> {
