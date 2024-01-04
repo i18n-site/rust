@@ -73,6 +73,7 @@ pub async fn watch<'a>(
                 .iter()
                 .map(|addr| task.ping(kind, watch, host, kind_arg, watch_arg, *addr)),
             );
+
             let mut n = 0;
             let mut failed_addr = Vec::new();
             while let Some(result) = ing.next().await {
