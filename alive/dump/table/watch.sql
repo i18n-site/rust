@@ -1,3 +1,0 @@
-CREATE TABLE `watch` (
-  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,`host_id` BIGINT UNSIGNED NOT NULL,`kind_id` BIGINT UNSIGNED NOT NULL,`dns_type` TINYINT UNSIGNED NOT NULL,`ts` BIGINT UNSIGNED NOT NULL DEFAULT '0',`err` INT UNSIGNED NOT NULL DEFAULT '0',`url_id` BIGINT UNSIGNED NOT NULL DEFAULT '0',PRIMARY KEY (`id`),UNIQUE KEY `watch_UN` (`dns_type`,`kind_id`,`host_id`,`url_id`),KEY `watch_kind_IDX` (`kind_id`,`ts`)
-);
