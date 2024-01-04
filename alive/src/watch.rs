@@ -76,7 +76,14 @@ pub async fn watch<'a>(
           // }
         }
         Err(err) => {
-          errlog(kind, host, watch, format!("DNS 解析失败 {err}"), "").await?;
+          errlog(
+            kind,
+            host,
+            watch,
+            format!("DNS 解析失败 {err}"),
+            "https://atomgit.com/i18n-ops/conf/tree/main/dns",
+          )
+          .await?;
         }
       }
     }
