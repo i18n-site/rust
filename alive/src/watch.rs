@@ -2,6 +2,7 @@ use std::net::SocketAddr;
 
 use aok::{Result, OK};
 use enum_dispatch::enum_dispatch;
+use futures::{stream::FuturesOrdered, StreamExt};
 use hickory_proto::rr::{record_type::RecordType, RData};
 use hickory_resolver::{
   config::{ResolverConfig, ResolverOpts},
