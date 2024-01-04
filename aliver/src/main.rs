@@ -12,6 +12,10 @@ use axum::{
   Router,
 };
 use tower::ServiceBuilder;
+use tower_http::compression::{
+  predicate::{NotForContentType, Predicate, SizeAbove},
+  CompressionLayer,
+};
 
 genv::def!(PORT:u16 | 5123);
 
@@ -49,15 +53,20 @@ async fn set_content_type(req: Request<Body>, next: Next) -> impl IntoResponse {
   let mut res = next.run(req).await;
   res
     .headers_mut()
-    .insert(http::header::CONTENT_TYPE, TEXT_JSON)
+    .insert(http::header::CONTENT_TYPE, TEXT_JSON);
+  res
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
   loginit::init();
+  let predicate = SizeAbove::new(256)
+    .and(NotForContentType::GRPC)
+    .and(NotForContentType::IMAGES);
 
   let app = Router::new()
     .route("/", get(aerr::FnAny(index)))
+    .layer(CompressionLayer::new().compress_when(predicate))
     .layer(ServiceBuilder::new().layer(middleware::from_fn(set_content_type)));
   let addr = SocketAddr::from(([0, 0, 0, 0], PORT()));
 
