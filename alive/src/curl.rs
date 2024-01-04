@@ -32,13 +32,13 @@ pub async fn curl(
       xerr::log!(errlog(kind, host, &watch, txt, url).await);
     }
     Ok(txt) => {
+      let txt = "请求响应如下:\n".to_owned() + &txt;
       let mut sql = vec!["UPDATE watch SET "];
 
       if watch.err != 0 {
         let kind_v = &kind.v;
         let err_duration = crate::err_duration(watch.id).await?;
         let title = format!("✅ {kind_v} {host} ( IPV{dns_type} 恢复正常, 耗时 {err_duration})");
-        let txt = "请求响应如下:\n".to_owned() + &txt;
         hi::send(title, txt, url).await;
         sql.push("err=0,");
       }
