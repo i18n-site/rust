@@ -124,7 +124,11 @@ pub async fn next() -> Result<()> {
     ($($ing:ident),*) => {
       $(
         while let Some(r) = $ing.next().await {
-          xerr::log!(r);
+          if let Err(err) = r {
+            let title = "未处理的异常";
+            tracing::error!("{title}:\n{err}");
+            hi::send(title,err.to_string(),"https://atomgit.com/3ti/rust/blob/main/alive/src/lib.rs#L117").await;
+          }
         }
       )*
     };
