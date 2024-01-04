@@ -68,6 +68,12 @@ pub async fn watch<'a>(
           }
           if addr_li.is_empty() {
             errlog(kind, host, watch, format!("域名记录为空"), DNS_URL).await?;
+          } else {
+            let mut ing = FuturesOrdered::from_iter(
+              addr_li
+                .iter()
+                .map(|addr| task.ping(kind, watch, host, kind_arg, watch_arg, addr)),
+            );
           }
         }
         Err(err) => {
