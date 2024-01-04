@@ -1,11 +1,17 @@
 use std::net::SocketAddr;
 
 use aok::Result;
-use axum::{body::Bytes, http::StatusCode, routing::post, Router};
+use axum::{
+  body::Bytes,
+  http::StatusCode,
+  routing::{get, post},
+  Router,
+};
 
 genv::def!(PORT:u16 | 5123);
 
-async fn index(json: Bytes) -> aerr::msg!() {
+// json: Bytes
+async fn index() -> aerr::msg!() {
   // let subject;
   // let txt;
   // let status;
@@ -36,7 +42,7 @@ async fn index(json: Bytes) -> aerr::msg!() {
 #[tokio::main]
 async fn main() -> Result<()> {
   loginit::init();
-  let app = Router::new().route("/", post(aerr::FnAny(index)));
+  let app = Router::new().route("/", get(aerr::FnAny(index)));
   let addr = SocketAddr::from(([0, 0, 0, 0], PORT()));
 
   tracing::info!("http://{}", addr);
