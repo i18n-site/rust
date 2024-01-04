@@ -8,6 +8,9 @@ mod test_macro {
 #[tokio::test]
 async fn test() -> aok::Result<()> {
   loginit::init();
-  alive::next().await?;
+  let li = alive::status().await?;
+
+  dbg!(li);
+  // alive::next().await?;
   Ok(())
 }

@@ -25,4 +25,5 @@ pub struct Status {
   pub kind_id: u64,
   pub dns_type: u8,
   pub err: u32,
+  pub ts: u64,
 }
