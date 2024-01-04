@@ -120,7 +120,7 @@ pub async fn next() -> Result<()> {
     }
   }
 
-  while let Some(()) = ing.next().await {}
+  while ing.next().await.is_some() {}
 
   OK
 }
