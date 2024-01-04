@@ -23,7 +23,6 @@ async fn index(json: Bytes) -> aerr::msg!() {
       txt = payload.txt.into();
     }
   }
-  wxpush::send(&*WARN_URL, &subject, &txt).await?;
   if status == StatusCode::OK {
     Ok(())
   } else {

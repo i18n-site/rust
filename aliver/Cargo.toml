@@ -11,6 +11,7 @@ description = "aliver"
 alive = { version = "0.1.2", path = "../alive" }
 axum = "0.7.3"
 genv = { version = "0.1.5", path = "../genv" }
+loginit = { version = "0.1.4", path = "../loginit" }
 sonic-rs = "0.3.1"
 
 [dev-dependencies]

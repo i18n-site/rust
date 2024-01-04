@@ -116,6 +116,7 @@ dependencies = [
  "alive",
  "axum",
  "genv 0.1.5",
+ "loginit",
  "sonic-rs",
 ]
 
