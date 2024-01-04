@@ -8,19 +8,19 @@ homepage = "https://github.com/3TiSite/rust/tree/main/alive"
 description = "use mysql to check is service alive"
 
 [dependencies]
-aok = { version = "0.1.2", path = "../aok" }
+aok = { version = "0.1.2" }
 enum_dispatch = "0.3.12"
 futures = "0.3.30"
-hi = { version = "0.1.8", path = "../hi" }
+hi = { version = "0.1.8" }
 hickory-proto = "0.24.0"
 hickory-resolver = "0.24.0"
-ireq = { version = "0.1.7", path = "../ireq" }
+ireq = { version = "0.1.7" }
 mail-send = "0.4.6"
 mysql_async = "0.33.0"
-mysql_macro = { version = "0.1.6", path = "../mysql_macro" }
+mysql_macro = { version = "0.1.6" }
 paste = "1.0.14"
 static_init = "1.0.3"
-sts = { version = "0.1.13", path = "../sts" }
+sts = { version = "0.1.13" }
 tokio = { version = "1.35.1", features = [
   "macros",
   "rt",
@@ -29,9 +29,9 @@ tokio = { version = "1.35.1", features = [
   "sync",
 ] }
 tracing = "0.1.40"
-trt = { version = "0.1.21", path = "../trt" }
-xerr = { version = "0.1.2", path = "../xerr" }
-xstr = { version = "0.1.9", path = "../xstr" }
+trt = { version = "0.1.21" }
+xerr = { version = "0.1.2" }
+xstr = { version = "0.1.9" }
 
 [dev-dependencies]
 loginit = { path = "../loginit" }
