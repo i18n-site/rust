@@ -2,6 +2,14 @@ pub mod lark;
 
 genv::s!(TO_MAIL, NAME);
 
+// https://github.com/rust-lang/rust/issues/83527#issuecomment-1876263029
+// macro_rules! join {
+//     ($($task:expr),*) => {{
+// let r = tokio::join!($($task,)*);
+// xerr::log!($(r.${task.index()}),*);
+//     }};
+// }
+
 pub async fn send(title: impl AsRef<str>, txt: impl AsRef<str>, url: impl AsRef<str>) {
   let name: &str = NAME.as_ref();
   let title = title.as_ref();
@@ -10,7 +18,7 @@ pub async fn send(title: impl AsRef<str>, txt: impl AsRef<str>, url: impl AsRef<
 
   let name_title = format!("{} · {}", name, title);
 
-  let result_li = tokio::join!(
+  let r = tokio::join!(
     xsmtp::send(
       name,
       TO_MAIL.as_ref(),
@@ -25,5 +33,5 @@ pub async fn send(title: impl AsRef<str>, txt: impl AsRef<str>, url: impl AsRef<
     wxpush::send(&name_title, txt, url),
     lark::send(&name_title, txt, url)
   );
-  xerr::log!(result_li.0, result_li.1, result_li.2);
+  xerr::log!(r.0, r.1, r.2);
 }
