@@ -1,7 +1,7 @@
 use std::{
   future::Future,
   sync::atomic::{AtomicU64, Ordering},
-  time::{Instant, SystemTime},
+  time::Instant,
 };
 
 use tokio::time::{interval, Duration};
@@ -13,10 +13,7 @@ pub static DURATION: AtomicU64 = AtomicU64::new(0);
 pub static COUNT: AtomicU64 = AtomicU64::new(0);
 
 async fn _run() {
-  let now = SystemTime::now()
-    .duration_since(SystemTime::UNIX_EPOCH)
-    .unwrap()
-    .as_secs();
+  let now = sts::sec();
   TS.store(now, Ordering::Relaxed);
 
   let start = Instant::now();
