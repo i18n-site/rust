@@ -49,6 +49,15 @@ pub async fn watch<'a>(
   let dns_type = watch.dns_type;
   let watch_id = watch.id;
   let kind_v = &kind.v;
+  // todo 添加超时, 用 try join
+  // match task.ping(kind, watch, host, kind_arg, watch_arg).await {
+  //   Ok(_) => {
+  //     // ok(kind, watch)
+  //   }
+  //   Err(err) => {
+  //     dbg!("todo");
+  //   }
+  // }
 
   match dns_type {
     4 | 6 => {
@@ -73,15 +82,16 @@ pub async fn watch<'a>(
               }
             }
           }
-          // todo 添加超时, 用 try join
-          // match task.ping(kind, watch, host, kind_arg, watch_arg).await {
-          //   Ok(_) => {
-          //     // ok(kind, watch)
-          //   }
-          //   Err(err) => {
-          //     dbg!("todo");
-          //   }
-          // }
+          if n == 0 {
+            errlog(
+              kind,
+              host,
+              watch,
+              format!("DNS 记录为空"),
+              "https://atomgit.com/i18n-ops/conf/tree/main/dns",
+            )
+            .await?;
+          }
         }
         Err(err) => {
           errlog(
