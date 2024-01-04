@@ -16,7 +16,7 @@ pub async fn send(title: impl AsRef<str>, txt: impl AsRef<str>, url: impl AsRef<
   let txt = txt.as_ref();
   let url = url.as_ref();
 
-  let name_title = format!("{} · {}", name, title);
+  let title_name = format!("{} · {}", title, name);
 
   let r = tokio::join!(
     xsmtp::send(
@@ -30,8 +30,8 @@ pub async fn send(title: impl AsRef<str>, txt: impl AsRef<str>, url: impl AsRef<
       },
       "",
     ),
-    wxpush::send(&name_title, txt, url),
-    lark::send(&name_title, txt, url)
+    wxpush::send(&title_name, txt, url),
+    lark::send(&title_name, txt, url)
   );
   xerr::log!(r.0, r.1, r.2);
 }
