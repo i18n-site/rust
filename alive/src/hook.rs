@@ -6,12 +6,14 @@ use crate::{
   watch::Task,
 };
 
+#[allow(non_camel_case_types)]
 #[enum_dispatch(Task)]
 enum Hook {
   smtp,
   mysql,
 }
 
+#[allow(non_camel_case_types)]
 pub struct smtp;
 
 impl Task for smtp {
@@ -20,6 +22,7 @@ impl Task for smtp {
   }
 }
 
+#[allow(non_camel_case_types)]
 pub struct mysql;
 
 impl Task for mysql {
