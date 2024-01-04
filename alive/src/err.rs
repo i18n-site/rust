@@ -25,7 +25,12 @@ pub async fn errlog(
 
   if should_send(err_count, kind.warnErr) {
     let alive = if err_count > 1 {
-      err_duration(watch_id).await?
+      let msg = err_duration(watch_id).await?;
+      if msg.is_empty() {
+        format!(", 持续 {msg}")
+      } else {
+        "".into()
+      }
     } else {
       "".into()
     };

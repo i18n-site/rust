@@ -40,7 +40,7 @@ pub async fn err_duration(watch_id: u64) -> Result<String> {
       let now = sts::sec();
       if now > ts {
         let n = (now - ts) / 60;
-        return Ok(format!(", 持续 {n} 分钟"));
+        return Ok(format!("{n} 分钟"));
       }
     }
   }
