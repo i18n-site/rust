@@ -75,9 +75,18 @@ pub async fn watch<'a>(
                 .map(|addr| task.ping(kind, watch, host, kind_arg, watch_arg, *addr)),
             );
             let mut n = 0;
+            let mut failed_addr = Vec::new();
             while let Some(result) = ing.next().await {
+              if let Err(err) = result {
+                failed_addr.push(format!("IP地址 {}\n{err}", addr_li[n]));
+              }
               n += 1;
             }
+
+            if !failed_addr.is_empty() {
+              let txt = failed_addr.join("\n\n");
+              errlog(kind, host, watch, txt, "").await?;
+            };
           }
         }
         Err(err) => {
