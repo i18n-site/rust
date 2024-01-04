@@ -21,7 +21,6 @@ pub async fn send(
   li.push(json!({
     "tag": "at",
     "user_id": "all", //取值使用"all"来at所有人
-    "user_name": ""
   }));
 
   if !url.is_empty() {
