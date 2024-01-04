@@ -29,7 +29,10 @@ members = [
   "rany",
   "alive",
   "aok",
-  "hi", "ireq", "i18n-site", "aliver",
+  "hi",
+  "ireq",
+  "i18n-site",
+  "aliver",
 ]
 resolver = "2"
 
