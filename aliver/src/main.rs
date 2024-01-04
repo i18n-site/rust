@@ -60,8 +60,7 @@ async fn main() -> Result<()> {
 
   tracing::info!("http://{}", addr);
 
-  let listener = tokio::net::TcpListener::bind(addr).await?;
-  axum::serve(listener, app).await?;
+  axum::serve(tokio::net::TcpListener::bind(addr).await?, app).await?;
 
   Ok(())
 }
