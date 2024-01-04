@@ -1,5 +1,6 @@
 use aok::{Result, OK};
 use enum_dispatch::enum_dispatch;
+use hickory_proto::rr::record_type::RecordType;
 use hickory_resolver::{
   config::{ResolverConfig, ResolverOpts},
   Resolver,
@@ -35,8 +36,14 @@ pub async fn watch<'a>(
   task: impl Task,
 ) -> Result<()> {
   match watch.dns_type {
-    4 => {}
-    6 => {}
+    4 => {
+      let ip = RESOLVER.lookup(host, RecordType::A);
+      dbg!(&ip);
+    }
+    6 => {
+      let ip = RESOLVER.lookup(host, RecordType::AAAA);
+      dbg!(&ip);
+    }
     _ => {
       dberr!(
         DnsTypeNotSupported
