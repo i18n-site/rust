@@ -6,7 +6,7 @@ pub async fn smtp() -> Result<()> {
 
 macro_rules! hook {
   ($($fn:ident),*) => {
-    pub fn hook(name: &str) -> bool {
+    pub fn hook(name: &str) -> Option<impl futures::Future<Output=Result<()>>> {
       match name {
         $(
           stringify!($fn) => {

@@ -1,8 +1,8 @@
-use aok::Result;
+use aok::{Result, OK};
 
 use crate::{errlog, ok};
 
-pub async fn watch(result: Result<()>) {
+pub async fn watch(task: impl futures::Future<Output = Result<()>>) -> Result<()> {
   // xerr::log!(
   //   async move {
   //     if let Err(err) = result {
@@ -11,4 +11,5 @@ pub async fn watch(result: Result<()>) {
   //   }
   //   .await
   // );
+  OK
 }
