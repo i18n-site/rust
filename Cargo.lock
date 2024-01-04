@@ -118,6 +118,7 @@ dependencies = [
  "genv 0.1.5",
  "loginit",
  "sonic-rs",
+ "tokio",
 ]
 
 [[package]]
