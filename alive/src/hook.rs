@@ -1,13 +1,31 @@
 use aok::{Result, OK};
+use enum_dispatch::enum_dispatch;
 
-use crate::db::{Kind, Watch};
+use crate::{
+  db::{Kind, Watch},
+  watch::Task,
+};
 
-pub async fn smtp() -> Result<()> {
-  OK
+#[enum_dispatch(Task)]
+enum Hook {
+  smtp,
+  mysql,
 }
 
-pub async fn mysql() -> Result<()> {
-  OK
+pub struct smtp;
+
+impl Task for smtp {
+  async fn run(&self) -> Result<()> {
+    OK
+  }
+}
+
+pub struct mysql;
+
+impl Task for mysql {
+  async fn run(&self) -> Result<()> {
+    OK
+  }
 }
 
 pub fn hook<'a>(
@@ -20,7 +38,7 @@ pub fn hook<'a>(
       match kind.v.as_str() {
         $(
           stringify!($fn) => {
-            Some(crate::watch(kind,watch,host,$fn()))
+            Some(crate::watch(kind,watch,host,Hook::$fn($fn)))
           }
         ),*
         _ => None,
