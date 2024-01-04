@@ -77,7 +77,7 @@ pub async fn watch<'a>(
               kind,
               host,
               watch,
-              format!("DNS 记录为空"),
+              format!("域名记录为空"),
               "https://atomgit.com/i18n-ops/conf/tree/main/dns",
             )
             .await?;
@@ -88,7 +88,7 @@ pub async fn watch<'a>(
             kind,
             host,
             watch,
-            format!("DNS 解析失败 {err}"),
+            format!("域名解析失败 {err}"),
             "https://atomgit.com/i18n-ops/conf/tree/main/dns",
           )
           .await?;
