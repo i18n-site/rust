@@ -9,5 +9,6 @@ pub async fn ping<'a>(
   kind_arg: &'a str,
   watch_arg: &'a str,
 ) -> Result<()> {
+  dbg!(host);
   OK
 }
