@@ -17,7 +17,7 @@ ireq = { version = "0.1.7" }
 loginit = { version = "0.1.4" }
 sonic-rs = "0.3.1"
 static_init = "1.0.3"
-sts = { version = "0.1.13", path = "../sts" }
+sts = { version = "0.1.13" }
 tokio = { version = "1.35.1", features = [
   "macros",
   "rt",
@@ -31,7 +31,7 @@ tower-http = { version = "0.5.0", features = [
   "decompression-full",
 ] }
 tracing = "0.1.40"
-xerr = { version = "0.1.2", path = "../xerr" }
+xerr = { version = "0.1.2" }
 
 [dev-dependencies]
 
