@@ -37,7 +37,7 @@ pub async fn watch<'a>(
 ) -> Result<()> {
   let dns_type = watch.dns_type;
   let watch_id = watch.id;
-  let kind_v = kind.v;
+  let kind_v = &kind.v;
 
   match dns_type {
     4 | 6 => {
