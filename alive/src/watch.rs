@@ -53,12 +53,7 @@ pub async fn watch<'a>(
         .await
       {
         Ok(ip_li) => {
-          hi::send(
-            "DNS_RESOLVER_ERROR",
-            format!("{host} IPV{dns_type} {kind_v} watch_id={watch_id}"),
-            "",
-          )
-          .await;
+          errlog(kind, host, watch, "", "");
           // todo 添加超时, 用 try join
           match task.ping(kind, watch, host, kind_arg, watch_arg).await {
             Ok(_) => {
@@ -68,12 +63,7 @@ pub async fn watch<'a>(
           }
         }
         Err(err) => {
-          hi::send(
-            "DNS_RESOLVER_ERROR",
-            format!("{host} IPV{dns_type} {kind_v} watch_id={watch_id}\n{err}"),
-            "",
-          )
-          .await;
+          errlog(kind, host, watch, format!("{kind_v}"), "").await?;
         }
       }
     }
