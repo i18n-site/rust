@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-
-
 use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
 use hook::hook;
@@ -19,7 +17,6 @@ mod should_send;
 use should_send::should_send;
 mod err;
 mod hook;
-
 
 pub async fn id_v(table: &str, id_set: HashSet<u64>) -> Result<HashMap<u64, String>> {
   if id_set.is_empty() {

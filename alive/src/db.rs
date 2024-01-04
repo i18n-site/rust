@@ -1,4 +1,4 @@
-use mysql_macro::{mysql_async::prelude::FromRow};
+use mysql_macro::mysql_async::prelude::FromRow;
 
 #[derive(Debug, Clone, FromRow)]
 pub struct Kind {

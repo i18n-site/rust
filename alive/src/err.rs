@@ -1,5 +1,5 @@
 use aok::{Result, OK};
-use mysql_macro::{exe};
+use mysql_macro::exe;
 
 use crate::{
   db::{Kind, Watch},
