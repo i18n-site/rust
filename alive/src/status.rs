@@ -1,13 +1,13 @@
 use std::collections::{HashMap, HashSet};
 
-use aok::{Result, OK};
+use aok::Result;
 use dashmap::DashMap;
 use mysql_macro as m;
 use sonic_rs::{Deserialize, Serialize};
 
 use crate::{db::Status, id_v};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct StatusLi {
   host: HashMap<u64, String>,
   kind: HashMap<u64, String>,
