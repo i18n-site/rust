@@ -23,7 +23,7 @@ mod hook {
 
     impl Task for $type {
       async fn ping(&self) -> Result<()> {
-        OK
+        super::$type::ping().await
       }
     }
   )*
