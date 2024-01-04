@@ -89,8 +89,9 @@ pub async fn next() -> Result<()> {
                 paste! {
                   dberr!(
                     [< $type MissArg >]
-                    "watch id={} arg_id={} kind_id={} kind_arg_id={}",
+                    "watch_id={} host={} arg_id={} kind_id={} kind_arg_id={}",
                     watch.id,
+                    host,
                     watch.arg_id,
                     watch.kind_id,
                     kind.arg_id

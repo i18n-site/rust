@@ -54,4 +54,5 @@ pub fn hook<'a>(
   };
 }
 
-hook!(smtp, mysql);
+hook!(smtp);
+// hook!(smtp, mysql);

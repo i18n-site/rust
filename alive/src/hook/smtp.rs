@@ -1,14 +1,31 @@
 use aok::{Result, OK};
 
-use crate::db::{Kind, Watch};
+use crate::{
+  db::{Kind, Watch},
+  dberr,
+};
 
 pub async fn ping<'a>(
   kind: &'a Kind,
   watch: &'a Watch,
   host: &'a str,
-  kind_arg: &'a str,
-  watch_arg: &'a str,
+  _: &'a str,
+  _: &'a str,
 ) -> Result<()> {
-  dbg!(host);
+  dbg!(host, watch.dns_type);
+
+  match watch.dns_type {
+    4 => {}
+    6 => {}
+    _ => {
+      dberr!(
+        UnknownDnsType
+        "watch_id={} host={} dns_type={}",
+        watch.dns_type,
+        host,
+        watch.id
+      );
+    }
+  }
   OK
 }
