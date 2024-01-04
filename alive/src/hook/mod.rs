@@ -44,7 +44,7 @@ pub fn hook<'a>(
 ) -> Option<impl futures::Future<Output = Result<()>> + 'a> {
   match kind.v.as_str() {
     $(
-      stringify!($fn) => {
+      stringify!($type) => {
         Some(crate::watch(kind,watch,host,kind_arg,watch_arg,self::hook::Hook::$type(self::hook::$type)))
       }
     ),*
