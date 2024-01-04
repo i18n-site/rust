@@ -19,7 +19,6 @@ async fn _run() {
   let start = Instant::now();
   xerr::log!(ping().await);
   let duration = start.elapsed().as_millis();
-
   DURATION.fetch_add(duration, Ordering::Relaxed);
   COUNT.fetch_add(1, Ordering::Relaxed);
 }
