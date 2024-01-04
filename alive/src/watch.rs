@@ -72,8 +72,8 @@ pub async fn watch<'a>(
         Err(err) => {
           dberr!(
             DNS_RESOLVER_ERROR
-            "{} IPV{} {} watch_id={} {}",
-            host, dns_type, kind_v, watch_id, err
+            "{} {} IPV{} watch_id={} {}",
+            kind_v, host, dns_type, watch_id, err
           );
         }
       }
