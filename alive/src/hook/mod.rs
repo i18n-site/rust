@@ -22,7 +22,7 @@ mod hook {
     pub struct $type;
 
     impl Task for $type {
-      async fn ping(&self,
+      async fn ping<'a>(&self,
         kind: &'a Kind,
         watch: &'a Watch,
         host: &'a str,
@@ -44,7 +44,7 @@ pub fn hook<'a>(
   match kind.v.as_str() {
     $(
       stringify!($fn) => {
-        Some(crate::watch(kind,watch,host,self::hook::Hook::$type(self::hook::$type)))
+        Some(crate::watch(kind,watch,host,kind_arg,watch_arg,self::hook::Hook::$type(self::hook::$type)))
       }
     ),*
     _ => None,

@@ -2,7 +2,7 @@ use aok::{Result, OK};
 
 use crate::db::{Kind, Watch};
 
-pub async fn ping(
+pub async fn ping<'a>(
   kind: &'a Kind,
   watch: &'a Watch,
   host: &'a str,
