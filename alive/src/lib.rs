@@ -31,7 +31,7 @@ use err_duration::err_duration;
 mod id_v;
 use id_v::id_v;
 
-struct Alive {
+pub struct Alive {
   arg_cache: Cache<u64, String>,
 }
 
@@ -42,11 +42,10 @@ impl Alive {
     }
   }
   pub async fn ping(&mut self) -> Result<()> {
-    let now = sts::sec();
-
+    // let li: Vec<Watch> = q!( "SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch" );
     let li: Vec<Watch> = q!(
       "SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch WHERE ts<=?",
-      now
+      sts::sec()
     );
     if li.is_empty() {
       return OK;
@@ -55,13 +54,23 @@ impl Alive {
     let mut kind_set = HashSet::new();
     let mut host_set = HashSet::new();
     let mut arg_set = HashSet::new();
+    let mut arg_map = HashMap::new();
 
+    macro_rules! arg_set {
+      ($w:ident) => {
+        if $w.arg_id > 0 {
+          if let Some(exist) = self.arg_cache.get(&$w.arg_id) {
+            arg_map.insert($w.arg_id, exist.to_owned());
+          } else {
+            arg_set.insert($w.arg_id);
+          }
+        }
+      };
+    }
     li.iter().for_each(|w| {
       kind_set.insert(w.kind_id);
       host_set.insert(w.host_id);
-      if w.arg_id != 0 {
-        arg_set.insert(w.arg_id);
-      }
+      arg_set!(w);
     });
 
     let kind_li: Vec<Kind> = q!(format!(
@@ -70,20 +79,21 @@ impl Alive {
     ));
 
     kind_li.iter().for_each(|k| {
-      if k.arg_id != 0 {
-        arg_set.insert(k.arg_id);
-      }
+      arg_set!(k);
     });
 
     let kind_map = HashMap::<u64, Kind>::from_iter(kind_li.into_iter().map(|k| (k.id, k)));
     let host_map = id_v("host", host_set).await?;
 
-    let mut arg_map = HashMap::new();
-    for i in id_v("arg", arg_set).await? {
-      arg_map.insert(i.0, i.1.clone());
-      self.arg_cache.insert(i.0, i.1);
+    dbg!(arg_set.len());
+    if !arg_set.is_empty() {
+      for i in id_v("arg", arg_set).await? {
+        arg_map.insert(i.0, i.1.to_owned());
+        self.arg_cache.insert(i.0, i.1);
+      }
     }
 
+    dbg!(&arg_map);
     let mut ing_curl = FuturesUnordered::new();
     let mut ing_hook = FuturesUnordered::new();
 
