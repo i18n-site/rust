@@ -144,10 +144,10 @@ dependencies = [
  "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "ireq 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "loginit 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
- "re 0.1.5",
+ "re 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "static_init",
  "sts 0.1.14",
- "t3",
+ "t3 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "tokio",
  "tower",
  "tower-http",
@@ -4070,6 +4070,29 @@ dependencies = [
  "tower-http",
  "tracing",
  "tracing-stackdriver",
+ "tracing-subscriber",
+ "xtld 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "t3"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b3cc8e36b729c0a47e201120e8b826a303af0bae58410760fcf969e9e098bc17"
+dependencies = [
+ "anyhow",
+ "axum",
+ "bytes",
+ "coarsetime",
+ "futures",
+ "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "once_cell",
+ "re 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "thiserror",
+ "tokio",
+ "tower",
+ "tower-http",
+ "tracing",
  "tracing-subscriber",
  "xtld 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
