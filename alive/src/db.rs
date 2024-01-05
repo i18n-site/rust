@@ -1,4 +1,4 @@
-use mysql_macro::mysql_async::prelude::FromRow;
+use mysql_macro::{mysql_async::prelude::FromRow, Id};
 
 #[derive(Debug, Clone, FromRow)]
 pub struct Kind {
@@ -9,9 +9,9 @@ pub struct Kind {
   pub v: String,
 }
 
-impl From<Kind> for u64 {
-  fn from(t: Kind) -> u64 {
-    t.id
+impl Id for Kind {
+  fn id(&self) -> u64 {
+    self.id
   }
 }
 
