@@ -24,13 +24,19 @@ ENV RUSTUP_HOME=/opt/rust
 RUN curl https://sh.rustup.rs -sSf | \
 sh -s -- -y --no-modify-path --default-toolchain nightly
 
-ADD Cargo.toml .
 ADD ./sh/cpso.sh .
+
+ADD Cargo.toml .
 ADD ./src ./src
-ADD ./alive/Cargo.toml ./alive/
-ADD ./alive/src ./alive/
-ADD ./alive/api.proto ./alive/
-ADD ./alive/build.rs ./alive/
+
+WORKDIR /app/alive
+
+ADD ./alive/Cargo.toml .
+ADD ./alive/src .
+ADD ./alive/api.proto .
+ADD ./alive/build.rs .
+
+WORKDIR /app
 
 RUN \
 source $CARGO_HOME/env &&\
