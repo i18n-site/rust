@@ -6,11 +6,10 @@ use std::{
 use aok::Result;
 use dashmap::DashMap;
 use mysql_macro as m;
-use sonic_rs::{Deserialize, Serialize};
 
 use crate::{cron, db::Status};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct StatusLi(
   HashMap<u64, String>,          // host
   HashMap<u64, String>,          // kind
