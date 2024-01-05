@@ -1,5 +1,6 @@
 import {default as $decode} from '@3-/proto/decode.js'
 import {u64 as $u64,string as $string,u32 as $u32} from '@3-/proto/decode/types.js'
+import BIN1 from "@3-/proto/decode/BIN1.js"
 
 export const IdName /*
   0 id  	u64
@@ -36,5 +37,5 @@ export const StateLi /*
   3 check	Check
 */ = $decode(
   [IdName,IdName,State,Check],
-  [1,1,1,[]]
+  [1,1,1,Check(BIN1)]
 )

@@ -10,8 +10,7 @@
     "./*": "./*"
   },
   "peerDependencies": {
-    "@3-/proto": "^2.0.34",
-    "@~3/captcha": "^0.1.61"
+    "@3-/proto": "^2.0.35"
   },
   "type": "module"
 }
