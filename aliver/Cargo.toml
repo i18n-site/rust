@@ -1,3 +1,6 @@
+[workspace]
+members = ["../alive"]
+
 [package]
 name = "aliver"
 version = "0.1.3"
