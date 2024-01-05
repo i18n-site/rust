@@ -1,6 +1,6 @@
 [package]
 name = "mysql_macro"
-version = "0.1.9"
+version = "0.1.10"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/3TiSite/rust.git"
@@ -27,6 +27,7 @@ tokio = { version = "1.35.1", features = [
   "rt",
 ] }
 trt = "0.1.21"
+xstr = { version = "0.1.9", path = "../xstr" }
 
 [dev-dependencies]
 tokio = { version = "1.35.1", features = [
