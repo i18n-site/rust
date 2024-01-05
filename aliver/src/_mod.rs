@@ -2,6 +2,6 @@
 #[macro_export]
 macro_rules! urlmod {
   () => {
-
+    pub mod index;
   };
 }
