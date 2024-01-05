@@ -81,9 +81,9 @@ pub async fn status() -> Result<StateLi> {
       })
       .collect(),
     check: Some(Check {
-      last: cron::TS.load(Relaxed),
-      count: cron::COUNT.load(Relaxed),
-      cost: cron::DURATION.load(Relaxed),
+      last: 0,  //cron::TS.load(Relaxed),
+      count: 0, //cron::COUNT.load(Relaxed),
+      cost: 0,  //cron::DURATION.load(Relaxed),
     }),
   })
 }
