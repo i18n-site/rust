@@ -2,6 +2,7 @@
 members = [
   "xstr",
   "xerr",
+  "t3",
   "tp",
   "xhash",
   "trt",
