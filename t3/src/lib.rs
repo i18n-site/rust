@@ -18,8 +18,6 @@ pub use tracing;
 mod log;
 mod srv;
 
-static _: () = loginit::_init_();
-
 #[macro_export]
 macro_rules! api {
   () => {
