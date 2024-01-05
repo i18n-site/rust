@@ -33,7 +33,7 @@ members = [
   "hi",
   "ireq",
   "i18n-site",
-  "aliver",
+  "aliver", "idns",
 ]
 resolver = "2"
 
