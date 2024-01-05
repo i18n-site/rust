@@ -18,6 +18,13 @@ pub use tracing;
 mod log;
 mod srv;
 
+use static_init::constructor;
+
+#[constructor(0)]
+extern "C" fn init() {
+  log::init();
+}
+
 #[macro_export]
 macro_rules! api {
   () => {
@@ -27,7 +34,6 @@ macro_rules! api {
   };
 }
 
-pub use log::init;
 pub use srv::srv;
 
 pub type Response = re::Result<axum::response::Response>;
