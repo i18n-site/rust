@@ -21,7 +21,7 @@ macro_rules! ipv4 {
 pub static RESOLVER: [TokioAsyncResolver; 2] = {
   let mut opt = ResolverOpts::default();
   opt.attempts = 6;
-  opt.num_concurrent_reqs = 4;
+  opt.num_concurrent_reqs = 3;
   opt.timeout = Duration::from_secs(6);
   [
     TokioAsyncResolver::tokio(
