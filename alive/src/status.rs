@@ -8,7 +8,7 @@ use dashmap::DashMap;
 use mysql_macro as m;
 use sonic_rs::{Deserialize, Serialize};
 
-use crate::{cron, db::Status, id_v};
+use crate::{cron, db::Status};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StatusLi(
@@ -43,12 +43,12 @@ pub async fn status() -> Result<StatusLi> {
   }
 
   if !host_id_li.is_empty() {
-    for i in id_v("host", host_id_li).await? {
+    for i in m::id_v_str("host", host_id_li).await? {
       HOST.insert(i.0, i.1);
     }
   }
   if !kind_id_li.is_empty() {
-    for i in id_v("kind", kind_id_li).await? {
+    for i in m::id_v_str("kind", kind_id_li).await? {
       KIND.insert(i.0, i.1);
     }
   }
