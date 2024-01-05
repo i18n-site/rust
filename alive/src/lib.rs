@@ -33,12 +33,14 @@ use id_v::id_v;
 
 pub struct Alive {
   arg_cache: Cache<u64, String>,
+  kind_cache: Cache<u64, Kind>,
 }
 
 impl Alive {
   pub fn new() -> Self {
     Alive {
       arg_cache: Cache::new(1024),
+      kind_cache: Cache::new(1024),
     }
   }
   pub async fn ping(&mut self) -> Result<()> {
@@ -67,6 +69,7 @@ impl Alive {
         }
       };
     }
+
     li.iter().for_each(|w| {
       kind_set.insert(w.kind_id);
       host_set.insert(w.host_id);
@@ -83,11 +86,11 @@ impl Alive {
     });
 
     let kind_map = HashMap::<u64, Kind>::from_iter(kind_li.into_iter().map(|k| (k.id, k)));
-    let host_map = id_v("host", host_set).await?;
+    let host_map = id_v::<String>("host", host_set).await?;
 
     dbg!(arg_set.len());
     if !arg_set.is_empty() {
-      for i in id_v("arg", arg_set).await? {
+      for i in id_v::<String>("arg", arg_set).await? {
         arg_map.insert(i.0, i.1.to_owned());
         self.arg_cache.insert(i.0, i.1);
       }
