@@ -11,11 +11,21 @@ message IdName
 
 message State
 {
+  uint32 dns_type = 1;
+  uint32 err = 2;
+  uint64 ts = 3;
+}
+
+message HostStateLi
+{
+  uint64 host_id = 1;
+  repeated State li = 2;
+}
+
+message KindStateLi
+{
   uint64 kind_id = 1;
-  uint64 host_id = 2;
-  uint32 dns_type = 3;
-  uint32 err = 4;
-  uint64 ts = 5;
+  repeated HostStateLi li = 2;
 }
 
 message Check
@@ -29,7 +39,8 @@ message StateLi
 {
   repeated IdName kind = 1;
   repeated IdName host = 2;
-  repeated State li = 3;
-  Check check = 4;
+  repeated KindStateLi ok = 3;
+  repeated KindStateLi err = 4;
+  Check check = 5;
 }
 ```

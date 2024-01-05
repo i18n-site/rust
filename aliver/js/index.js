@@ -11,14 +11,28 @@ export const IdName /*
 )
 
 export const State /*
-  0 kindId 	u64
-  1 hostId 	u64
-  2 dnsType	u32
-  3 err    	u32
-  4 ts     	u64
+  0 dnsType	u32
+  1 err    	u32
+  2 ts     	u64
 */ = $decode(
-  [$u64,$u64,$u32,$u32,$u64],
-  [0,0,0,0,0]
+  [$u32,$u32,$u64],
+  [0,0,0]
+)
+
+export const HostStateLi /*
+  0 hostId	u64
+  1 li    	[State]
+*/ = $decode(
+  [$u64,State],
+  [0,1]
+)
+
+export const KindStateLi /*
+  0 kindId	u64
+  1 li    	[HostStateLi]
+*/ = $decode(
+  [$u64,HostStateLi],
+  [0,1]
 )
 
 export const Check /*
@@ -33,9 +47,10 @@ export const Check /*
 export const StateLi /*
   0 kind 	[IdName]
   1 host 	[IdName]
-  2 li   	[State]
-  3 check	Check
+  2 ok   	[KindStateLi]
+  3 err  	[KindStateLi]
+  4 check	Check
 */ = $decode(
-  [IdName,IdName,State,Check],
-  [1,1,1,Check(BIN1)]
+  [IdName,IdName,KindStateLi,KindStateLi,Check],
+  [1,1,1,1,Check(BIN1)]
 )
