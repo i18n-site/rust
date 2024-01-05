@@ -28,7 +28,6 @@ members = [
   "getc",
   "i18",
   "rany",
-  "alive",
   "aok",
   "hi",
   "ireq",
