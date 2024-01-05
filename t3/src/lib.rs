@@ -18,12 +18,7 @@ pub use tracing;
 mod log;
 mod srv;
 
-use static_init::constructor;
-
-#[constructor(0)]
-extern "C" fn init() {
-  log::init();
-}
+use loginit::init;
 
 #[macro_export]
 macro_rules! api {

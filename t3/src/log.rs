@@ -2,7 +2,6 @@ use std::fmt::Debug;
 
 use axum::http::Request;
 use futures::{future::Map, FutureExt};
-pub use loginit::init;
 use tower::Service;
 
 #[derive(Clone)]

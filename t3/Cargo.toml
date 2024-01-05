@@ -36,7 +36,6 @@ tokio = { version = "1.35.1", features = [
 axum = { version = "0.7.3", features = ["ws"] }
 genv = "0.1.5"
 re = "0.1.5"
-static_init = "1.0.3"
 
 [features]
 stackdriver = ["tracing-stackdriver"]
