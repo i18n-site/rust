@@ -24,8 +24,8 @@ dependencies:
     specifier: ^0.0.3
     version: 0.0.3
   '@3-/protopkg':
-    specifier: ^0.1.41
-    version: 0.1.41
+    specifier: ^0.1.42
+    version: 0.1.42
   '@3-/uridir':
     specifier: ^0.0.2
     version: 0.0.2
@@ -137,18 +137,18 @@ packages:
     resolution: {integrity: sha512-RBaGAC/fUWAlt52mk54x/ky0sIHVBMKIPeCdwGTwwZ5T2d+0oLf7u4sPsMuPdP1qeRx4BvrFBsL/WEut9cEPiw==}
     dev: false
 
-  /@3-/protojs@0.1.14:
-    resolution: {integrity: sha512-FVs2Hbgu1S5M+R6bQFCI+K8NqdssjWy5ZPUOqzMCXtb4HVHFo1ogvlQyix7/oug9BBscg69w+/rXVmwoLWK33w==}
+  /@3-/protojs@0.1.15:
+    resolution: {integrity: sha512-+E0AF2ixsjuqjveDw/pfl9MsCG7dCf5NAf71kY0KHPxyC2UW2H9reJ7PizhWaj+/PX7hIW4jiqCdUEJ4NLBRvw==}
     dependencies:
       '@3-/snake': 0.0.2
       protobufjs: 7.2.5
     dev: false
 
-  /@3-/protopkg@0.1.41:
-    resolution: {integrity: sha512-Q0aSeHv1u3A2g2/2cLzYQHBHH3B1omm8WLHuM88uomh5GuRzqpfCq7K7038wCI08zIRy11nIr/OniLYT9AlxHA==}
+  /@3-/protopkg@0.1.42:
+    resolution: {integrity: sha512-Ddu7qTZw/Q1eI7tBAjdF3gFLNibH75W8lUx+gnW5ia9RewiYt3xAQ27lYJwj1PQeyStkROClyfuzyuZjqkXCEg==}
     dependencies:
       '@3-/nt': 0.1.2
-      '@3-/protojs': 0.1.14
+      '@3-/protojs': 0.1.15
       '@3-/read': 0.0.1
       '@3-/split': 0.1.1
       '@3-/walk': 0.0.1
