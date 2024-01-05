@@ -144,7 +144,7 @@ pub async fn id_row<R: FromRow + Id + Send + 'static>(
   if id_set.is_empty() {
     return Ok(Default::default());
   }
-  let row = R::row();
+  let row = R::col();
   let li: Vec<R> = q!(format!(
     "SELECT {row} FROM {table} WHERE id IN ({})",
     id_set
