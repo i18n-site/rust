@@ -6,7 +6,7 @@ use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
 use hashlru::Cache;
 use hook::hook;
-use mysql_macro::{id_v, id_v_str, q};
+use mysql_macro::{id_row, id_v_str, q};
 use paste::paste;
 use xstr::Join;
 

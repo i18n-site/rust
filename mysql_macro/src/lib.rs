@@ -4,7 +4,7 @@ use genv::def;
 pub use mysql_async::{
   self,
   prelude::{Query, Queryable, WithParams},
-  Error, Params, Result,
+  Error, FromRow, FromRowError, FromValue, FromValueError, Params, Result,
 };
 use mysql_async::{OptsBuilder, Pool};
 pub use trt::bg;
