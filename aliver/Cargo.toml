@@ -8,6 +8,7 @@ homepage = "https://github.com/3TiSite/rust/tree/main/aliver"
 description = "aliver"
 
 [dependencies]
+aliver = { version = "0.1.34", path = "../alive" }
 aok = { version = "0.1.2" }
 axum = "0.7.3"
 genv = { version = "0.1.5" }
