@@ -10,7 +10,7 @@ use hickory_resolver::{
 };
 
 macro_rules! ipv4 {
-  ($($i1:expr ; $i2:expr ; $i3:expr ; $i4:expr) , +) => {
+  ($($i1:expr ; $i2:expr ; $i3:expr ; $i4:expr , )+) => {
     [
       $(IpAddr::V4(Ipv4Addr::new($i1,$i2,$i3,$i4))),+
     ]
@@ -29,11 +29,14 @@ pub static RESOLVER: [TokioAsyncResolver; 2] = {
         None,
         vec![],
         NameServerConfigGroup::from_ips_clear(
-          // https://zhuanlan.zhihu.com/p/461095126
+          // https://www.chengxulvtu.net/public-dns/
           &ipv4!(
-            77;88;8;1,
+            208;67;220;220,
+            208;67;222;222,
+            77;88;8;8,
             77;88;8;1,
             114;114;114;114,
+            114;114;115;115,
             119;28;28;28,
             119;29;29;29,
             149;112;112;112,
@@ -44,7 +47,7 @@ pub static RESOLVER: [TokioAsyncResolver; 2] = {
             223;6;6;6,
             8;8;4;4,
             9;9;9;9,
-            8;8;8;8
+            8;8;8;8,
           ),
           53,
           false,
