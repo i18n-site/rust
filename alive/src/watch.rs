@@ -36,15 +36,6 @@ pub async fn _watch<'a>(
 ) -> Result<()> {
   let dns_type = watch.dns_type;
   let watch_id = watch.id;
-  // todo 添加超时, 用 try join
-  // match task.ping(kind, watch, host, kind_arg, watch_arg).await {
-  //   Ok(_) => {
-  //     // ok(kind, watch)
-  //   }
-  //   Err(err) => {
-  //     dbg!("todo");
-  //   }
-  // }
 
   macro_rules! dns {
     ($rec_type:ident, $v:ident) => {
