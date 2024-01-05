@@ -6,7 +6,7 @@ set -ex
 
 mkdir -p dump/data
 
-../node_modules/mysql2rust/mysql2rust.js -r src/m.rs
+bun x mysql2rust -r src/m.rs
 
 arg="-h$MYSQL_HOST -P$MYSQL_PORT -u$MYSQL_USER $MYSQL_DB"
 

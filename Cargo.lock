@@ -86,7 +86,7 @@ dependencies = [
  "hickory-resolver",
  "ireq 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "len-trait",
- "loginit 0.1.7",
+ "loginit 0.1.8",
  "mail-send",
  "mysql_async",
  "mysql_macro 0.1.17 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -143,7 +143,7 @@ dependencies = [
  "axum",
  "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "ireq 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
- "loginit 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "loginit 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "re 0.1.5",
  "static_init",
  "sts 0.1.14",
@@ -2105,7 +2105,6 @@ name = "loginit"
 version = "0.1.8"
 dependencies = [
  "atty",
- "static_init",
  "tracing-stackdriver",
  "tracing-subscriber",
 ]
@@ -2114,10 +2113,9 @@ dependencies = [
 name = "loginit"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64712dff08183cfc1a4fe2c28f5b2acd3e6b58b4fcba6b2051213b734f07c879"
+checksum = "331f937b8516c4586ade7746efeb4ad445254659bcc86588719a3eedf1f33349"
 dependencies = [
  "atty",
- "static_init",
  "tracing-subscriber",
 ]
 
@@ -4064,7 +4062,6 @@ dependencies = [
  "coarsetime",
  "futures",
  "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "loginit 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "once_cell",
  "re 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "thiserror",

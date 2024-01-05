@@ -33,6 +33,8 @@ async fn header(req: Request<Body>, next: Next) -> impl IntoResponse {
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() -> Result<()> {
+  loginit::init();
+
   tokio::task::spawn_blocking(async || {
     let healthcheck = HEALTHCHECK.as_str();
     alive::cron::run(async move || {
