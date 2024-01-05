@@ -57,8 +57,8 @@ impl Alive {
     let mut arg_set = HashSet::new();
     let mut arg_map = HashMap::new();
 
-    macro_rules! arg_set {
-      ($w:ident) => {{
+    macro_rules! arg_to_get {
+      ($w:expr) => {{
         let arg_id = $w.arg_id;
         if arg_id > 0 {
           if let Some(exist) = self.arg_cache.get(&arg_id) {
@@ -73,12 +73,13 @@ impl Alive {
     let mut kind_map = HashMap::<u64, Kind>::new();
     li.iter().for_each(|w| {
       if let Some(kind) = self.kind_cache.get(&w.kind_id) {
+        arg_to_get!(kind);
         kind_map.insert(w.kind_id, kind.clone());
       } else {
         kind_set.insert(w.kind_id);
       }
       host_set.insert(w.host_id);
-      arg_set!(w);
+      arg_to_get!(w);
     });
 
     let host_map = id_v_str("host", host_set).await?;
@@ -86,15 +87,14 @@ impl Alive {
     if !kind_set.is_empty() {
       let map: HashMap<u64, Kind> = id_row("kind", kind_set).await?;
       for i in map {
+        arg_to_get!(i.1);
         kind_map.insert(i.0, i.1.clone());
         self.kind_cache.insert(i.0, i.1);
       }
     }
 
     if !arg_set.is_empty() {
-      dbg!(&arg_set);
       let li = id_v_str("arg", arg_set).await?;
-      dbg!(&li);
       for i in li {
         arg_map.insert(i.0, i.1.clone());
         self.arg_cache.insert(i.0, i.1);
