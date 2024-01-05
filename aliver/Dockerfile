@@ -5,7 +5,7 @@ WORKDIR /app
 RUN apt-get update
 
 RUN apt-get install -y \
-curl bash build-essential libssl-dev pkg-config mold clang
+protobuf-compiler curl bash build-essential libssl-dev pkg-config mold clang
 
 SHELL [ "/bin/bash", "-c" ]
 
