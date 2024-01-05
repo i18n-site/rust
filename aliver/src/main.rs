@@ -43,7 +43,7 @@ async fn main() -> Result<()> {
   });
 
   let app = Router::new()
-    .route("/", post(re::FnAny(li::post)))
+    .route("/Li", post(re::FnAny(li::post)))
     .route("/ping", get(re::FnAny(ping)))
     .layer(ServiceBuilder::new().layer(middleware::from_fn(header)));
 
