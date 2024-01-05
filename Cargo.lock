@@ -1514,7 +1514,7 @@ checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
 name = "hi"
-version = "0.1.8"
+version = "0.1.9"
 dependencies = [
  "aok 0.1.2",
  "genv 0.1.5",
@@ -1532,7 +1532,7 @@ dependencies = [
 
 [[package]]
 name = "hi"
-version = "0.1.8"
+version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fa25c23170442669401ebdff0b7d40809162fc0661691d325c2494eac1382cd5"
 dependencies = [
