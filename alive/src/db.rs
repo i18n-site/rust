@@ -9,6 +9,12 @@ pub struct Kind {
   pub v: String,
 }
 
+impl From<Kind> for u64 {
+  fn from(t: Kind) -> u64 {
+    t.id
+  }
+}
+
 #[derive(Debug, Clone, FromRow)]
 pub struct Watch {
   pub id: u64,

@@ -74,7 +74,16 @@ impl Alive {
       arg_set!(w);
     });
 
-    let kind_map: HashMap<_, Kind> = id_v("kind", kind_set).await?;
+    let kind_li: Vec<Kind> = q!(format!(
+      "SELECT id,arg_id,duration,warnErr,v FROM kind WHERE id IN ({})",
+      kind_set.join(",")
+    ));
+
+    kind_li.iter().for_each(|k| {
+      arg_set!(k);
+    });
+
+    let kind_map = HashMap::<u64, Kind>::from_iter(kind_li.into_iter().map(|k| (k.id, k)));
     let host_map = id_v_str("host", host_set).await?;
 
     dbg!(arg_set.len());
