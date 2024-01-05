@@ -5,4 +5,4 @@ cd $DIR
 set -ex
 
 bun x apint
-direnv exec . ./gen.coffee
+direnv exec . ./_gen.coffee
