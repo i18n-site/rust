@@ -48,7 +48,7 @@ pub async fn _watch<'a>(
 
   macro_rules! dns {
     ($rec_type:ident, $v:ident) => {
-      match idns.lookup(host, RecordType::$rec_type).await {
+      match idns::lookup(host, RecordType::$rec_type).await {
         Ok(ip_li) => {
           let mut addr_li = Vec::new();
           for ip in ip_li.records() {
