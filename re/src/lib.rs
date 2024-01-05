@@ -6,3 +6,6 @@ pub mod bad_request;
 pub mod form;
 mod msg;
 pub use msg::{FnAny, Msg};
+pub fn same<T>(t: T) -> T {
+  t
+}
