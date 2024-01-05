@@ -1,6 +1,8 @@
 #![feature(macro_metavar_expr)]
 
+mod id_v;
 use genv::def;
+pub use id_v::id_v;
 pub use mysql_async::{
   self,
   prelude::{Query, Queryable, WithParams},
