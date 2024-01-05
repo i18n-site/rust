@@ -18,6 +18,7 @@ pub use tracing;
 mod log;
 mod srv;
 
+#[allow(unused_imports)]
 use loginit::init;
 
 #[macro_export]
