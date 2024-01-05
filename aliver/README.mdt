@@ -6,4 +6,17 @@
 fly apps create NAME
 ```
 
+fly.io 默认会启动 2 台机器 , 但是我们只需要一台机器 , 所以要删掉一台
+
+```sh
+flyctl machine list
+flyctl machine destory ID
+```
+
+其他配置参见 ./fly.toml
+
+```toml
+<+ ./fly.toml>
+```
+
 其他参见 https://crates.io/crates/alive
