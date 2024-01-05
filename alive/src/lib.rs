@@ -58,15 +58,16 @@ impl Alive {
     let mut arg_map = HashMap::new();
 
     macro_rules! arg_set {
-      ($w:ident) => {
-        if $w.arg_id > 0 {
-          if let Some(exist) = self.arg_cache.get(&$w.arg_id) {
-            arg_map.insert($w.arg_id, exist.to_owned());
+      ($w:ident) => {{
+        let arg_id = $w.arg_id;
+        if arg_id > 0 {
+          if let Some(exist) = self.arg_cache.get(&arg_id) {
+            arg_map.insert(arg_id, exist.to_owned());
           } else {
-            arg_set.insert($w.arg_id);
+            arg_set.insert(arg_id);
           }
         }
-      };
+      }};
     }
 
     let mut kind_map = HashMap::<u64, Kind>::new();
