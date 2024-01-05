@@ -27,6 +27,10 @@ sh -s -- -y --no-modify-path --default-toolchain nightly
 ADD Cargo.toml .
 ADD ./sh/cpso.sh .
 ADD ./src ./src
+ADD ./alive/Cargo.toml ./alive/
+ADD ./alive/src ./alive/
+ADD ./alive/api.proto ./alive/
+ADD ./alive/build.rs ./alive/
 
 RUN \
 source $CARGO_HOME/env &&\
