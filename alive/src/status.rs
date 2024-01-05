@@ -5,19 +5,14 @@ use std::{
 
 use aok::Result;
 use dashmap::DashMap;
+use len_trait::len::Len;
 use mysql_macro as m;
 
-use crate::{cron, db::Status};
-
-#[derive(Debug)]
-pub struct StatusLi(
-  HashMap<u64, String>,          // host
-  HashMap<u64, String>,          // kind
-  Vec<(u64, u64, u8, u32, u64)>, // li
-  u64,                           // pre start
-  u64,                           // run times
-  u64,                           // run secs
-);
+use crate::{
+  api::{Check, IdName, State, StateLi},
+  cron,
+  db::Status,
+};
 
 #[static_init::dynamic]
 pub static HOST: DashMap<u64, String> = DashMap::new();
@@ -25,7 +20,15 @@ pub static HOST: DashMap<u64, String> = DashMap::new();
 #[static_init::dynamic]
 pub static KIND: DashMap<u64, String> = DashMap::new();
 
-pub async fn status() -> Result<StatusLi> {
+pub fn to_id_name(li: impl Len + IntoIterator<Item = (u64, String)>) -> Vec<IdName> {
+  let mut id_name = Vec::with_capacity(li.len());
+  for i in li {
+    id_name.push(IdName { id: i.0, name: i.1 });
+  }
+  id_name
+}
+
+pub async fn status() -> Result<StateLi> {
   let li: Vec<Status> =
     m::q!("SELECT kind_id,host_id,dns_type,err,ts FROM watch ORDER BY err DESC,kind_id,host_id");
 
@@ -64,14 +67,23 @@ pub async fn status() -> Result<StatusLi> {
     }
   }
 
-  Ok(StatusLi(
-    kind,
-    host,
-    li.into_iter()
-      .map(|i| (i.kind_id, i.host_id, i.dns_type, i.err, i.ts))
+  Ok(StateLi {
+    kind: to_id_name(kind),
+    host: to_id_name(host),
+    li: li
+      .into_iter()
+      .map(|i| State {
+        kind_id: i.kind_id,
+        host_id: i.host_id,
+        dns_type: i.dns_type as _,
+        err: i.err,
+        ts: i.ts,
+      })
       .collect(),
-    cron::TS.load(Relaxed),
-    cron::COUNT.load(Relaxed),
-    cron::DURATION.load(Relaxed),
-  ))
+    check: Some(Check {
+      last: cron::TS.load(Relaxed),
+      count: cron::COUNT.load(Relaxed),
+      cost: cron::DURATION.load(Relaxed),
+    }),
+  })
 }

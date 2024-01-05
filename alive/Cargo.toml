@@ -17,6 +17,7 @@ hi = { version = "0.1.8" }
 hickory-proto = "0.24.0"
 hickory-resolver = "0.24.0"
 ireq = { version = "0.1.7" }
+len-trait = "0.6.1"
 mail-send = "0.4.6"
 mysql_async = "0.33.0"
 mysql_macro = { version = "0.1.17" }

@@ -5,7 +5,7 @@ package api;
 message IdName
 {
   uint64 id = 1;
-  uint64 name = 2;
+  string name = 2;
 }
 
 message State
@@ -20,7 +20,7 @@ message State
 message Check
 {
   uint64 last = 1;
-  uint64 times = 2;
+  uint64 count = 2;
   uint64 cost = 3;
 }
 
