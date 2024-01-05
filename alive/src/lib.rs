@@ -8,7 +8,6 @@ use hashlru::Cache;
 use hook::hook;
 use mysql_macro::{id_row, id_v_str, q};
 use paste::paste;
-use xstr::Join;
 
 pub mod cron;
 mod ok;
@@ -42,11 +41,11 @@ impl Alive {
     }
   }
   pub async fn ping(&mut self) -> Result<()> {
-    // let li: Vec<Watch> = q!( "SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch" );
-    let li: Vec<Watch> = q!(
-      "SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch WHERE ts<=?",
-      sts::sec()
-    );
+    let li: Vec<Watch> = q!("SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch");
+    // let li: Vec<Watch> = q!(
+    //   "SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch WHERE ts<=?",
+    //   sts::sec()
+    // );
     if li.is_empty() {
       return OK;
     }
@@ -68,28 +67,31 @@ impl Alive {
       };
     }
 
+    let mut kind_map = HashMap::<u64, Kind>::new();
     li.iter().for_each(|w| {
-      kind_set.insert(w.kind_id);
+      if let Some(kind) = self.kind_cache.get(&w.kind_id) {
+        kind_map.insert(w.kind_id, kind.clone());
+      } else {
+        kind_set.insert(w.kind_id);
+      }
       host_set.insert(w.host_id);
       arg_set!(w);
     });
 
-    let kind_li: Vec<Kind> = q!(format!(
-      "SELECT id,arg_id,duration,warnErr,v FROM kind WHERE id IN ({})",
-      kind_set.join(",")
-    ));
-
-    kind_li.iter().for_each(|k| {
-      arg_set!(k);
-    });
-
-    let kind_map = HashMap::<u64, Kind>::from_iter(kind_li.into_iter().map(|k| (k.id, k)));
     let host_map = id_v_str("host", host_set).await?;
+    dbg!(arg_set.len(), kind_set.len());
 
-    dbg!(arg_set.len());
+    if !kind_set.is_empty() {
+      let map: HashMap<u64, Kind> = id_row("kind", kind_set).await?;
+      for i in map {
+        kind_map.insert(i.0, i.1.clone());
+        self.kind_cache.insert(i.0, i.1);
+      }
+    }
+
     if !arg_set.is_empty() {
       for i in id_v_str("arg", arg_set).await? {
-        arg_map.insert(i.0, i.1.to_owned());
+        arg_map.insert(i.0, i.1.clone());
         self.arg_cache.insert(i.0, i.1);
       }
     }

@@ -133,6 +133,7 @@ pub async fn id_v_str(
 
 pub trait Id {
   fn id(&self) -> u64;
+  fn row() -> &'static str;
 }
 
 pub async fn id_row<R: FromRow + Id + Send + 'static>(
@@ -143,6 +144,10 @@ pub async fn id_row<R: FromRow + Id + Send + 'static>(
   if id_set.is_empty() {
     return Ok(Default::default());
   }
-  let li: Vec<R> = q!(format!("SELECT id,v FROM {table} WHERE id IN ({})", id_set));
+  let row = R::row();
+  let li: Vec<R> = q!(format!(
+    "SELECT {row} FROM {table} WHERE id IN ({})",
+    id_set
+  ));
   Ok(HashMap::from_iter(li.into_iter().map(|i| (i.id(), i))))
 }
