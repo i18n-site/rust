@@ -25,6 +25,7 @@ tracing = "0.1.40"
 wxpush = { version = "0.1.9", path = "../wxpush" }
 xerr = { version = "0.1.1", path = "../xerr" }
 xsmtp = { version = "0.1.3", path = "../xsmtp" }
+xstr = { version = "0.1.9", path = "../xstr" }
 
 [dev-dependencies]
 

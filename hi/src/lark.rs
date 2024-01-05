@@ -1,5 +1,6 @@
 use aok::OK;
 use sonic_rs::{json, to_string, Value};
+use xstr::cut;
 
 genv::s!(LARK_BOT);
 
@@ -8,8 +9,8 @@ pub async fn send(
   txt: impl AsRef<str>,
   url: impl AsRef<str>,
 ) -> aok::Result<()> {
-  let title = title.as_ref();
-  let txt = txt.as_ref();
+  let title = cut(title.as_ref(), 255);
+  let txt = cut(txt.as_ref(), 10000);
   let url = url.as_ref();
 
   let mut li: Vec<Value> = Vec::with_capacity(2);
