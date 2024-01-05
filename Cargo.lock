@@ -144,7 +144,7 @@ dependencies = [
  "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "ireq 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "loginit 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "re",
+ "re 0.1.5",
  "static_init",
  "sts 0.1.14",
  "tokio",
@@ -204,6 +204,9 @@ name = "anyhow"
 version = "1.0.79"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "080e9890a082662b09c1ad45f567faeeb47f22b5fb23895fbe1e651e718e25ca"
+dependencies = [
+ "backtrace",
+]
 
 [[package]]
 name = "aok"
@@ -316,6 +319,7 @@ checksum = "d09dbe0e490df5da9d69b36dca48a76635288a82f92eca90024883a56202026d"
 dependencies = [
  "async-trait",
  "axum-core",
+ "base64",
  "bytes",
  "futures-util",
  "http 1.0.0",
@@ -334,8 +338,10 @@ dependencies = [
  "serde_json",
  "serde_path_to_error",
  "serde_urlencoded",
+ "sha1",
  "sync_wrapper",
  "tokio",
+ "tokio-tungstenite",
  "tower",
  "tower-layer",
  "tower-service",
@@ -3136,6 +3142,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "re"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "206f1484c9e78ce431cf46c81f66b6ab76e6d2879e9be32fa99bebed4c23439e"
+dependencies = [
+ "anyhow",
+ "axum",
+ "bytes",
+ "prost",
+ "serde",
+ "sonic-rs",
+ "tracing",
+]
+
+[[package]]
 name = "redox_syscall"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4031,6 +4052,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "t3"
+version = "0.1.1"
+dependencies = [
+ "anyhow",
+ "axum",
+ "bytes",
+ "coarsetime",
+ "futures",
+ "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "loginit 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "once_cell",
+ "re 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "thiserror",
+ "tokio",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-stackdriver",
+ "tracing-subscriber",
+ "xtld 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "tap"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4262,6 +4306,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokio-tungstenite"
+version = "0.21.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c83b561d025642014097b66e6c1bb422783339e0909e4429cde4749d1990bc38"
+dependencies = [
+ "futures-util",
+ "log",
+ "tokio",
+ "tungstenite",
+]
+
+[[package]]
 name = "tokio-util"
 version = "0.7.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4484,6 +4540,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "17f77d76d837a7830fe1d4f12b7b4ba4192c1888001c7164257e4bc6d21d96b4"
 
 [[package]]
+name = "tungstenite"
+version = "0.21.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9ef1a641ea34f399a848dea702823bbecfb4c486f911735368f1f137cb8257e1"
+dependencies = [
+ "byteorder",
+ "bytes",
+ "data-encoding",
+ "http 1.0.0",
+ "httparse",
+ "log",
+ "rand",
+ "sha1",
+ "thiserror",
+ "url",
+ "utf-8",
+]
+
+[[package]]
 name = "twox-hash"
 version = "1.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4643,6 +4718,12 @@ dependencies = [
  "svgtypes",
  "tiny-skia-path",
 ]
+
+[[package]]
+name = "utf-8"
+version = "0.7.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "09cc8ee72d2a9becf2f2febe0205bbed8fc6615b7cb429ad062dc7b7ddd036a9"
 
 [[package]]
 name = "uuid"
@@ -5081,7 +5162,7 @@ version = "0.1.8"
 dependencies = [
  "punycode",
  "xstr 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
- "xtld",
+ "xtld 0.1.1",
 ]
 
 [[package]]
@@ -5138,6 +5219,16 @@ checksum = "3e2633e51ac29e7198ac7556cd753a5f7bd92a171290629ea0ab111cda3e28f2"
 [[package]]
 name = "xtld"
 version = "0.1.1"
+dependencies = [
+ "psl",
+ "xstr 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "xtld"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "00ef6c75f4052e2b2536f8430ed543d2b73f57a045ac9d4e6ab8964aefffc8f7"
 dependencies = [
  "psl",
  "xstr 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
