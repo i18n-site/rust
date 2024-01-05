@@ -92,7 +92,10 @@ impl Alive {
     }
 
     if !arg_set.is_empty() {
-      for i in id_v_str("arg", arg_set).await? {
+      dbg!(&arg_set);
+      let li = id_v_str("arg", arg_set).await?;
+      dbg!(&li);
+      for i in li {
         arg_map.insert(i.0, i.1.clone());
         self.arg_cache.insert(i.0, i.1);
       }

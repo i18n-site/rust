@@ -8,11 +8,24 @@ mod test_macro {
 #[tokio::test]
 async fn test() -> aok::Result<()> {
   loginit::init();
-  // let li = alive::status().await?;
-  use alive::Alive;
+  use std::collections::{HashMap, HashSet};
 
-  let mut alive = Alive::new();
-  alive.ping().await?;
-  alive.ping().await?;
+  use mysql_macro::{id_row, id_v_str, q};
+  use xstr::Join;
+
+  let id_set = HashSet::from([11]);
+  // dbg!(id_set.join(","));
+
+  let map = id_v_str("arg", id_set).await?;
+  dbg!(map);
+
+  let r: Vec<(u64, String)> = q!("select id,v from arg where id IN(11)");
+  dbg!(r);
+  // let li = alive::status().await?;
+  // use alive::Alive;
+  //
+  // let mut alive = Alive::new();
+  // alive.ping().await?;
+  // alive.ping().await?;
   Ok(())
 }
