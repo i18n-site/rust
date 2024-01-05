@@ -3,8 +3,8 @@
 use genv::def;
 pub use mysql_async::{
   self,
-  prelude::{Query, Queryable, WithParams},
-  Error, FromRow, FromRowError, FromValue, FromValueError, Params, Result,
+  prelude::{FromRow, FromValue, Query, Queryable, WithParams},
+  Error, FromRowError, FromValueError, Params, Result,
 };
 use mysql_async::{OptsBuilder, Pool};
 pub use trt::bg;
@@ -106,7 +106,6 @@ macro-expanded `macro_export` macros from the current crate cannot be referred t
 
 use std::collections::HashMap;
 
-use mysql_async::prelude::FromRow;
 use xstr::Join;
 
 pub async fn id_v<S: Send + 'static>(
