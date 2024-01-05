@@ -9,6 +9,7 @@ description = "mysql macro for mysql_async"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
+aok = { version = "0.1.2", path = "../aok" }
 genv = "0.1.5"
 mysql_async = { default-features = false, version = "0.33.0", features = [
   "minimal",
