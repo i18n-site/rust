@@ -147,6 +147,7 @@ dependencies = [
  "re 0.1.5",
  "static_init",
  "sts 0.1.14",
+ "t3",
  "tokio",
  "tower",
  "tower-http",
