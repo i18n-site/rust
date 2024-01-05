@@ -134,22 +134,25 @@ dependencies = [
 name = "alive"
 version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d55c60d46225f60f3ff2a64ef6255f77ae0f76c101cebd4a5f19bd668ccd0cb"
+checksum = "ae5b3abd70b6925de0afe3593b077f9334c50d40adc5e141e9a616f07302fb23"
 dependencies = [
  "aok 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "dashmap",
  "enum_dispatch",
  "futures",
+ "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "hashlru",
  "hi 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "hickory-proto",
  "hickory-resolver",
  "ireq 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "len-trait",
  "mail-send",
  "mysql_async",
  "mysql_macro 0.1.17 (registry+https://github.com/rust-lang/crates.io-index)",
  "paste",
- "serde",
- "sonic-rs 0.3.1",
+ "prost",
+ "prost-build",
  "static_init",
  "sts 0.1.14",
  "tokio",
@@ -164,7 +167,7 @@ name = "aliver"
 version = "0.1.2"
 dependencies = [
  "aerr 0.1.11 (registry+https://github.com/rust-lang/crates.io-index)",
- "alive 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
+ "alive 0.1.11 (registry+https://github.com/rust-lang/crates.io-index)",
  "aok 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "axum",
  "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
