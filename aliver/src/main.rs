@@ -1,5 +1,5 @@
 #![feature(async_closure)]
-mod index;
+mod li;
 mod ping;
 
 use aok::{Result, OK};
@@ -43,7 +43,7 @@ async fn main() -> Result<()> {
   });
 
   let app = Router::new()
-    .route("/", post(re::FnAny(index::post)))
+    .route("/", post(re::FnAny(li::post)))
     .route("/ping", get(re::FnAny(ping)))
     .layer(ServiceBuilder::new().layer(middleware::from_fn(header)));
 
