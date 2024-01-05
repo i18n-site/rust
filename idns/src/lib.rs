@@ -69,9 +69,3 @@ pub async fn lookup<N: IntoName>(name: N, record_type: RecordType) -> Result<Loo
     }
   }
 }
-//     match RESOLVER.lookup(host, RecordType::$rec_type).await {
-// #[static_init::dynamic]
-// pub static RESOLVER: NameServerConfigGroup =
-//   NameServerConfigGroup::from_ips_clear(&[IpAddr::V4(Ipv4Addr::new(223, 5, 5, 5))], 53, true);
-
-// from_ips_clear
