@@ -1,5 +1,5 @@
 [workspace]
-members = ["../alive"]
+members = ["./alive"]
 
 [package]
 name = "aliver"
