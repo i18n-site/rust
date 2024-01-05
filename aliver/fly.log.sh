@@ -4,4 +4,4 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
-exec fly logs
+fly logs | cut -d ']' -f 2-
