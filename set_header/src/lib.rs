@@ -1,6 +1,5 @@
 use std::{ops::Deref, sync::Arc};
 
-use amid::middleware;
 use axum::{extract::Request, http::HeaderName, middleware::Next, response::Response};
 use parking_lot::Mutex;
 
@@ -50,5 +49,5 @@ async fn _set_header(mut req: Request, next: Next) -> anyhow::Result<Response> {
 }
 
 pub async fn set_header(req: Request, next: Next) -> Response {
-  middleware(_set_header(req, next).await)
+  amid::middleware(_set_header(req, next).await)
 }
