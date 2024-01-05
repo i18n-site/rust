@@ -6,7 +6,7 @@ use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
 use hashlru::Cache;
 use hook::hook;
-use mysql_macro::q;
+use mysql_macro::{id_v, id_v_str, q};
 use paste::paste;
 use xstr::Join;
 
@@ -28,8 +28,6 @@ use err::errlog;
 mod err_duration;
 mod hook;
 use err_duration::err_duration;
-mod id_v;
-use id_v::id_v;
 
 pub struct Alive {
   arg_cache: Cache<u64, String>,
@@ -76,21 +74,12 @@ impl Alive {
       arg_set!(w);
     });
 
-    let kind_li: Vec<Kind> = q!(format!(
-      "SELECT id,arg_id,duration,warnErr,v FROM kind WHERE id IN ({})",
-      kind_set.join(",")
-    ));
-
-    kind_li.iter().for_each(|k| {
-      arg_set!(k);
-    });
-
-    let kind_map = HashMap::<u64, Kind>::from_iter(kind_li.into_iter().map(|k| (k.id, k)));
-    let host_map = id_v::<String>("host", host_set).await?;
+    let kind_map: HashMap<_, Kind> = id_v("kind", kind_set).await?;
+    let host_map = id_v_str("host", host_set).await?;
 
     dbg!(arg_set.len());
     if !arg_set.is_empty() {
-      for i in id_v::<String>("arg", arg_set).await? {
+      for i in id_v_str("arg", arg_set).await? {
         arg_map.insert(i.0, i.1.to_owned());
         self.arg_cache.insert(i.0, i.1);
       }

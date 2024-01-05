@@ -115,7 +115,7 @@ dependencies = [
  "loginit 0.1.4",
  "mail-send",
  "mysql_async",
- "mysql_macro 0.1.6",
+ "mysql_macro 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "paste",
  "serde",
  "sonic-rs 0.3.1",
@@ -144,7 +144,7 @@ dependencies = [
  "ireq 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "mail-send",
  "mysql_async",
- "mysql_macro 0.1.6",
+ "mysql_macro 0.1.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "paste",
  "serde",
  "sonic-rs 0.3.1",
@@ -2371,19 +2371,6 @@ dependencies = [
 [[package]]
 name = "mysql_macro"
 version = "0.1.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bdd8305f9172ba1cedd3085ca288e99f0cc070992ec8bc4351a0fbc77cc1f023"
-dependencies = [
- "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "mysql_async",
- "static_init",
- "tokio",
- "trt 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "mysql_macro"
-version = "0.1.10"
 dependencies = [
  "aok 0.1.2",
  "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -2393,6 +2380,20 @@ dependencies = [
  "tokio-test",
  "trt 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
  "xstr 0.1.9",
+]
+
+[[package]]
+name = "mysql_macro"
+version = "0.1.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2d80c8bec03ba13869415cfb47c6cf27d38039307ef2b4d84f6f1eaa8389430a"
+dependencies = [
+ "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "mysql_async",
+ "static_init",
+ "tokio",
+ "trt 0.1.21 (registry+https://github.com/rust-lang/crates.io-index)",
+ "xstr 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
