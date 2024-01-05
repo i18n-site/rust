@@ -41,11 +41,11 @@ impl Alive {
     }
   }
   pub async fn ping(&mut self) -> Result<()> {
-    let li: Vec<Watch> = q!("SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch");
-    // let li: Vec<Watch> = q!(
-    //   "SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch WHERE ts<=?",
-    //   sts::sec()
-    // );
+    // let li: Vec<Watch> = q!("SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch");
+    let li: Vec<Watch> = q!(
+      "SELECT id,host_id,kind_id,dns_type,err,arg_id FROM watch WHERE ts<=?",
+      sts::sec()
+    );
     if li.is_empty() {
       return OK;
     }
@@ -79,7 +79,6 @@ impl Alive {
     });
 
     let host_map = id_v_str("host", host_set).await?;
-    dbg!(arg_set.len(), kind_set.len());
 
     if !kind_set.is_empty() {
       let map: HashMap<u64, Kind> = id_row("kind", kind_set).await?;
@@ -96,7 +95,6 @@ impl Alive {
       }
     }
 
-    dbg!(&arg_map);
     let mut ing_curl = FuturesUnordered::new();
     let mut ing_hook = FuturesUnordered::new();
 
