@@ -2,13 +2,16 @@ FROM ubuntu as build
 
 WORKDIR /app
 
-RUN apt-get update &&\
-  apt-get install -y python3-pip &&\
-  pip install apt-smart &&\
-  apt-smart -a &&\
-  apt-get update
+ENV PIP_ROOT_USER_ACTION=ignore
 
-RUN apt-get install -y \
+# RUN apt-get update &&\
+#   apt-get install -y python3-pip &&\
+#   pip install apt-smart &&\
+#   apt-smart -a 
+
+RUN \
+apt-get update &&\
+apt-get install -y \
 protobuf-compiler curl bash build-essential libssl-dev pkg-config mold clang
 
 SHELL [ "/bin/bash", "-c" ]
