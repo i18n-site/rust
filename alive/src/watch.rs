@@ -4,20 +4,12 @@ use aok::{Result, OK};
 use enum_dispatch::enum_dispatch;
 use futures::{stream::FuturesOrdered, StreamExt};
 use hickory_proto::rr::{record_type::RecordType, RData};
-use hickory_resolver::{
-  config::{ResolverConfig, ResolverOpts},
-  TokioAsyncResolver,
-};
 use xstr::Join;
 
 use crate::{
   db::{Kind, Watch},
   dberr, errlog, ok,
 };
-
-#[static_init::dynamic]
-pub static RESOLVER: TokioAsyncResolver =
-  TokioAsyncResolver::tokio(ResolverConfig::cloudflare(), ResolverOpts::default());
 
 #[enum_dispatch]
 pub trait Task {
@@ -56,7 +48,7 @@ pub async fn _watch<'a>(
 
   macro_rules! dns {
     ($rec_type:ident, $v:ident) => {
-      match RESOLVER.lookup(host, RecordType::$rec_type).await {
+      match idns.lookup(host, RecordType::$rec_type).await {
         Ok(ip_li) => {
           let mut addr_li = Vec::new();
           for ip in ip_li.records() {

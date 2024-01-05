@@ -1,7 +1,9 @@
 use core::net::Ipv4Addr;
 use std::{net::IpAddr, time::Duration};
 
+pub use hickory_proto;
 use hickory_proto::rr::record_type::RecordType;
+pub use hickory_resolver;
 use hickory_resolver::{
   config::{NameServerConfigGroup, ResolverConfig, ResolverOpts},
   error::ResolveError,
