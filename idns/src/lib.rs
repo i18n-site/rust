@@ -64,7 +64,7 @@ pub async fn lookup<N: IntoName>(name: N, record_type: RecordType) -> Result<Loo
   match RESOLVER[0].lookup(name.clone(), record_type).await {
     Ok(r) => Ok(r),
     Err(err) => {
-      tracing::warn!("lookup error: {}", err);
+      tracing::warn!("DNS ERROR: {}", err);
       RESOLVER[1].lookup(name, record_type).await
     }
   }
