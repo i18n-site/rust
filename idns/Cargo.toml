@@ -8,6 +8,7 @@ homepage = "https://github.com/3TiSite/rust/tree/main/idns"
 description = "idns"
 
 [dependencies]
+hickory-resolver = "0.24.0"
 
 [dev-dependencies]
 
