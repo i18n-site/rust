@@ -10,6 +10,10 @@ pub struct Kind {
 }
 
 impl Id for Kind {
+  fn col() -> &'static str {
+    "id,arg_id,duration,warnErr,v"
+  }
+
   fn id(&self) -> u64 {
     self.id
   }
