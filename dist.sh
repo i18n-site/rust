@@ -24,6 +24,6 @@ git describe --tags $(git rev-list --tags --max-count=1) | xargs git tag -d
 
 rm Cargo.lock
 git add -u
-git commit -m.
+git commit -m. || true
 git push
 cargo publish --registry crates-io || true
