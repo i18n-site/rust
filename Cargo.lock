@@ -2370,7 +2370,7 @@ dependencies = [
 
 [[package]]
 name = "mysql_macro"
-version = "0.1.8"
+version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bdd8305f9172ba1cedd3085ca288e99f0cc070992ec8bc4351a0fbc77cc1f023"
 dependencies = [
@@ -2383,7 +2383,7 @@ dependencies = [
 
 [[package]]
 name = "mysql_macro"
-version = "0.1.8"
+version = "0.1.9"
 dependencies = [
  "anyhow",
  "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
