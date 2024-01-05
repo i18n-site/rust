@@ -133,7 +133,7 @@ pub async fn id_v_str(
 
 pub trait Id {
   fn id(&self) -> u64;
-  fn row() -> &'static str;
+  fn col() -> &'static str;
 }
 
 pub async fn id_row<R: FromRow + Id + Send + 'static>(
