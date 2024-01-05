@@ -2,7 +2,11 @@ FROM ubuntu as build
 
 WORKDIR /app
 
-RUN apt-get update
+RUN apt-get update &&\
+  apt-get install -y python3-pip &&\
+  pip install apt-smart &&\
+  apt-smart -a &&\
+  apt-get update
 
 RUN apt-get install -y \
 protobuf-compiler curl bash build-essential libssl-dev pkg-config mold clang
