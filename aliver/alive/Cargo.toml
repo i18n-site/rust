@@ -38,7 +38,7 @@ xerr = { version = "0.1.2" }
 xstr = { version = "0.1.9" }
 
 [dev-dependencies]
-loginit = { path = "../../loginit" }
+loginit = { version = "0.1.8" }
 
 [features]
 
