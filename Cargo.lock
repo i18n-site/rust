@@ -101,7 +101,7 @@ dependencies = [
 
 [[package]]
 name = "alive"
-version = "0.1.10"
+version = "0.1.11"
 dependencies = [
  "aok 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "dashmap",
@@ -132,7 +132,7 @@ dependencies = [
 
 [[package]]
 name = "alive"
-version = "0.1.10"
+version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8d55c60d46225f60f3ff2a64ef6255f77ae0f76c101cebd4a5f19bd668ccd0cb"
 dependencies = [
