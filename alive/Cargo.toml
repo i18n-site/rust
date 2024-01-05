@@ -21,6 +21,7 @@ mail-send = "0.4.6"
 mysql_async = "0.33.0"
 mysql_macro = { version = "0.1.17" }
 paste = "1.0.14"
+prost = "0.12.3"
 static_init = "1.0.3"
 sts = { version = "0.1.14" }
 tokio = { version = "1.35.1", features = [
@@ -39,3 +40,8 @@ xstr = { version = "0.1.9" }
 loginit = { path = "../loginit" }
 
 [features]
+
+[build-dependencies]
+aok = "0.1.2"
+genv = { version = "0.1.5", path = "../genv" }
+prost-build = "0.12.3"
