@@ -9,13 +9,12 @@ description = "aliver"
 
 [dependencies]
 aerr = "0.1.11"
-alive = "0.1.10"
+alive = "0.1.12"
 aok = { version = "0.1.2" }
 axum = "0.7.3"
 genv = { version = "0.1.5" }
 ireq = { version = "0.1.7" }
 loginit = { version = "0.1.4" }
-sonic-rs = "0.3.1"
 static_init = "1.0.3"
 sts = { version = "0.1.14" }
 tokio = { version = "1.35.1", features = [

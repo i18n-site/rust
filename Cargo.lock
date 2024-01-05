@@ -134,7 +134,7 @@ dependencies = [
 name = "alive"
 version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ae5b3abd70b6925de0afe3593b077f9334c50d40adc5e141e9a616f07302fb23"
+checksum = "dcb8f797094a73ed4b04cc9a85d8cb2cbe928c53929f8f88ebf5cb8aa6935e00"
 dependencies = [
  "aok 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "dashmap",
@@ -167,13 +167,12 @@ name = "aliver"
 version = "0.1.2"
 dependencies = [
  "aerr 0.1.11 (registry+https://github.com/rust-lang/crates.io-index)",
- "alive 0.1.11 (registry+https://github.com/rust-lang/crates.io-index)",
+ "alive 0.1.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "aok 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "axum",
  "genv 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "ireq 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "loginit 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "sonic-rs 0.3.1",
  "static_init",
  "sts 0.1.14",
  "tokio",
