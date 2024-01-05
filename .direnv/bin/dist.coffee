@@ -4,7 +4,7 @@
   fs > existsSync readFileSync writeFileSync copyFileSync
   path > join
   fs > rmSync
-  @w5/mdt/make.js
+  @3-/mdt/make.js
 
 cwd = process.cwd()
 
@@ -53,6 +53,6 @@ if existsSync src
 
   await $'git add -u'
   await $"git commit -m '#{json.name} v#{version}'"
-  await $'git push'
+  #await $'git push'
   cd lib
   await $'npm publish --access=public'
