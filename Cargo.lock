@@ -2102,7 +2102,7 @@ checksum = "b5e6163cb8c49088c2c36f57875e58ccd8c87c7427f7fbd50ea6710b2f3f2e8f"
 
 [[package]]
 name = "loginit"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "atty",
  "static_init",
@@ -2112,7 +2112,7 @@ dependencies = [
 
 [[package]]
 name = "loginit"
-version = "0.1.6"
+version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a435d5dcacd43d0941157ddadac42ff2e9ea40d1c13269847b28aad9aea8d023"
 dependencies = [

@@ -9,7 +9,8 @@ impl tracing_subscriber::fmt::time::FormatTime for NoTime {
   }
 }
 
-pub fn init() {
+#[constructor(0)]
+extern "C" fn _init_() {
   let env_filter = EnvFilter::from_default_env();
   #[cfg(feature = "stackdriver")]
   {
@@ -32,7 +33,4 @@ pub fn init() {
   }
 }
 
-#[constructor(0)]
-extern "C" fn _init() {
-  init()
-}
+pub const fn init() {}

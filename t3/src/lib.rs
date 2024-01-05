@@ -18,8 +18,7 @@ pub use tracing;
 mod log;
 mod srv;
 
-#[allow(unused_imports)]
-use loginit::init;
+loginit::init();
 
 #[macro_export]
 macro_rules! api {
