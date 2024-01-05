@@ -1,7 +1,7 @@
 use mysql_macro::{conn, exe, q, q01, q1};
 
 #[tokio::test]
-async fn main() -> anyhow::Result<()> {
+async fn main() -> aok::Result<()> {
   let mail_id: Option<Option<u64>> = q01!(r#"select mailId("a@b.c")"#);
   dbg!(mail_id);
   let mail_id: Option<u64> = q1!(r#"select mailId("a@b.c")"#);

@@ -9,7 +9,6 @@ description = "mysql macro for mysql_async"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
-aok = { version = "0.1.2", path = "../aok" }
 genv = "0.1.5"
 mysql_async = { default-features = false, version = "0.33.0", features = [
   "minimal",
@@ -30,7 +29,6 @@ tokio = { version = "1.35.1", features = [
 trt = "0.1.21"
 
 [dev-dependencies]
-anyhow = "1.0.79"
 tokio = { version = "1.35.1", features = [
   "time",
   "rt-multi-thread",
@@ -38,3 +36,4 @@ tokio = { version = "1.35.1", features = [
   "rt",
 ] }
 tokio-test = "0.4.3"
+aok = { version = "0.1.2", path = "../aok" }
