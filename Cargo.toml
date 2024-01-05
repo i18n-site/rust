@@ -15,7 +15,7 @@ members = [
   "xtld",
   "mreplace",
   "radix_str",
-  "aerr",
+  "re",
   "wxpush",
   "genv",
   "xsmtp",
