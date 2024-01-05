@@ -69,8 +69,8 @@ async fn main() -> Result<()> {
     .and(NotForContentType::IMAGES);
 
   let app = Router::new()
-    .route("/", get(aerr::FnAny(index)))
-    .route("/ping", get(aerr::FnAny(ping)))
+    .route("/", get(re::FnAny(index)))
+    .route("/ping", get(re::FnAny(ping)))
     .layer(middleware)
     .layer(CompressionLayer::new().compress_when(predicate))
     .layer(ServiceBuilder::new().layer(middleware::from_fn(header)));

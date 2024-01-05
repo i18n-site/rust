@@ -1,10 +1,10 @@
 use std::sync::atomic::Ordering::Relaxed;
 
-use aerr::err;
+use re::err;
 use axum::http::StatusCode;
 use tokio::time::{sleep, Duration};
 
-pub async fn ping() -> aerr::msg!() {
+pub async fn ping() -> re::msg!() {
   let pre = alive::cron::TS.load(Relaxed);
   let now = sts::sec();
   let diff = if now > pre { now - pre } else { 0 };

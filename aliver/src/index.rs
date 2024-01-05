@@ -1,3 +1,3 @@
-pub async fn index() -> aerr::msg!() {
+pub async fn index() -> re::msg!() {
   Ok(alive::status().await?)
 }
