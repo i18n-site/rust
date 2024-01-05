@@ -1,0 +1,86 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@3-/proto':
+    specifier: ^2.0.34
+    version: 2.0.34
+  '@~3/captcha':
+    specifier: ^0.1.61
+    version: 0.1.61(@2-/new@0.1.1)(@3-/render@0.0.1)(@5-/captcha@0.1.10)(@~3/box@0.1.28)
+
+packages:
+
+  /@2-/focus@0.1.1:
+    resolution: {integrity: sha512-uZ6A2DPbdp99eguWIUi5llOlTzL14tTNezoPaSESBUqFR3xyoZEH0SsRoUv8+kUDPSzTrjMnoWVVl+fDANV3UA==}
+    dev: false
+
+  /@2-/new@0.1.1:
+    resolution: {integrity: sha512-e2JYA5Y4j9OW6QtHFgv9yvwuqDiR1Vbuq2FnZ/B72bF8ZvG8up792lUL4ZCe+xHtXfSrwQbz0EA8VzhJaPiuyA==}
+    dev: false
+
+  /@3-/on@0.0.1:
+    resolution: {integrity: sha512-E3zQvp8z4xxFlk2ZJ7dLS9j+gQ0/+ZyaZ34BFl2HYG2NLRuOj55CorMj95aLXWaUyi6VsGKUIDlbJ3et7/VWCA==}
+    dev: false
+
+  /@3-/proto@2.0.34:
+    resolution: {integrity: sha512-hkkRHHJrfztpP/zFZFiibNNlH1eGrLQwo/OjNIUP9+Z0PrkWWB0URSUIO6BMXPtFtyS4eT3f6m07kJiCiyyRlg==}
+    dependencies:
+      '@3-/utf8': 0.0.3
+      nanoassert: 2.0.0
+    dev: false
+
+  /@3-/render@0.0.1:
+    resolution: {integrity: sha512-4BvviHfLIBMGL2994aGn7ZWozGAhwlIkP5zKIg9TLbJ13uoUH1oPa78hQ07oFproGL7EPwaclcHER6buC6W1WQ==}
+    dev: false
+
+  /@3-/utf8@0.0.3:
+    resolution: {integrity: sha512-BLqh1MiPrtPLqtD6h7c1wXrsO1kw7Zp1AJcKkac2q4UZ/JPtayOqYXJvDM3oeTAbOtOZgMm4TnbOR5V8myXpBg==}
+    dev: false
+
+  /@5-/captcha@0.1.10(@3-/proto@2.0.34):
+    resolution: {integrity: sha512-i2zwOEd1ucp+z7+u+qz2kf8FS/lF49oTPw+L4R6oZz/dvZpJneUGElJIN39mxWNVBWI0Afa7glxvIOINfa/Apg==}
+    peerDependencies:
+      '@3-/proto': ^2.0.34
+    dependencies:
+      '@3-/proto': 2.0.34
+    dev: false
+
+  /@~3/box@0.1.28(@2-/focus@0.1.1)(@2-/new@0.1.1)(@3-/on@0.0.1)(@~3/svelte_mount@0.0.1):
+    resolution: {integrity: sha512-xCWNfFMcVOmE7YeiZHCSt5y9llN4GEYH5SyT+vDE+SyAbOuPh0dUHpHmxMPF7VR0GlfOGfR0ihhPPp9azUwulA==}
+    peerDependencies:
+      '@2-/focus': ^0.1.1
+      '@2-/new': ^0.1.1
+      '@3-/on': ^0.0.1
+      '@~3/svelte_mount': ^0.0.1
+    dependencies:
+      '@2-/focus': 0.1.1
+      '@2-/new': 0.1.1
+      '@3-/on': 0.0.1
+      '@~3/svelte_mount': 0.0.1
+    dev: false
+
+  /@~3/captcha@0.1.61(@2-/new@0.1.1)(@3-/render@0.0.1)(@5-/captcha@0.1.10)(@~3/box@0.1.28):
+    resolution: {integrity: sha512-CzK/T3ccSW7KB07HbaQRuWEDVFWnIy5EvW0x1Ho6VCT2k6M+ssOgJmS8mcEJ+mnOwPTUjfCk2+VWOg7ewy4ACw==}
+    peerDependencies:
+      '@2-/new': ^0.1.1
+      '@3-/render': ^0.0.1
+      '@5-/captcha': ^0.1.10
+      '@~3/box': ^0.1.28
+    dependencies:
+      '@2-/new': 0.1.1
+      '@3-/render': 0.0.1
+      '@5-/captcha': 0.1.10(@3-/proto@2.0.34)
+      '@~3/box': 0.1.28(@2-/focus@0.1.1)(@2-/new@0.1.1)(@3-/on@0.0.1)(@~3/svelte_mount@0.0.1)
+    dev: false
+
+  /@~3/svelte_mount@0.0.1:
+    resolution: {integrity: sha512-75CzSNy9o4hOgpGp/1phomxEOQKXnwvst4Z4elKlMcBKE9jCr2QkhoswCzj1dxulq7xwN+F7d/fHIDEgCe5hqQ==}
+    dev: false
+
+  /nanoassert@2.0.0:
+    resolution: {integrity: sha512-7vO7n28+aYO4J+8w96AzhmU8G+Y/xpPDJz/se19ICsqj/momRbb9mh9ZUtkoJ5X3nTnPdhEJyc0qnM6yAsHBaA==}
+    dev: false
