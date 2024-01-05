@@ -1,5 +1,6 @@
 #![feature(min_specialization)]
 mod err;
+pub use axum::http::StatusCode;
 pub use err::{err, Err, Error, Result};
 pub mod bad_request;
 pub mod form;
