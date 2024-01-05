@@ -1,6 +1,5 @@
 #![feature(async_closure)]
 mod index;
-use index::index;
 mod ping;
 
 use aok::{Result, OK};
@@ -11,7 +10,7 @@ use axum::{
   middleware,
   middleware::Next,
   response::IntoResponse,
-  routing::get,
+  routing::{get, post},
   Router,
 };
 use ping::ping;
@@ -44,7 +43,7 @@ async fn main() -> Result<()> {
   });
 
   let app = Router::new()
-    .route("/", get(re::FnAny(index)))
+    .route("/", post(re::FnAny(index::post)))
     .route("/ping", get(re::FnAny(ping)))
     .layer(ServiceBuilder::new().layer(middleware::from_fn(header)));
 

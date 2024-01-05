@@ -1,3 +1,5 @@
-pub async fn index() -> re::msg!() {
-  Ok(alive::status().await?)
+use alive::{api, status};
+
+pub async fn post() -> re::msg!() {
+  Ok::<api::StateLi, _>(status().await?)
 }
