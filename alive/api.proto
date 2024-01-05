@@ -17,9 +17,17 @@ message State
   uint64 ts = 5;
 }
 
+message Check
+{
+  uint64 last = 1;
+  uint64 times = 2;
+  uint64 cost = 3;
+}
+
 message StateLi
 {
   repeated IdName kind = 1;
   repeated IdName host = 2;
-  repeated IdName name = 3;
+  repeated State li = 3;
+  Check check = 4;
 }
