@@ -13,7 +13,7 @@ dashmap = "5.5.3"
 enum_dispatch = "0.3.12"
 futures = "0.3.30"
 hashlru = "0.11.0"
-hi = { version = "0.1.8" }
+hi = { version = "0.1.9" }
 hickory-proto = "0.24.0"
 hickory-resolver = "0.24.0"
 ireq = { version = "0.1.7" }
