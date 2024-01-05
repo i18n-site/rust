@@ -2,7 +2,7 @@ use atty::Stream;
 use tracing_subscriber::{fmt::format::Writer, layer::SubscriberExt, EnvFilter};
 
 pub struct NoTime;
-
+use static_init::constructor;
 impl tracing_subscriber::fmt::time::FormatTime for NoTime {
   fn format_time(&self, _writer: &mut Writer<'_>) -> std::fmt::Result {
     Ok(())
@@ -30,4 +30,9 @@ pub fn init() {
       .with(env_filter)
       .init();
   }
+}
+
+#[constructor(0)]
+extern "C" fn _init() {
+  init()
 }

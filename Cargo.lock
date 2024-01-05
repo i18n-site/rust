@@ -2105,6 +2105,7 @@ name = "loginit"
 version = "0.1.4"
 dependencies = [
  "atty",
+ "static_init",
  "tracing-stackdriver",
  "tracing-subscriber",
 ]
