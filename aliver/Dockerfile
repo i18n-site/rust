@@ -29,15 +29,6 @@ ADD ./sh/cpso.sh .
 ADD Cargo.toml .
 ADD ./src ./src
 
-WORKDIR /app/alive
-
-ADD ./alive/Cargo.toml .
-ADD ./alive/src .
-ADD ./alive/api.proto .
-ADD ./alive/build.rs .
-
-WORKDIR /app
-
 RUN \
 source $CARGO_HOME/env &&\
 mkdir -p out &&\
