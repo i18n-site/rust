@@ -12,7 +12,7 @@ pub static TS: AtomicU64 = AtomicU64::new(0);
 pub static DURATION: AtomicU64 = AtomicU64::new(0);
 pub static COUNT: AtomicU64 = AtomicU64::new(0);
 
-async fn _run(alive: &Alive) {
+async fn _run(alive: &mut Alive) {
   let now = sts::sec();
   TS.store(now, Ordering::Relaxed);
 
@@ -29,10 +29,10 @@ where
 {
   let mut interval = interval(Duration::from_secs(60));
 
-  let alive = Alive::new();
+  let mut alive = Alive::new();
   loop {
     interval.tick().await;
-    _run(&alive).await;
+    _run(&mut alive).await;
     tokio::task::spawn(next());
   }
 }

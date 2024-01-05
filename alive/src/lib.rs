@@ -4,6 +4,7 @@ use std::collections::{HashMap, HashSet};
 
 use aok::{Result, OK};
 use futures::{stream::FuturesUnordered, StreamExt};
+use hashlru::Cache;
 use hook::hook;
 use mysql_macro::q;
 use paste::paste;
@@ -30,13 +31,17 @@ use err_duration::err_duration;
 mod id_v;
 use id_v::id_v;
 
-struct Alive {}
+struct Alive {
+  arg_cache: Cache<u64, String>,
+}
 
 impl Alive {
   pub fn new() -> Self {
-    Alive {}
+    Alive {
+      arg_cache: Cache::new(1024),
+    }
   }
-  pub async fn ping(&self) -> Result<()> {
+  pub async fn ping(&mut self) -> Result<()> {
     let now = sts::sec();
 
     let li: Vec<Watch> = q!(
@@ -72,7 +77,12 @@ impl Alive {
 
     let kind_map = HashMap::<u64, Kind>::from_iter(kind_li.into_iter().map(|k| (k.id, k)));
     let host_map = id_v("host", host_set).await?;
-    let arg_map = id_v("arg", arg_set).await?;
+
+    let mut arg_map = HashMap::new();
+    for i in id_v("arg", arg_set).await? {
+      arg_map.insert(i.0, i.1.clone());
+      self.arg_cache.insert(i.0, i.1);
+    }
 
     let mut ing_curl = FuturesUnordered::new();
     let mut ing_hook = FuturesUnordered::new();
@@ -91,7 +101,7 @@ impl Alive {
             ($type:ident) => {
               if $type.arg_id > 0 {
                 if let Some(s) = arg_map.get(&$type.arg_id) {
-                  s.as_str()
+                  s
                 } else {
                   paste! {
                     dberr!(
