@@ -123,14 +123,12 @@ impl Alive {
                   paste! {
                     dberr!(
                       [< $type MissArg >]
-                      "{} watch_id={} arg_id={} kind_id={} kind_arg_id={} arg_map {:?} arg_cache {:?}",
+                      "{} watch_id={} arg_id={} kind_id={} kind_arg_id={}",
                       host,
                       watch.id,
                       watch.arg_id,
                       watch.kind_id,
-                      kind.arg_id,
-                      &arg_map,
-                      &self.arg_cache
+                      kind.arg_id
                     );
                   }
                   continue;
