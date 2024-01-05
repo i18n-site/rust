@@ -15,6 +15,7 @@ if ! [ -x "$(command -v cargo-v)" ]; then
 fi
 
 cd $1
+cargo build
 bun x mdt .
 rm -rf Cargo.lock
 ln -s ../Cargo.lock
