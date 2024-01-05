@@ -4,5 +4,5 @@ DIR=$(realpath ${0%/*})
 cd $DIR
 set -ex
 
-npm patch -y
+npm version patch -y
 npm publish --access=public
