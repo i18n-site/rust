@@ -2,7 +2,7 @@
 
 mod id_v;
 use genv::def;
-pub use id_v::id_v;
+pub use id_v::{id_v, id_v_str};
 pub use mysql_async::{
   self,
   prelude::{Query, Queryable, WithParams},
