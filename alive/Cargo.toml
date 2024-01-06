@@ -18,7 +18,7 @@ hickory-proto = "0.24.0"
 idns = { version = "0.1.5" }
 ireq = { version = "0.1.7" }
 len-trait = "0.6.1"
-mail-send = { version="0.4.7", package="mail-send-fork"}
+mail-send = { version="0.4.8", package="mail-send-fork"}
 mysql_async = "0.33.0"
 mysql_macro = { version = "0.1.17" }
 paste = "1.0.14"
