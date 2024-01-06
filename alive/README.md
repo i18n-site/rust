@@ -1,6 +1,6 @@
 [‼️]: ✏️README.mdt
 
-# alive : use mysql to check is service alive
+# alive : check service is alive
 
 ## 前端
 
