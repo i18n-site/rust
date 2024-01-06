@@ -54,7 +54,6 @@ pub async fn send(
       if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
         tracing::error!("SMTP {err}");
       } else {
-        dbg!(2);
         return OK;
       }
     }
@@ -73,7 +72,6 @@ pub async fn send(
     let pos = rng.gen_range(0..len);
     len -= 1;
     let ip = ip_li.remove(pos);
-    dbg!(&ip);
     let smtp = smtp_builder(&host, ip);
     if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
       if len == 0 {
