@@ -1,6 +1,6 @@
 [package]
 name = "alive"
-version = "0.1.44"
+version = "0.1.45"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/3TiSite/rust.git"
@@ -13,7 +13,7 @@ dashmap = "5.5.3"
 enum_dispatch = "0.3.12"
 futures = "0.3.30"
 hashlru = "0.11.0"
-hi = { version = "0.1.9" }
+hi = { version = "0.1.10" }
 hickory-proto = "0.24.0"
 idns = { version = "0.1.13" }
 ireq = { version = "0.1.7" }
