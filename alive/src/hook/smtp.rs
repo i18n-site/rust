@@ -15,7 +15,8 @@ pub async fn ping<'a>(
   _: &'a str, // watch_arg: : &'a str,
   ip: IpAddr,
 ) -> Result<()> {
-  let smtp = SmtpClientBuilder::new_bind_ip(host, ip, SMTP_PORT);
+  let mut smtp = SmtpClientBuilder::new_bind_ip(host, ip, SMTP_PORT);
+  smtp.tls_implicit = false;
   let ehlo = smtp.connect().await?.ehlo(host).await?;
   assert_eq!(ehlo.hostname, host);
   OK
