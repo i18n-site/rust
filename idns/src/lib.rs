@@ -95,10 +95,7 @@ pub static RESOLVER_TLS: TokioAsyncResolver = {
 pub async fn lookup<N: IntoName>(name: N, record_type: RecordType) -> Result<Lookup, ResolveError> {
   let name = name.into_name()?;
   match RESOLVER_TLS.lookup(name.clone(), record_type).await {
-    Ok(r) => {
-      dbg!(1);
-      Ok(r)
-    }
+    Ok(r) => Ok(r),
     Err(err) => {
       tracing::warn!("DNS ERROR: {}", err);
       RESOLVER_IPV4.lookup(name, record_type).await
