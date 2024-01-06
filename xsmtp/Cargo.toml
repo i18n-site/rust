@@ -10,6 +10,7 @@ description = "smtp send mail"
 [dependencies]
 anyhow = "1.0.79"
 genv = "0.1.5"
+idns = { version = "0.1.5", path = "../idns" }
 mail-builder = "0.3.1"
 mail-send = "0.4.6"
 static_init = { version = "1.0.3", features = [
