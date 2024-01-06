@@ -1,3 +1,5 @@
+use std::net::SocketAddr;
+
 use mail_builder::{headers::address::Address, MessageBuilder};
 use mail_send::SmtpClientBuilder;
 use static_init::dynamic;
@@ -8,6 +10,9 @@ genv::def!(SMTP_HOST, SMTP_USER, SMTP_PASSWORD);
 genv::def!(SMTP_IMPLICIT_TLS:bool| false);
 genv::def!(SMTP_PORT:u16| 587);
 genv::s!(SMTP_FROM);
+
+#[dynamic]
+pub static SMTP_ADDR: Option<SocketAddr> = None;
 
 #[dynamic]
 pub static SMTP: SmtpClientBuilder<String> = {
