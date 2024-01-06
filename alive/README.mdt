@@ -14,11 +14,9 @@
 
 [cron-job.org](https://cron-job.org) 用来做每分钟触发
 
-导入配置的脚本
-https://atomgit.com/3ti/node/tree/main/alive/init
+[导入监控配置的脚本](https://atomgit.com/3ti/node/tree/main/alive/init)
 
-mysql 数据库的表结构
-https://atomgit.com/3ti/rust/tree/main/alive/dump
+[MySql 数据库的表结构](https://atomgit.com/3ti/rust/tree/main/alive/dump)
 
 ![](https://i-01.eu.org/2024/01/7mIDvw7.webp)
 
