@@ -8,14 +8,12 @@ async fn test() -> anyhow::Result<()> {
     "",
   )
   .await?;
-  Ok(
-    xsmtp::send(
-      "测试xsmtp 2",
-      "i18n.site@gmail.com",
-      "测试邮件 2",
-      "正文\n测试",
-      "",
-    )
-    .await?,
+  xsmtp::send(
+    "测试xsmtp 2",
+    "i18n.site@gmail.com",
+    "测试邮件 2",
+    "正文\n测试",
+    "",
   )
+  .await
 }

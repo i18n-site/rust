@@ -51,7 +51,7 @@ pub async fn send(
 
   {
     if let Some(smtp) = &*SMTP.read().await {
-      if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
+      if let Err(err) = no_retry_send(smtp, from_name, to.clone(), subject, txt, htm).await {
         tracing::error!("SMTP {err}");
       } else {
         return OK;
