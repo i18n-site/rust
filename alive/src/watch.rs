@@ -38,15 +38,9 @@ pub async fn _watch<'a>(
   let watch_id = watch.id;
 
   macro_rules! dns {
-    ($rec_type:ident, $v:ident) => {
-      match idns::lookup(host, RecordType::$rec_type).await {
-        Ok(ip_li) => {
-          let mut addr_li = Vec::new();
-          for ip in ip_li.records() {
-            if let Some(RData::$rec_type(ip)) = ip.data() {
-              addr_li.push(std::net::IpAddr::$v(**ip));
-            }
-          }
+    ($rec_type:ident) => {
+      match idns::$rec_type(host).await {
+        Ok(addr_li) => {
           if addr_li.is_empty() {
             errlog(kind, host, watch, format!("域名记录为空"), DNS_URL).await?;
           } else {
@@ -96,10 +90,10 @@ pub async fn _watch<'a>(
 
   match dns_type {
     4 => {
-      dns!(A, V4)
+      dns!(A)
     }
     6 => {
-      dns!(AAAA, V6)
+      dns!(AAAA)
     }
     _ => {
       dberr!(
