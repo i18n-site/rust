@@ -2,7 +2,7 @@ use core::net::Ipv4Addr;
 use std::{net::IpAddr, time::Duration};
 
 pub use hickory_proto;
-use hickory_proto::rr::record_type::RecordType;
+use hickory_proto::rr::{record_type::RecordType, RData};
 pub use hickory_resolver;
 use hickory_resolver::{
   config::{NameServerConfigGroup, ResolverConfig, ResolverOpts},
@@ -72,12 +72,26 @@ pub async fn lookup<N: IntoName>(name: N, record_type: RecordType) -> Result<Loo
   }
 }
 
-#[allow(non_snake_case)]
-pub async fn A<N: IntoName>(name: N) -> Result<Lookup, ResolveError> {
-  lookup(name, RecordType::A).await
+macro_rules! ip_li {
+  ($host:ident,$type:ident, $ver:ident) => {{
+    let li = lookup($host, RecordType::$type).await?;
+    let li = li.records();
+    let mut r = Vec::with_capacity(li.len());
+    for i in li {
+      if let Some(RData::$type(ip)) = i.data() {
+        r.push(std::net::IpAddr::$ver(**ip));
+      }
+    }
+    Ok(r)
+  }};
 }
 
 #[allow(non_snake_case)]
-pub async fn AAAA<N: IntoName>(name: N) -> Result<Lookup, ResolveError> {
-  lookup(name, RecordType::AAAA).await
+pub async fn A<N: IntoName>(name: N) -> Result<Vec<std::net::IpAddr>, ResolveError> {
+  ip_li!(name, A, V4)
+}
+
+#[allow(non_snake_case)]
+pub async fn AAAA<N: IntoName>(name: N) -> Result<Vec<std::net::IpAddr>, ResolveError> {
+  ip_li!(name, AAAA, V6)
 }
