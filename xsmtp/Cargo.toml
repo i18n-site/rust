@@ -12,7 +12,6 @@ anyhow = "1.0.79"
 genv = "0.1.5"
 idns = { version = "0.1.5", path = "../idns" }
 mail-builder = "0.3.1"
-mail-send = "0.4.6"
 static_init = { version = "1.0.3", features = [
   "lock_statistics",
   "parking_lot",
@@ -20,6 +19,7 @@ static_init = { version = "1.0.3", features = [
 ] }
 tracing = "0.1.40"
 trt = "0.1.21"
+mail-send = { version="0.4.8", package="mail-send-fork"}
 
 [dev-dependencies]
 anyhow = "1.0.79"
