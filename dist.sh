@@ -14,7 +14,10 @@ if ! [ -x "$(command -v cargo-v)" ]; then
   cargo install cargo-v
 fi
 
+cargo build -p $1
+
 cd $1
+
 bun x mdt .
 rm -rf Cargo.lock
 ln -s ../Cargo.lock
