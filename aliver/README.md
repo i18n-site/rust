@@ -2,6 +2,8 @@
 
 # aliver
 
+可以部署到 [fly.io](http://fly.io) 的免费服务器
+
 第一次运行请用
 
 ```
@@ -41,5 +43,7 @@ cpu_kind = "shared"
 cpus = 1
 memory_mb = 256
 ```
+
+运行 `./fly.dist.sh` 部署
 
 其他参见 https://crates.io/crates/alive
