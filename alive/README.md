@@ -10,6 +10,20 @@
 
 ![](https://i-01.eu.org/2024/01/pIjGoxv.webp)
 
+## 后端
+
+[API 服务器代码](https://atomgit.com/3ti/rust/blob/main/aliver/README.md)
+
+MySql 可以用免费数据库 [aiven.io](https://aiven.io)。
+
+`arg` 和 `kind` 表 , 从设计上是只读的 .
+
+修改 `arg_id` 应该是插入新的条目然后更新 `arg_id`。
+
+如果手动修改了 `arg`, 请重启应用避免读取到过期的缓存 。
+
+`kind` 表应该是插入新的条目然后更新 `watch` 表的 `kind_id`。
+
 ## 运维
 
 监控服务本身可以用 [healthchecks.io](https://healthchecks.io) 做状态监控
@@ -44,15 +58,3 @@ TO_MAIL
 WXPUSH_ID
 WXPUSH_TOKEN
 ```
-
-## 后端
-
-MySql 可以用免费数据库 [aiven.io](https://aiven.io)。
-
-`arg` 和 `kind` 表 , 从设计上是只读的 .
-
-修改 `arg_id` 应该是插入新的条目然后更新 `arg_id`。
-
-如果手动修改了 `arg`, 请重启应用避免读取到过期的缓存 。
-
-`kind` 表应该是插入新的条目然后更新 `watch` 表的 `kind_id`。
