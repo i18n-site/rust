@@ -127,12 +127,22 @@ pub async fn AAAA<N: IntoName>(name: N) -> Result<Vec<std::net::IpAddr>, Resolve
   ip_li!(name, AAAA, V6)
 }
 
+static mut USE_IPV6: bool = true;
+
 pub async fn ip<N: IntoName>(name: N) -> Result<Vec<std::net::IpAddr>, ResolveError> {
   let name = name.into_name()?;
-  if let Ok(r) = AAAA(name.clone()).await {
-    if !r.is_empty() {
-      return Ok(r);
+  if unsafe { USE_IPV6 } {
+    if let Ok(r) = AAAA(name.clone()).await {
+      if !r.is_empty() {
+        return Ok(r);
+      }
+    }
+    UNSAFE {
+      USE_IPV6 = false;
     }
   }
   A(name).await
 }
+
+
+
