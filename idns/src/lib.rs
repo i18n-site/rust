@@ -137,12 +137,9 @@ pub async fn ip<N: IntoName>(name: N) -> Result<Vec<std::net::IpAddr>, ResolveEr
         return Ok(r);
       }
     }
-    UNSAFE {
+    unsafe {
       USE_IPV6 = false;
     }
   }
   A(name).await
 }
-
-
-
