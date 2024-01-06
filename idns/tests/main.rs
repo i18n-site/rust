@@ -7,9 +7,9 @@ async fn test() -> Result<()> {
     "baidu.com",
     "youdao.com",
     "z.com",
-    "a.com",
+    "google.com",
   ] {
-    let r = idns::ip(host).await?;
+    let r = idns::A(host).await?;
     dbg!((host, r));
   }
   OK

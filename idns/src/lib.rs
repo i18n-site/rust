@@ -53,7 +53,7 @@ pub static RESOLVER_IPV4: TokioAsyncResolver = TokioAsyncResolver::tokio(
         8;8;8;8,
       ),
       53,
-      false,
+      true,
     ),
   ),
   resolve_options(),
@@ -61,10 +61,29 @@ pub static RESOLVER_IPV4: TokioAsyncResolver = TokioAsyncResolver::tokio(
 
 #[static_init::dynamic]
 pub static RESOLVER_TLS: TokioAsyncResolver = {
-  let mut conf = ResolverConfig::google_tls();
+  let mut conf = ResolverConfig::default();
   for dns in [
-    NameServerConfigGroup::cloudflare_tls(),
-    NameServerConfigGroup::quad9_tls(),
+    NameServerConfigGroup::from_ips_https(
+      &[
+        IpAddr::V4([223, 6, 6, 6].into()),
+        IpAddr::V4([223, 5, 5, 5].into()),
+      ],
+      443,
+      "dns.alidns.com".into(),
+      true,
+    ),
+    NameServerConfigGroup::from_ips_https(
+      &[
+        IpAddr::V4([120, 53, 53, 53].into()),
+        IpAddr::V4([1, 12, 12, 12].into()),
+      ],
+      443,
+      "doh.pub".into(),
+      true,
+    ),
+    NameServerConfigGroup::google_https(),
+    NameServerConfigGroup::cloudflare_https(),
+    NameServerConfigGroup::quad9_https(),
   ] {
     for i in dns.iter() {
       conf.add_name_server(i.clone());
@@ -76,7 +95,10 @@ pub static RESOLVER_TLS: TokioAsyncResolver = {
 pub async fn lookup<N: IntoName>(name: N, record_type: RecordType) -> Result<Lookup, ResolveError> {
   let name = name.into_name()?;
   match RESOLVER_TLS.lookup(name.clone(), record_type).await {
-    Ok(r) => Ok(r),
+    Ok(r) => {
+      dbg!(1);
+      Ok(r)
+    }
     Err(err) => {
       tracing::warn!("DNS ERROR: {}", err);
       RESOLVER_IPV4.lookup(name, record_type).await
