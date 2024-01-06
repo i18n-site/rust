@@ -1,35 +1,45 @@
-```proto
-syntax = "proto3";
+[‼️]: ✏️README.mdt
 
-package api;
+# aliver
 
-message IdName
-{
-  uint64 id = 1;
-  string name = 2;
-}
+第一次运行请用
 
-message State
-{
-  uint64 kind_id = 1;
-  uint64 host_id = 2;
-  uint32 dns_type = 3;
-  uint32 err = 4;
-  uint64 ts = 5;
-}
-
-message Check
-{
-  uint64 last = 1;
-  uint64 count = 2;
-  uint64 cost = 3;
-}
-
-message StateLi
-{
-  repeated IdName kind = 1;
-  repeated IdName host = 2;
-  repeated State li = 3;
-  Check check = 4;
-}
 ```
+fly apps create NAME
+```
+
+fly.io 默认会启动 2 台机器 , 但是我们只需要一台机器 , 所以要删掉一台
+
+```sh
+flyctl machine list
+flyctl machine destory ID
+```
+
+其他配置参见 ./fly.toml
+
+```toml
+# fly.toml app configuration file generated for cname-flatten on 2023-12-30T22:33:47+08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "ii"
+primary_region = "fra"
+
+[build]
+
+[http_service]
+internal_port = 5123
+force_https = true
+auto_stop_machines = false
+auto_start_machines = false
+min_machines_running = 1
+processes = ["app"]
+
+[[vm]]
+cpu_kind = "shared"
+cpus = 1
+memory_mb = 256
+```
+
+其他参见 https://crates.io/crates/alive
