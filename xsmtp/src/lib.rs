@@ -75,6 +75,7 @@ pub async fn send(
     let smtp = smtp_builder(&host, ip);
     if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
       if len == 0 {
+        *SMTP.write().await = None;
         return Err(err)?;
       }
       tracing::error!("{host} SMTP {err}");
