@@ -35,6 +35,12 @@ pub struct Alive {
   kind_cache: Cache<u64, Kind>,
 }
 
+impl Default for Alive {
+  fn default() -> Self {
+    Self::new()
+  }
+}
+
 impl Alive {
   pub fn new() -> Self {
     Alive {

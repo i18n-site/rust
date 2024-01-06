@@ -8,10 +8,9 @@ mod test_macro {
 #[tokio::test]
 async fn test() -> aok::Result<()> {
   loginit::init();
-  use std::collections::{HashMap, HashSet};
+  use std::collections::HashSet;
 
-  use mysql_macro::{id_row, id_v_str, q};
-  use xstr::Join;
+  use mysql_macro::{id_v_str, q};
 
   let id_set = HashSet::from([11]);
   // dbg!(id_set.join(","));

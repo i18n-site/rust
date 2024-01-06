@@ -21,5 +21,5 @@ pub async fn ping() -> re::msg!() {
     )?
   }
 
-  return Ok(diff.to_string());
+  Ok(diff.to_string())
 }
