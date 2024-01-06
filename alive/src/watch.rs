@@ -53,7 +53,7 @@ pub async fn _watch<'a>(
             let mut failed_addr = Vec::new();
             while let Some(result) = ing.next().await {
               if let Err(err) = result {
-                failed_addr.push(format!("IP地址 {}\n{err}", addr_li[n]));
+                failed_addr.push(format!("IP {} SMTP 异常: {err}", addr_li[n]));
               }
               n += 1;
             }
