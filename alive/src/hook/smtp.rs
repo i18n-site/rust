@@ -1,14 +1,9 @@
-use std::{
-  net::{IpAddr},
-  time::Duration,
-};
+use std::{net::IpAddr, time::Duration};
 
 use aok::{Result, OK};
 use mail_send::{smtp::tls::build_tls_connector, SmtpClientBuilder};
 
-use crate::{
-  db::{Kind, Watch},
-};
+use crate::db::{Kind, Watch};
 
 pub const SMTP_PORT: u16 = 587;
 
