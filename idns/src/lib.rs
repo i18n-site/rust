@@ -71,3 +71,13 @@ pub async fn lookup<N: IntoName>(name: N, record_type: RecordType) -> Result<Loo
     }
   }
 }
+
+#[allow(non_snake_case)]
+pub async fn A<N: IntoName>(name: N) -> Result<Lookup, ResolveError> {
+  lookup(name, RecordType::A).await
+}
+
+#[allow(non_snake_case)]
+pub async fn AAAA<N: IntoName>(name: N) -> Result<Lookup, ResolveError> {
+  lookup(name, RecordType::AAAA).await
+}
