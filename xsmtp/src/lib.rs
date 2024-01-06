@@ -1,8 +1,20 @@
+#![feature(const_trait_impl)]
+#![feature(effects)]
+
 use std::net::{IpAddr, SocketAddr};
 
+use aok::OK;
+use dashmap::DashMap;
 use mail_builder::{headers::address::Address, MessageBuilder};
 use mail_send::SmtpClientBuilder;
 use static_init::dynamic;
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum XsmtpError {
+  #[error("{0} DNS NO IP")]
+  DnsNoIp(String),
+}
 
 // SMTP HOST 请给域名而不是 IP
 
@@ -11,18 +23,18 @@ genv::def!(SMTP_IMPLICIT_TLS:bool| false);
 genv::def!(SMTP_PORT:u16| 587);
 genv::s!(SMTP_FROM);
 
-pub fn smtp_builder(smtp_host: impl Into<String>, ip: IpAddr) -> SmtpClientBuilder<String> {
-  let smtp_host = smtp_host.into();
+pub fn smtp_builder(host: impl Into<String>, ip: IpAddr) -> SmtpClientBuilder<String> {
   let smtp_user = SMTP_USER();
   let smtp_password = SMTP_PASSWORD();
   let smtp_port: u16 = SMTP_PORT();
 
-  SmtpClientBuilder::new_bind_ip(smtp_host, ip, smtp_port)
+  SmtpClientBuilder::new_bind_ip(host.into(), ip, smtp_port)
     .implicit_tls(SMTP_IMPLICIT_TLS())
     .credentials((smtp_user, smtp_password))
 }
 
-pub static mut SMTP: Option<SmtpClientBuilder<String>> = None;
+#[dynamic]
+pub static SMTP: DashMap<IpAddr, SmtpClientBuilder<String>> = DashMap::new();
 
 pub async fn send(
   from_name: impl AsRef<str>,
@@ -30,12 +42,43 @@ pub async fn send(
   subject: impl AsRef<str>,
   txt: impl AsRef<str>,
   htm: impl AsRef<str>,
-) -> Result<(), mail_send::Error> {
-  no_retry_send(from_name, to, subject, txt, htm).await
+) -> aok::Result<()> {
+  let from_name = from_name.as_ref();
+  let to = to.into();
+  let subject = subject.as_ref();
+  let txt = txt.as_ref();
+  let htm = htm.as_ref();
+
+  let mut n = 2;
+  loop {
+    if SMTP.is_empty() {
+      let host: String = SMTP_HOST();
+      let ip_li = idns::ip(&host).await?;
+      for i in ip_li {
+        let smtp = smtp_builder(host.to_owned(), i);
+        if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
+          tracing::error!("{host} SMTP {err}");
+        } else {
+          return OK;
+        }
+      }
+    }
+
+    n -= 1;
+    if n == 0 {
+      break;
+    }
+  }
+
+  Err(XsmtpError::DnsNoIp(SMTP_HOST()))?
+
+  // if let Some(smtp) = SMTP.as_ref() {
+  //   return Ok(no_retry_send(smtp, from_name, to, subject, txt, htm).await?);
+  // }
 }
 
-pub async fn no_retry_send<T>(
-  smtp: SmtpClientBuilder<T>
+pub async fn no_retry_send(
+  smtp: &SmtpClientBuilder<String>,
   from_name: impl AsRef<str>,
   to: impl Into<Address<'static>>,
   subject: impl AsRef<str>,
@@ -58,8 +101,7 @@ pub async fn no_retry_send<T>(
   if !htm.is_empty() {
     mail = mail.html_body(htm);
   }
-  let mut smtp = SMTP.connect().await?;
-  smtp.send(mail).await?;
+  smtp.connect().await?.send(mail).await?;
   Ok(())
 }
 

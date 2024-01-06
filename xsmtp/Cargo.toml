@@ -12,17 +12,22 @@ anyhow = "1.0.79"
 genv = "0.1.5"
 idns = { version = "0.1.5", path = "../idns" }
 mail-builder = "0.3.1"
-static_init = { version = "1.0.3", features = [
-  "lock_statistics",
-  "parking_lot",
-  "parking_lot_core"
-] }
 tracing = "0.1.40"
 trt = "0.1.21"
-mail-send = { version="0.4.8", package="mail-send-fork"}
+mail-send = { version = "0.4.8", package = "mail-send-fork" }
+dashmap = "5.5.3"
+static_init = "1.0.3"
+thiserror = "1.0.56"
+aok = { version = "0.1.2", path = "../aok" }
 
 [dev-dependencies]
 anyhow = "1.0.79"
-tokio = { version = "1.35.1", features = ["macros", "rt", "rt-multi-thread", "time", "sync"] }
+tokio = { version = "1.35.1", features = [
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "time",
+  "sync",
+] }
 
 [features]
