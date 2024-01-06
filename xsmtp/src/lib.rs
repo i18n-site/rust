@@ -1,7 +1,7 @@
-use std::net::SocketAddr;
+use std::{net::SocketAddr, time::Duration};
 
 use mail_builder::{headers::address::Address, MessageBuilder};
-use mail_send::SmtpClientBuilder;
+use mail_send::{smtp::tls::build_tls_connector, SmtpClientBuilder};
 use static_init::dynamic;
 
 // SMTP HOST 请给域名而不是 IP
@@ -11,14 +11,25 @@ genv::def!(SMTP_IMPLICIT_TLS:bool| false);
 genv::def!(SMTP_PORT:u16| 587);
 genv::s!(SMTP_FROM);
 
-pub fn smtp_builder(smtp_host: SocketAddr) -> SmtpClientBuilder<String> {
-  let smtp_user = SMTP_USER();
-  let smtp_password = SMTP_PASSWORD();
-  let smtp_port: u16 = SMTP_PORT();
-
-  SmtpClientBuilder::new(smtp_host, smtp_port)
-    .implicit_tls(SMTP_IMPLICIT_TLS())
-    .credentials((smtp_user, smtp_password))
+pub fn smtp_builder(ip: SocketAddr) -> SmtpClientBuilder<String> {
+  // let smtp_user = SMTP_USER();
+  // let smtp_password = SMTP_PASSWORD();
+  // let smtp_port: u16 = SMTP_PORT();
+  //
+  // SmtpClientBuilder::new(smtp_host, smtp_port)
+  //   .implicit_tls(SMTP_IMPLICIT_TLS())
+  //   .credentials((SMTP_USER(), SMTP_PASSWORD()))
+  SmtpClientBuilder {
+    addr: format!("{}:{}", &ip, SMTP_PORT()),
+    timeout: Duration::from_secs(30),
+    tls_connector: build_tls_connector(false),
+    tls_hostname: SMTP_HOST(),
+    tls_implicit: false,
+    is_lmtp: false,
+    local_host: ip.clone(),
+    credentials: None,
+    say_ehlo: true,
+  }
 }
 
 #[dynamic]

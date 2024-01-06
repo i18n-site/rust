@@ -15,19 +15,7 @@ pub async fn ping<'a>(
   _: &'a str, // watch_arg: : &'a str,
   ip: IpAddr,
 ) -> Result<()> {
-  let ip = ip.to_string();
-  let smtp = SmtpClientBuilder {
-    addr: format!("{}:{}", &ip, SMTP_PORT),
-    timeout: Duration::from_secs(30),
-    tls_connector: build_tls_connector(false),
-    tls_hostname: host,
-    tls_implicit: false,
-    is_lmtp: false,
-    local_host: ip.clone(),
-    credentials: None,
-    say_ehlo: true,
-  };
-
+  let smtp = SmtpClientBuilder::new_bind_ip(host, ip, SMTP_PORT);
   let ehlo = smtp.connect().await?.ehlo(host).await?;
   assert_eq!(ehlo.hostname, host);
   OK
