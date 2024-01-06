@@ -12,14 +12,11 @@ genv::def!(SMTP_PORT:u16| 587);
 genv::s!(SMTP_FROM);
 
 #[dynamic]
-pub static SMTP_ADDR: Option<SocketAddr> = None;
-
-#[dynamic]
 pub static SMTP: SmtpClientBuilder<String> = {
-  let smtp_port: u16 = SMTP_PORT();
   let smtp_host = SMTP_HOST();
   let smtp_user = SMTP_USER();
   let smtp_password = SMTP_PASSWORD();
+  let smtp_port: u16 = SMTP_PORT();
 
   SmtpClientBuilder::new(smtp_host, smtp_port)
     .implicit_tls(SMTP_IMPLICIT_TLS())
@@ -27,6 +24,16 @@ pub static SMTP: SmtpClientBuilder<String> = {
 };
 
 pub async fn send(
+  from_name: impl AsRef<str>,
+  to: impl Into<Address<'static>>,
+  subject: impl AsRef<str>,
+  txt: impl AsRef<str>,
+  htm: impl AsRef<str>,
+) -> Result<(), mail_send::Error> {
+  no_retry_send(from_name, to, subject, txt, htm).await
+}
+
+pub async fn no_retry_send(
   from_name: impl AsRef<str>,
   to: impl Into<Address<'static>>,
   subject: impl AsRef<str>,
