@@ -11,9 +11,7 @@ genv::def!(SMTP_IMPLICIT_TLS:bool| false);
 genv::def!(SMTP_PORT:u16| 587);
 genv::s!(SMTP_FROM);
 
-#[dynamic]
-pub static SMTP: SmtpClientBuilder<String> = {
-  let smtp_host = SMTP_HOST();
+pub fn smtp_builder(smtp_host: SocketAddr) -> SmtpClientBuilder<String> {
   let smtp_user = SMTP_USER();
   let smtp_password = SMTP_PASSWORD();
   let smtp_port: u16 = SMTP_PORT();
@@ -21,7 +19,10 @@ pub static SMTP: SmtpClientBuilder<String> = {
   SmtpClientBuilder::new(smtp_host, smtp_port)
     .implicit_tls(SMTP_IMPLICIT_TLS())
     .credentials((smtp_user, smtp_password))
-};
+}
+
+#[dynamic]
+pub static mut SMTP: Option<SmtpClientBuilder<String>> = None;
 
 pub async fn send(
   from_name: impl AsRef<str>,
