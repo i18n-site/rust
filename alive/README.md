@@ -6,7 +6,7 @@
 
 [演示 status.i18n.site](https://status.i18n.site)
 
-[代码][https://github.com/i18n-site/status]
+[前端代码](https://github.com/i18n-site/status)
 
 ## 后端
 
