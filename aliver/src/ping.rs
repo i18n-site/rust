@@ -1,7 +1,7 @@
 use std::sync::atomic::Ordering::Relaxed;
 
-use re::err;
 use axum::http::StatusCode;
+use re::err;
 use tokio::time::{sleep, Duration};
 
 pub async fn ping() -> re::msg!() {
