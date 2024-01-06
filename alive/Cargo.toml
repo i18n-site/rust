@@ -15,7 +15,7 @@ futures = "0.3.30"
 hashlru = "0.11.0"
 hi = { version = "0.1.9" }
 hickory-proto = "0.24.0"
-idns = { version = "0.1.10" }
+idns = { version = "0.1.13" }
 ireq = { version = "0.1.7" }
 len-trait = "0.6.1"
 mail-send = { version="0.4.8", package="mail-send-fork"}
