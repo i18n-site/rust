@@ -6,7 +6,7 @@ use std::net::IpAddr;
 use aok::OK;
 use mail_builder::{headers::address::Address, MessageBuilder};
 use mail_send::SmtpClientBuilder;
-use rand::Rng;
+use rand::{rngs::OsRng, Rng};
 use thiserror::Error;
 use tokio::sync::RwLock;
 
@@ -65,19 +65,19 @@ pub async fn send(
     Err(XsmtpError::DnsNoIp(SMTP_HOST()))?
   }
 
-  let mut rng = rand::thread_rng();
-
   let mut len = ip_li.len();
+  let mut rng = OsRng;
+
   loop {
     let pos = rng.gen_range(0..len);
     len -= 1;
     let ip = ip_li.remove(pos);
     let smtp = smtp_builder(&host, ip);
     if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
-      tracing::error!("{host} SMTP {err}");
       if len == 0 {
         return Err(err)?;
       }
+      tracing::error!("{host} SMTP {err}");
     } else {
       return OK;
     }
