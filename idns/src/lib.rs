@@ -101,8 +101,9 @@ pub async fn AAAA<N: IntoName>(name: N) -> Result<Vec<std::net::IpAddr>, Resolve
 pub async fn resolve<N: IntoName>(name: N) -> Result<Vec<std::net::IpAddr>, ResolveError> {
   let name = name.into_name()?;
   if let Ok(r) = AAAA(name.clone()).await {
-    Ok(r)
-  } else {
-    A(name).await
+    if !r.is_empty() {
+      return Ok(r);
+    }
   }
+  A(name).await
 }
