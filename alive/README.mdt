@@ -43,10 +43,6 @@ WXPUSH_ID
 WXPUSH_TOKEN
 ```
 
-```rust
-< ./tests/main.rs>
-```
-
 ## 后端
 
 MySql 可以用免费数据库 [aiven.io](https://aiven.io)。
