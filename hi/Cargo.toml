@@ -24,7 +24,7 @@ tokio = { version = "1.35.1", features = [
 tracing = "0.1.40"
 wxpush = { version = "0.1.11" }
 xerr = { version = "0.1.2" }
-xsmtp = { version = "0.1.7" }
+xsmtp = { version = "0.1.8" }
 xstr = { version = "0.1.9" }
 
 [dev-dependencies]
