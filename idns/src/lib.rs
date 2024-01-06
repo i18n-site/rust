@@ -1,5 +1,5 @@
 use core::net::Ipv4Addr;
-use std::{net::IpAddr, time::Duration};
+use std::{f32::consts::E, net::IpAddr, time::Duration};
 
 pub use hickory_proto;
 use hickory_proto::rr::{record_type::RecordType, RData};
@@ -141,5 +141,14 @@ pub async fn ip<N: IntoName>(name: N) -> Result<Vec<std::net::IpAddr>, ResolveEr
       USE_IPV6 = false;
     }
   }
-  A(name).await
+
+  match A(name).await {
+    Ok(r) => Ok(r),
+    Err(err) => {
+      unsafe {
+        USE_IPV6 = true;
+      }
+      return Err(err);
+    }
+  }
 }
