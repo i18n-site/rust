@@ -68,12 +68,9 @@ pub async fn send(
   let ip_li = idns::ip(&host).await?;
   for i in ip_li {
     let smtp = smtp_builder(host.to_owned(), i);
-    if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
-      tracing::error!("{host} SMTP {err}");
-    } else {
-      return OK;
-    }
+    send!(smtp);
   }
+
   Err(XsmtpError::DnsNoIp(SMTP_HOST()))?
 
   // if let Some(smtp) = SMTP.as_ref() {
