@@ -3,7 +3,6 @@ use std::{net::IpAddr, time::Duration};
 use aok::{Result, OK};
 use enum_dispatch::enum_dispatch;
 use futures::{stream::FuturesOrdered, StreamExt};
-use hickory_proto::rr::{record_type::RecordType, RData};
 use xstr::Join;
 
 use crate::{
