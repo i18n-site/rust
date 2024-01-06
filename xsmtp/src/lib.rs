@@ -1,14 +1,13 @@
 #![feature(const_trait_impl)]
 #![feature(effects)]
 
-use std::net::{IpAddr, SocketAddr};
+use std::net::IpAddr;
 
 use aok::OK;
-use dashmap::DashMap;
 use mail_builder::{headers::address::Address, MessageBuilder};
 use mail_send::SmtpClientBuilder;
-use static_init::dynamic;
 use thiserror::Error;
+use tokio::sync::RwLock;
 
 #[derive(Error, Debug)]
 pub enum XsmtpError {
@@ -33,8 +32,8 @@ pub fn smtp_builder(host: impl Into<String>, ip: IpAddr) -> SmtpClientBuilder<St
     .credentials((smtp_user, smtp_password))
 }
 
-#[dynamic]
-pub static SMTP: DashMap<IpAddr, SmtpClientBuilder<String>> = DashMap::new();
+#[static_init::dynamic]
+pub static SMTP: RwLock<Option<SmtpClientBuilder<String>>> = RwLock::new(None);
 
 pub async fn send(
   from_name: impl AsRef<str>,
@@ -49,27 +48,32 @@ pub async fn send(
   let txt = txt.as_ref();
   let htm = htm.as_ref();
 
-  let mut n = 2;
-  loop {
-    if SMTP.is_empty() {
-      let host: String = SMTP_HOST();
-      let ip_li = idns::ip(&host).await?;
-      for i in ip_li {
-        let smtp = smtp_builder(host.to_owned(), i);
-        if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
-          tracing::error!("{host} SMTP {err}");
-        } else {
-          return OK;
-        }
+  macro_rules! send {
+    ($smtp:ident) => {
+      if let Err(err) = no_retry_send(&$smtp, from_name, to.clone(), subject, txt, htm).await {
+        tracing::error!("SMTP {err}");
+      } else {
+        return OK;
       }
-    }
+    };
+  }
 
-    n -= 1;
-    if n == 0 {
-      break;
+  {
+    if let Some(smtp) = &*SMTP.read().await {
+      send!(smtp);
     }
   }
 
+  let host: String = SMTP_HOST();
+  let ip_li = idns::ip(&host).await?;
+  for i in ip_li {
+    let smtp = smtp_builder(host.to_owned(), i);
+    if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
+      tracing::error!("{host} SMTP {err}");
+    } else {
+      return OK;
+    }
+  }
   Err(XsmtpError::DnsNoIp(SMTP_HOST()))?
 
   // if let Some(smtp) = SMTP.as_ref() {
