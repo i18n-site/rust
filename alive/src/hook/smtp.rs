@@ -1,7 +1,7 @@
-use std::{net::IpAddr, time::Duration};
+use std::net::IpAddr;
 
 use aok::{Result, OK};
-use mail_send::{smtp::tls::build_tls_connector, SmtpClientBuilder};
+use mail_send::SmtpClientBuilder;
 
 use crate::db::{Kind, Watch};
 
@@ -15,7 +15,6 @@ pub async fn ping<'a>(
   _: &'a str, // watch_arg: : &'a str,
   ip: IpAddr,
 ) -> Result<()> {
-  let host = host.to_owned();
   let smtp = SmtpClientBuilder::new_bind_ip(host, ip, SMTP_PORT);
   let ehlo = smtp.connect().await?.ehlo(host).await?;
   assert_eq!(ehlo.hostname, host);
