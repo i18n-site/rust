@@ -22,6 +22,8 @@ pub fn smtp_builder(smtp_host: impl Into<String>, ip: IpAddr) -> SmtpClientBuild
     .credentials((smtp_user, smtp_password))
 }
 
+pub static mut SMTP: Option<SmtpClientBuilder<String>> = None;
+
 pub async fn send(
   from_name: impl AsRef<str>,
   to: impl Into<Address<'static>>,
@@ -32,7 +34,8 @@ pub async fn send(
   no_retry_send(from_name, to, subject, txt, htm).await
 }
 
-pub async fn no_retry_send(
+pub async fn no_retry_send<T>(
+  smtp: SmtpClientBuilder<T>
   from_name: impl AsRef<str>,
   to: impl Into<Address<'static>>,
   subject: impl AsRef<str>,

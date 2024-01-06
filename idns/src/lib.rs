@@ -53,15 +53,25 @@ pub static RESOLVER_IPV4: TokioAsyncResolver = TokioAsyncResolver::tokio(
         8;8;8;8,
       ),
       53,
-      true,
+      false,
     ),
   ),
   resolve_options(),
 );
 
 #[static_init::dynamic]
-pub static RESOLVER_TLS: TokioAsyncResolver =
-  TokioAsyncResolver::tokio(ResolverConfig::cloudflare_tls(), resolve_options());
+pub static RESOLVER_TLS: TokioAsyncResolver = {
+  let mut conf = ResolverConfig::google_tls();
+  for dns in [
+    NameServerConfigGroup::cloudflare_tls(),
+    NameServerConfigGroup::quad9_tls(),
+  ] {
+    for i in dns.iter() {
+      conf.add_name_server(i.clone());
+    }
+  }
+  TokioAsyncResolver::tokio(conf, resolve_options())
+};
 
 pub async fn lookup<N: IntoName>(name: N, record_type: RecordType) -> Result<Lookup, ResolveError> {
   let name = name.into_name()?;
