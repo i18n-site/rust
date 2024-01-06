@@ -2,6 +2,8 @@ use mail_builder::{headers::address::Address, MessageBuilder};
 use mail_send::SmtpClientBuilder;
 use static_init::dynamic;
 
+// SMTP HOST 请给域名而不是 IP
+
 genv::def!(SMTP_HOST, SMTP_USER, SMTP_PASSWORD);
 genv::def!(SMTP_IMPLICIT_TLS:bool| false);
 genv::def!(SMTP_PORT:u16| 587);
