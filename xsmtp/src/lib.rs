@@ -6,6 +6,7 @@ use std::net::IpAddr;
 use aok::OK;
 use mail_builder::{headers::address::Address, MessageBuilder};
 use mail_send::SmtpClientBuilder;
+use rand::Rng;
 use thiserror::Error;
 use tokio::sync::RwLock;
 
@@ -48,34 +49,39 @@ pub async fn send(
   let txt = txt.as_ref();
   let htm = htm.as_ref();
 
-  macro_rules! send {
-    ($smtp:ident) => {
-      if let Err(err) = no_retry_send(&$smtp, from_name, to.clone(), subject, txt, htm).await {
+  {
+    if let Some(smtp) = &*SMTP.read().await {
+      if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
         tracing::error!("SMTP {err}");
       } else {
         return OK;
       }
-    };
-  }
-
-  {
-    if let Some(smtp) = &*SMTP.read().await {
-      send!(smtp);
     }
   }
 
   let host: String = SMTP_HOST();
-  let ip_li = idns::ip(&host).await?;
-  for i in ip_li {
-    let smtp = smtp_builder(host.to_owned(), i);
-    send!(smtp);
+  let mut ip_li = idns::ip(&host).await?;
+  if ip_li.is_empty() {
+    Err(XsmtpError::DnsNoIp(SMTP_HOST()))?
   }
 
-  Err(XsmtpError::DnsNoIp(SMTP_HOST()))?
+  let mut rng = rand::thread_rng();
 
-  // if let Some(smtp) = SMTP.as_ref() {
-  //   return Ok(no_retry_send(smtp, from_name, to, subject, txt, htm).await?);
-  // }
+  let mut len = ip_li.len();
+  loop {
+    let pos = rng.gen_range(0..len);
+    len -= 1;
+    let ip = ip_li.remove(pos);
+    let smtp = smtp_builder(&host, ip);
+    if let Err(err) = no_retry_send(&smtp, from_name, to.clone(), subject, txt, htm).await {
+      tracing::error!("{host} SMTP {err}");
+      if len == 0 {
+        return Err(err)?;
+      }
+    } else {
+      return OK;
+    }
+  }
 }
 
 pub async fn no_retry_send(
