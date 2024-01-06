@@ -46,4 +46,4 @@ memory_mb = 256
 
 运行 `./fly.dist.sh` 部署
 
-其他参见 https://crates.io/crates/alive
+其他参见 [crates.io/crates/alive](https://crates.io/crates/alive)
