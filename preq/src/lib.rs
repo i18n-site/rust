@@ -1,6 +1,6 @@
 use std::{future::Future, time::Duration};
 
-use reqwest::{Client, Response};
+use reqwest::{Client, RequestBuilder, Response};
 
 genv::def!(IPV6_PROXY);
 
@@ -35,20 +35,21 @@ pub fn client() -> reqwest::ClientBuilder {
         .connect_timeout(CONNECT_TIMEOUT)
 }
 
-pub fn proxy(
-  build: impl FnOnce(&ClientWithMiddleware) -> RequestBuilder,
-) -> impl Future<Output = Result<Response, reqwest_middleware::Error>> {
-  let client = retry_client(
-    client_builder()
-      .proxy(reqwest::Proxy::https(proxy_next()).unwrap())
-      .build()
-      .unwrap(),
-  );
-  build(&client).send()
+pub fn proxy_with_ip(
+  url: impl AsRef<str>,
+) -> impl Future<Output = Result<Response, reqwest::Error>> {
+  // let client = retry_client(
+  client()
+    .proxy(reqwest::Proxy::https(url.as_ref()).unwrap())
+    .build()
+    .unwrap()
+    .send()
+  // proxy_next()
+  // build(&client).send()
 }
 
-pub fn send(
-  build: impl FnOnce(&ClientWithMiddleware) -> RequestBuilder,
-) -> impl Future<Output = Result<Response, reqwest_middleware::Error>> {
-  CLIENT.with(|client| build(client).send())
-}
+// pub fn send(
+//   build: impl FnOnce(&ClientWithMiddleware) -> RequestBuilder,
+// ) -> impl Future<Output = Result<Response, reqwest_middleware::Error>> {
+//   CLIENT.with(|client| build(client).send())
+// }
