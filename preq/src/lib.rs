@@ -9,7 +9,7 @@ pub const TIMEOUT: Duration = Duration::from_secs(120);
 genv::s!(IPV6_PROXY_TOKEN);
 
 pub fn proxy(url: impl AsRef<str>) -> reqwest::Client {
-  let url = format!("http://i:{}@{}", &*IPV6_PROXY_TOKEN, url.as_ref());
+  let url = format!("http://{}@{}", &*IPV6_PROXY_TOKEN, url.as_ref());
   dbg!(&url);
   Client::builder()
         .proxy(reqwest::Proxy::https(url).unwrap())
