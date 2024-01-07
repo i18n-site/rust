@@ -1,9 +1,11 @@
-/*
-#[test]
-fn test() {
+use aok::{Null, OK};
+
+fn decode(a: u8) -> Null {
+  let _ = String::from_utf8(vec![a])?;
+  OK
 }
 
-#[cfg(feature = "macro")]
-mod test_macro {
+#[test]
+fn test() {
+  assert_eq!(true, decode(99).is_ok());
 }
-*/
