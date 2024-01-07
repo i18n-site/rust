@@ -46,6 +46,8 @@ pub async fn post_form(
       })
       .collect::<Vec<_>>()
       .join("&");
+
+    dbg!(&form);
     req
       .header("Content-Type", "application/x-www-form-urlencoded")
       .body(form)
