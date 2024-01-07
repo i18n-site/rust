@@ -8,9 +8,10 @@ pub const TIMEOUT: Duration = Duration::from_secs(120);
 
 genv::s!(IPV6_PROXY_TOKEN);
 
-pub fn proxy(url: impl IntoUrl) -> reqwest::Client {
+pub fn proxy(url: impl IntoUrl + std::fmt::Debug) -> reqwest::Client {
+  dbg!(&url);
   Client::builder()
-        .proxy(reqwest::Proxy::http(url).unwrap())
+        .proxy(reqwest::Proxy::https(url).unwrap())
         .brotli(true)
         // .http3_prior_knowledge()
         .timeout(TIMEOUT)
