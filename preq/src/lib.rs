@@ -8,9 +8,8 @@ pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
 
 pub const TIMEOUT: Duration = Duration::from_secs(120);
 
-thread_local! {
-    static CLIENT : Client =  client().build().unwrap();
-}
+#[static_init::dynamic]
+pub static CLIENT: Client = client().build().unwrap();
 
 #[static_init::dynamic]
 static PROXY: Vec<String> = IPV6_PROXY::<String>()
