@@ -15,10 +15,10 @@ static PROXY: Vec<String> = IPV6_PROXY::<String>()
 static mut N: usize = 0;
 
 pub fn proxy_next() -> &'static str {
-  unsafe {
+  &PROXY[unsafe {
     N = (N + 1) % PROXY.len();
-    &PROXY[N]
-  }
+    N
+  }]
 }
 
 pub fn retry_client(client: Client) -> ClientWithMiddleware {
