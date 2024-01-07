@@ -11,11 +11,11 @@ where
     Ok(val) => match val.parse() {
       Ok(r) => r,
       Err(err) => {
-        panic!("{name}={val} {:?}", err);
+        panic!("❌ {:?} {name}={val}", err);
       }
     },
     Err(err) => {
-      panic!("{name}: {err}");
+      panic!("❌ {err} {name}");
     }
   }
 }
@@ -27,7 +27,7 @@ where
   if let Ok(i) = std::env::var(name) {
     match i.parse() {
       Ok(i) => return i,
-      Err(err) => tracing::error!("ENV {name}={i} PARSE ERROR {:?}", err),
+      Err(err) => tracing::error!("❌ ENV PARSE ERROR {name}={i} : {:?}", err),
     }
   }
   default
@@ -35,38 +35,38 @@ where
 
 #[macro_export]
 macro_rules! s {
-    ($name:ident) => {
-        $crate::s!($name: String);
-    };
-    ($name:ident: $ty:ty) => {
-        #[$crate::static_init::dynamic]
-        static $name: $ty = $crate::get(stringify!($name));
-    };
-    ($($name:ident$(:$ty:ty)?),+) => {
-        $(
-          $crate::s!($name$(: $ty)?);
-        )+
-    }
+($name:ident) => {
+$crate::s!($name: String);
+};
+($name:ident: $ty:ty) => {
+#[$crate::static_init::dynamic]
+static $name: $ty = $crate::get(stringify!($name));
+};
+($($name:ident$(:$ty:ty)?),+) => {
+$(
+$crate::s!($name$(: $ty)?);
+)+
+}
 }
 
 #[macro_export]
 macro_rules! def {
-        ($name:ident: $type:ty | $default:expr) => {
-            #[allow(non_snake_case)]
-            pub fn $name() -> $type {
-                $crate::get_or_default(stringify!($name), $default)
-            }
-        };
-        ($name:ident) => {
-            #[allow(non_snake_case)]
-            pub fn $name<T: std::str::FromStr>() -> T
-                where <T as std::str::FromStr>::Err: std::fmt::Debug {
-                    $crate::get(stringify!($name))
-            }
-        };
-        ($($name:ident),+) => {
-            $(
-                $crate::def!($name);
-            )+
-        };
-    }
+($name:ident: $type:ty | $default:expr) => {
+#[allow(non_snake_case)]
+pub fn $name() -> $type {
+    $crate::get_or_default(stringify!($name), $default)
+}
+};
+($name:ident) => {
+#[allow(non_snake_case)]
+pub fn $name<T: std::str::FromStr>() -> T
+    where <T as std::str::FromStr>::Err: std::fmt::Debug {
+        $crate::get(stringify!($name))
+}
+};
+($($name:ident),+) => {
+$(
+    $crate::def!($name);
+)+
+};
+}
