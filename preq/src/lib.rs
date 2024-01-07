@@ -35,7 +35,6 @@ pub async fn post_form(
   form: impl IntoIterator<Item = (impl AsRef<str>, impl AsRef<str>)>,
 ) -> reqwest::Result<reqwest::Response> {
   let url = url.into_url()?;
-  dbg!(&url);
   post(client, url, |req| {
     let form = form
       .into_iter()
@@ -49,7 +48,6 @@ pub async fn post_form(
       .collect::<Vec<_>>()
       .join("&");
 
-    dbg!(&form);
     req
       .header("Content-Type", "application/x-www-form-urlencoded")
       .body(form)
