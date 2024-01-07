@@ -9,7 +9,7 @@ description = "smtp send mail"
 
 [dependencies]
 anyhow = "1.0.79"
-genv = "0.1.5"
+genv = "0.1.6"
 idns = { version = "0.1.5", path = "../idns" }
 mail-builder = "0.3.1"
 tracing = "0.1.40"

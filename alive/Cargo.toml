@@ -44,5 +44,5 @@ loginit = { version = "0.1.8" }
 
 [build-dependencies]
 aok = "0.1.2"
-genv = { version = "0.1.5" }
+genv = { version = "0.1.6" }
 prost-build = "0.12.3"
