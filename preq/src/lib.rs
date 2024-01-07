@@ -30,19 +30,19 @@ pub async fn post(
     .await
 }
 
-genv::def!(IPV6_PROXY);
+// genv::def!(IPV6_PROXY);
 
-#[static_init::dynamic]
-static PROXY: Vec<String> = IPV6_PROXY::<String>()
-  .split(' ')
-  .map(|i| format!("http://{i}"))
-  .collect();
-
-static mut N: usize = 0;
-
-pub fn proxy_next() -> &'static str {
-  &PROXY[unsafe {
-    N = (N + 1) % PROXY.len();
-    N
-  }]
-}
+// #[static_init::dynamic]
+// static PROXY: Vec<String> = IPV6_PROXY::<String>()
+//   .split(' ')
+//   .map(|i| format!("http://{i}"))
+//   .collect();
+//
+// static mut N: usize = 0;
+//
+// pub fn proxy_next() -> &'static str {
+//   &PROXY[unsafe {
+//     N = (N + 1) % PROXY.len();
+//     N
+//   }]
+// }
