@@ -32,10 +32,10 @@ pub async fn post(
 pub async fn post_form(
   client: &reqwest::Client,
   url: impl IntoUrl,
-  build: impl FnOnce(RequestBuilder) -> RequestBuilder,
+  form: impl IntoIterator<Item = impl AsRef<str>>,
 ) -> reqwest::Result<reqwest::Response> {
   post(client, url, |req| {
-    let form = all
+    let form = form
       .iter()
       .map(|i| {
         format!(
