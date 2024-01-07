@@ -6,7 +6,7 @@ pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
 
 pub const TIMEOUT: Duration = Duration::from_secs(120);
 
-genv::s!(TOKEN);
+genv::s!(IPV6_PROXY_TOKEN);
 
 pub fn proxy(url: impl IntoUrl) -> reqwest::Client {
   Client::builder()
@@ -24,13 +24,13 @@ pub async fn post(
 ) -> reqwest::Result<reqwest::Response> {
   client
     .post(url)
-    .header("T", &*TOKEN)
+    .header("T", &*IPV6_PROXY_TOKEN)
     .body(body)
     .send()
     .await
 }
 
-genv::def!(IPV6_PROXY, IPV6_PROXY_PORT, IPV6_PROXY_TOKEN);
+genv::def!(IPV6_PROXY, IPV6_PROXY_PORT);
 
 // #[static_init::dynamic]
 // static PROXY: Vec<String> = IPV6_PROXY::<String>()
