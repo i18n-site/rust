@@ -29,7 +29,7 @@ pub fn retry_client(client: Client) -> ClientWithMiddleware {
   ClientBuilder::new(client)
     .with(RetryTransientMiddleware::new_with_policy(
       ExponentialBackoff::builder()
-        .retry_bounds(Duration::from_millis(1), Duration::from_secs(1))
+        .retry_bounds(Duration::from_millis(1), Duration::from_secs(2))
         .build_with_max_retries(9),
     ))
     .build()
