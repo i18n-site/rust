@@ -5,7 +5,7 @@ async fn test() -> aok::Result<()> {
   let port: String = IPV6_PROXY_PORT();
   let proxy = format!("http://{}:{}", proxy, port);
   let proxy = preq::proxy(proxy.as_str());
-  let url = "https://translate.google.com/translate_a/t?client=gtx&tl=en&sl=zh";
+  let url = "https://translate.google.com/translate_a/t?client=gtx&tl=zh&sl=en";
   let r = preq::post_form(&proxy, url, [("q", "I")]).await?;
   dbg!(proxy);
   dbg!(r.text().await?);

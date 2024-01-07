@@ -12,7 +12,7 @@ genv::def!(IPV6_PROXY, IPV6_PROXY_PORT);
 
 pub fn proxy(url: impl IntoUrl) -> reqwest::Client {
   Client::builder()
-        .proxy(reqwest::Proxy::https(url).unwrap())
+        .proxy(reqwest::Proxy::http(url).unwrap())
         .brotli(true)
         // .http3_prior_knowledge()
         .timeout(TIMEOUT)
