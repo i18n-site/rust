@@ -6,6 +6,10 @@ use reqwest_retry::{policies::ExponentialBackoff, RetryTransientMiddleware};
 
 genv::def!(IPV6_PROXY);
 
+pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
+
+pub const TIMEOUT: Duration = Duration::from_secs(300);
+
 #[static_init::dynamic]
 static PROXY: Vec<String> = IPV6_PROXY::<String>()
   .split(' ')
@@ -39,8 +43,8 @@ pub fn proxy(
         .brotli(true)
         // .http3_prior_knowledge()
         .proxy(reqwest::Proxy::https(proxy_next()).unwrap())
-        .timeout(Duration::from_secs(300))
-        .connect_timeout(Duration::from_secs(8))
+        .timeout(TIMEOUT)
+        .connect_timeout(CONNECT_TIMEOUT)
         .build().unwrap(),
   );
   build(&client).send()
