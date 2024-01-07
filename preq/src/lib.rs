@@ -28,15 +28,7 @@ pub async fn post(
     .body(body)
     .send()
     .await
-  // proxy_next()
-  // build(&client).send()
 }
-
-// pub fn send(
-//   build: impl FnOnce(&ClientWithMiddleware) -> RequestBuilder,
-// ) -> impl Future<Output = Result<Response, reqwest_middleware::Error>> {
-//   CLIENT.with(|client| build(client).send())
-// }
 
 genv::def!(IPV6_PROXY);
 
