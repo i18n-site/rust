@@ -44,7 +44,8 @@ pub async fn post_form(
           form_urlencoded::byte_serialize(v.as_ref().as_bytes()).collect::<String>()
         )
       })
-      .collect::<Vec<_>>();
+      .collect::<Vec<_>>()
+      .join("&");
     req
       .header("Content-Type", "application/x-www-form-urlencoded")
       .body(form)
