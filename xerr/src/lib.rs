@@ -21,6 +21,7 @@ macro_rules! is_ok {
       Ok(_) => true,
       Err(err) => {
         $crate::tracing::error!("{}", err);
+        false
       }
     }
   }};
