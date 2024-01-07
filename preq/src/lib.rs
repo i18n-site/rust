@@ -10,6 +10,10 @@ pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
 
 pub const TIMEOUT: Duration = Duration::from_secs(300);
 
+thread_local! {
+    static CLIENT :ClientWithMiddleware= retry_client(Client::builder().brotli(true).build().unwrap());
+}
+
 #[static_init::dynamic]
 static PROXY: Vec<String> = IPV6_PROXY::<String>()
   .split(' ')
@@ -48,10 +52,6 @@ pub fn proxy(
         .build().unwrap(),
   );
   build(&client).send()
-}
-
-thread_local! {
-    static CLIENT :ClientWithMiddleware= retry_client(Client::builder().brotli(true).build().unwrap());
 }
 
 pub fn send(
