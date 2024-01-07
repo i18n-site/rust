@@ -6,6 +6,8 @@ pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
 
 pub const TIMEOUT: Duration = Duration::from_secs(120);
 
+genv::s!(TOKEN);
+
 #[static_init::dynamic]
 pub static CLIENT: Client = client().build().unwrap();
 
@@ -26,9 +28,7 @@ pub async fn post(
 ) -> reqwest::Result<reqwest::Response> {
   // let client = retry_client(
   let client = client().proxy(proxy).build()?;
-  let req = client.post(url).body(body);
-
-  req.send().await
+  client.post(url).header("T", TOKEN).body(body).send().await
   // proxy_next()
   // build(&client).send()
 }
