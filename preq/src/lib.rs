@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use reqwest::{Client, IntoUrl};
+use reqwest::Client;
 
 genv::def!(IPV6_PROXY);
 
