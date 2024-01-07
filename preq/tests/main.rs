@@ -1,3 +1,5 @@
+genv::s!(IPV6_PROXY_TEST_URL, IPV6_PROXY_TEST_RESULT);
+
 #[tokio::test]
 async fn test() -> aok::Result<()> {
   use preq::{IPV6_PROXY, IPV6_PROXY_PORT};
