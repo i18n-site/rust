@@ -17,8 +17,6 @@ pub fn proxy(url: impl IntoUrl) -> reqwest::Client {
         .connect_timeout(CONNECT_TIMEOUT).build().unwrap()
 }
 
-// reqwest::Proxy::https(proxy_url).unwrap()
-
 pub async fn post(
   client: reqwest::Client,
   url: impl IntoUrl,
