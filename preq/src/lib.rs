@@ -34,6 +34,8 @@ pub async fn post_form(
   url: impl IntoUrl,
   form: impl IntoIterator<Item = (impl AsRef<str>, impl AsRef<str>)>,
 ) -> reqwest::Result<reqwest::Response> {
+  let url = url.into_url()?;
+  dbg!(&url);
   post(client, url, |req| {
     let form = form
       .into_iter()
