@@ -31,7 +31,7 @@ macro_rules! is_ok {
 macro_rules! ok {
   ($result:expr) => {{
     match $result {
-      Ok(r) => r,
+      Ok(r) => Ok(r),
       Err(err) => {
         $crate::tracing::error!("{}", err);
         Err(err)
