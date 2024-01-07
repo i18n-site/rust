@@ -34,12 +34,9 @@ pub fn client() -> reqwest::ClientBuilder {
         .connect_timeout(CONNECT_TIMEOUT)
 }
 
-pub fn proxy(proxy_url: impl IntoUrl) -> reqwest::Client {
+pub fn proxy(proxy: reqwest::Proxy) -> reqwest::Client {
   // let client = retry_client(
-  client()
-    .proxy(reqwest::Proxy::https(proxy_url).unwrap())
-    .build()
-    .unwrap()
+  client().proxy(proxy).build().unwrap()
   // proxy_next()
   // build(&client).send()
 }
