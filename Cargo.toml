@@ -34,7 +34,7 @@ members = [
   "i18n-site",
   "aliver",
   "alive",
-  "idns",
+  "idns", "ok_or",
 ]
 resolver = "2"
 
