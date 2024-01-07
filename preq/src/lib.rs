@@ -11,7 +11,7 @@ pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
 pub const TIMEOUT: Duration = Duration::from_secs(300);
 
 thread_local! {
-    static CLIENT :ClientWithMiddleware= retry_client(Client::builder().brotli(true).build().unwrap());
+    static CLIENT :ClientWithMiddleware= client();
 }
 
 #[static_init::dynamic]
@@ -39,10 +39,8 @@ pub fn retry_client(client: Client) -> ClientWithMiddleware {
     .build()
 }
 
-pub fn proxy(
-  build: impl FnOnce(&ClientWithMiddleware) -> RequestBuilder,
-) -> impl Future<Output = Result<Response, reqwest_middleware::Error>> {
-  let client = retry_client(
+pub fn client() -> ClientWithMiddleware {
+  retry_client(
     Client::builder()
         .brotli(true)
         // .http3_prior_knowledge()
@@ -50,7 +48,13 @@ pub fn proxy(
         .timeout(TIMEOUT)
         .connect_timeout(CONNECT_TIMEOUT)
         .build().unwrap(),
-  );
+  )
+}
+
+pub fn proxy(
+  build: impl FnOnce(&ClientWithMiddleware) -> RequestBuilder,
+) -> impl Future<Output = Result<Response, reqwest_middleware::Error>> {
+  let client = client();
   build(&client).send()
 }
 
