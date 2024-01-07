@@ -30,7 +30,7 @@ pub async fn post(
     .await
 }
 
-// genv::def!(IPV6_PROXY);
+genv::def!(IPV6_PROXY, IPV6_PROXY_PORT, IPV6_PROXY_TOKEN);
 
 // #[static_init::dynamic]
 // static PROXY: Vec<String> = IPV6_PROXY::<String>()
