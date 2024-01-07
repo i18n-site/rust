@@ -32,14 +32,15 @@ pub async fn post(
 pub async fn post_form(
   client: &reqwest::Client,
   url: impl IntoUrl,
-  form: impl IntoIterator<Item = impl AsRef<str>>,
+  form: impl IntoIterator<Item = (impl AsRef<str>, impl AsRef<str>)>,
 ) -> reqwest::Result<reqwest::Response> {
   post(client, url, |req| {
     let form = form
       .into_iter()
       .map(|(k, v)| {
         format!(
-          "{k}={}",
+          "{}={}",
+          k.as_ref(),
           form_urlencoded::byte_serialize(v.as_ref().as_bytes()).collect::<String>()
         )
       })
