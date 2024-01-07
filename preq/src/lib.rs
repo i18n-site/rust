@@ -8,9 +8,6 @@ pub const TIMEOUT: Duration = Duration::from_secs(120);
 
 genv::s!(TOKEN);
 
-#[static_init::dynamic]
-pub static CLIENT: Client = client().build().unwrap();
-
 pub fn proxy(url: impl IntoUrl) -> reqwest::Client {
   Client::builder()
         .proxy(reqwest::Proxy::https(url).unwrap())
