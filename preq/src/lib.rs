@@ -8,7 +8,8 @@ pub const TIMEOUT: Duration = Duration::from_secs(120);
 
 genv::s!(IPV6_PROXY_TOKEN);
 
-pub fn proxy(url: impl IntoUrl + std::fmt::Debug) -> reqwest::Client {
+pub fn proxy(url: impl AsRef<str>) -> reqwest::Client {
+  let url = format!("http://i:{}@{}", &*IPV6_PROXY_TOKEN, url.as_ref());
   dbg!(&url);
   Client::builder()
         .proxy(reqwest::Proxy::https(url).unwrap())
@@ -23,7 +24,6 @@ pub async fn post(
   url: impl IntoUrl,
   build: impl FnOnce(RequestBuilder) -> RequestBuilder,
 ) -> reqwest::Result<reqwest::Response> {
-  //.header("T", &*IPV6_PROXY_TOKEN))
   build(client.post(url)).send().await
 }
 
