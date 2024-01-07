@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use reqwest::Client;
+use reqwest::{Client, IntoUrl};
 
 pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
 
@@ -19,9 +19,12 @@ pub fn client() -> reqwest::ClientBuilder {
 
 // reqwest::Proxy::https(proxy_url).unwrap()
 
-pub fn proxy(proxy: reqwest::Proxy) -> reqwest::Client {
+pub async fn post(proxy: reqwest::Proxy, url: impl IntoUrl) -> reqwest::Result<reqwest::Response> {
   // let client = retry_client(
-  client().proxy(proxy).build().unwrap()
+  let client = client().proxy(proxy).build()?;
+  let req = client.post(url);
+
+  req.send().await
   // proxy_next()
   // build(&client).send()
 }
