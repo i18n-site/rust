@@ -11,3 +11,6 @@ description = "log error util"
 [dependencies]
 anyhow = "1.0.79"
 tracing = "0.1.40"
+
+[dev-dependencies]
+loginit = { path = "../loginit" }

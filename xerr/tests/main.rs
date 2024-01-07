@@ -19,6 +19,7 @@ mod tests {
 
   #[test]
   fn test() {
+    loginit::init();
     let result = size("not exist");
     assert_eq!(result, 0);
   }
