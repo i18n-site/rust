@@ -36,11 +36,11 @@ pub async fn post_form(
 ) -> reqwest::Result<reqwest::Response> {
   post(client, url, |req| {
     let form = form
-      .iter()
-      .map(|i| {
+      .into_iter()
+      .map(|(k, v)| {
         format!(
-          "q={}",
-          form_urlencoded::byte_serialize(i.as_ref().as_bytes()).collect::<String>()
+          "{k}={}",
+          form_urlencoded::byte_serialize(v.as_ref().as_bytes()).collect::<String>()
         )
       })
       .collect::<Vec<_>>();
