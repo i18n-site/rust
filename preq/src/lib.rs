@@ -2,14 +2,14 @@ use std::time::Duration;
 
 use reqwest::Client;
 
-genv::def!(IPV6_PROXY);
-
 pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
 
 pub const TIMEOUT: Duration = Duration::from_secs(120);
 
 #[static_init::dynamic]
 pub static CLIENT: Client = client().build().unwrap();
+
+genv::def!(IPV6_PROXY);
 
 #[static_init::dynamic]
 static PROXY: Vec<String> = IPV6_PROXY::<String>()
