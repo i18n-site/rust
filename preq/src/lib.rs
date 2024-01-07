@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use reqwest::{Client, IntoUrl};
+use reqwest::{Client, IntoUrl, RequestBuilder};
 
 pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
 
@@ -20,17 +20,16 @@ pub fn proxy(url: impl IntoUrl) -> reqwest::Client {
 pub async fn post(
   client: &reqwest::Client,
   url: impl IntoUrl,
-  body: impl Into<reqwest::Body>,
+  build: impl FnOnce(RequestBuilder) -> RequestBuilder,
 ) -> reqwest::Result<reqwest::Response> {
-  client
-    .post(url)
-    .header("T", &*IPV6_PROXY_TOKEN)
-    .body(body)
+  build(client.post(url).header("T", &*IPV6_PROXY_TOKEN))
     .send()
     .await
 }
 
 genv::def!(IPV6_PROXY, IPV6_PROXY_PORT);
+// body: impl Into<reqwest::Body>,
+
 /*
   let form = all
     .iter()
