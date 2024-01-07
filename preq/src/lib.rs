@@ -8,6 +8,8 @@ pub const TIMEOUT: Duration = Duration::from_secs(120);
 
 genv::s!(IPV6_PROXY_TOKEN);
 
+genv::def!(IPV6_PROXY, IPV6_PROXY_PORT);
+
 pub fn proxy(url: impl IntoUrl) -> reqwest::Client {
   Client::builder()
         .proxy(reqwest::Proxy::https(url).unwrap())
@@ -27,7 +29,26 @@ pub async fn post(
     .await
 }
 
-genv::def!(IPV6_PROXY, IPV6_PROXY_PORT);
+pub async fn post_form(
+  client: &reqwest::Client,
+  url: impl IntoUrl,
+  build: impl FnOnce(RequestBuilder) -> RequestBuilder,
+) -> reqwest::Result<reqwest::Response> {
+  post(client, url, |req| {
+    let req = req.header("Content-Type", "application/x-www-form-urlencoded");
+    let form = all
+      .iter()
+      .map(|i| {
+        format!(
+          "q={}",
+          form_urlencoded::byte_serialize(i.as_ref().as_bytes()).collect::<String>()
+        )
+      })
+      .collect::<Vec<_>>();
+    req
+  })
+  .await
+}
 // body: impl Into<reqwest::Body>,
 
 /*
