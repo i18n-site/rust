@@ -19,3 +19,10 @@ macro_rules! log {
     )+
   }}
 }
+
+#[macro_export]
+macro_rules! is_ok {
+  ($result:expr) => {{
+    $crate::log!($result).is_ok()
+  }};
+}
