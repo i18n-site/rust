@@ -11,7 +11,7 @@ pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
 pub const TIMEOUT: Duration = Duration::from_secs(300);
 
 thread_local! {
-    static CLIENT :ClientWithMiddleware= client();
+    static CLIENT :ClientWithMiddleware=  retry_client(client_builder().build().unwrap());
 }
 
 #[static_init::dynamic]
@@ -39,22 +39,23 @@ pub fn retry_client(client: Client) -> ClientWithMiddleware {
     .build()
 }
 
-pub fn client() -> ClientWithMiddleware {
-  retry_client(
-    Client::builder()
+pub fn client_builder() -> reqwest::ClientBuilder {
+  Client::builder()
         .brotli(true)
         // .http3_prior_knowledge()
-        .proxy(reqwest::Proxy::https(proxy_next()).unwrap())
         .timeout(TIMEOUT)
         .connect_timeout(CONNECT_TIMEOUT)
-        .build().unwrap(),
-  )
 }
 
 pub fn proxy(
   build: impl FnOnce(&ClientWithMiddleware) -> RequestBuilder,
 ) -> impl Future<Output = Result<Response, reqwest_middleware::Error>> {
-  let client = client();
+  let client = retry_client(
+    client_builder()
+      .proxy(reqwest::Proxy::https(proxy_next()).unwrap())
+      .build()
+      .unwrap(),
+  );
   build(&client).send()
 }
 
