@@ -28,7 +28,12 @@ pub async fn post(
 ) -> reqwest::Result<reqwest::Response> {
   // let client = retry_client(
   let client = client().proxy(proxy).build()?;
-  client.post(url).header("T", TOKEN).body(body).send().await
+  client
+    .post(url)
+    .header("T", &*TOKEN)
+    .body(body)
+    .send()
+    .await
   // proxy_next()
   // build(&client).send()
 }
