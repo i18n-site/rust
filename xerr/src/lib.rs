@@ -13,3 +13,29 @@ macro_rules! log {
     )+
   }}
 }
+
+#[macro_export]
+macro_rules! is_ok {
+  ($result:expr) => {{
+    match $result {
+      Ok(_) => true,
+      Err(err) => {
+        $crate::tracing::error!("{}", err);
+        false
+      }
+    }
+  }};
+}
+
+#[macro_export]
+macro_rules! ok {
+  ($result:expr) => {{
+    match $result {
+      Ok(r) => Ok(r),
+      Err(err) => {
+        $crate::tracing::error!("{}", err);
+        Err(err)
+      }
+    }
+  }};
+}
