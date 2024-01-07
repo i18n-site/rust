@@ -3,8 +3,14 @@ pub use tracing;
 #[macro_export]
 macro_rules! log {
   ($result:expr) => {{
-    if let Err(err) = $result {
-      $crate::tracing::error!("{}", err);
+    match $result {
+      Err(err) =>{
+        $crate::tracing::error!("{}", err)
+        Err(err)
+      }
+      Ok(r)=>{
+        Ok(r)
+      }
     }
   }};
   ($($result:expr),+$(,)?) => {{
