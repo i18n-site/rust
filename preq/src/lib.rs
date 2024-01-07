@@ -35,7 +35,6 @@ pub async fn post_form(
   build: impl FnOnce(RequestBuilder) -> RequestBuilder,
 ) -> reqwest::Result<reqwest::Response> {
   post(client, url, |req| {
-    let req = req.header("Content-Type", "application/x-www-form-urlencoded");
     let form = all
       .iter()
       .map(|i| {
@@ -46,6 +45,8 @@ pub async fn post_form(
       })
       .collect::<Vec<_>>();
     req
+      .header("Content-Type", "application/x-www-form-urlencoded")
+      .body(form)
   })
   .await
 }
