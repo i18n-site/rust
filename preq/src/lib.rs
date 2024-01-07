@@ -1,6 +1,6 @@
 use std::{future::Future, time::Duration};
 
-use reqwest::{Client, RequestBuilder, Response};
+use reqwest::{Client, IntoUrl, Response};
 
 genv::def!(IPV6_PROXY);
 
@@ -35,13 +35,12 @@ pub fn client() -> reqwest::ClientBuilder {
         .connect_timeout(CONNECT_TIMEOUT)
 }
 
-pub fn proxy(proxy_url: impl AsRef<str>) -> impl Future<Output = Result<Response, reqwest::Error>> {
+pub fn proxy(proxy_url: impl IntoUrl) -> reqwest::Client {
   // let client = retry_client(
   client()
-    .proxy(reqwest::Proxy::https(proxy_url.as_ref()).unwrap())
+    .proxy(reqwest::Proxy::https(proxy_url).unwrap())
     .build()
     .unwrap()
-    .send()
   // proxy_next()
   // build(&client).send()
 }
