@@ -11,23 +11,22 @@ genv::s!(TOKEN);
 #[static_init::dynamic]
 pub static CLIENT: Client = client().build().unwrap();
 
-pub fn client() -> reqwest::ClientBuilder {
+pub fn proxy(url: impl IntoUrl) -> reqwest::Client {
   Client::builder()
+        .proxy(reqwest::Proxy::https(url).unwrap())
         .brotli(true)
         // .http3_prior_knowledge()
         .timeout(TIMEOUT)
-        .connect_timeout(CONNECT_TIMEOUT)
+        .connect_timeout(CONNECT_TIMEOUT).build().unwrap()
 }
 
 // reqwest::Proxy::https(proxy_url).unwrap()
 
 pub async fn post(
-  proxy: reqwest::Proxy,
+  client: reqwest::Client,
   url: impl IntoUrl,
   body: impl Into<reqwest::Body>,
 ) -> reqwest::Result<reqwest::Response> {
-  // let client = retry_client(
-  let client = client().proxy(proxy).build()?;
   client
     .post(url)
     .header("T", &*TOKEN)
