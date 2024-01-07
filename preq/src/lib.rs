@@ -31,6 +31,21 @@ pub async fn post(
 }
 
 genv::def!(IPV6_PROXY, IPV6_PROXY_PORT);
+/*
+  let form = all
+    .iter()
+    .map(|i| {
+      format!(
+        "q={}",
+        form_urlencoded::byte_serialize(i.as_ref().as_bytes()).collect::<String>()
+      )
+    })
+    .collect::<Vec<_>>()
+    .join("&");
+"https://translate.google.com/translate_a/t?client=gtx&tl=en&sl=zh"
+header("Content-Type", "application/x-www-form-urlencoded")
+body(form)
+*/
 
 // #[static_init::dynamic]
 // static PROXY: Vec<String> = IPV6_PROXY::<String>()
