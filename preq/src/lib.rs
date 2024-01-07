@@ -39,6 +39,8 @@ pub fn proxy(
         .brotli(true)
         // .http3_prior_knowledge()
         .proxy(reqwest::Proxy::https(proxy_next()).unwrap())
+        .timeout(Duration::from_secs(300))
+        .connect_timeout(Duration::from_secs(8))
         .build().unwrap(),
   );
   build(&client).send()
