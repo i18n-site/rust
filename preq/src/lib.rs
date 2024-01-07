@@ -1,17 +1,15 @@
 use std::{future::Future, time::Duration};
 
 use reqwest::{Client, Response};
-use reqwest_middleware::{ClientBuilder, ClientWithMiddleware, RequestBuilder};
-use reqwest_retry::{policies::ExponentialBackoff, RetryTransientMiddleware};
 
 genv::def!(IPV6_PROXY);
 
 pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
 
-pub const TIMEOUT: Duration = Duration::from_secs(300);
+pub const TIMEOUT: Duration = Duration::from_secs(120);
 
 thread_local! {
-    static CLIENT :ClientWithMiddleware=  retry_client(client_builder().build().unwrap());
+    static CLIENT : Client =  client().build().unwrap();
 }
 
 #[static_init::dynamic]
@@ -29,17 +27,7 @@ pub fn proxy_next() -> &'static str {
   }]
 }
 
-pub fn retry_client(client: Client) -> ClientWithMiddleware {
-  ClientBuilder::new(client)
-    .with(RetryTransientMiddleware::new_with_policy(
-      ExponentialBackoff::builder()
-        .retry_bounds(Duration::from_millis(1), Duration::from_secs(2))
-        .build_with_max_retries(9),
-    ))
-    .build()
-}
-
-pub fn client_builder() -> reqwest::ClientBuilder {
+pub fn client() -> reqwest::ClientBuilder {
   Client::builder()
         .brotli(true)
         // .http3_prior_knowledge()
