@@ -23,9 +23,8 @@ pub async fn post(
   url: impl IntoUrl,
   build: impl FnOnce(RequestBuilder) -> RequestBuilder,
 ) -> reqwest::Result<reqwest::Response> {
-  build(client.post(url).header("T", &*IPV6_PROXY_TOKEN))
-    .send()
-    .await
+  //.header("T", &*IPV6_PROXY_TOKEN))
+  build(client.post(url)).send().await
 }
 
 pub async fn post_form(
