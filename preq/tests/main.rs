@@ -5,8 +5,9 @@ async fn test() -> aok::Result<()> {
   let port: String = IPV6_PROXY_PORT();
   let url = format!("http://{}:{}", proxy, port);
   let proxy = preq::proxy(url.as_str());
-  preq::post(&proxy, "http://baidu.com", "").await;
+  let r = preq::post(&proxy, "http://baidu.com", "").await?;
   dbg!(proxy);
+  dbg!(r.text().await?);
   aok::OK
 }
 
