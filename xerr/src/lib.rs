@@ -1,4 +1,19 @@
+pub use anyhow;
 pub use tracing;
+
+#[macro_export]
+macro_rules! ok_or {
+  ($expr:expr,$default:expr) => {{
+    let r = (move || Ok::<_, $crate::anyhow::Error>($expr))();
+    match r {
+      Ok(r) => r,
+      Err(err) => {
+        $crate::tracing::error!("{}", err);
+        $default
+      }
+    }
+  }};
+}
 
 #[macro_export]
 macro_rules! log {
