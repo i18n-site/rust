@@ -19,10 +19,14 @@ pub fn client() -> reqwest::ClientBuilder {
 
 // reqwest::Proxy::https(proxy_url).unwrap()
 
-pub async fn post(proxy: reqwest::Proxy, url: impl IntoUrl) -> reqwest::Result<reqwest::Response> {
+pub async fn post(
+  proxy: reqwest::Proxy,
+  url: impl IntoUrl,
+  body: impl Into<reqwest::Body>,
+) -> reqwest::Result<reqwest::Response> {
   // let client = retry_client(
   let client = client().proxy(proxy).build()?;
-  let req = client.post(url);
+  let req = client.post(url).body(body);
 
   req.send().await
   // proxy_next()
