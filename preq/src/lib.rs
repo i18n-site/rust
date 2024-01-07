@@ -18,7 +18,7 @@ pub fn proxy(url: impl IntoUrl) -> reqwest::Client {
 }
 
 pub async fn post(
-  client: reqwest::Client,
+  client: &reqwest::Client,
   url: impl IntoUrl,
   body: impl Into<reqwest::Body>,
 ) -> reqwest::Result<reqwest::Response> {
