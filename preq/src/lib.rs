@@ -35,12 +35,10 @@ pub fn client() -> reqwest::ClientBuilder {
         .connect_timeout(CONNECT_TIMEOUT)
 }
 
-pub fn proxy_with_ip(
-  url: impl AsRef<str>,
-) -> impl Future<Output = Result<Response, reqwest::Error>> {
+pub fn proxy(proxy_url: impl AsRef<str>) -> impl Future<Output = Result<Response, reqwest::Error>> {
   // let client = retry_client(
   client()
-    .proxy(reqwest::Proxy::https(url.as_ref()).unwrap())
+    .proxy(reqwest::Proxy::https(proxy_url.as_ref()).unwrap())
     .build()
     .unwrap()
     .send()
