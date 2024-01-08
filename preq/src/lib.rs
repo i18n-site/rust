@@ -26,6 +26,7 @@ pub fn proxy(url: impl AsRef<str>) -> reqwest::Client {
 }
 
 pub const MAX_RETRY: usize = 3;
+static mut N: usize = 0;
 
 pub async fn post(
   client_li: &[reqwest::Client],
