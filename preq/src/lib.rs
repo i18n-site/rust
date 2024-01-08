@@ -26,7 +26,6 @@ pub fn proxy(url: impl AsRef<str>) -> reqwest::Client {
 }
 
 pub const MAX_RETRY: usize = 3;
-static mut N: usize = 0;
 
 pub async fn post(
   client_li: &[reqwest::Client],
@@ -105,3 +104,26 @@ body(form)
 //     N
 //   }]
 // }
+
+static mut N: usize = 0;
+
+pub struct Proxy(Vec<reqwest::Client>);
+
+#[static_init::dynamic]
+pub static mut PROXY: Proxy = {
+  let mut v = Vec::new();
+  let port: u16 = IPV6_PROXY_PORT();
+  for i in IPV6_PROXY::<String>().split(' ') {
+    v.push(proxy(format!("{i}:{port}")));
+  }
+  Proxy(v)
+};
+impl Proxy {
+  pub async fn post_form(
+    &self,
+    url: impl IntoUrl,
+    form: impl IntoIterator<Item = (impl AsRef<str>, impl AsRef<str>)>,
+  ) -> reqwest::Result<reqwest::Response> {
+    post_form(&self.0, url, form).await
+  }
+}
