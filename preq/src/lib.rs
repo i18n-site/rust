@@ -15,7 +15,6 @@ pub fn proxy(url: impl AsRef<str>) -> reqwest::Client {
     *IPV6_PROXY_PASSWD,
     url.as_ref()
   );
-  dbg!(&url);
   Client::builder()
         .proxy(reqwest::Proxy::https(url).unwrap())
         .brotli(true)
