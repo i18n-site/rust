@@ -28,6 +28,7 @@ pub fn proxy(url: impl AsRef<str>) -> reqwest::Client {
 pub const MAX_RETRY: usize = 3;
 
 pub async fn post(
+  n: usize,
   client_li: &[reqwest::Client],
   url: impl IntoUrl,
   build: impl Fn(RequestBuilder) -> RequestBuilder,
@@ -48,6 +49,7 @@ pub async fn post(
 }
 
 pub async fn post_form(
+  n: usize,
   client_li: &[reqwest::Client],
   url: impl IntoUrl,
   form: impl IntoIterator<Item = (impl AsRef<str>, impl AsRef<str>)>,
@@ -64,7 +66,7 @@ pub async fn post_form(
     })
     .collect::<Vec<_>>()
     .join("&");
-  post(client_li, url, |req| {
+  post(n, client_li, url, |req| {
     req
       .header("Content-Type", "application/x-www-form-urlencoded")
       .body(form.clone())
@@ -124,6 +126,7 @@ impl Proxy {
     url: impl IntoUrl,
     form: impl IntoIterator<Item = (impl AsRef<str>, impl AsRef<str>)>,
   ) -> reqwest::Result<reqwest::Response> {
-    post_form(&self.0, url, form).await
+    unsafe { (N, _) = N.overflowing_add(1) };
+    post_form(unsafe { N }, &self.0, url, form).await
   }
 }
