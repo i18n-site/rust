@@ -26,15 +26,28 @@ pub fn proxy(url: impl AsRef<str>) -> reqwest::Client {
 }
 
 pub async fn post(
-  client: &reqwest::Client,
+  client: &[reqwest::Client],
   url: impl IntoUrl,
   build: impl FnOnce(RequestBuilder) -> RequestBuilder,
 ) -> reqwest::Result<reqwest::Response> {
-  build(client.post(url)).send().await
+  let mut retry = 3;
+  let mut pos = 0;
+  let url = url.into_url()?;
+  loop {
+    let r = build(client[pos].post(url.clone())).send().await;
+    if retry == 0 {
+      return r;
+    }
+    if let Ok(r) = r {
+      return Ok(r);
+    }
+    pos = (pos + 1) % client.len();
+    retry -= 1;
+  }
 }
 
 pub async fn post_form(
-  client: &reqwest::Client,
+  client: &[reqwest::Client],
   url: impl IntoUrl,
   form: impl IntoIterator<Item = (impl AsRef<str>, impl AsRef<str>)>,
 ) -> reqwest::Result<reqwest::Response> {

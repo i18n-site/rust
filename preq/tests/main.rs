@@ -9,7 +9,7 @@ async fn test() -> aok::Result<()> {
   let proxy = preq::proxy(proxy.as_str());
   let url = &*IPV6_PROXY_TEST_URL;
   // let url = "https://www.baidu.com";
-  let r = preq::post_form(&proxy, url, [("q", "I")]).await?;
+  let r = preq::post_form(&[proxy], url, [("q", "I")]).await?;
   let r = r.text().await?;
   dbg!(&r);
   assert_eq!(r, *IPV6_PROXY_TEST_RESULT);
