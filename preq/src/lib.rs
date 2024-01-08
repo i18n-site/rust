@@ -26,33 +26,34 @@ pub fn proxy(url: impl AsRef<str>) -> reqwest::Client {
 }
 
 pub async fn post(
-  client: &[reqwest::Client],
+  client_li: &[reqwest::Client],
   url: impl IntoUrl,
-  build: impl FnOnce(RequestBuilder) -> RequestBuilder,
+  build: impl Fn(RequestBuilder) -> RequestBuilder,
 ) -> reqwest::Result<reqwest::Response> {
   let mut retry = 3;
   let mut pos = 0;
   let url = url.into_url()?;
   loop {
-    let r = build(client[pos].post(url.clone())).send().await;
+    let client = &client_li[pos];
+    let r = build(client.post(url.clone())).send().await;
     if retry == 0 {
       return r;
     }
     if let Ok(r) = r {
       return Ok(r);
     }
-    pos = (pos + 1) % client.len();
+    pos = (pos + 1) % client_li.len();
     retry -= 1;
   }
 }
 
 pub async fn post_form(
-  client: &[reqwest::Client],
+  client_li: &[reqwest::Client],
   url: impl IntoUrl,
   form: impl IntoIterator<Item = (impl AsRef<str>, impl AsRef<str>)>,
 ) -> reqwest::Result<reqwest::Response> {
   let url = url.into_url()?;
-  post(client, url, |req| {
+  post(client_li, url, |req| {
     let form = form
       .into_iter()
       .map(|(k, v)| {
