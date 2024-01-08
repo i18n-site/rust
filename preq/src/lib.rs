@@ -40,7 +40,7 @@ pub async fn post(
     if retry > MAX_RETRY {
       return r;
     }
-    if let Ok(r) = r {
+    if let Ok(r) = xerr::ok!(r) {
       return Ok(r);
     }
     retry += 1;
