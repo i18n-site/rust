@@ -36,7 +36,6 @@ pub async fn post(
   let mut retry = 0;
   let url = url.into_url()?;
   loop {
-    dbg!(retry);
     let client = &client_li[(n.overflowing_add(retry)).0 % client_li.len()];
     let r = build(client.post(url.clone())).send().await;
     retry += 1;
