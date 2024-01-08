@@ -25,25 +25,25 @@ pub fn proxy(url: impl AsRef<str>) -> reqwest::Client {
         .connect_timeout(CONNECT_TIMEOUT).build().unwrap()
 }
 
+pub const MAX_RETRY: usize = 3;
+
 pub async fn post(
   client_li: &[reqwest::Client],
   url: impl IntoUrl,
   build: impl Fn(RequestBuilder) -> RequestBuilder,
 ) -> reqwest::Result<reqwest::Response> {
-  let mut retry = 3;
-  let mut pos = 0;
+  let mut retry = 0;
   let url = url.into_url()?;
   loop {
-    let client = &client_li[pos];
+    let client = &client_li[retry % client_li.len()];
     let r = build(client.post(url.clone())).send().await;
-    if retry == 0 {
+    if retry > MAX_RETRY {
       return r;
     }
     if let Ok(r) = r {
       return Ok(r);
     }
-    pos = (pos + 1) % client_li.len();
-    retry -= 1;
+    retry += 1;
   }
 }
 
