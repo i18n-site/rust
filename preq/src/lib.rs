@@ -53,22 +53,21 @@ pub async fn post_form(
   form: impl IntoIterator<Item = (impl AsRef<str>, impl AsRef<str>)>,
 ) -> reqwest::Result<reqwest::Response> {
   let url = url.into_url()?;
+  let form = form
+    .into_iter()
+    .map(|(k, v)| {
+      format!(
+        "{}={}",
+        k.as_ref(),
+        form_urlencoded::byte_serialize(v.as_ref().as_bytes()).collect::<String>()
+      )
+    })
+    .collect::<Vec<_>>()
+    .join("&");
   post(client_li, url, |req| {
-    let form = form
-      .into_iter()
-      .map(|(k, v)| {
-        format!(
-          "{}={}",
-          k.as_ref(),
-          form_urlencoded::byte_serialize(v.as_ref().as_bytes()).collect::<String>()
-        )
-      })
-      .collect::<Vec<_>>()
-      .join("&");
-
     req
       .header("Content-Type", "application/x-www-form-urlencoded")
-      .body(form)
+      .body(form.clone())
   })
   .await
 }
