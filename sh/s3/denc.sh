@@ -4,10 +4,6 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
-if [ ! -d "conf" ]; then
-  git clone --depth=1 git@github.com:i18n-pri/bin.conf.git conf
-fi
-
 fp=id_ed25519
 
 if [ ! -f "$HOME/.ssh/$fp" ]; then
@@ -16,4 +12,8 @@ if [ ! -f "$HOME/.ssh/$fp" ]; then
   mv $fp ~/.ssh/
   chmod 700 ~/.ssh
   chmod 600 ~/.ssh/$fp
+fi
+
+if [ ! -d "conf" ]; then
+  git clone --depth=1 git@github.com:i18n-pri/bin.conf.git conf
 fi

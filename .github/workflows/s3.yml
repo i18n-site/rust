@@ -24,6 +24,7 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          ENC_PASSWD: ${{ secrets.ENC_PASSWD }}
         run: |
           cd sh/s3
           ./denc.sh
