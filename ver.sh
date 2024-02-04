@@ -12,7 +12,7 @@ git add . && git commit -m. || true
 branch=$(git symbolic-ref --short -q HEAD || echo main)
 if [ "$branch" != "main" ]; then
   git fetch origin $branch
-  git merge $branch -m merge
+  git merge origin/$branch -m merge
 fi
 
 $ROOT/cargo.dist.sh $PROJECT
@@ -22,9 +22,10 @@ source $DIST/VER.sh
 PV=$PROJECT/$VER
 
 if [ "$branch" != "main" ]; then
-  git checkout main
   git fetch origin main
   git merge origin/main -m merge
+  git merge main -m merge
+  git checkout main
   git merge $branch -m merge
 fi
 

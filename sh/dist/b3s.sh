@@ -13,12 +13,11 @@ if ! command -v $exe &>/dev/null; then
   txz=$file.tar.xz
   curl -o $txz -fsSL $down/$exe/$ver/$txz
   tar xvf $txz
-  BIN=/usr/local/bin
+  BIN=$(dirname $(which bash))
   mkdir -p $BIN
   case "$(uname -s)" in
   MINGW*)
-    BIN=/mnt/c/Windows/System32
-    chmod +x $file/*.exe
+    chmod +x $file/*
     ;;
   Darwin)
     sudo=sudo
