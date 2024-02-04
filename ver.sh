@@ -32,7 +32,7 @@ fi
 cd $ROOT
 git reset --soft $beginhash || true
 git add .
-git commit -m $PV
+git commit -m $PV || true
 
 git tag $PV
 git push origin main
