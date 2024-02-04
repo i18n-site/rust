@@ -19,7 +19,7 @@ $ROOT/dist.sh $PROJECT
 beginhash=$(git log --format=%H -1 main)
 
 source $DIST/VER.sh
-PV=$PROJECT.$VER
+PV=$PROJECT/$VER
 
 if [ "$branch" != "main" ]; then
   git checkout main
