@@ -36,7 +36,7 @@ async fn main() -> Result<()> {
     .arg(arg!(
         - -vv "more version info"
     ))
-    .arg(arg!(<fp> "file path"));
+    .arg(arg!([fp] "file path"));
 
   let m = cmd.clone().get_matches();
 
