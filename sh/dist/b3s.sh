@@ -13,10 +13,10 @@ if ! command -v $exe &>/dev/null; then
   txz=$file.tar.xz
   curl -o $txz -fsSL $down/$exe/$ver/$txz
   tar xvf $txz
-  BIN=$(dirname $(which bash))
-  mkdir -p $BIN
+  BIN=/usr/local/bin
   case "$(uname -s)" in
   MINGW*)
+    BIN=$(dirname $(which bash))
     chmod +x $file/*
     ;;
   Darwin)
