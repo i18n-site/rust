@@ -19,6 +19,14 @@ if ! command -v $exe &>/dev/null; then
     # windows 没有 sudo
     sudo=sudo
   fi
+  case "$(uname -s)" in
+  MINGW*)
+    echo $BIN >>$GITHUB_PATH
+    ;;
+  Darwin)
+    sudo=sudo
+    ;;
+  esac
   $sudo mv $file/* $BIN
   rm -rf $file $txz
 fi
