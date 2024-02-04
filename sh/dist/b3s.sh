@@ -15,6 +15,10 @@ if ! command -v $exe &>/dev/null; then
   tar xvf $txz
   BIN=/usr/local/bin
   mkdir -p $BIN
-  sudo mv $file/* $BIN
+  if [ "$(uname -s)" == "Darwin" ]; then
+    # windows 没有 sudo
+    sudo=sudo
+  fi
+  $sudo mv $file/* $BIN
   rm -rf $file $txz
 fi

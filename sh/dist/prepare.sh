@@ -15,6 +15,8 @@ case "$(uname -s)" in
 #   TARGET_LI=$(rustup target list | awk '{print $1}' | grep "\-linux-" | grep -E "x86|aarch64" | grep -E "[musl|gun]$" | grep -v "i686-unknown-linux-musl")
 #   ;;
 Darwin)
-  brew install coreutils || true
+  if ! command -v realpath &>/dev/null; then
+    brew install coreutils || true
+  fi
   ;;
 esac
