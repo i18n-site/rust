@@ -1,0 +1,15 @@
+[package]
+name = "cnu"
+version = "0.1.6"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/cnu"
+description = "cnu"
+
+[dependencies]
+phf = { version = "0.11.2", features = ["macros"] }
+
+[dev-dependencies]
+
+[features]
