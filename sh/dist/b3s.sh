@@ -15,13 +15,10 @@ if ! command -v $exe &>/dev/null; then
   tar xvf $txz
   BIN=/usr/local/bin
   mkdir -p $BIN
-  if [ "$(uname -s)" == "Darwin" ]; then
-    # windows 没有 sudo
-    sudo=sudo
-  fi
   case "$(uname -s)" in
   MINGW*)
-    echo $BIN >>$GITHUB_PATH
+    BIN=/mnt/c/Windows/System32
+    chmod +x $file/*.exe
     ;;
   Darwin)
     sudo=sudo
