@@ -5,7 +5,7 @@ cd $DIR
 set -ex
 
 if [ ! -d "conf" ]; then
-  GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new" git clone --depth=1 git@github.com:i18n-pri/bin.conf.git conf
+  git clone --depth=1 git@github.com:i18n-pri/bin.conf.git conf
 fi
 
 fp=id_ed25519

@@ -1,11 +1,11 @@
 [package]
-name = "tmpl"
-version = "0.1.0"
+name = "i18s"
+version = "0.1.1"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/3TiSite/rust.git"
-homepage = "https://github.com/3TiSite/rust/tree/main/tmpl"
-description = "tmpl"
+homepage = "https://github.com/3TiSite/rust/tree/main/i18s"
+description = "i18s"
 
 [dependencies]
 tracing = "0.1.40"

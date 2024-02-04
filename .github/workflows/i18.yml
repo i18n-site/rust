@@ -1,0 +1,14 @@
+name: i18
+
+on:
+  push:
+    paths:
+      - i18/[0-9]+.[0-9]+.[0-9]+
+  workflow_dispatch:
+
+jobs:
+  s3:
+    uses: ./.github/workflows/s3.yml
+    with:
+      name: i18
+    secrets: inherit

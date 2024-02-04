@@ -1,5 +1,6 @@
 [workspace]
 members = [
+  "tmpl",
   "xstr",
   "xerr",
   "t3",
@@ -46,6 +47,7 @@ members = [
   "cget",
   "cget/test_cget",
   "i18",
+  "i18s", "i18e",
 ]
 resolver = "2"
 

@@ -1,8 +1,3 @@
-[‼️]: ✏️README.mdt
-
-# i18
-
-```rust
 use aok::{Result, OK};
 use static_init::constructor;
 use tracing::info;
@@ -17,4 +12,3 @@ async fn test() -> Result<()> {
   info!("{}", 123456);
   OK
 }
-```

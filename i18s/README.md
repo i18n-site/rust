@@ -1,6 +1,6 @@
 [‼️]: ✏️README.mdt
 
-# i18
+# i18s
 
 ```rust
 use aok::{Result, OK};
