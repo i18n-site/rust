@@ -16,7 +16,9 @@ cd ../..
 mkdir -p v
 echo $VER >v/$PROJECT
 
-find . -mindepth 1 -maxdepth 1 -exec ../rcp.sh {} \;
+find . -mindepth 1 -maxdepth 1 -type d | while read file; do
+  ../rcp.sh $file
+done
 
 cd ..
 
