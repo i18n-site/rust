@@ -1,0 +1,17 @@
+[package]
+name = "amid"
+version = "0.1.5"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/amid"
+description = "amid"
+
+[dependencies]
+anyhow = "1.0.79"
+axum = "0.7.4"
+tracing = "0.1.40"
+
+[dev-dependencies]
+
+[features]

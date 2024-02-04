@@ -1,0 +1,16 @@
+[package]
+name = "cookiestr"
+version = "0.1.1"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/cookiestre"
+description = "cookiestr"
+
+[dependencies]
+base-x = "0.2.11"
+
+[dev-dependencies]
+anyhow = "1.0.79"
+
+[features]

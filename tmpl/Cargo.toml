@@ -1,0 +1,24 @@
+[package]
+name = "tmpl"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/tmpl"
+description = "tmpl"
+
+[dependencies]
+
+[features]
+
+[dev-dependencies]
+aok = "0.1.3"
+loginit = "0.1.10"
+static_init = "1.0.3"
+tokio = { version = "1.35.1", features = [
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "time",
+  "sync",
+] }

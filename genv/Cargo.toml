@@ -1,0 +1,17 @@
+[package]
+name = "genv"
+version = "0.1.6"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/genv"
+description = "global static var from environment"
+
+[dependencies]
+const-str = "0.5.6"
+static_init = { version = "1.0.3", features = ["parking_lot"] }
+tracing = "0.1.40"
+
+[dev-dependencies]
+
+[features]

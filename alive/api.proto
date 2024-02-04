@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package api;
+
+message IdName
+{
+  uint64 id = 1;
+  string name = 2;
+}
+
+message State
+{
+  uint32 dns_type = 1;
+  uint32 err = 2;
+  uint64 ts = 3;
+}
+
+message HostStateLi
+{
+  uint64 host_id = 1;
+  repeated State li = 2;
+}
+
+message KindStateLi
+{
+  uint64 kind_id = 1;
+  repeated HostStateLi li = 2;
+}
+
+message Check
+{
+  uint64 last = 1;
+  uint64 count = 2;
+  uint64 cost = 3;
+}
+
+message StateLi
+{
+  repeated IdName kind = 1;
+  repeated IdName host = 2;
+  repeated IdName ip = 3;
+  repeated KindStateLi ok = 4;
+  repeated KindStateLi err = 5;
+  Check check = 6;
+}

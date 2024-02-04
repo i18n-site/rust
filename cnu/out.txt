@@ -1,0 +1,31 @@
+direnv: loading /Volumes/d/3Ti/rust/.envrc
+direnv: loading /Volumes/d/3Ti/.envrc
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /Volumes/d/3Ti/rust/sts/Cargo.toml
+workspace: /Volumes/d/3Ti/rust/Cargo.toml
+warning: /Volumes/d/3Ti/rust/cnu/Cargo.toml: unused manifest key: target.cfg(target_os = "macos").rust
+   Compiling cnu v0.1.5 (/Volumes/d/3Ti/rust/cnu)
+    Finished test [unoptimized + debuginfo] target(s) in 0.29s
+     Running unittests src/lib.rs (/Volumes/d/3Ti/rust/target/debug/deps/cnu-b4a55d95a6f81fb9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/main.rs (/Volumes/d/3Ti/rust/target/debug/deps/main-edb42f999d2e58d0)
+
+running 1 test
+[cnu/tests/main.rs:8:3] f = "B端工具型產品在企業環境中发揮着至關重要的作用，然而，它們的复雜性常常讓用戶感到困擾。引導式設計成為解決這一挑戰的重要策略。通過本文，我們將深入探討B端產品引導式設計的特殊性，以及如何通過它來提高效率、降低成本，滿足用戶需求，創造更大價值。"
+[cnu/tests/main.rs:9:3] j = "B端工具型产品在企业环境中发挥着至关重要的作用，然而，它们的复杂性常常让用户感到困扰。引导式设计成为解决这一挑战的重要策略。通过本文，我们将深入探讨B端产品引导式设计的特殊性，以及如何通过它来提高效率、降低成本，满足用户需求，创造更大价值。"
+[cnu/tests/main.rs:11:3] is_cn_char('a') = false
+[cnu/tests/main.rs:12:3] is_cn_char('我') = true
+test test ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests cnu
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
