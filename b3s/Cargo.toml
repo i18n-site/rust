@@ -1,6 +1,6 @@
 [package]
 name = "b3s"
-version = "0.1.71"
+version = "0.1.73"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/3TiSite/rust.git"

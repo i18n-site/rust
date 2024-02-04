@@ -16,8 +16,9 @@ if ! command -v $exe &>/dev/null; then
   BIN=/usr/local/bin
   case "$(uname -s)" in
   MINGW*)
-    BIN=$(dirname $(which bash))
-    chmod +x $file/*
+    BIN=/usr/bin
+    #BIN=$(dirname $(which bash))
+    # chmod +x $file/*
     ;;
   Darwin)
     sudo=sudo
