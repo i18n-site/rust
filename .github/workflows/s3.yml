@@ -21,6 +21,9 @@ jobs:
         with:
           set-safe-directory: false
           lfs: true
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
       - name: dist
         shell: bash
         env:

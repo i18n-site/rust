@@ -7,6 +7,7 @@ cd $DIR
 . ../dist/VER.sh
 
 set -ex
+bun i
 
 DV=dist/$PROJECT/$VER
 mkdir -p $DV
@@ -20,7 +21,7 @@ find . -mindepth 1 -maxdepth 1 -type d | while read file; do
   ../rcp.sh $file
 done
 
-../cf.clean.js $PROJECT
+bun run --bun ../cf.clean.js -- $PROJECT
 
 export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new"
 git init
