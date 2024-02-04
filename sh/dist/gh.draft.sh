@@ -12,7 +12,7 @@ LOG=$ROOT/$PROJECT/log/$VER.md
 if [ -f "$LOG" ]; then
   NOTE="-F $LOG"
 else
-  NOTE='-n ✅'
+  NOTE="-n $PROJECT/$VER"
 fi
 
 gh release create -d $PROJECT/$VER $NOTE

@@ -7,11 +7,11 @@ set -ex
 . project.sh
 . VER.sh
 
-mkdir -p /tmp/dist
-cd /tmp/dist
-
+mkdir -p v
+cd v
 echo $VER >$PROJECT
 $DIR/gh.publish.sh $PROJECT
 gh release delete-asset $PROJECT v || true
 $DIR/gh.sh v $PROJECT || (gh release create v -n v || true) && $DIR/gh.sh v $PROJECT
-rm $PROJECT
+cd ..
+rm -rf v

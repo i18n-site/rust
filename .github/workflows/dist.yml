@@ -20,6 +20,7 @@ jobs:
       # - uses: GuillaumeFalourd/setup-rsync@v1.2
       - uses: actions/checkout@v4
         with:
+          set-safe-directory: false
           lfs: true
       - if: runner.os == 'linux'
         shell: bash
@@ -57,6 +58,7 @@ jobs:
       #     node-version: latest
       - uses: actions/checkout@v4
         with:
+          set-safe-directory: false
           lfs: true
   #     # - uses: HatsuneMiku3939/direnv-action@v1
   #     #   with:
