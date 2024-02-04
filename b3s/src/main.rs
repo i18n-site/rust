@@ -28,7 +28,7 @@ https://docs.rs/ed25519-dalek/latest/ed25519_dalek/
 
 #[tokio::main]
 async fn main() -> Result<()> {
-  let m = Command::new("b3s")
+  let mut cmd = Command::new("b3s")
     .disable_version_flag(true)
     .arg(arg!(-c --create "create key if not exist"))
     .arg(arg!(-k --key <key> "key file path").required(false))
@@ -36,8 +36,9 @@ async fn main() -> Result<()> {
     .arg(arg!(
         - -vv "more version info"
     ))
-    .arg(arg!(<fp> "file path"))
-    .get_matches();
+    .arg(arg!([fp] "file path"));
+
+  let m = cmd.clone().get_matches();
 
   if m.get_one("version") == Some(&true) {
     println!(crate_version!());
@@ -54,20 +55,22 @@ build_target:{}"#,
     exit(0);
   }
 
-  cget!(
-    m:
-      fp: String;
-      create: bool;
-  );
+  if let Some::<&String>(fp) = m.get_one("fp") {
+    cget!(
+      m:
+        create: bool;
+    );
+    let key = if let Some(key) = m.get_one::<String>("key") {
+      b3s::key(key, *create).await?
+    } else {
+      let sk: String = B3S_SK();
+      let key = &BASE64_STANDARD.decode(sk)?[..];
+      SigningKey::from_bytes(&key.try_into()?)
+    };
 
-  let key = if let Some(key) = m.get_one::<String>("key") {
-    b3s::key(key, *create).await?
+    b3s::b3s(fp, key).await?;
   } else {
-    let sk: String = B3S_SK();
-    let key = &BASE64_STANDARD.decode(sk)?[..];
-    SigningKey::from_bytes(&key.try_into()?)
-  };
-
-  b3s::b3s(fp, key).await?;
+    cmd.print_long_help()?;
+  }
   OK
 }
