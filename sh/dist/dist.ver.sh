@@ -11,7 +11,7 @@ mkdir -p v
 cd v
 echo $VER >$PROJECT
 $DIR/gh.publish.sh $PROJECT
-gh release delete-asset v $PROJECT || true
+gh release delete-asset v $PROJECT -y || true
 $DIR/gh.sh v $PROJECT || (gh release create v -n v || true) && $DIR/gh.sh v $PROJECT
 cd ..
 rm -rf v
