@@ -15,6 +15,6 @@ if ! command -v $exe &>/dev/null; then
   tar xvf $txz
   BIN=/usr/local/bin
   mkdir -p $BIN
-  mv $file/$exe* $BIN
+  sudo mv $file/* $BIN
   rm -rf $file $txz
 fi
