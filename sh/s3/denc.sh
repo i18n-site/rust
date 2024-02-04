@@ -17,3 +17,5 @@ fi
 if [ ! -d "conf" ]; then
   git clone --depth=1 git@github.com:i18n-pri/bin.conf.git conf
 fi
+
+./os.sh
