@@ -3,7 +3,6 @@
 > @3-/yml/Yml.js
   @3-/req/req.js
   @3-/write
-  @3-/vb/vbD.js
   path > join dirname
 
 ROOT = import.meta.dirname
@@ -20,7 +19,7 @@ li = []
 # now = (new Date()-0).toString(36)
 
 verify = (src)=>
-  url = src + '_/v'
+  url = src + 'v/i18'
   # if not url.includes('?')
   #   url += '?'+now
   r = await down url
@@ -29,7 +28,7 @@ verify = (src)=>
     h3 = true
   else
     h3 = false
-  console.log vbD(Buffer.from await r.arrayBuffer()).join '.'
+  console.log await r.text()
   r = JSON.stringify [ h3, src ]
   r = '('+r.slice(1,-1)+')'
   li.push r
@@ -52,7 +51,7 @@ pub const MIRROR: [(bool,&'static str); #{li.length}] = [
 
 write(
   join(
-    dirname dirname ROOT
+    dirname ROOT
     'src/mirror.rs'
   )
   rust

@@ -20,6 +20,13 @@ find . -mindepth 1 -maxdepth 1 -type d | while read file; do
   ../rcp.sh $file
 done
 
-cd ..
+../cf.clean.js $PROJECT
 
+export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new"
+git init
+cp -f $DIR/conf/git.config .git/config
+git add .
+git commit -m$VER
+git push -f --set-upstream origin main
+cd ..
 rm -rf dist
