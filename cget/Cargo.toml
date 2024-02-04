@@ -1,0 +1,12 @@
+[package]
+name = "cget"
+version = "0.1.2"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/cget"
+description = "macro for clip get_one easy"
+
+[dependencies]
+
+[features]

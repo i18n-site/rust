@@ -1,0 +1,26 @@
+# aliver
+
+可以部署到 [fly.io](http://fly.io) 的免费服务器
+
+第一次运行请用
+
+```
+fly apps create NAME
+```
+
+fly.io 默认会启动 2 台机器 , 但是我们只需要一台机器 , 所以要删掉一台
+
+```sh
+flyctl machine list
+flyctl machine destory ID
+```
+
+其他配置参见 ./fly.toml
+
+```toml
+<+ ./fly.toml>
+```
+
+运行 `./fly.dist.sh` 部署
+
+其他参见 [crates.io/crates/alive](https://crates.io/crates/alive)

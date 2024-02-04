@@ -1,0 +1,30 @@
+[package]
+name = "preq"
+version = "0.1.10"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/preq"
+description = "ipv6 proxyed reqwest"
+
+[dependencies]
+bytes = "1.5.0"
+genv = { version = "0.1.5", path = "../genv" }
+preq1 = { version = "0.1.2", path = "../preq1" }
+reqwest = { version = "0.11.24", features = ["brotli"] }
+static_init = { version = "1.0.3" }
+tracing = "0.1.40"
+
+[dev-dependencies]
+aok = { path = "../aok" }
+loginit = { path = "../loginit" }
+tokio = { version = "1.36.0", features = [
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "time",
+  "sync",
+] }
+tracing = "0.1.40"
+
+[features]

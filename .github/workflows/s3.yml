@@ -1,0 +1,32 @@
+on:
+  workflow_call:
+    inputs:
+      name:
+        required: true
+        type: string
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      name: ${{inputs.name}}
+    secrets: inherit
+  s3:
+    name: cp
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: AnimMouse/setup-rclone@v1
+      - uses: actions/checkout@v4
+        with:
+          set-safe-directory: false
+          lfs: true
+      - name: dist
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENC_PASSWD: ${{ secrets.ENC_PASSWD }}
+        run: |
+          cd sh/s3
+          ./denc.sh
+          ./cp.sh ${{inputs.name}}
