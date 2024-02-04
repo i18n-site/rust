@@ -15,7 +15,7 @@ if [ "$branch" != "main" ]; then
   git merge $branch -m merge
 fi
 
-$ROOT/dist.sh $PROJECT
+$ROOT/cargo.dist.sh $PROJECT
 beginhash=$(git log --format=%H -1 main)
 
 source $DIST/VER.sh

@@ -18,6 +18,6 @@ cd $BIN
 find . -mindepth 1 -maxdepth 1 -type d | while read file; do
   tarname=$(basename $file).tar.xz
   tar -cJvf $tarname $file
-  # b3s $tarname
+  b3s $tarname
   $DIR/gh.sh $PROJECT/$VER $tarname*
 done
