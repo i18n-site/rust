@@ -1,0 +1,16 @@
+[package]
+name = "jarg"
+version = "0.1.7"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/jarg"
+description = "json parser with re::bad_reqesut"
+
+[dependencies]
+axum = "0.7.4"
+sonic-rs = "0.3.2"
+
+[dev-dependencies]
+
+[features]

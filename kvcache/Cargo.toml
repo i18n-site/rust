@@ -1,0 +1,19 @@
+[package]
+name = "kvcache"
+version = "0.1.5"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/3TiSite/rust.git"
+homepage = "https://github.com/3TiSite/rust/tree/main/kvcache"
+description = "kvcache"
+
+[dependencies]
+aok = { version = "0.1.3", path = "../aok" }
+fred = "8.0.1"
+intbin = "0.1.2"
+tracing = "0.1.40"
+xhash = { version = "0.1.5", path = "../xhash" }
+
+[dev-dependencies]
+
+[features]
