@@ -1,10 +1,12 @@
 - github.com/i18n-site/rust/releases/download/
 - codeberg.org/i18n-site/dist/raw/branch/
 - huggingface.co/datasets/i18n-site/dist/raw/
-- bitbucket.org/i18nsite/dist/raw/
 - raw.githubusercontent.com/i18n-site/dist/
 - atomgit.com/i18n-site/dist/raw/
 - xxai.eu.org/
+
+# 没有准确识别二进制
+# - bitbucket.org/i18nsite/dist/raw/
 # - gh-proxy.com/https://raw.githubusercontent.com/i18n-site/bin.dist/main/
 # - gitflic.ru/project/i18n/bindist/blob/raw?file=
 # - download.fgit.cf/i18n-site/bin/releases/download/

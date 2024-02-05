@@ -44,7 +44,7 @@ for src from Y.down
 
 
 rust = """
-pub const MIRROR: [(bool,&'static str); #{li.length}] = [
+pub const MIRROR: [(bool,&str); #{li.length}] = [
   #{li.join(',\n  ')}
 ];
 """

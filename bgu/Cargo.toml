@@ -11,7 +11,19 @@ description = "bgu"
 aok = { version = "0.1.3", path = "../aok" }
 const-str = "0.5.6"
 current_platform = "0.2.0"
+ed25519-dalek = "2.1.0"
+ifs = { version = "0.1.2", path = "../ifs" }
 iget = { version = "0.1.5", path = "../iget" }
+lzma-rs = "0.3.0"
+tar = "0.4.40"
+tokio = { version = "1.36.0", features = [
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "time",
+  "fs",
+  "io-util",
+] }
 tracing = "0.1.40"
 trt = { version = "0.1.28", path = "../trt" }
 

@@ -1,6 +1,9 @@
 use std::path::{Path, PathBuf};
 
-use tokio::fs::{create_dir_all, File, OpenOptions};
+use tokio::{
+  fs::{create_dir_all, File, OpenOptions},
+  io::BufWriter,
+};
 
 pub async fn ensure_file_dir(path: impl Into<PathBuf>) -> Result<(), tokio::io::Error> {
   let p: PathBuf = path.into();
@@ -10,9 +13,9 @@ pub async fn ensure_file_dir(path: impl Into<PathBuf>) -> Result<(), tokio::io::
   Ok(())
 }
 
-pub async fn w(path: impl AsRef<Path>) -> Result<File, tokio::io::Error> {
+pub async fn w(path: impl AsRef<Path>) -> Result<BufWriter<File>, tokio::io::Error> {
   ensure_file_dir(path.as_ref()).await?;
-  File::create(path).await
+  Ok(BufWriter::new(File::create(path).await?))
 }
 
 pub async fn r(path: impl AsRef<Path>) -> Result<Vec<u8>, tokio::io::Error> {
@@ -28,8 +31,10 @@ pub async fn r(path: impl AsRef<Path>) -> Result<Vec<u8>, tokio::io::Error> {
   }
 }
 
-pub async fn append(path: impl AsRef<Path>) -> Result<File, tokio::io::Error> {
-  OpenOptions::new().append(true).open(path).await
+pub async fn append(path: impl AsRef<Path>) -> Result<BufWriter<File>, tokio::io::Error> {
+  Ok(BufWriter::new(
+    OpenOptions::new().append(true).open(path).await?,
+  ))
 }
 
 pub async fn size(path: impl AsRef<Path>) -> u64 {
