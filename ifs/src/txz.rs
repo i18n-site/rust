@@ -12,8 +12,3 @@ pub fn d(path: impl AsRef<std::path::Path>, to: impl AsRef<std::path::Path>) -> 
   tar::Archive::new(r).unpack(to)?;
   OK
 }
-
-// lzma_rs::xz_decompress(&mut r, &mut w)?;
-// let tar = w.get_mut();
-// tar.seek(std::io::SeekFrom::Start(0))?;
-// let tar = tar::Archive::new(tar);
