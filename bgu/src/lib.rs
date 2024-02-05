@@ -83,7 +83,7 @@ pub const EXT_B3S: &str = ".b3s";
 pub struct Downing {
   pub ver: Ver,
   pub down: [Down; 2],
-  pub tar: String,
+  pub txz: String,
 }
 
 async fn bgu(name: impl AsRef<str>, now_ver: Ver, site: iget::Site) -> Result<Option<Downing>> {
@@ -97,20 +97,20 @@ async fn bgu(name: impl AsRef<str>, now_ver: Ver, site: iget::Site) -> Result<Op
   if now_ver >= ver {
     return Ok(None);
   }
-  let tar = format!("{name}/{ver_txt}/{CURRENT_PLATFORM}.tar.xz");
+  let txz = format!("{name}/{ver_txt}/{CURRENT_PLATFORM}.txz");
   let dir: String = temp_dir().as_os_str().to_string_lossy().into();
 
-  let tar_fp = dir + &tar;
+  let txz_fp = dir + &txz;
 
-  let (dtar, db3s) = trt::join!(
-    site.down(tar.clone() + EXT_B3S, tar_fp.clone() + EXT_B3S),
-    site.down(tar, tar_fp.clone())
+  let (dtxz, db3s) = trt::join!(
+    site.down(txz.clone() + EXT_B3S, txz_fp.clone() + EXT_B3S),
+    site.down(txz, txz_fp.clone())
   );
 
   Ok(Some(Downing {
-    tar: tar_fp,
+    txz: txz_fp,
     ver,
-    down: [dtar, db3s],
+    down: [dtxz, db3s],
   }))
 }
 
@@ -139,8 +139,8 @@ impl<'a> Bgu<'a> {
       for i in ing.down {
         i.show().await?;
       }
-      let tar = ing.tar.clone();
-      let (b3s, hash) = trt::join!(ifs::r(ing.tar + EXT_B3S), ifs::hash(&tar));
+      let txz = ing.txz.clone();
+      let (b3s, hash) = trt::join!(ifs::r(ing.txz + EXT_B3S), ifs::hash(&txz));
 
       use ed25519_dalek::{Signature, Verifier, VerifyingKey};
 
@@ -148,9 +148,9 @@ impl<'a> Bgu<'a> {
       let sign = Signature::from_bytes(&b3s[..].try_into()?);
       match verify.verify(&hash, &sign) {
         Ok(_) => {
-          let mut dir: PathBuf = tar.clone().into();
+          let mut dir: PathBuf = txz.clone().into();
           dir.pop();
-          spawn_blocking(move || ifs::txz::d(&tar, &dir)).await??;
+          spawn_blocking(move || ifs::txz::d(&txz, &dir)).await??;
           return Ok(Some(ing.ver));
         }
         Err(err) => {

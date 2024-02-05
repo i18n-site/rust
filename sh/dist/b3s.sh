@@ -10,9 +10,8 @@ if ! command -v $exe &>/dev/null; then
   target=$(rustc -vV | grep "host:" | awk '{print $2}')
   ver=$(curl -fsSL $down/v/$exe)
   file=$target
-  txz=$file.tar.xz
+  txz=$file.txz
   curl -o $txz -fsSL $down/$exe/$ver/$txz
-  tar xvf $txz
   BIN=/usr/local/bin
   case "$(uname -s)" in
   MINGW*)
@@ -24,6 +23,6 @@ if ! command -v $exe &>/dev/null; then
     sudo=sudo
     ;;
   esac
-  $sudo mv $file/* $BIN
-  rm -rf $file $txz
+  $sudo tar xvf $txz -C $BIN
+  rm -rf $txz
 fi
