@@ -2,7 +2,7 @@ features = {}
 
 [package]
 name = "b3s"
-version = "0.1.76"
+version = "0.1.77"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
