@@ -12,7 +12,7 @@ pub use const_str;
 use current_platform::CURRENT_PLATFORM;
 pub use ed25519_dalek::PUBLIC_KEY_LENGTH;
 use iget::Down;
-use tokio::task::JoinHandle;
+use tokio::task::{spawn_blocking, JoinHandle};
 
 #[derive(Default, PartialOrd, Ord, PartialEq, Eq)]
 pub struct Ver(pub [u32; 3]);
@@ -147,22 +147,7 @@ impl<'a> Bgu<'a> {
       let sign = Signature::from_bytes(&b3s[..].try_into()?);
       match verify.verify(&hash, &sign) {
         Ok(_) => {
-          ifs::txz::d(&tar, &tar[..tar.len() - 7])?;
-          // let xz = std::fs::File::open(&tar)?;
-          // let mut r = BufReader::new(xz);
-          // dbg!(&tar[..tar.len() - 3]);
-          // let mut tar = OpenOptions::new()
-          //   .create(true)
-          //   .write(true)
-          //   .read(true)
-          //   .open(&tar[..tar.len() - 3])?;
-          //
-          // let mut w = BufWriter::new(tar);
-          // lzma_rs::xz_decompress(&mut r, &mut w)?;
-          // let tar = w.get_mut();
-          // tar.seek(std::io::SeekFrom::Start(0))?;
-          // let tar = tar::Archive::new(tar);
-
+          spawn_blocking(move || ifs::txz::d(&tar, &tar[..tar.len() - 7])).await??;
           return Ok(Some(ing.ver));
         }
         Err(err) => {
