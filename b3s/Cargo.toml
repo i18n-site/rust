@@ -41,7 +41,7 @@ version = "0.1.6"
 path = "../genv"
 
 [dependencies.ifs]
-version = "0.1.4"
+version = "0.1.5"
 path = "../ifs"
 default-features = false
 features = [ "hash" ]

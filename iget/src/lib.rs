@@ -161,7 +161,6 @@ impl Site {
     }
 
     let content_len = res.content_length();
-    dbg!((&url, &status, content_len));
     let mut file = if status == StatusCode::PARTIAL_CONTENT {
       ifs::append(path).await?
     } else if status == StatusCode::OK {
