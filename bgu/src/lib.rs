@@ -5,8 +5,6 @@
 use std::{
   env::temp_dir,
   fmt::{Debug, Display},
-  fs::OpenOptions,
-  io::{BufReader, BufWriter, Seek},
 };
 
 use aok::Result;
