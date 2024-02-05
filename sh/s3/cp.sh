@@ -9,13 +9,16 @@ cd $DIR
 set -ex
 bun i
 
-DV=dist/$PROJECT/$VER
+rm -rf dist
+DP=$DIR/dist/$PROJECT
+DV=$DP/$VER
 mkdir -p $DV
 cd $DV
 gh release download --clobber $PROJECT/$VER
-cd ../..
+
+cd $DIR/dist
 mkdir -p v
-echo $VER >v/$PROJECT
+echo -n $VER >v/$PROJECT
 
 find . -mindepth 1 -maxdepth 1 -type d | while read file; do
   ../rcp.sh $file
@@ -23,12 +26,18 @@ done
 
 bun run --bun ../cf.clean.js -- $PROJECT
 
+ap() {
+  git init
+  cp -f $DIR/conf/git.config .git/config
+  git checkout -b $1 || true
+  git add . &&
+    git commit -m. &&
+    git push -f --set-upstream origin $1
+}
+
 export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new"
-git init
-cp -f $DIR/conf/git.config .git/config
-git checkout -b $PROJECT || true
-git add . &&
-  git commit -m$VER &&
-  git push -f --set-upstream origin $PROJECT
-cd ..
-rm -rf dist
+cd $DP
+ap $PROJECT
+cd ../v
+ap v
+rm -rf $DIR/dist
