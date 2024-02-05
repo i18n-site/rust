@@ -1,0 +1,38 @@
+[package]
+name = "aliver"
+version = "0.1.7"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/aliver"
+description = "aliver"
+
+[dependencies]
+alive = { version = "0.1.73" }
+aok = { version = "0.1.3" }
+axum = "0.7.4"
+genv = { version = "0.1.6" }
+ireq = { version = "0.1.7" }
+loginit = "0.1.10"
+re = { version = "0.1.5" }
+static_init = "1.0.3"
+sts = { version = "0.1.19" }
+t3 = { version = "0.1.5" }
+tokio = { version = "1.36.0", features = [
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "time",
+  "sync",
+] }
+tower = { version = "0.4.13", features = ["log", "timeout"] }
+tower-http = { version = "0.5.1", features = [
+  "compression-full",
+  "decompression-full",
+] }
+tracing = "0.1.40"
+xerr = { version = "0.1.11" }
+
+[dev-dependencies]
+
+[features]

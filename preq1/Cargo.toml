@@ -1,0 +1,29 @@
+[package]
+name = "preq1"
+version = "0.1.6"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/preq1"
+description = "preq1"
+
+[dependencies]
+bytes = "1.5.0"
+form_urlencoded = "1.2.1"
+genv = { version = "0.1.6" }
+reqwest = { version = "0.11.24", features = ["brotli"] }
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies]
+aok = { path = "../aok" }
+loginit = { path = "../loginit" }
+tokio = { version = "1.36.0", features = [
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "time",
+  "sync",
+] }
+
+[features]

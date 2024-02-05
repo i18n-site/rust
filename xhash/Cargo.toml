@@ -1,0 +1,12 @@
+[package]
+name = "xhash"
+version = "0.1.5"
+edition = "2021"
+license = "Apache-2.0"
+description = "wrap gxhash for easy use"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/xhash"
+
+[dependencies]
+gxhash = "3.1.1"
+intbin = "0.1.2"

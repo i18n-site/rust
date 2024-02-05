@@ -1,0 +1,19 @@
+[package]
+name = "set_header"
+version = "0.1.4"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/set_header"
+description = "axum set header middleware"
+
+[dependencies]
+amid = { version = "0.1.5", path = "../amid" }
+anyhow = "1.0.79"
+axum = "0.7.4"
+parking_lot = "0.12.1"
+tracing = "0.1.40"
+
+[dev-dependencies]
+
+[features]

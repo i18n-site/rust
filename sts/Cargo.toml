@@ -1,0 +1,25 @@
+[package]
+name = "sts"
+version = "0.1.19"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/sts"
+description = "shortcut for timestamp"
+
+[dependencies]
+chrono = "0.4.33"
+coarsetime = "0.1.33"
+num-traits = "0.2.17"
+
+[dev-dependencies]
+
+[profile.release]
+lto = true
+opt-level = 3
+incremental = true
+codegen-units = 1
+overflow-checks = false
+panic = 'abort'
+debug-assertions = false
+# strip = true

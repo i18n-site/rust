@@ -1,0 +1,21 @@
+[package]
+name = "re"
+version = "0.1.5"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/re"
+description = "error like anyhow for axum"
+
+[dependencies]
+anyhow = "1.0.79"
+axum = "0.7.4"
+bytes = "1.5.0"
+prost = { version = "0.12.3" }
+serde = { version = "1.0.196", features = ["derive"] }
+sonic-rs = "0.3.2"
+tracing = "0.1.40"
+
+[features]
+
+[dev-dependencies]

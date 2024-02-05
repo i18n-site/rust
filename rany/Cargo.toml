@@ -1,0 +1,14 @@
+[package]
+name = "rany"
+version = "0.1.5"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/rany"
+description = "decode/encode usize to radix any"
+
+[dependencies]
+
+[dev-dependencies]
+
+[features]

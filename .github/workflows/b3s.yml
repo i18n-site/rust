@@ -1,0 +1,14 @@
+name: b3s
+
+on:
+  push:
+    tags:
+      - b3s/[0-9]+.[0-9]+.[0-9]+
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      name: b3s
+    secrets: inherit

@@ -1,0 +1,17 @@
+[package]
+name = "xmail"
+version = "0.1.8"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/xmaile"
+description = "convert mail address to low trim case , use punycode decode domain"
+
+[dependencies]
+punycode = "0.4.1"
+xstr = { version = "0.1.10" }
+xtld = { version = "0.1.1", path = "../xtld" }
+
+[dev-dependencies]
+
+[features]
