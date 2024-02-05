@@ -26,9 +26,9 @@ bun run --bun ../cf.clean.js -- $PROJECT
 export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new"
 git init
 cp -f $DIR/conf/git.config .git/config
-git checkout -b main || true
+git checkout -b $PROJECT || true
 git add . &&
   git commit -m$VER &&
-  git push -f --set-upstream origin main
+  git push -f --set-upstream origin $PROJECT
 cd ..
 rm -rf dist

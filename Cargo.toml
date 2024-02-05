@@ -47,7 +47,9 @@ members = [
   "cget",
   "cget/test_cget",
   "i18",
-  "i18s", "i18e", "ifs",
+  "i18s",
+  "i18e",
+  "ifs",
 ]
 resolver = "2"
 

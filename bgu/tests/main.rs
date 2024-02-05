@@ -11,6 +11,6 @@ use bgu::{bgu, ver};
 
 #[tokio::test]
 async fn test() -> Result<()> {
-  bgu(ver!(), &mirror::MIRROR).await?;
+  bgu("i18", ver!(), &mirror::MIRROR).await?;
   OK
 }

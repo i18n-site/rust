@@ -1,3 +1,6 @@
+dev-dependencies = { }
+features = { }
+
 [package]
 name = "ireq"
 version = "0.1.7"
@@ -8,24 +11,23 @@ homepage = "https://github.com/i18n-site/rust/tree/main/ireq"
 description = "ireq"
 
 [dependencies]
-aok = { version = "0.1.2", path = "../aok" }
-reqwest = { version = "0.11.24", features = [
+static_init = "1.0.3"
+thiserror = "1.0.56"
+
+  [dependencies.aok]
+  version = "0.1.3"
+  path = "../aok"
+
+  [dependencies.reqwest]
+  version = "0.11.24"
+  features = [
   "http3",
   "rustls-tls",
   "rustls-tls-native-roots",
   "brotli",
-  "stream",
-] }
-static_init = "1.0.3"
-thiserror = "1.0.56"
-tokio = { version = "1.36.0", features = [
-  "macros",
-  "rt",
-  "rt-multi-thread",
-  "time",
-  "sync",
-] }
+  "stream"
+]
 
-[dev-dependencies]
-
-[features]
+  [dependencies.tokio]
+  version = "1.36.0"
+  features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

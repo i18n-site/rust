@@ -9,7 +9,7 @@ set -ex
 
 mkdir -p v
 cd v
-echo $VER >$PROJECT
+echo -n $VER >$PROJECT
 $DIR/gh.publish.sh $PROJECT
 gh release delete-asset v $PROJECT -y || true
 $DIR/gh.sh v $PROJECT ||

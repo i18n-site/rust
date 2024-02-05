@@ -7,10 +7,12 @@ homepage = "https://github.com/i18n-site/rust/tree/main/click_captcha"
 license = "BUSL-1.1"
 description = "gen click captcha"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 rand = "0.8.5"
-svg2webp = { version = "0.1.3", path = "../svg2webp" }
+
+  [dependencies.svg2webp]
+  version = "0.1.4"
+  path = "../svg2webp"
 
 [dev-dependencies]
 anyhow = "1.0.79"

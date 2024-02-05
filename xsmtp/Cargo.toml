@@ -1,3 +1,5 @@
+features = { }
+
 [package]
 name = "xsmtp"
 version = "0.1.9"
@@ -13,28 +15,28 @@ genv = "0.1.6"
 mail-builder = "0.3.1"
 tracing = "0.1.40"
 trt = "0.1.28"
-mail-send = { version = "0.4.8", package = "mail-send-fork" }
 static_init = "1.0.3"
 thiserror = "1.0.56"
-aok = { version = "0.1.2", path = "../aok" }
-tokio = { version = "1.36.0", features = [
-  "macros",
-  "rt",
-  "rt-multi-thread",
-  "time",
-  "sync",
-] }
 rand = "0.8.5"
-idns = { version = "0.1.18" }
+
+  [dependencies.mail-send]
+  version = "0.4.8"
+  package = "mail-send-fork"
+
+  [dependencies.aok]
+  version = "0.1.3"
+  path = "../aok"
+
+  [dependencies.tokio]
+  version = "1.36.0"
+  features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+
+  [dependencies.idns]
+  version = "0.1.18"
 
 [dev-dependencies]
 anyhow = "1.0.79"
-tokio = { version = "1.36.0", features = [
-  "macros",
-  "rt",
-  "rt-multi-thread",
-  "time",
-  "sync",
-] }
 
-[features]
+  [dev-dependencies.tokio]
+  version = "1.36.0"
+  features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

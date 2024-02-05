@@ -7,10 +7,10 @@ homepage = "https://github.com/i18n-site/rust/tree/main/xerr"
 repository = "https://github.com/i18n-site/rust.git"
 description = "log error util"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 anyhow = "1.0.79"
 tracing = "0.1.40"
 
-[dev-dependencies]
-loginit = { path = "../loginit" }
+[dev-dependencies.loginit]
+path = "../loginit"
+version = "0.1.10"
