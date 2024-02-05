@@ -18,7 +18,7 @@ fi
 $ROOT/cargo.dist.sh $PROJECT
 beginhash=$(git log --format=%H -1 main)
 
-source $DIST/VER.sh
+. $DIST/VER.sh
 PV=$PROJECT/$VER
 
 if [ "$branch" != "main" ]; then
