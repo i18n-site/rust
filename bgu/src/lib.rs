@@ -147,6 +147,7 @@ impl<'a> Bgu<'a> {
       let sign = Signature::from_bytes(&b3s[..].try_into()?);
       match verify.verify(&hash, &sign) {
         Ok(_) => {
+          ifs::txz::d(&tar, &tar[..tar.len() - 7])?;
           // let xz = std::fs::File::open(&tar)?;
           // let mut r = BufReader::new(xz);
           // dbg!(&tar[..tar.len() - 3]);
