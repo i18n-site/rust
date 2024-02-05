@@ -21,7 +21,6 @@ if ! command -v $exe &>/dev/null; then
     #BIN=$(dirname $(which bash))
     # chmod +x $file/*
     ;;
-    ;;
   esac
   $sudo tar xvf $txz -C $BIN
   rm -rf $txz
