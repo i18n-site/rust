@@ -5,6 +5,7 @@
 use std::{
   env::temp_dir,
   fmt::{Debug, Display},
+  path::PathBuf,
 };
 
 use aok::Result;
@@ -147,7 +148,9 @@ impl<'a> Bgu<'a> {
       let sign = Signature::from_bytes(&b3s[..].try_into()?);
       match verify.verify(&hash, &sign) {
         Ok(_) => {
-          spawn_blocking(move || ifs::txz::d(&tar, &tar[..tar.len() - 7])).await??;
+          let mut dir: PathBuf = tar.clone().into();
+          dir.pop();
+          spawn_blocking(move || ifs::txz::d(&tar, &dir)).await??;
           return Ok(Some(ing.ver));
         }
         Err(err) => {
