@@ -3,13 +3,18 @@
 # ifs
 
 ```rust
-/*
-#[test]
-fn test_replace() {
+use aok::{Result, OK};
+use static_init::constructor;
+use tracing::info;
+
+#[constructor(0)]
+extern "C" fn init() {
+  loginit::init()
 }
 
-#[cfg(feature = "macro")]
-mod test_macro {
+#[tokio::test]
+async fn test() -> Result<()> {
+  info!("{}", 123456);
+  OK
 }
-*/
 ```

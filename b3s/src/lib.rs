@@ -2,7 +2,6 @@
 use std::path::Path;
 
 use aok::{Error, Result, OK};
-use blake3::Hasher;
 use ed25519_dalek::{Signer, SigningKey, SECRET_KEY_LENGTH};
 use rand::rngs::OsRng;
 use tokio::{
@@ -40,25 +39,9 @@ pub async fn key(key: impl AsRef<Path>, create: bool) -> Result<SigningKey> {
   }
 }
 
-pub async fn hash(path: impl AsRef<Path>) -> Result<[u8; 32], std::io::Error> {
-  let mut hasher = Hasher::new();
-  let mut file = File::open(path).await?;
-
-  let mut buf = [0; 4096];
-  loop {
-    let n = file.read(&mut buf).await?;
-    if n == 0 {
-      break;
-    }
-    hasher.update(&buf[..n]);
-  }
-
-  Ok(*hasher.finalize().as_bytes())
-}
-
 pub async fn b3s(fp: impl AsRef<Path>, key: SigningKey) -> Result<()> {
   let fp = fp.as_ref();
-  let hash = hash(fp).await?;
+  let hash = ifs::hash(fp).await?;
   let sign = key.sign(&hash).to_bytes();
   let mut b3 = fp.to_owned().into_os_string();
   b3.push(".b3");

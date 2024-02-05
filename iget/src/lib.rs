@@ -1,4 +1,4 @@
-use std::{fmt::Display, path::PathBuf, sync::Arc, time::Duration};
+use std::{fmt::Display, sync::Arc, time::Duration};
 
 use aok::{Result, OK};
 use futures_util::StreamExt;
@@ -6,14 +6,7 @@ use indicatif::{ProgressBar, ProgressStyle};
 use rand::prelude::SliceRandom;
 use reqwest::{header::RANGE, Client, ClientBuilder, StatusCode};
 use thiserror::Error;
-use tokio::{
-  fs::{create_dir_all, File, OpenOptions},
-  io::AsyncWriteExt,
-  join,
-  sync::RwLock,
-  task::JoinHandle,
-  time::timeout,
-};
+use tokio::{io::AsyncWriteExt, join, sync::RwLock, task::JoinHandle, time::timeout};
 
 #[derive(Debug)]
 pub struct Site {
@@ -152,13 +145,12 @@ impl Site {
     let path = path.as_ref();
 
     let mut req = self.client.get(&url);
-    let file_size = if let Ok(meta) = tokio::fs::metadata(path).await {
-      let s = meta.len();
-      req = req.header(RANGE, format!("bytes={}-{}", s, ""));
-      s
-    } else {
-      0
-    };
+
+    let file_size = ifs::size(path).await;
+
+    if file_size > 0 {
+      req = req.header(RANGE, format!("bytes={}-{}", file_size, ""));
+    }
 
     let mut res = req.send().await?;
     let mut status = res.status();
@@ -168,19 +160,14 @@ impl Site {
       status = res.status();
     }
 
-    let pathbuf: PathBuf = path.into();
-    if let Some(p) = pathbuf.parent() {
-      create_dir_all(p).await?;
-    }
-
     let content_len = res.content_length();
     let mut file = if status == StatusCode::PARTIAL_CONTENT {
-      OpenOptions::new().append(true).open(pathbuf).await?
+      ifs::append(path).await?
     } else if status == StatusCode::OK {
       if content_len == Some(file_size) {
         return Ok(Down(None));
       }
-      File::create(pathbuf).await?
+      ifs::w(path).await?
     } else {
       return Err(ReqError::Status(status, res.text().await?).into());
     };
@@ -191,27 +178,24 @@ impl Site {
       pb: UrlOrProgressBar::Url(url.to_string()),
     }));
 
-    Ok(Down(Some(
-      _Down {
-        bar: bar.clone(),
-        ing: tokio::spawn(async move {
-          let mut stream = res.bytes_stream();
+    Ok(Down(Some(_Down {
+      bar: bar.clone(),
+      ing: tokio::spawn(async move {
+        let mut stream = res.bytes_stream();
 
-          while let Some(chunk) = timeout(Duration::from_secs(60), stream.next()).await? {
-            let chunk = chunk?;
-            let (f, _) = join!(file.write_all(&chunk), async {
-              bar.write().await.incr(chunk.len() as _);
-            });
-            f?;
-          }
+        while let Some(chunk) = timeout(Duration::from_secs(60), stream.next()).await? {
+          let chunk = chunk?;
+          let (f, _) = join!(file.write_all(&chunk), async {
+            bar.write().await.incr(chunk.len() as _);
+          });
+          f?;
+        }
 
-          {
-            bar.read().await.done();
-          }
-          OK
-        }),
-      }
-      .into(),
-    )))
+        {
+          bar.read().await.done();
+        }
+        OK
+      }),
+    })))
   }
 }
