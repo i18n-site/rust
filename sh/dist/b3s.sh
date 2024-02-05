@@ -13,14 +13,14 @@ if ! command -v $exe &>/dev/null; then
   txz=$file.txz
   curl -o $txz -fsSL $down/$exe/$ver/$txz
   BIN=/usr/local/bin
+  sudo=sudo
   case "$(uname -s)" in
   MINGW*)
     BIN=/usr/bin
+    sudo=""
     #BIN=$(dirname $(which bash))
     # chmod +x $file/*
     ;;
-  Darwin)
-    sudo=sudo
     ;;
   esac
   $sudo tar xvf $txz -C $BIN
