@@ -20,6 +20,6 @@ find . -mindepth 1 -maxdepth 1 -type d | while read dir; do
   txz=$name.txz
   tar -C $dir -cJvf $txz .
   b3s $txz
-  tar -cf $name.tar $txz $txz.b3s
-  $DIR/gh.sh $PROJECT/$VER $tar
+  tar -C . -cf $name.tar $txz $txz.b3s
+  $DIR/gh.sh $PROJECT/$VER $name.tar
 done

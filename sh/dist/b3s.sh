@@ -10,8 +10,16 @@ if ! command -v $exe &>/dev/null; then
   target=$(rustc -vV | grep "host:" | awk '{print $2}')
   ver=$(curl -fsSL $down/v/$exe)
   file=$target
-  txz=$file.txz
-  curl -o $txz -fsSL $down/$exe/$ver/$txz
+  tar=$file.tar
+
+  if command -v wget &>/dev/null; then
+    get="wget -c -O"
+  else
+    get="curl -fsSL -o --retry 9 --retry-all-errors"
+  fi
+  outdir=$down/$exe/$ver
+  mkdir -p $outdir
+  $get $tar $outdir/$tar
   BIN=/usr/local/bin
   sudo=sudo
   case "$(uname -s)" in
@@ -22,6 +30,7 @@ if ! command -v $exe &>/dev/null; then
     # chmod +x $file/*
     ;;
   esac
-  $sudo tar xvf $txz -C $BIN
-  rm -rf $txz
+  tar xvf $tar
+  $sudo tar xvf $file.txz -C $BIN
+  rm -rf $file.*
 fi
