@@ -2,7 +2,7 @@ features = { }
 
 [package]
 name = "b3s"
-version = "0.1.84"
+version = "0.1.85"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -45,7 +45,7 @@ version = "0.1.6"
 path = "../genv"
 
 [dependencies.ifs]
-version = "0.1.7"
+version = "0.1.9"
 path = "../ifs"
 default-features = false
 features = [ "hash" ]

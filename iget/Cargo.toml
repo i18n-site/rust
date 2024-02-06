@@ -19,7 +19,7 @@ static_init = "1.0.3"
 thiserror = "1.0.56"
 
 [dependencies.ifs]
-version = "0.1.7"
+version = "0.1.9"
 path = "../ifs"
 features = [ "fs" ]
 default-features = false
