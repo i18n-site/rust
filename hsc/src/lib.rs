@@ -3,8 +3,8 @@
 use std::path::Path;
 
 use aok::{Error, Result, OK};
+use blake3::Hasher;
 use ed25519_dalek::{Signer, SigningKey, SECRET_KEY_LENGTH};
-use gxhash::GxHasher as Hasher;
 use rand::rngs::OsRng;
 use tokio::{
   fs::{write, File},
@@ -44,8 +44,8 @@ pub async fn key(key: impl AsRef<Path>, create: bool) -> Result<SigningKey> {
 pub async fn hsc(fp: impl AsRef<Path>, key: SigningKey) -> Result<()> {
   let fp = fp.as_ref();
   let hash: Hasher = ifs::hash(fp).await?;
-  let hash = hash.finish_u128().to_le_bytes();
-  let sign = key.sign(&hash[..]).to_bytes();
+  let hash = hash.finalize();
+  let sign = key.sign(hash.as_bytes()).to_bytes();
   // let mut b3 = fp.to_owned().into_os_string();
   // b3.push(".b3");
   let mut hsc = fp.to_owned().into_os_string();

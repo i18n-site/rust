@@ -1,11 +1,12 @@
-use std::{hash::Hasher, path::Path};
+use std::path::Path;
 
+use digest::Digest;
 use tokio::{fs::File, io::AsyncReadExt};
 
 #[macro_export]
 macro_rules! hash {
   ($($await:ident)? : $Hasher:ty, $reader:expr $(,$write:ident)?) => {{
-    let mut hasher = <$Hasher>::default();
+    let mut hasher = <$Hasher>::new();
     let mut reader = $reader;
 /*
 Hasher 实现 std::io::Write ，因此可以使用 std::io::copy 它从任何读取器更新 A Hasher 。
@@ -24,14 +25,14 @@ https://docs.rs/blake3/latest/blake3/struct.Hasher.html
         break;
       }
       let bin = &buf[..n];
-      hasher.write(bin);
-      $($write.write(bin)?;)?
+      hasher.update(bin);
+      $(let _ = $write.write(bin)?;)?
     }
     hasher
   }};
 }
 
-pub async fn hash<H: Hasher + Default>(path: impl AsRef<Path>) -> Result<H, std::io::Error> {
+pub async fn hash<H: Digest>(path: impl AsRef<Path>) -> Result<H, std::io::Error> {
   let file = File::open(path).await?;
   Ok(hash!(await: H, file))
 }

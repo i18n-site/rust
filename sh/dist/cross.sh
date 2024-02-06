@@ -5,9 +5,7 @@ cd $DIR
 ROOT=${DIR%/*/*}
 set -ex
 
-source project.sh
-
-source RUSTFLAGS.sh
+. project.sh
 
 build="build" # -Z unstable-options
 
@@ -45,6 +43,7 @@ wait
 # docker pull i18nsite/aarch64-pc-windows-msvc-cross &
 # fi
 
+. RUSTFLAGS.sh
 build="cargo $build -p $PROJECT -Z build-std=std,panic_abort --release --target"
 
 # echo $TARGET_LI | xargs -n1 -P$(nproc) $build

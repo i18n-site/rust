@@ -159,7 +159,7 @@ impl<'a> Bgu<'a> {
             if let Some(ext) = ext.to_str() {
               match ext {
                 "b3s" => {
-                  entry.read(&mut b3s[..])?;
+                  entry.read_exact(&mut b3s[..])?;
                 }
                 "txz" => {
                   let mut bin_dir: PathBuf = XDG_BIN_HOME();
@@ -170,8 +170,8 @@ impl<'a> Bgu<'a> {
                   //     bin.into_iter().rev().for_each(|i| bin_dir.push(i));
                   //     let mut exe = bin_dir.clone();
                   //     exe.push(bin_name.as_ref());
-                  let hasher: gxhash::GxHasher = txz::d(&mut entry, bin_dir)?;
-                  hash = Some(hasher.finish_u128().to_le_bytes());
+                  let hasher: blake3::Hasher = txz::d(&mut entry, bin_dir)?;
+                  hash = Some(hasher.finalize());
                 }
                 _ => {}
               }

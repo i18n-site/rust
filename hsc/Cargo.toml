@@ -1,13 +1,11 @@
-features = {}
-
 [package]
 name = "hsc"
-version = "0.1.1"
+version = "0.1.4"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/main/hsc"
-description = "gxhash then ed25519 sign cli"
+description = "blake then ed25519 sign cli"
 
 [lib]
 name = "hsc"
@@ -20,8 +18,8 @@ path = "src/main.rs"
 [dependencies]
 aok = "0.1.3"
 base64 = "0.21.7"
+blake3 = { version = "1.5.0", features = ["traits-preview"] }
 current_platform = "0.2.0"
-gxhash = "3.1.1"
 rand = "0.8.5"
 static_init = "1.0.3"
 
@@ -46,7 +44,7 @@ version = "0.1.6"
 path = "../genv"
 
 [dependencies.ifs]
-version = "0.1.9"
+version = "0.1.10"
 path = "../ifs"
 default-features = false
 features = ["hash"]

@@ -1,15 +1,13 @@
-use std::{
-  hash::Hasher,
-  io::{Read, Write},
-};
+use std::io::{Read, Write};
 
 use aok::Result;
+pub use digest::Digest;
 pub use lzma_rs as lzma;
 pub use tar::{self, Archive as Tar};
 
 use crate::hash;
 
-pub fn d<H: Hasher + Default>(reader: impl Read, to: impl AsRef<std::path::Path>) -> Result<H> {
+pub fn d<H: Digest>(reader: impl Read, to: impl AsRef<std::path::Path>) -> Result<H> {
   let (mut read, mut write) = pipe::pipe();
 
   let hasher = hash!(: H, reader, write);
