@@ -16,8 +16,10 @@ BIN=$ROOT/target/bin/$PROJECT
 cd $BIN
 
 find . -mindepth 1 -maxdepth 1 -type d | while read dir; do
-  tarname=$(basename $dir).txz
-  tar -C $dir -cJvf $tarname .
-  b3s $tarname
-  $DIR/gh.sh $PROJECT/$VER $tarname*
+  name=$(basename $dir)
+  txz=$name.txz
+  tar -C $dir -cJvf $txz .
+  b3s $txz
+  tar -cf $name.tar $txz $txz.b3s
+  $DIR/gh.sh $PROJECT/$VER $tar
 done

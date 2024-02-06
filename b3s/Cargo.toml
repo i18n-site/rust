@@ -2,7 +2,7 @@ features = {}
 
 [package]
 name = "b3s"
-version = "0.1.77"
+version = "0.1.78"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -23,6 +23,10 @@ base64 = "0.21.7"
 current_platform = "0.2.0"
 rand = "0.8.5"
 static_init = "1.0.3"
+
+[dependencies.cmdv]
+version = "0.1.1"
+path = "../cmdv"
 
 [dependencies.cget]
 version = "0.1.2"
@@ -50,9 +54,9 @@ features = ["hash"]
 version = "1.36.0"
 features = ["fs", "macros", "rt", "rt-multi-thread", "time", "io-util"]
 
-[dependencies.trt]
-version = "0.1.28"
-path = "../trt"
+# [dependencies.trt]
+# version = "0.1.28"
+# path = "../trt"
 
 [dev-dependencies]
 aok = "0.1.3"

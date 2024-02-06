@@ -3,7 +3,7 @@
 #![feature(macro_metavar_expr)]
 
 use std::{
-  env::temp_dir,
+  env::{consts::EXE_SUFFIX, temp_dir},
   fmt::{Debug, Display},
   path::PathBuf,
 };
@@ -13,10 +13,22 @@ pub use const_str;
 use current_platform::CURRENT_PLATFORM;
 pub use ed25519_dalek::PUBLIC_KEY_LENGTH;
 use iget::Down;
-use tokio::task::{spawn_blocking, JoinHandle};
+use tokio::{
+  fs::remove_file,
+  task::{spawn_blocking, JoinHandle},
+};
 
 #[derive(Default, PartialOrd, Ord, PartialEq, Eq)]
 pub struct Ver(pub [u32; 3]);
+
+genv::def!(
+  XDG_BIN_HOME:PathBuf |
+  dirs::home_dir().map(
+    |i|i.join(".local/bin")
+  ).unwrap_or_else(||{
+    std::env::current_exe().unwrap().parent().unwrap().into()
+  })
+);
 
 impl Display for Ver {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -140,24 +152,42 @@ impl<'a> Bgu<'a> {
         i.show().await?;
       }
       let txz = ing.txz.clone();
-      let (b3s, hash) = trt::join!(ifs::r(ing.txz + EXT_B3S), ifs::hash(&txz));
+      let b3s_fp = ing.txz + EXT_B3S;
+      let (b3s, hash) = trt::join!(ifs::r(&b3s_fp), ifs::hash(&txz));
 
       use ed25519_dalek::{Signature, Verifier, VerifyingKey};
 
       let verify = VerifyingKey::from_bytes(self.pk)?;
-      let sign = Signature::from_bytes(&b3s[..].try_into()?);
+      let b3s = match b3s[..].try_into() {
+        Ok(r) => r,
+        Err(_) => {
+          tracing::warn!("b3s length {} != 64 {b3s_fp}", b3s.len());
+          let _ = remove_file(b3s_fp).await;
+          return Ok(None);
+        }
+      };
+
+      let sign = Signature::from_bytes(&b3s);
       match verify.verify(&hash, &sign) {
         Ok(_) => {
-          let mut dir: PathBuf = txz.clone().into();
-          dir.pop();
-          spawn_blocking(move || ifs::txz::d(&txz, &dir)).await??;
+          let mut bin_dir: PathBuf = XDG_BIN_HOME();
+          let t = Into::<PathBuf>::into(&txz[..txz.len() - 4]);
+          let bin = t.iter().rev().take(3).collect::<Vec<_>>();
+          let bin_name = bin.last().unwrap().to_string_lossy() + EXE_SUFFIX;
+          bin.into_iter().rev().for_each(|i| bin_dir.push(i));
+          let mut exe = bin_dir.clone();
+          exe.push(bin_name.as_ref());
+          spawn_blocking(move || ifs::txz::d(&txz, bin_dir)).await??;
+          dbg!(exe);
           return Ok(Some(ing.ver));
         }
         Err(err) => {
           let ver = ing.ver;
           tracing::warn!("{ver} : b3s verify failed {:?}", err);
+          let _ = remove_file(b3s_fp).await;
+          let _ = remove_file(txz).await;
         }
-      }
+      };
     }
     Ok(None)
   }

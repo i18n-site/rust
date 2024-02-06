@@ -14,8 +14,8 @@ macro_rules! ignore {
 #[macro_export]
 macro_rules! ok_or {
   ($expr:expr,$default:expr) => {{
-    let r = (move || Ok::<_, $crate::anyhow::Error>($expr))();
-    match r {
+    let result = (move || Ok::<_, $crate::anyhow::Error>($expr))();
+    match result {
       Ok(r) => r,
       Err(err) => {
         $crate::tracing::error!("{}", err);

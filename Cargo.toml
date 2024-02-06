@@ -50,6 +50,7 @@ members = [
   "i18s",
   "i18e",
   "ifs",
+  "cmdv", "s_", "i_", "t_",
 ]
 resolver = "2"
 

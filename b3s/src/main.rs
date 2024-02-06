@@ -1,10 +1,8 @@
-use std::process::exit;
-
 use aok::{Result, OK};
 use base64::prelude::{Engine, BASE64_STANDARD};
 use cget::cget;
-use clap::{arg, crate_version, Command};
-use current_platform::CURRENT_PLATFORM;
+use clap::arg;
+use cmdv::cmdv;
 use ed25519_dalek::SigningKey;
 
 genv::def!(B3S_SK);
@@ -28,32 +26,12 @@ https://docs.rs/ed25519-dalek/latest/ed25519_dalek/
 
 #[tokio::main]
 async fn main() -> Result<()> {
-  let mut cmd = Command::new("b3s")
-    .disable_version_flag(true)
-    .arg(arg!(-c --create "create key if not exist"))
+  let mut cmd = cmdv("b3s")
     .arg(arg!(-k --key <key> "key file path").required(false))
-    .arg(arg!(-v - -version))
-    .arg(arg!(
-        - -vv "more version info"
-    ))
+    .arg(arg!(-c --create "create key if not exist"))
     .arg(arg!([fp] "file path"));
 
   let m = cmd.clone().get_matches();
-
-  if m.get_one("version") == Some(&true) {
-    println!(crate_version!());
-    exit(0);
-  }
-
-  if m.get_one("vv") == Some(&true) {
-    println!(
-      r#"ver:{}
-build_target:{}"#,
-      crate_version!(),
-      CURRENT_PLATFORM
-    );
-    exit(0);
-  }
 
   if let Some::<&String>(fp) = m.get_one("fp") {
     cget!(

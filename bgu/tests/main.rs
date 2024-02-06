@@ -15,7 +15,7 @@ use bgu::{ver, Bgu};
 
 #[tokio::test]
 async fn test() -> Result<()> {
-  let bgu = Bgu::new(PK, "i18", ver!(), &mirror::MIRROR);
+  let bgu = Bgu::new(PK, "i18", ver!(), mirror::MIRROR);
   sleep(Duration::from_secs(1)).await;
   let ver = bgu.join().await?;
   dbg!(ver);

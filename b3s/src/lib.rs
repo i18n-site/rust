@@ -8,7 +8,7 @@ use tokio::{
   fs::{write, File},
   io::AsyncReadExt,
 };
-use trt::join;
+// use trt::join;
 
 pub async fn key(key: impl AsRef<Path>, create: bool) -> Result<SigningKey> {
   let key = key.as_ref();
@@ -43,11 +43,11 @@ pub async fn b3s(fp: impl AsRef<Path>, key: SigningKey) -> Result<()> {
   let fp = fp.as_ref();
   let hash = ifs::hash(fp).await?;
   let sign = key.sign(&hash).to_bytes();
-  let mut b3 = fp.to_owned().into_os_string();
-  b3.push(".b3");
+  // let mut b3 = fp.to_owned().into_os_string();
+  // b3.push(".b3");
   let mut b3s = fp.to_owned().into_os_string();
   b3s.push(".b3s");
-  join!(write(b3, hash), write(b3s, sign));
+  write(b3s, sign).await?;
   /*
   use ed25519_dalek::Verifier;
   let verifying_key = key.verifying_key();
