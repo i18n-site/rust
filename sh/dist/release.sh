@@ -11,7 +11,7 @@ source project.sh
 
 BIN=$ROOT/target/bin/$PROJECT
 
-./b3s.sh
+./hsc.sh
 
 cd $BIN
 

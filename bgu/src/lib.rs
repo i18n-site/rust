@@ -118,6 +118,7 @@ async fn bgu(name: impl AsRef<str>, now_ver: Ver, site: iget::Site) -> Result<Op
 }
 
 pub struct Bgu<'a> {
+  name: String,
   pk: &'a [u8; PUBLIC_KEY_LENGTH],
   ing: JoinHandle<Result<Option<Downing>>>,
 }
@@ -132,8 +133,9 @@ impl<'a> Bgu<'a> {
     let name = name.into();
     let site = iget::Site::rand_new("https://", mirror);
     Self {
+      ing: tokio::spawn(bgu(name.clone(), now_ver, site)),
+      name,
       pk,
-      ing: tokio::spawn(bgu(name, now_ver, site)),
     }
   }
 
@@ -142,14 +144,15 @@ impl<'a> Bgu<'a> {
       use std::{fs::File, io::BufReader};
 
       use ed25519_dalek::{Signature, VerifyingKey};
-      let _verify = VerifyingKey::from_bytes(self.pk)?;
+      use ifs::txz_hash_d as txz;
 
       ing.down.show().await?;
 
       let mut b3s = [0u8; SIGNATURE_LENGTH];
-      // let mut txz = None;
+      let mut hash = None;
 
-      for entry in ifs::txz::Tar::new(BufReader::new(File::open(&ing.tar)?)).entries()? {
+      let tar = ing.tar;
+      for entry in txz::Tar::new(BufReader::new(File::open(tar)?)).entries()? {
         let mut entry = entry?;
         if let Ok(path) = entry.path() {
           if let Some(ext) = path.extension() {
@@ -158,7 +161,18 @@ impl<'a> Bgu<'a> {
                 "b3s" => {
                   entry.read(&mut b3s[..])?;
                 }
-                "txz" => {}
+                "txz" => {
+                  let mut bin_dir: PathBuf = XDG_BIN_HOME();
+                  bin_dir.push(&self.name);
+                  // let t = Into::<PathBuf>::into(&tar[..tar.len() - 4]);
+                  // let bin = t.iter().rev().take(3).collect::<Vec<_>>();
+                  //     let bin_name = bin.last().unwrap().to_string_lossy() + EXE_SUFFIX;
+                  //     bin.into_iter().rev().for_each(|i| bin_dir.push(i));
+                  //     let mut exe = bin_dir.clone();
+                  //     exe.push(bin_name.as_ref());
+                  let hasher: gxhash::GxHasher = txz::d(&mut entry, bin_dir)?;
+                  hash = Some(hasher.finish_u128().to_le_bytes());
+                }
                 _ => {}
               }
             }
@@ -166,6 +180,8 @@ impl<'a> Bgu<'a> {
         }
       }
 
+      dbg!(hash);
+      let _verify = VerifyingKey::from_bytes(self.pk)?;
       let _sign = Signature::from_bytes(&b3s);
 
       // let tar = ing.tar.clone();
@@ -183,7 +199,6 @@ impl<'a> Bgu<'a> {
       //
       // match verify.verify(&hash, &sign) {
       //   Ok(_) => {
-      //     let mut bin_dir: PathBuf = XDG_BIN_HOME();
       //     let t = Into::<PathBuf>::into(&tar[..tar.len() - 4]);
       //     let bin = t.iter().rev().take(3).collect::<Vec<_>>();
       //     let bin_name = bin.last().unwrap().to_string_lossy() + EXE_SUFFIX;

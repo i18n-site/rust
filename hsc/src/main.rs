@@ -26,7 +26,7 @@ https://docs.rs/ed25519-dalek/latest/ed25519_dalek/
 
 #[tokio::main]
 async fn main() -> Result<()> {
-  let mut cmd = cmdv("b3s")
+  let mut cmd = cmdv("hsc")
     .arg(arg!(-k --key <key> "key file path").required(false))
     .arg(arg!(-c --create "create key if not exist"))
     .arg(arg!([fp] "file path"));
@@ -39,14 +39,14 @@ async fn main() -> Result<()> {
         create: bool;
     );
     let key = if let Some(key) = m.get_one::<String>("key") {
-      b3s::key(key, *create).await?
+      hsc::key(key, *create).await?
     } else {
       let sk: String = B3S_SK();
       let key = &BASE64_STANDARD.decode(sk)?[..];
       SigningKey::from_bytes(&key.try_into()?)
     };
 
-    b3s::b3s(fp, key).await?;
+    hsc::hsc(fp, key).await?;
   } else {
     cmd.print_long_help()?;
   }

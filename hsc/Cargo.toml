@@ -1,32 +1,33 @@
-features = { }
+features = {}
 
 [package]
-name = "b3s"
-version = "0.1.85"
+name = "hsc"
+version = "0.1.1"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
-homepage = "https://github.com/i18n-site/rust/tree/main/b3s"
-description = "blake3 sum then ed25519 sign"
+homepage = "https://github.com/i18n-site/rust/tree/main/hsc"
+description = "gxhash then ed25519 sign cli"
 
 [lib]
-name = "b3s"
+name = "hsc"
 path = "src/lib.rs"
 
 [[bin]]
-name = "b3s"
+name = "hsc"
 path = "src/main.rs"
 
 [dependencies]
 aok = "0.1.3"
 base64 = "0.21.7"
 current_platform = "0.2.0"
+gxhash = "3.1.1"
 rand = "0.8.5"
 static_init = "1.0.3"
 
 [dependencies.ed25519-dalek]
 version = "2.1.0"
-features = [ "signature", "rand_core" ]
+features = ["signature", "rand_core"]
 
 [dependencies.cmdv]
 version = "0.1.1"
@@ -38,7 +39,7 @@ path = "../cget"
 
 [dependencies.clap]
 version = "4.4.18"
-features = [ "cargo" ]
+features = ["cargo"]
 
 [dependencies.genv]
 version = "0.1.6"
@@ -48,11 +49,11 @@ path = "../genv"
 version = "0.1.9"
 path = "../ifs"
 default-features = false
-features = [ "hash" ]
+features = ["hash"]
 
 [dependencies.tokio]
 version = "1.36.0"
-features = [ "fs", "macros", "rt", "rt-multi-thread", "time", "io-util" ]
+features = ["fs", "macros", "rt", "rt-multi-thread", "time", "io-util"]
 
 [dev-dependencies]
 aok = "0.1.3"
@@ -61,4 +62,4 @@ static_init = "1.0.3"
 
 [dev-dependencies.tokio]
 version = "1.36.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

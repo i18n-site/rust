@@ -43,14 +43,17 @@ members = [
   "kvcache",
   "iget",
   "bgu",
-  "b3s",
+  "hsc",
   "cget",
   "cget/test_cget",
   "i18",
   "i18s",
   "i18e",
   "ifs",
-  "cmdv", "s_", "i_", "t_",
+  "cmdv",
+  "s_",
+  "i_",
+  "t_",
 ]
 resolver = "2"
 

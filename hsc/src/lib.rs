@@ -4,6 +4,7 @@ use std::path::Path;
 
 use aok::{Error, Result, OK};
 use ed25519_dalek::{Signer, SigningKey, SECRET_KEY_LENGTH};
+use gxhash::GxHasher as Hasher;
 use rand::rngs::OsRng;
 use tokio::{
   fs::{write, File},
@@ -40,15 +41,16 @@ pub async fn key(key: impl AsRef<Path>, create: bool) -> Result<SigningKey> {
   }
 }
 
-pub async fn b3s(fp: impl AsRef<Path>, key: SigningKey) -> Result<()> {
+pub async fn hsc(fp: impl AsRef<Path>, key: SigningKey) -> Result<()> {
   let fp = fp.as_ref();
-  let hash = ifs::hash(fp).await?;
-  let sign = key.sign(&hash).to_bytes();
+  let hash: Hasher = ifs::hash(fp).await?;
+  let hash = hash.finish_u128().to_le_bytes();
+  let sign = key.sign(&hash[..]).to_bytes();
   // let mut b3 = fp.to_owned().into_os_string();
   // b3.push(".b3");
-  let mut b3s = fp.to_owned().into_os_string();
-  b3s.push(".b3s");
-  write(b3s, sign).await?;
+  let mut hsc = fp.to_owned().into_os_string();
+  hsc.push(".hsc");
+  write(hsc, sign).await?;
   /*
   use ed25519_dalek::Verifier;
   let verifying_key = key.verifying_key();
