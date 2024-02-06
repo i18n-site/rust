@@ -1,11 +1,12 @@
 #!/usr/bin/env coffee
 
-> zx/globals:
-  @3-/read
+> @3-/read
   @3-/write
   @3-/cache
-  path > join resolve
+  path > join resolve dirname
   @iarna/toml:T
+
+ROOT = dirname import.meta.dirname
 
 CARGO_TOML = 'Cargo.toml'
 
@@ -41,10 +42,7 @@ upgrade = (dir)=>
   )
   return
 
+for i from T.parse(read(join ROOT,CARGO_TOML)).workspace.members
+  upgrade join ROOT,i
 
-
-for i from T.parse(read(CARGO_TOML)).workspace.members
-  upgrade i
-
-await $"cargo upgrade"
 process.exit()

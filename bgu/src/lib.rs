@@ -3,7 +3,7 @@
 #![feature(macro_metavar_expr)]
 
 use std::{
-  env::{consts::EXE_SUFFIX, temp_dir},
+  env::temp_dir,
   fmt::{Debug, Display},
   path::PathBuf,
 };
@@ -13,10 +13,7 @@ pub use const_str;
 use current_platform::CURRENT_PLATFORM;
 pub use ed25519_dalek::PUBLIC_KEY_LENGTH;
 use iget::Down;
-use tokio::{
-  fs::remove_file,
-  task::{spawn_blocking, JoinHandle},
-};
+use tokio::task::JoinHandle;
 
 #[derive(Default, PartialOrd, Ord, PartialEq, Eq)]
 pub struct Ver(pub [u32; 3]);
@@ -94,8 +91,8 @@ pub const EXT_B3S: &str = ".b3s";
 
 pub struct Downing {
   pub ver: Ver,
-  pub down: [Down; 2],
-  pub txz: String,
+  pub down: Down,
+  pub tar: String,
 }
 
 async fn bgu(name: impl AsRef<str>, now_ver: Ver, site: iget::Site) -> Result<Option<Downing>> {
@@ -109,20 +106,15 @@ async fn bgu(name: impl AsRef<str>, now_ver: Ver, site: iget::Site) -> Result<Op
   if now_ver >= ver {
     return Ok(None);
   }
-  let txz = format!("{name}/{ver_txt}/{CURRENT_PLATFORM}.txz");
+  let tar = format!("{name}/{ver_txt}/{CURRENT_PLATFORM}.tar");
   let dir: String = temp_dir().as_os_str().to_string_lossy().into();
 
-  let txz_fp = dir + &txz;
-
-  let (dtxz, db3s) = trt::join!(
-    site.down(txz.clone() + EXT_B3S, txz_fp.clone() + EXT_B3S),
-    site.down(txz, txz_fp.clone())
-  );
+  let tar_fp = dir + &tar;
 
   Ok(Some(Downing {
-    txz: txz_fp,
+    tar: tar_fp.clone(),
     ver,
-    down: [dtxz, db3s],
+    down: site.down(tar, tar_fp).await?,
   }))
 }
 
@@ -148,46 +140,54 @@ impl<'a> Bgu<'a> {
 
   pub async fn join(self) -> Result<Option<Ver>> {
     if let Some(ing) = self.ing.await?? {
-      for i in ing.down {
-        i.show().await?;
-      }
-      let txz = ing.txz.clone();
-      let b3s_fp = ing.txz + EXT_B3S;
-      let (b3s, hash) = trt::join!(ifs::r(&b3s_fp), ifs::hash(&txz));
+      ing.down.show().await?;
 
-      use ed25519_dalek::{Signature, Verifier, VerifyingKey};
+      // let mut b3s = None;
+      // let mut txz = None;
 
-      let verify = VerifyingKey::from_bytes(self.pk)?;
-      let b3s = match b3s[..].try_into() {
-        Ok(r) => r,
-        Err(_) => {
-          tracing::warn!("b3s length {} != 64 {b3s_fp}", b3s.len());
-          let _ = remove_file(b3s_fp).await;
-          return Ok(None);
-        }
-      };
+      // for entry in ifs::txz::Tar::new(BufReader::new(File::open(&ing.tar)?)).entries()? {
+      //   if let Ok(path) = entry?.path() {
+      //     if path.ends_with(EXT_B3S) {
+      //
+      //     }
+      //   }
+      // }
 
-      let sign = Signature::from_bytes(&b3s);
-      match verify.verify(&hash, &sign) {
-        Ok(_) => {
-          let mut bin_dir: PathBuf = XDG_BIN_HOME();
-          let t = Into::<PathBuf>::into(&txz[..txz.len() - 4]);
-          let bin = t.iter().rev().take(3).collect::<Vec<_>>();
-          let bin_name = bin.last().unwrap().to_string_lossy() + EXE_SUFFIX;
-          bin.into_iter().rev().for_each(|i| bin_dir.push(i));
-          let mut exe = bin_dir.clone();
-          exe.push(bin_name.as_ref());
-          spawn_blocking(move || ifs::txz::d(&txz, bin_dir)).await??;
-          dbg!(exe);
-          return Ok(Some(ing.ver));
-        }
-        Err(err) => {
-          let ver = ing.ver;
-          tracing::warn!("{ver} : b3s verify failed {:?}", err);
-          let _ = remove_file(b3s_fp).await;
-          let _ = remove_file(txz).await;
-        }
-      };
+      // let tar = ing.tar.clone();
+      // let b3s_fp = ing.tar + EXT_B3S;
+      // let (b3s, hash) = trt::join!(ifs::r(&b3s_fp), ifs::hash(&tar));
+
+      // let verify = VerifyingKey::from_bytes(self.pk)?;
+      // let b3s = match b3s[..].try_into() {
+      //   Ok(r) => r,
+      //   Err(_) => {
+      //     tracing::warn!("b3s length {} != 64 {b3s_fp}", b3s.len());
+      //     let _ = remove_file(b3s_fp).await;
+      //     return Ok(None);
+      //   }
+      // };
+      //
+      // let sign = Signature::from_bytes(&b3s);
+      // match verify.verify(&hash, &sign) {
+      //   Ok(_) => {
+      //     let mut bin_dir: PathBuf = XDG_BIN_HOME();
+      //     let t = Into::<PathBuf>::into(&tar[..tar.len() - 4]);
+      //     let bin = t.iter().rev().take(3).collect::<Vec<_>>();
+      //     let bin_name = bin.last().unwrap().to_string_lossy() + EXE_SUFFIX;
+      //     bin.into_iter().rev().for_each(|i| bin_dir.push(i));
+      //     let mut exe = bin_dir.clone();
+      //     exe.push(bin_name.as_ref());
+      //     spawn_blocking(move || ifs::txz::d(&tar, bin_dir)).await??;
+      //     dbg!(exe);
+      //     return Ok(Some(ing.ver));
+      //   }
+      //   Err(err) => {
+      //     let ver = ing.ver;
+      //     tracing::warn!("{ver} : b3s verify failed {:?}", err);
+      //     let _ = remove_file(b3s_fp).await;
+      //     let _ = remove_file(tar).await;
+      //   }
+      // };
     }
     Ok(None)
   }

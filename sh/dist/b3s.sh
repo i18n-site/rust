@@ -15,7 +15,7 @@ if ! command -v $exe &>/dev/null; then
   if command -v wget &>/dev/null; then
     get="wget -c -O"
   else
-    get="curl -fsSL -o --retry 9 --retry-all-errors"
+    get="curl -fsSL --retry 9 --retry-all-errors -o"
   fi
   outdir=$down/$exe/$ver
   mkdir -p $outdir
