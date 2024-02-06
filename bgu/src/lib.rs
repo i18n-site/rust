@@ -1,7 +1,3 @@
-#![feature(const_trait_impl)]
-#![feature(effects)]
-#![feature(macro_metavar_expr)]
-
 use std::{
   env::temp_dir,
   fmt::{Debug, Display},
@@ -14,7 +10,8 @@ pub use const_str;
 use current_platform::CURRENT_PLATFORM;
 pub use ed25519_dalek::{PUBLIC_KEY_LENGTH, SIGNATURE_LENGTH};
 use iget::Down;
-use tokio::task::JoinHandle;
+use scopeguard::defer;
+use tokio::{fs::remove_dir_all, task::JoinHandle};
 
 #[derive(Default, PartialOrd, Ord, PartialEq, Eq)]
 pub struct Ver(pub [u32; 3]);
@@ -143,36 +140,41 @@ impl<'a> Bgu<'a> {
     if let Some(ing) = self.ing.await?? {
       use std::{fs::File, io::BufReader};
 
-      use ed25519_dalek::{Signature, VerifyingKey};
+      use ed25519_dalek::{Signature, Verifier, VerifyingKey};
       use ifs::txz_hash_d as txz;
 
+      let tar = ing.tar;
       ing.down.show().await?;
 
-      let mut b3s = [0u8; SIGNATURE_LENGTH];
+      defer! {
+        let tar = PathBuf::from(&tar);
+        xerr::log!(std::fs::remove_dir_all(tar.parent().unwrap()));
+      }
+
+      let mut hsc = [0u8; SIGNATURE_LENGTH];
       let mut hash = None;
 
-      let tar = ing.tar;
-      for entry in txz::Tar::new(BufReader::new(File::open(tar)?)).entries()? {
+      for entry in txz::Tar::new(BufReader::new(File::open(&tar)?)).entries()? {
         let mut entry = entry?;
         if let Ok(path) = entry.path() {
           if let Some(ext) = path.extension() {
             if let Some(ext) = ext.to_str() {
               match ext {
-                "b3s" => {
-                  entry.read_exact(&mut b3s[..])?;
+                "hsc" => {
+                  entry.read_exact(&mut hsc[..])?;
                 }
                 "txz" => {
                   let mut bin_dir: PathBuf = XDG_BIN_HOME();
                   bin_dir.push(&self.name);
-                  bin_dir.push(path);
-                  // let t = Into::<PathBuf>::into(&tar[..tar.len() - 4]);
-                  // let bin = t.iter().rev().take(3).collect::<Vec<_>>();
-                  //     let bin_name = bin.last().unwrap().to_string_lossy() + EXE_SUFFIX;
-                  //     bin.into_iter().rev().for_each(|i| bin_dir.push(i));
-                  //     let mut exe = bin_dir.clone();
-                  //     exe.push(bin_name.as_ref());
-                  let hasher: blake3::Hasher = txz::d(&mut entry, bin_dir)?;
-                  hash = Some(hasher.finalize());
+                  let path: PathBuf = path.into();
+                  if let Some(path) = path.iter().next_back() {
+                    let path = path.to_string_lossy();
+                    if let Some(p) = path.rfind('.') {
+                      bin_dir.push(&path[..p])
+                    }
+                  };
+                  let hasher: blake3::Hasher = txz::d(&mut entry, bin_dir.clone())?;
+                  hash = Some((hasher.finalize(), bin_dir));
                 }
                 _ => {}
               }
@@ -181,42 +183,40 @@ impl<'a> Bgu<'a> {
         }
       }
 
-      dbg!(hash);
-      let _verify = VerifyingKey::from_bytes(self.pk)?;
-      let _sign = Signature::from_bytes(&b3s);
+      if let Some((hash, bin_dir)) = hash {
+        let verify = VerifyingKey::from_bytes(self.pk)?;
+        let sign = Signature::from_bytes(&hsc);
+        if xerr::is_ok!(verify.verify(hash.as_bytes(), &sign)) {
+          let name = self.name;
+          let exe = bin_dir.join(name.clone() + std::env::consts::EXE_SUFFIX);
+          use std::process::Command;
+          let out = Command::new(exe).args(["-v"]).output()?;
+          if out.status.success() {
+            let out = String::from_utf8(out.stdout)?;
+            if let Some(ver_line) = out.lines().next() {
+              let mut t = Vec::new();
 
-      // let tar = ing.tar.clone();
-      // let b3s_fp = ing.tar + EXT_B3S;
-      // let (b3s, hash) = trt::join!(ifs::r(&b3s_fp), ifs::hash(&tar));
+              for i in ver_line.chars().rev() {
+                if i == '.' || i.is_ascii_digit() {
+                  t.push(i);
+                } else {
+                  break;
+                }
+              }
 
-      // let b3s = match b3s[..].try_into() {
-      //   Ok(r) => r,
-      //   Err(_) => {
-      //     tracing::warn!("b3s length {} != 64 {b3s_fp}", b3s.len());
-      //     let _ = remove_file(b3s_fp).await;
-      //     return Ok(None);
-      //   }
-      // };
-      //
-      // match verify.verify(&hash, &sign) {
-      //   Ok(_) => {
-      //     let t = Into::<PathBuf>::into(&tar[..tar.len() - 4]);
-      //     let bin = t.iter().rev().take(3).collect::<Vec<_>>();
-      //     let bin_name = bin.last().unwrap().to_string_lossy() + EXE_SUFFIX;
-      //     bin.into_iter().rev().for_each(|i| bin_dir.push(i));
-      //     let mut exe = bin_dir.clone();
-      //     exe.push(bin_name.as_ref());
-      //     spawn_blocking(move || ifs::txz::d(&tar, bin_dir)).await??;
-      //     dbg!(exe);
-      //     return Ok(Some(ing.ver));
-      //   }
-      //   Err(err) => {
-      //     let ver = ing.ver;
-      //     tracing::warn!("{ver} : b3s verify failed {:?}", err);
-      //     let _ = remove_file(b3s_fp).await;
-      //     let _ = remove_file(tar).await;
-      //   }
-      // };
+              let ver: Ver = t.into_iter().rev().collect::<String>().into();
+              let now_ver = ing.ver;
+              if ver > now_ver {
+                dbg!(ver);
+              } else {
+                tracing::error!("{} update ver {ver} <= now {now_ver}", name);
+              }
+            }
+          }
+        } else {
+          xerr::log!(remove_dir_all(bin_dir).await);
+        }
+      }
     }
     Ok(None)
   }

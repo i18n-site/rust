@@ -1,9 +1,11 @@
 use std::process::exit;
 
-use clap::{arg, crate_version, Command};
+pub use clap;
+use clap::{arg, Command};
 use current_platform::CURRENT_PLATFORM;
 
-pub fn cmdv(name: impl Into<clap::builder::Str>) -> Command {
+pub fn cmdv(name: impl Into<clap::builder::Str>, ver: impl AsRef<str>) -> Command {
+  let ver = ver.as_ref();
   let cmd = Command::new(name)
     .disable_version_flag(true)
     .arg(arg!(-v --version ...))
@@ -19,7 +21,7 @@ pub fn cmdv(name: impl Into<clap::builder::Str>) -> Command {
     let n = *n;
     if n > 0 {
       if n == 1 {
-        println!(crate_version!());
+        println!("{ver}");
         exit(0);
       } else {
         vv = true;
@@ -31,11 +33,17 @@ pub fn cmdv(name: impl Into<clap::builder::Str>) -> Command {
     println!(
       r#"ver:{}
 target:{}"#,
-      crate_version!(),
-      CURRENT_PLATFORM
+      ver, CURRENT_PLATFORM
     );
     exit(0);
   }
 
   cmd
+}
+
+#[macro_export]
+macro_rules! cmdv {
+  ($name:ident) => {
+    $crate::cmdv(stringify!($name), $crate::clap::crate_version!())
+  };
 }

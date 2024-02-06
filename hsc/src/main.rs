@@ -26,7 +26,7 @@ https://docs.rs/ed25519-dalek/latest/ed25519_dalek/
 
 #[tokio::main]
 async fn main() -> Result<()> {
-  let mut cmd = cmdv("hsc")
+  let mut cmd = cmdv!(hsc)
     .arg(arg!(-k --key <key> "key file path").required(false))
     .arg(arg!(-c --create "create key if not exist"))
     .arg(arg!([fp] "file path"));

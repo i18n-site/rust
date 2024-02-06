@@ -1,7 +1,6 @@
 use image::EncodableLayout;
 use thiserror::Error;
 use tiny_skia::PremultipliedColorU8;
-use usvg::TreeParsing;
 use webp::Encoder;
 
 #[derive(Error, Debug)]

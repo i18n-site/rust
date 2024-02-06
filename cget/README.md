@@ -11,7 +11,7 @@ use clap::{arg, crate_version, Command};
 //use current_platform::CURRENT_PLATFORM;
 
 fn main() -> Result<()> {
-  let m = Command::new("b3s")
+  let m = Command::new("hsc")
     .disable_version_flag(true)
     .arg(arg!(-c --create "create key if not exist"))
     .arg(arg!(-k --key <key> "key file path"))
