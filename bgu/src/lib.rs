@@ -139,8 +139,12 @@ impl<'a> Bgu<'a> {
   }
 
   pub async fn join(self) -> Result<Option<Ver>> {
-    if let Some(ing) = self.ing.await?? {
-      ing.down.show().await?;
+    if let Some(_ing) = self.ing.await?? {
+      // use std::{fs::File, io::BufReader};
+      //
+      // use ed25519_dalek::{Signature, Verifier, VerifyingKey};
+      //
+      // ing.down.show().await?;
 
       // let mut b3s = None;
       // let mut txz = None;
