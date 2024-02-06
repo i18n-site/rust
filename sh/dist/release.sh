@@ -24,6 +24,6 @@ find . -mindepth 1 -maxdepth 1 -type d | while read dir; do
   tar -C $name -cJvf $NV/$txz .
   b3s $NV/$txz
   tar -C $NV -cf $name.tar .
-  $DIR/gh.sh $PROJECT/$VER $NV/$name.tar
-  rm -rf $NV
+  $DIR/gh.sh $PROJECT/$VER $name.tar
+  rm -rf $NV $name.tar
 done

@@ -11,7 +11,7 @@ use std::{
 use aok::Result;
 pub use const_str;
 use current_platform::CURRENT_PLATFORM;
-pub use ed25519_dalek::PUBLIC_KEY_LENGTH;
+pub use ed25519_dalek::{PUBLIC_KEY_LENGTH, SIGNATURE_LENGTH};
 use iget::Down;
 use tokio::task::JoinHandle;
 
@@ -145,14 +145,15 @@ impl<'a> Bgu<'a> {
       // use ed25519_dalek::{Signature, Verifier, VerifyingKey};
       //
       // ing.down.show().await?;
-
-      // let mut b3s = None;
-      // let mut txz = None;
-
-      // for entry in ifs::txz::Tar::new(BufReader::new(File::open(&ing.tar)?)).entries()? {
-      //   if let Ok(path) = entry?.path() {
-      //     if path.ends_with(EXT_B3S) {
       //
+      // let mut b3s = [0u8; SIGNATURE_LENGTH];
+      // let mut txz = None;
+      //
+      // for entry in ifs::txz::Tar::new(BufReader::new(File::open(&ing.tar)?)).entries()? {
+      //   let entry = entry?;
+      //   if let Ok(path) = entry.path() {
+      //     if path.ends_with(EXT_B3S) {
+      //       entry.read(&mut b3s[..]);
       //     }
       //   }
       // }
