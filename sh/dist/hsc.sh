@@ -2,12 +2,12 @@
 
 set -ex
 
-exe=b3s
+exe=hsc
 
 if ! command -v $exe &>/dev/null; then
-  rm -rf /tmp/b3s
-  mkdir -p /tmp/b3s
-  cd /tmp/b3s
+  rm -rf /tmp/hsc
+  mkdir -p /tmp/hsc
+  cd /tmp/hsc
   down=https://github.com/i18n-site/rust/releases/download
   target=$(rustc -vV | grep "host:" | awk '{print $2}')
   ver=$(curl -fsSL $down/v/$exe)
@@ -34,5 +34,5 @@ if ! command -v $exe &>/dev/null; then
   esac
   tar xvf $tar
   $sudo tar xvf *.txz -C $BIN
-  rm -rf /tmp/b3s
+  rm -rf /tmp/hsc
 fi

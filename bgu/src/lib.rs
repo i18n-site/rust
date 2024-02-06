@@ -164,6 +164,7 @@ impl<'a> Bgu<'a> {
                 "txz" => {
                   let mut bin_dir: PathBuf = XDG_BIN_HOME();
                   bin_dir.push(&self.name);
+                  bin_dir.push(path);
                   // let t = Into::<PathBuf>::into(&tar[..tar.len() - 4]);
                   // let bin = t.iter().rev().take(3).collect::<Vec<_>>();
                   //     let bin_name = bin.last().unwrap().to_string_lossy() + EXE_SUFFIX;
