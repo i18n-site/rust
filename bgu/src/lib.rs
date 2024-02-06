@@ -5,6 +5,7 @@
 use std::{
   env::temp_dir,
   fmt::{Debug, Display},
+  io::Read,
   path::PathBuf,
 };
 
@@ -87,8 +88,6 @@ impl<S: AsRef<str>> From<S> for Ver {
 //   }
 // }
 
-pub const EXT_B3S: &str = ".b3s";
-
 pub struct Downing {
   pub ver: Ver,
   pub down: Down,
@@ -139,30 +138,41 @@ impl<'a> Bgu<'a> {
   }
 
   pub async fn join(self) -> Result<Option<Ver>> {
-    if let Some(_ing) = self.ing.await?? {
-      // use std::{fs::File, io::BufReader};
-      //
+    if let Some(ing) = self.ing.await?? {
+      use std::{fs::File, io::BufReader};
+
+      use ed25519_dalek::{Signature, VerifyingKey};
       // use ed25519_dalek::{Signature, Verifier, VerifyingKey};
-      //
-      // ing.down.show().await?;
-      //
-      // let mut b3s = [0u8; SIGNATURE_LENGTH];
+      let _verify = VerifyingKey::from_bytes(self.pk)?;
+
+      ing.down.show().await?;
+
+      let mut b3s = [0u8; SIGNATURE_LENGTH];
       // let mut txz = None;
-      //
-      // for entry in ifs::txz::Tar::new(BufReader::new(File::open(&ing.tar)?)).entries()? {
-      //   let entry = entry?;
-      //   if let Ok(path) = entry.path() {
-      //     if path.ends_with(EXT_B3S) {
-      //       entry.read(&mut b3s[..]);
-      //     }
-      //   }
-      // }
+
+      for entry in ifs::txz::Tar::new(BufReader::new(File::open(&ing.tar)?)).entries()? {
+        let mut entry = entry?;
+        if let Ok(path) = entry.path() {
+          if let Some(ext) = path.extension() {
+            if let Some(ext) = ext.to_str() {
+              match ext {
+                "b3s" => {
+                  entry.read(&mut b3s[..])?;
+                }
+                "txz" => {}
+                _ => {}
+              }
+            }
+          }
+        }
+      }
+
+      let _sign = Signature::from_bytes(&b3s);
 
       // let tar = ing.tar.clone();
       // let b3s_fp = ing.tar + EXT_B3S;
       // let (b3s, hash) = trt::join!(ifs::r(&b3s_fp), ifs::hash(&tar));
 
-      // let verify = VerifyingKey::from_bytes(self.pk)?;
       // let b3s = match b3s[..].try_into() {
       //   Ok(r) => r,
       //   Err(_) => {
@@ -172,7 +182,6 @@ impl<'a> Bgu<'a> {
       //   }
       // };
       //
-      // let sign = Signature::from_bytes(&b3s);
       // match verify.verify(&hash, &sign) {
       //   Ok(_) => {
       //     let mut bin_dir: PathBuf = XDG_BIN_HOME();
