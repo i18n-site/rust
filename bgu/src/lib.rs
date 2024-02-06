@@ -142,7 +142,6 @@ impl<'a> Bgu<'a> {
       use std::{fs::File, io::BufReader};
 
       use ed25519_dalek::{Signature, VerifyingKey};
-      // use ed25519_dalek::{Signature, Verifier, VerifyingKey};
       let _verify = VerifyingKey::from_bytes(self.pk)?;
 
       ing.down.show().await?;
