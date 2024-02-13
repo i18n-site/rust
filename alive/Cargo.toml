@@ -12,7 +12,7 @@ aok = { version = "0.1.3" }
 dashmap = "5.5.3"
 enum_dispatch = "0.3.12"
 futures = "0.3.30"
-genv = "0.1.6"
+genv = "0.1.7"
 hi = { version = "0.1.13" }
 hickory-proto = "0.24.0"
 idns = { version = "0.1.18" }
@@ -45,5 +45,5 @@ loginit = { version = "0.1.10" }
 
 [build-dependencies]
 aok = "0.1.3"
-genv = { version = "0.1.6" }
+genv = { version = "0.1.7" }
 prost-build = "0.12.3"

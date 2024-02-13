@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/mysql_macro"
 description = "mysql macro for mysql_async"
 
 [dependencies]
-genv = "0.1.6"
+genv = "0.1.7"
 rustc-hex = "2.1.0"
 tracing = "0.1.40"
 trt = "0.1.28"

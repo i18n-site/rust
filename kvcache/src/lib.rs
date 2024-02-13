@@ -56,7 +56,7 @@ pub trait Cache {
   ) -> Result<Vec<String>> {
     Ok(
       self
-        .getset(suffix, keys, async |li| {
+        .getset(suffix, keys, |li| async move {
           Ok(
             get(
               li.into_iter()

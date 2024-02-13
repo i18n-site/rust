@@ -1,5 +1,5 @@
-dev-dependencies = { }
-features = { }
+dev-dependencies = {}
+features = {}
 
 [package]
 name = "getc"
@@ -15,10 +15,10 @@ daachorse = "1.0.0"
 paste = "1.0.14"
 static_init = "1.0.3"
 
-  [dependencies.phf]
-  version = "0.11.2"
-  features = [ "macros" ]
+[dependencies.phf]
+version = "0.11.2"
+features = ["macros"]
 
-  [dependencies.tp]
-  version = "0.1.9"
-  path = "../tp"
+[dependencies.tp]
+version = "0.1.9"
+path = "../tp"

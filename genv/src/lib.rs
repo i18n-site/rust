@@ -51,11 +51,13 @@ $crate::s!($name$(: $ty)?);
 
 #[macro_export]
 macro_rules! def {
-($name:ident: $type:ty | $default:expr) => {
+($($name:ident: $type:ty | $default:expr);+ $(;)?) => {
+$(
 #[allow(non_snake_case)]
 pub fn $name() -> $type {
     $crate::get_or_default(stringify!($name), $default)
 }
+)+
 };
 ($name:ident) => {
 #[allow(non_snake_case)]

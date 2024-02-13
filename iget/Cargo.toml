@@ -2,7 +2,7 @@ features = { }
 
 [package]
 name = "iget"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -12,14 +12,13 @@ description = "iget"
 [dependencies]
 bytes = "1.5.0"
 futures-util = "0.3.30"
-indicatif = "0.17.7"
+indicatif = "0.17.8"
 parking_lot = "0.12.1"
-rand = "0.8.5"
 static_init = "1.0.3"
-thiserror = "1.0.56"
+thiserror = "1.0.57"
 
 [dependencies.ifs]
-version = "0.1.11"
+version = "0.1.18"
 path = "../ifs"
 features = [ "fs" ]
 default-features = false

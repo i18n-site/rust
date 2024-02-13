@@ -11,7 +11,7 @@ description = "aliver"
 alive = { version = "0.1.73" }
 aok = { version = "0.1.3" }
 axum = "0.7.4"
-genv = { version = "0.1.6" }
+genv = { version = "0.1.7" }
 ireq = { version = "0.1.7" }
 loginit = "0.1.10"
 re = { version = "0.1.5" }

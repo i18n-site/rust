@@ -3,7 +3,6 @@ use std::{fmt::Display, sync::Arc, time::Duration};
 use aok::{Result, OK};
 use futures_util::StreamExt;
 use indicatif::{ProgressBar, ProgressStyle};
-use rand::prelude::SliceRandom;
 use reqwest::{header::RANGE, Client, ClientBuilder, StatusCode};
 use thiserror::Error;
 use tokio::{io::AsyncWriteExt, join, sync::RwLock, task::JoinHandle, time::timeout};
@@ -33,12 +32,6 @@ pub static HTTP: Client = builder().build().unwrap();
 pub static H3: Client = builder().http3_prior_knowledge().build().unwrap();
 
 pub const MB16: u64 = 1048576 * 16;
-
-impl<S: AsRef<str>> From<(bool, S)> for Site {
-  fn from((h3, url): (bool, S)) -> Self {
-    Self::new(h3, url.as_ref())
-  }
-}
 
 macro_rules! req {
   ($name:ident, $func:ident, $rt:ty) => {
@@ -124,12 +117,6 @@ impl Down {
 }
 
 impl Site {
-  pub fn rand_new(prefix: impl Into<String>, li: &[(bool, impl AsRef<str>)]) -> Self {
-    let (h3, site) = li.choose(&mut rand::thread_rng()).unwrap();
-    let prefix = prefix.into();
-    (*h3, prefix + site.as_ref()).into()
-  }
-
   pub fn new(h3: bool, url: impl Into<String>) -> Self {
     Self {
       url: url.into(),
@@ -183,7 +170,7 @@ impl Site {
       ing: tokio::spawn(async move {
         let mut stream = res.bytes_stream();
 
-        while let Some(chunk) = timeout(Duration::from_secs(60), stream.next()).await? {
+        while let Some(chunk) = timeout(Duration::from_secs(10), stream.next()).await? {
           let chunk = chunk?;
           let (f, _) = join!(file.write_all(&chunk), async {
             bar.write().await.incr(chunk.len() as _);

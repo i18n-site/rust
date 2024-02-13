@@ -1,10 +1,8 @@
-use std::process::exit;
-
 pub use clap;
 use clap::{arg, Command};
 use current_platform::CURRENT_PLATFORM;
 
-pub fn cmdv(name: impl Into<clap::builder::Str>, ver: impl AsRef<str>) -> Command {
+pub fn cmdv(name: impl Into<clap::builder::Str>, ver: impl AsRef<str>) -> Option<Command> {
   let ver = ver.as_ref();
   let cmd = Command::new(name)
     .disable_version_flag(true)
@@ -22,10 +20,9 @@ pub fn cmdv(name: impl Into<clap::builder::Str>, ver: impl AsRef<str>) -> Comman
     if n > 0 {
       if n == 1 {
         println!("{ver}");
-        exit(0);
-      } else {
-        vv = true;
+        return None;
       }
+      vv = true;
     }
   }
 
@@ -35,10 +32,10 @@ pub fn cmdv(name: impl Into<clap::builder::Str>, ver: impl AsRef<str>) -> Comman
 target:{}"#,
       ver, CURRENT_PLATFORM
     );
-    exit(0);
+    return None;
   }
 
-  cmd
+  Some(cmd)
 }
 
 #[macro_export]

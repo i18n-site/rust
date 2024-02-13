@@ -10,7 +10,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/lang"
 description = "lang"
 
 [dependencies]
-thiserror = "1.0.56"
+thiserror = "1.0.57"
 
   [dependencies.phf]
   version = "0.11.2"

@@ -1,6 +1,6 @@
 [‼️]: ✏️README.mdt
 
-# ifs
+# ifs : util for write / read file
 
 ```rust
 use aok::{Result, OK};

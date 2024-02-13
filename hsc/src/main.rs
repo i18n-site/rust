@@ -26,29 +26,30 @@ https://docs.rs/ed25519-dalek/latest/ed25519_dalek/
 
 #[tokio::main]
 async fn main() -> Result<()> {
-  let mut cmd = cmdv!(hsc)
-    .arg(arg!(-k --key <key> "key file path").required(false))
-    .arg(arg!(-c --create "create key if not exist"))
-    .arg(arg!([fp] "file path"));
+  if let Some(mut cmd) = cmdv!(hsc) {
+    cmd = cmd
+      .arg(arg!(-k --key <key> "key file path").required(false))
+      .arg(arg!(-c --create "create key if not exist"))
+      .arg(arg!([fp] "file path"));
+    let m = cmd.clone().get_matches();
 
-  let m = cmd.clone().get_matches();
+    if let Some::<&String>(fp) = m.get_one("fp") {
+      cget!(
+        m:
+          create: bool;
+      );
+      let key = if let Some(key) = m.get_one::<String>("key") {
+        hsc::key(key, *create).await?
+      } else {
+        let sk: String = B3S_SK();
+        let key = &BASE64_STANDARD.decode(sk)?[..];
+        SigningKey::from_bytes(&key.try_into()?)
+      };
 
-  if let Some::<&String>(fp) = m.get_one("fp") {
-    cget!(
-      m:
-        create: bool;
-    );
-    let key = if let Some(key) = m.get_one::<String>("key") {
-      hsc::key(key, *create).await?
+      hsc::hsc(fp, key).await?;
     } else {
-      let sk: String = B3S_SK();
-      let key = &BASE64_STANDARD.decode(sk)?[..];
-      SigningKey::from_bytes(&key.try_into()?)
-    };
-
-    hsc::hsc(fp, key).await?;
-  } else {
-    cmd.print_long_help()?;
+      cmd.print_long_help()?;
+    }
   }
   OK
 }

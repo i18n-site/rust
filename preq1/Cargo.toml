@@ -16,7 +16,7 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
   [dependencies.genv]
-  version = "0.1.6"
+  version = "0.1.7"
 
   [dependencies.reqwest]
   version = "0.11.24"

@@ -56,7 +56,7 @@ async fn main() -> Result<()> {
 
   tokio::spawn(async {
     let healthcheck = HEALTHCHECK.as_str();
-    alive::cron::run(async move || {
+    alive::cron::run(|| async move {
       xerr::log!(ireq::get(healthcheck).await);
     })
     .await;

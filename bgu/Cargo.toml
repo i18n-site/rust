@@ -1,8 +1,8 @@
-features = { }
+features = {}
 
 [package]
 name = "bgu"
-version = "0.1.10"
+version = "0.1.12"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -13,18 +13,25 @@ description = "bgu"
 const-str = "0.5.6"
 current_platform = "0.2.0"
 dirs = "5.0.1"
-ed25519-dalek = "2.1.0"
+ed25519-dalek = "2.1.1"
 lzma-rs = "0.3.0"
+prost = "0.12.3"
+rand = "0.8.5"
 scopeguard = "1.2.0"
+static_init = "1.0.3"
 tar = "0.4.40"
 tracing = "0.1.40"
 
+[dependencies.sts]
+version = "0.1.19"
+path = "../sts"
+
 [dependencies.blake3]
 version = "1.5.0"
-features = [ "traits-preview" ]
+features = ["traits-preview"]
 
 [dependencies.genv]
-version = "0.1.6"
+version = "0.1.7"
 path = "../genv"
 
 [dependencies.xerr]
@@ -36,18 +43,18 @@ version = "0.1.3"
 path = "../aok"
 
 [dependencies.ifs]
-version = "0.1.11"
+version = "0.1.18"
 path = "../ifs"
 default-features = false
-features = [ "hash", "txz_hash_d", "fs" ]
+features = ["hash", "txz_hash_d", "fs", "dir", "conf", "rsync"]
 
 [dependencies.iget]
-version = "0.1.5"
+version = "0.1.6"
 path = "../iget"
 
 [dependencies.tokio]
 version = "1.36.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
 
 [dependencies.trt]
 version = "0.1.28"
@@ -59,4 +66,15 @@ static_init = "1.0.3"
 
 [dev-dependencies.tokio]
 version = "1.36.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[build-dependencies]
+prost-build = "0.12.3"
+
+[build-dependencies.aok]
+version = "0.1.3"
+path = "../aok"
+
+[build-dependencies.genv]
+version = "0.1.7"
+path = "../genv"

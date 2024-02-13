@@ -10,7 +10,7 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
   [dependencies.clap]
-  version = "4.4.18"
+  version = "4.5.0"
   features = [ "cargo" ]
 
   [dependencies.tokio]

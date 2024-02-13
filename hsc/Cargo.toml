@@ -27,11 +27,11 @@ version = "1.5.0"
 features = [ "traits-preview" ]
 
 [dependencies.ed25519-dalek]
-version = "2.1.0"
+version = "2.1.1"
 features = [ "signature", "rand_core" ]
 
 [dependencies.cmdv]
-version = "0.1.1"
+version = "0.1.2"
 path = "../cmdv"
 
 [dependencies.cget]
@@ -39,15 +39,15 @@ version = "0.1.2"
 path = "../cget"
 
 [dependencies.clap]
-version = "4.4.18"
+version = "4.5.0"
 features = [ "cargo" ]
 
 [dependencies.genv]
-version = "0.1.6"
+version = "0.1.7"
 path = "../genv"
 
 [dependencies.ifs]
-version = "0.1.11"
+version = "0.1.18"
 path = "../ifs"
 default-features = false
 features = [ "hash" ]

@@ -11,12 +11,12 @@ description = "smtp send mail"
 
 [dependencies]
 anyhow = "1.0.79"
-genv = "0.1.6"
+genv = "0.1.7"
 mail-builder = "0.3.1"
 tracing = "0.1.40"
 trt = "0.1.28"
 static_init = "1.0.3"
-thiserror = "1.0.56"
+thiserror = "1.0.57"
 rand = "0.8.5"
 
   [dependencies.mail-send]

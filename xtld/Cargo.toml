@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/xtld"
 description = "xtld"
 
 [dependencies]
-psl = "2.1.22"
+psl = "2.1.24"
 xstr = { version = "0.1.10" }
 
 [dev-dependencies]

@@ -36,8 +36,8 @@ jobs:
         uses: actions-rs/toolchain@v1.0.6
         with:
             # https://github.com/dalek-cryptography/curve25519-dalek/issues/618
-            # toolchain: nightly
-            toolchain: nightly-2024-02-04
+            toolchain: nightly
+            # toolchain: nightly-2024-02-04
             override: true
             components: rust-src
             # components: rustfmt, clippy

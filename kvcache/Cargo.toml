@@ -1,6 +1,6 @@
 [package]
 name = "kvcache"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -9,7 +9,7 @@ description = "kvcache"
 
 [dependencies]
 aok = { version = "0.1.3", path = "../aok" }
-fred = "8.0.1"
+fred = "8.0.2"
 intbin = "0.1.2"
 tracing = "0.1.40"
 xhash = { version = "0.1.5", path = "../xhash" }

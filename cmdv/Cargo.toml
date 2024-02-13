@@ -1,6 +1,6 @@
 [package]
 name = "cmdv"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/cmdv"
 description = "cmdv"
 
 [dependencies]
-clap = { version = "4.4.18", features = ["cargo"] }
+clap = { version = "4.5.0", features = ["cargo"] }
 current_platform = "0.2.0"
 tracing = "0.1.40"
 
