@@ -1,0 +1,79 @@
+[workspace]
+members = [
+  "tmpl",
+  "xstr",
+  "xerr",
+  "t3",
+  "tp",
+  "xhash",
+  "trt",
+  "sts",
+  "xmail",
+  "svg2webp",
+  "cookiestr",
+  "loginit",
+  "mysql_macro",
+  "click_captcha",
+  "xtld",
+  "mreplace",
+  "radix_str",
+  "re",
+  "wxpush",
+  "genv",
+  "xsmtp",
+  "jarg",
+  "set_header",
+  "amid",
+  "apart",
+  "preq",
+  "getc",
+  "rany",
+  "aok",
+  "hi",
+  "ireq",
+  "i18n-site",
+  "aliver",
+  "alive",
+  "idns",
+  "ok_or",
+  "preq1",
+  "b62",
+  "cnu",
+  "lang",
+  "kvcache",
+  "iget",
+  "bgu",
+  "hsc",
+  "cget",
+  "cget/test_cget",
+  "i18",
+  "i18s",
+  "i18e",
+  "ifs",
+  "cmdv",
+  "s_",
+  "i_",
+  "t_",
+  "sline",
+  "xbin",
+  "dot_hide",
+  "vb",
+]
+resolver = "2"
+
+[profile.release]
+lto = true
+opt-level = 3
+incremental = true
+codegen-units = 1
+overflow-checks = false
+panic = 'abort'
+debug-assertions = false
+strip = true
+
+[profile.dev]
+split-debuginfo = "unpacked"
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3

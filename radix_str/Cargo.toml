@@ -1,0 +1,18 @@
+[package]
+name = "radix_str"
+version = "0.1.1"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/radix_str"
+description = "use proc_macro convert number radix to static str"
+
+[lib]
+proc-macro = true
+
+[dev-dependencies]
+
+[features]
+
+[dependencies]
+radix_fmt = "1.0.0"

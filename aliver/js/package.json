@@ -1,0 +1,16 @@
+{
+  "name": "@5-/alive",
+  "version": "0.1.6",
+  "repository": "https://github.com/i18n-site/api-proto-js.git",
+  "homepage": "https://github.com/i18n-site/api-proto-js/tree/main/.",
+  "author": "3Ti.Site@gmail.com",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./index.js",
+    "./*": "./*"
+  },
+  "peerDependencies": {
+    "@3-/proto": "^2.0.36"
+  },
+  "type": "module"
+}

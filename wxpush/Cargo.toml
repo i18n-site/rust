@@ -1,0 +1,44 @@
+features = {}
+
+[package]
+name = "wxpush"
+version = "0.1.11"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/wxpush"
+description = "api for https://wxpusher.zjiecode.com"
+
+[dependencies]
+anyhow = "1.0.81"
+const-str = "0.5.7"
+serde_with = "3.7.0"
+sonic-rs = "0.3.4"
+thiserror = "1.0.58"
+
+[dependencies.genv]
+version = "0.1.7"
+path = "../genv"
+
+[dependencies.reqwest]
+version = "0.11.26"
+features = ["json"]
+
+[dependencies.serde]
+version = "1.0.197"
+features = ["derive"]
+
+[dependencies.static_init]
+version = "1.0.3"
+features = ["lock_statistics", "parking_lot", "parking_lot_core"]
+
+[dependencies.xstr]
+version = "0.1.10"
+path = "../xstr"
+
+[dev-dependencies]
+anyhow = "1.0.81"
+
+[dev-dependencies.tokio]
+version = "1.36.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

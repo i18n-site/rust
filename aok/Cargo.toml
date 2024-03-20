@@ -1,0 +1,15 @@
+[package]
+name = "aok"
+version = "0.1.3"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/aok"
+description = "aok"
+
+[dependencies]
+anyhow = "1.0.81"
+
+[dev-dependencies]
+
+[features]
