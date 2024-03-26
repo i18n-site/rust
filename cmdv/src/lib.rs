@@ -1,10 +1,14 @@
+use std::env;
+
 pub use clap;
 use clap::{arg, Command};
 use current_platform::CURRENT_PLATFORM;
 
-pub fn cmdv(name: impl Into<clap::builder::Str>, ver: impl AsRef<str>) -> Option<Command> {
+pub static NAME: &str = env!("CARGO_PKG_NAME");
+
+pub fn cmdv(ver: impl AsRef<str>) -> Option<Command> {
   let ver = ver.as_ref();
-  let cmd = Command::new(name)
+  let cmd = Command::new(NAME)
     .disable_version_flag(true)
     .arg(arg!(-v --version ...))
     .arg(arg!(
@@ -40,7 +44,7 @@ target:{}"#,
 
 #[macro_export]
 macro_rules! cmdv {
-  ($name:ident) => {
-    $crate::cmdv(stringify!($name), $crate::clap::crate_version!())
+  () => {
+    $crate::cmdv($crate::clap::crate_version!())
   };
 }

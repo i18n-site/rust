@@ -47,15 +47,6 @@ pub fn exe_path(name: impl Into<String>, ver: &Ver) -> PathBuf {
   path
 }
 
-#[macro_export]
-macro_rules! ver {
-  () => {{
-    use $crate::const_str::{parse, split};
-    let r: [&str; 3] = split!(env!("CARGO_PKG_VERSION"), ".");
-    $crate::Ver([parse!(r[0], u32), parse!(r[1], u32), parse!(r[2], u32)])
-  }};
-}
-
 // impl From<St> for Ver {
 //   type Error = vb::Error;
 //

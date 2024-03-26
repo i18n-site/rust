@@ -1,6 +1,6 @@
 [package]
 name = "alive"
-version = "0.1.73"
+version = "0.1.74"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -19,7 +19,7 @@ idns = { version = "0.1.18" }
 ireq = { version = "0.1.7" }
 len-trait = "0.6.1"
 mail-send = { version = "0.4.8", package = "mail-send-fork" }
-m = { version = "0.1.31", package = "mysql_macro" }
+m = { version = "0.1.32", package = "mysql_macro" }
 paste = "1.0.14"
 preq1 = { version = "0.1.6" }
 prost = "0.12.3"
@@ -36,7 +36,7 @@ tracing = "0.1.40"
 trt = { version = "0.1.28" }
 xerr = { version = "0.1.11" }
 xstr = { version = "0.1.10" }
-mysql_async = "0.33.0"
+mysql_async = "0.34.1"
 
 [dev-dependencies]
 loginit = { version = "0.1.10" }

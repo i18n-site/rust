@@ -56,18 +56,18 @@ for src from Y.down
     console.error src, e
 
 
-rust = """
-pub const MIRROR: &[(bool,&str)] = &[
-  #{li.join(',\n  ')}
-];
-"""
+# rust = """
+# pub const MIRROR: &[(bool,&str)] = &[
+#   #{li.join(',\n  ')}
+# ];
+# """
 
-write(
-  join(
-    dirname ROOT
-    'src/mirror.rs'
-  )
-  rust
-)
+# write(
+#   join(
+#     dirname ROOT
+#     'src/mirror.rs'
+#   )
+#   rust
+# )
 
 process.exit err_count

@@ -1,8 +1,6 @@
-features = {}
-
 [package]
 name = "bgu"
-version = "0.1.14"
+version = "0.1.16"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"

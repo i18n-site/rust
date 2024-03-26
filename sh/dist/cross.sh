@@ -22,7 +22,7 @@ Linux)
   if ! command -v cargo-zigbuild &>/dev/null; then
     cargo install cargo-zigbuild
   fi
-  TARGET_LI=$(rustup target list | awk '{print $1}' | grep "\-linux-" | grep -E "x86|aarch64" | grep -E "[musl|gun]$" | grep -v "i686-unknown-linux-musl")
+  TARGET_LI=(aarch64-unknown-linux-gnu aarch64-unknown-linux-musl x86_64-unknown-linux-gnu x86_64-unknown-linux-musl)
   ;;
 Darwin)
   TARGET_LI=$(rustc -vV | awk '/host/ { print $2 }')

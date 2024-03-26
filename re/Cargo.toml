@@ -9,8 +9,8 @@ description = "error like anyhow for axum"
 
 [dependencies]
 anyhow = "1.0.81"
-axum = "0.7.4"
-bytes = "1.5.0"
+axum = "0.7.5"
+bytes = "1.6.0"
 prost = { version = "0.12.3" }
 serde = { version = "1.0.197", features = ["derive"] }
 sonic-rs = "0.3.4"

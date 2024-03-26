@@ -10,8 +10,14 @@ pub struct BaseConf {
 
 #[allow(non_snake_case)]
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Conf {
+pub struct I18nConf {
   pub fromTo: HashMap<String, String>,
   pub yml: Option<BaseConf>,
   pub md: Option<BaseConf>,
+}
+
+#[allow(non_snake_case)]
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Conf {
+  pub i18n: Option<I18nConf>,
 }

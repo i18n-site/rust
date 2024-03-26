@@ -1,14 +1,30 @@
-dev-dependencies = {}
-features = {}
-
 [package]
 name = "i18n-site"
-version = "0.1.2"
+version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
-homepage = "https://github.com/i18n-site/rust/tree/main/i18n-site"
-description = "i18n-site"
+homepage = "https://github.com/i18n-site/rust/tree/main/i18n_site"
+description = "i18n_site"
+
+[dependencies]
+serde_yaml = "0.9.34"
+
+[dependencies.clap]
+version = "4.5.4"
+features = ["cargo"]
+
+[dependencies.cmdv]
+version = "0.1.4"
+path = "../cmdv"
+
+[dependencies.i18n_bgu]
+version = "0.1.1"
+path = "../i18n_bgu"
+
+[dependencies.tokio]
+version = "1.36.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
 
 [dependencies.aok]
 version = "0.1.3"

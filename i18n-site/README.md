@@ -1,6 +1,6 @@
 [‼️]: ✏️README.mdt
 
-# i18n-site
+# i18n_site
 
 ```rust
 /*

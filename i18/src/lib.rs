@@ -25,7 +25,6 @@ pub use from_to::FromTo;
 
 mod conf;
 pub use conf::Conf;
-pub mod mirror;
 // mod tran_dir;
 // pub use tran_dir::tran_dir;
 
@@ -116,7 +115,7 @@ extern "C" fn init() {
 const CACHE: &str = "cache";
 
 pub async fn run() -> Result<()> {
-  if let Some(cmd) = cmdv!(i18) {
+  if let Some(cmd) = cmdv!() {
     let cmd = cmd.arg(arg!(-d --workdir [path] "workdir"));
     let m = cmd.get_matches();
     let workdir = m
@@ -148,9 +147,9 @@ pub async fn run() -> Result<()> {
     let conf = workdir.join("conf.yml");
     let conf = ifs::r(conf)?;
     let conf: Conf = serde_yaml::from_slice(&conf)?;
-
-    if let Some(token) = env::token() {
-      macro_rules! ext {
+    if let Some(conf) = conf.i18n {
+      if let Some(token) = env::token() {
+        macro_rules! ext {
         ($($ext:ident),*) => {
           $(
             let $ext = if let Some($ext) = &conf.$ext
@@ -174,18 +173,21 @@ pub async fn run() -> Result<()> {
           )?;
         };
       }
-      ext!(md, yml);
-    } else {
-      eprintln!(
-        r#"
+        ext!(md, yml);
+      } else {
+        eprintln!(
+          r#"
 Please Set Token
 
 1. found token in https://i18n.site/token
 
 2. set env 'I18N_SITE_TOKEN' or config `token: your_token` in ~/.config/i18n.site.yml
 "#
-      );
-      std::process::exit(1);
+        );
+        std::process::exit(1);
+      }
+    } else {
+      eprintln!("miss i18n conf")
     }
   }
 

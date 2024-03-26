@@ -1,5 +1,8 @@
 use aok::{Result, OK};
+use i18n_site::run;
 
-pub fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
+  i18n_bgu::boot(run).await?;
   OK
 }

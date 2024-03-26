@@ -10,8 +10,6 @@ extern "C" fn init() {
   loginit::init()
 }
 
-use bgu::ver;
-
 async fn main() -> Result<()> {
   dbg!("test main");
   OK
@@ -19,6 +17,6 @@ async fn main() -> Result<()> {
 
 #[tokio::test]
 async fn test() -> Result<()> {
-  boot(PK, "i18", ver!(), mirror::MIRROR, main).await?;
+  boot(PK, mirror::MIRROR, "i18", main).await?;
   OK
 }

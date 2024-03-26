@@ -3,19 +3,23 @@
 # mysql macro: mysql macro for mysql_async
 
 ```rust
-use std::collections::HashMap;
-
-use mysql_macro::{conn, e, id_v, q, q01, q1};
+use mysql_macro::e;
 
 #[tokio::test]
 async fn main() -> aok::Result<()> {
   loginit::init();
-  tracing::debug!("test");
-  let id_li = vec![1];
-  let li: HashMap<_, String> = id_v("payBrand", id_li).await?;
-  dbg!(li);
-  let li: HashMap<_, String> = id_v("payBrand", *&[1]).await?;
-  dbg!(li);
+
+  let sql = format!("SELECT {}", 1);
+
+  e(sql.clone(), vec![]).await?;
+
+  dbg!(sql);
+  // tracing::debug!("test");
+  // let id_li = vec![1];
+  // let li: HashMap<_, String> = id_v("payBrand", id_li).await?;
+  // dbg!(li);
+  // let li: HashMap<_, String> = id_v("payBrand", *&[1]).await?;
+  // dbg!(li);
 
   // let mail_id: Option<Option<u64>> = q01!(r#"select mailId("a@b.c")"#);
   // dbg!(mail_id);

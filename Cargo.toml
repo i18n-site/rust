@@ -31,7 +31,6 @@ members = [
   "aok",
   "hi",
   "ireq",
-  "i18n-site",
   "aliver",
   "alive",
   "idns",
@@ -58,6 +57,9 @@ members = [
   "xbin",
   "dot_hide",
   "vb",
+  "i18n_bgu",
+  "cli_tmpl",
+  "i18n-site",
 ]
 resolver = "2"
 
