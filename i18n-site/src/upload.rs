@@ -80,7 +80,7 @@ impl Upload for NoUpload {
     let public = dir.join("public");
     let fp = "site";
     ifs::w(public.join(fp))?.write_all(&site_bin)?;
-    ifs::w(public.join(".v"))?.write_all(fp)?;
+    ifs::w(public.join(".v"))?.write_all(fp.as_bytes())?;
     OK
   }
 
