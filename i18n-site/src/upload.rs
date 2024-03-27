@@ -56,16 +56,16 @@ pub trait Upload {
       host: site.host,
       render_li: site.render_li,
       nav_li: site.nav_li,
-      lang_li: Self::upload_lang(dir, nav_li, &url_li, lang_url_li).await?,
+      lang_li: Self::upload_lang(&dir, nav_li, &url_li, lang_url_li).await?,
       url_li,
     };
-    Self::upload_site(site).await
+    Self::upload_site(dir, site).await
   }
 
-  async fn upload_site(site: api::Site) -> Result<()>;
+  async fn upload_site(dir: PathBuf, site: api::Site) -> Result<()>;
 
   async fn upload_lang(
-    dir: PathBuf,
+    dir: &PathBuf,
     nav_li: Vec<String>,
     url_li: &[String],
     lang_url_li: Vec<(u16, HashSet<String>)>,
@@ -75,12 +75,12 @@ pub trait Upload {
 pub struct NoUpload;
 
 impl Upload for NoUpload {
-  async fn upload_site(site: api::Site) -> Result<()> {
+  async fn upload_site(dir: PathBuf, site: api::Site) -> Result<()> {
     let site_bin = site.encode_to_vec();
     OK
   }
   async fn upload_lang(
-    dir: PathBuf,
+    dir: &PathBuf,
     nav_li: Vec<String>,
     url_li: &[String],
     lang_url_li: Vec<(u16, HashSet<String>)>,
@@ -93,12 +93,13 @@ impl Upload for NoUpload {
 pub struct S3;
 
 impl Upload for S3 {
-  async fn upload_site(site: api::Site) -> Result<()> {
+  async fn upload_site(dir: PathBuf, site: api::Site) -> Result<()> {
     let site_bin = site.encode_to_vec();
+
     OK
   }
   async fn upload_lang(
-    dir: PathBuf,
+    dir: &PathBuf,
     nav_li: Vec<String>,
     url_li: &[String],
     lang_url_li: Vec<(u16, HashSet<String>)>,
