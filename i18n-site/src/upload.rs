@@ -1,4 +1,4 @@
-use std::{collections::HashSet, fs, path::PathBuf};
+use std::{collections::HashSet, fs, io::Write, path::PathBuf};
 
 use aok::{Result, OK};
 use ifs::is_hidden;
@@ -77,8 +77,12 @@ pub struct NoUpload;
 impl Upload for NoUpload {
   async fn upload_site(dir: PathBuf, site: api::Site) -> Result<()> {
     let site_bin = site.encode_to_vec();
+    let public = dir.join("public");
+    ifs::w(public.join("site"))?.write_all(&site_bin)?;
+    ifs::w(public.join(".v"))?.write_all(b"site")?;
     OK
   }
+
   async fn upload_lang(
     dir: &PathBuf,
     nav_li: Vec<String>,
@@ -95,9 +99,9 @@ pub struct S3;
 impl Upload for S3 {
   async fn upload_site(dir: PathBuf, site: api::Site) -> Result<()> {
     let site_bin = site.encode_to_vec();
-
     OK
   }
+
   async fn upload_lang(
     dir: &PathBuf,
     nav_li: Vec<String>,
