@@ -2,6 +2,7 @@ use std::{collections::HashSet, fs, path::PathBuf};
 
 use aok::{Result, OK};
 use ifs::is_hidden;
+use prost::Message;
 use walkdir::WalkDir;
 
 use crate::{api, Site};
@@ -75,6 +76,7 @@ pub struct NoUpload;
 
 impl Upload for NoUpload {
   async fn upload_site(site: api::Site) -> Result<()> {
+    let site_bin = site.encode_to_vec();
     OK
   }
   async fn upload_lang(
@@ -92,6 +94,7 @@ pub struct S3;
 
 impl Upload for S3 {
   async fn upload_site(site: api::Site) -> Result<()> {
+    let site_bin = site.encode_to_vec();
     OK
   }
   async fn upload_lang(
