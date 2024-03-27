@@ -4,6 +4,12 @@ pub mod api {
   include!(concat!(env!("OUT_DIR"), "/api.rs"));
 }
 
+pub struct Site {
+  pub host: String,
+  pub render_li: Vec<api::Render>,
+  pub nav_li: Vec<api::Nav>,
+}
+
 pub mod upload;
 pub use upload::Upload;
 

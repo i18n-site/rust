@@ -1,25 +1,20 @@
 use std::{collections::HashSet, fs, path::PathBuf};
 
-use aok::Result;
+use aok::{Result, OK};
 use ifs::is_hidden;
 use walkdir::WalkDir;
 
-use crate::api;
-
-#[derive(Debug, Default)]
-pub struct Site {
-  pub lang_li: Vec<api::Lang>,
-  pub url_li: Vec<String>,
-}
+use crate::{api, Site};
 
 #[allow(async_fn_in_trait)]
 pub trait Upload {
   async fn run(
+    site: Site,
     dir: PathBuf,
     mut lang_path: Vec<(u32, String, &'static str)>,
     upload_ext: Vec<String>,
     nav_li: Vec<String>,
-  ) -> Result<Site> {
+  ) -> Result<()> {
     lang_path.sort_by(|a, b| a.0.cmp(&b.0));
     let mut url_set = HashSet::new();
     let lang_path_len = lang_path.len();
@@ -65,11 +60,15 @@ pub trait Upload {
     //   nav_i18n_li,
     //   url_v_li
     // }
-
-    Ok(Site {
+    let site = api::Site {
+      host: site.host,
+      render_li: site.render_li,
+      nav_li: site.nav_li,
       lang_li: Self::upload(dir, nav_li, &url_li, lang_url_li).await?,
       url_li,
-    })
+    };
+    dbg!(&site);
+    OK
   }
 
   async fn upload(

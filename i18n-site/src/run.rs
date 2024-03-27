@@ -6,7 +6,7 @@ use lang::{IntoEnumIterator, Lang, LANG_CODE, LANG_NAME};
 use crate::{
   api,
   upload::{self, NoUpload},
-  Conf, Err, Upload,
+  Conf, Err, Site, Upload,
 };
 
 pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
@@ -61,22 +61,25 @@ pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
     })
     .collect::<Vec<_>>();
 
-  let o = Up::run(dir, lang_path, conf.upload.ext, nav_code_li).await?;
+  let render_li = conf
+    .render
+    .0
+    .into_iter()
+    .map(|(func, url_li)| api::Render { func, url_li })
+    .collect();
 
-  // dbg!((conf.uploadExt, &lang_path));
-
-  let site = api::Site {
-    host: conf.host,
-    render_li: conf
-      .render
-      .0
-      .into_iter()
-      .map(|(func, url_li)| api::Render { func, url_li })
-      .collect(),
-    nav_li,
-    lang_li: o.lang_li,
-    url_li: o.url_li,
-  };
+  Up::run(
+    Site {
+      host: conf.host,
+      render_li,
+      nav_li,
+    },
+    dir,
+    lang_path,
+    conf.upload.ext,
+    nav_code_li,
+  )
+  .await?;
 
   OK
 }
