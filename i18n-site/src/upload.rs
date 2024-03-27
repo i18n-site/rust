@@ -7,12 +7,14 @@ use walkdir::WalkDir;
 
 use crate::{api, Site};
 
+pub type LangDirName = (u32, String, &'static str);
+
 #[allow(async_fn_in_trait)]
 pub trait Upload {
   async fn run(
     site: Site,
     dir: PathBuf,
-    mut lang_path: Vec<(u32, String, &'static str)>,
+    mut lang_path: Vec<LangDirName>,
     upload_ext: Vec<String>,
     nav_li: Vec<String>,
   ) -> Result<()> {
@@ -21,8 +23,7 @@ pub trait Upload {
     let lang_path_len = lang_path.len();
     let mut lang_url_li = Vec::with_capacity(lang_path_len);
     for i in lang_path {
-      let lang = i.1;
-      let dir = dir.join(&lang);
+      let dir = dir.join(&i.1);
       let mut lang_url_set = HashSet::new();
       for entry in WalkDir::new(&dir)
         .into_iter()
@@ -48,7 +49,7 @@ pub trait Upload {
         }
       }
       url_set.extend(lang_url_set.clone());
-      lang_url_li.push((i.0 as u16, lang_url_set));
+      lang_url_li.push((i, lang_url_set));
     }
     let mut url_li = url_set.into_iter().collect::<Vec<_>>();
     url_li.sort();
@@ -68,7 +69,7 @@ pub trait Upload {
     dir: &PathBuf,
     nav_li: Vec<String>,
     url_li: &[String],
-    lang_url_li: Vec<(u16, HashSet<String>)>,
+    lang_url_li: Vec<(LangDirName, HashSet<String>)>,
   ) -> Result<Vec<api::Lang>>;
 }
 
@@ -88,9 +89,25 @@ impl Upload for NoUpload {
     dir: &PathBuf,
     nav_li: Vec<String>,
     url_li: &[String],
-    lang_url_li: Vec<(u16, HashSet<String>)>,
+    lang_url_li: Vec<(LangDirName, HashSet<String>)>,
   ) -> Result<Vec<api::Lang>> {
     let mut r = Vec::with_capacity(lang_url_li.len());
+    for (lang_dir_name, url_set) in lang_url_li {
+      let site_lang = api::SiteLang {
+        nav_i18n_li: nav_li.iter().map(|nav| "todo".to_owned()).collect(),
+        url_v_li: url_li
+          .iter()
+          .map(|url| {
+            if url_set.contains(url) {
+              format!("{}/{url}", lang_dir_name.1)
+            } else {
+              Default::default()
+            }
+          })
+          .collect(),
+      };
+      dbg!(site_lang);
+    }
     Ok(r)
   }
 }
@@ -107,7 +124,7 @@ impl Upload for S3 {
     dir: &PathBuf,
     nav_li: Vec<String>,
     url_li: &[String],
-    lang_url_li: Vec<(u16, HashSet<String>)>,
+    lang_url_li: Vec<(LangDirName, HashSet<String>)>,
   ) -> Result<Vec<api::Lang>> {
     todo!()
   }
