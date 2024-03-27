@@ -78,8 +78,9 @@ impl Upload for NoUpload {
   async fn upload_site(dir: PathBuf, site: api::Site) -> Result<()> {
     let site_bin = site.encode_to_vec();
     let public = dir.join("public");
-    ifs::w(public.join("site"))?.write_all(&site_bin)?;
-    ifs::w(public.join(".v"))?.write_all(b"site")?;
+    let fp = "site";
+    ifs::w(public.join(fp))?.write_all(&site_bin)?;
+    ifs::w(public.join(".v"))?.write_all(fp)?;
     OK
   }
 
