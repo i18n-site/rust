@@ -1,9 +1,13 @@
 # i18n-site
 
-1. 软件包的签名
-2. 动态库的加载
-3. 架构编译期固化
+## 流程
 
-```rust
-<+ ./tests/main.rs>
-```
+### 开发
+
+1. 请求 xxx / site / .v -> /site
+2. /site -> name / id
+3. i18n & url_li
+
+### 线上
+
+1. 请求 xxx / burl::e(site_id) /.v

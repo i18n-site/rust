@@ -2,7 +2,7 @@ features = {}
 
 [package]
 name = "lang"
-version = "0.1.12"
+version = "0.1.14"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -10,7 +10,9 @@ homepage = "https://github.com/i18n-site/rust/tree/main/lang"
 description = "lang"
 
 [dependencies]
+ifs = { version = "0.1.25", path = "../ifs", default-features = false, features = ["hash"] }
 int-enum = "1.1.1"
+strum = { version = "0.26.2", features = ["derive"] }
 thiserror = "1.0.58"
 
 [dependencies.phf]

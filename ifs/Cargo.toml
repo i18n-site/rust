@@ -1,6 +1,6 @@
 [package]
 name = "ifs"
-version = "0.1.25"
+version = "0.1.26"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -31,7 +31,17 @@ walkdir = { version = "2.5.0", optional = true }
 blake3 = { version = "1.5.1", features = ["traits-preview"], optional = true }
 
 [features]
-default = ["hash", "fs", "txz_hash_d", "conf", "rsync", "b3_len", "confdir"]
+default = [
+  "hash",
+  "fs",
+  "txz_hash_d",
+  "conf",
+  "rsync",
+  "b3_len",
+  "confdir",
+  "is_hidden",
+]
+is_hidden = ["dep:walkdir"]
 b3_len = ["dep:blake3"]
 rsync = ["dep:walkdir"]
 dir = ["dep:dirs", "dep:static_init"]

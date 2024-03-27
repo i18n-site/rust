@@ -10,7 +10,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/preq1"
 description = "preq1"
 
 [dependencies]
-bytes = "1.5.0"
+bytes = "1.6.0"
 form_urlencoded = "1.2.1"
 static_init = "1.0.3"
 tracing = "0.1.40"
@@ -19,7 +19,7 @@ tracing = "0.1.40"
 version = "0.1.7"
 
 [dependencies.reqwest]
-version = "0.11.26"
+version = "0.12.2"
 features = ["brotli"]
 
 [dev-dependencies.aok]

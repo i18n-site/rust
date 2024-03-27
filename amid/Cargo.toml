@@ -9,7 +9,7 @@ description = "amid"
 
 [dependencies]
 anyhow = "1.0.81"
-axum = "0.7.4"
+axum = "0.7.5"
 tracing = "0.1.40"
 
 [dev-dependencies]

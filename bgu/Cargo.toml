@@ -1,8 +1,6 @@
-features = {}
-
 [package]
 name = "bgu"
-version = "0.1.14"
+version = "0.1.17"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -70,7 +68,3 @@ prost-build = "0.12.3"
 [build-dependencies.aok]
 version = "0.1.3"
 path = "../aok"
-
-[build-dependencies.genv]
-version = "0.1.7"
-path = "../genv"

@@ -21,7 +21,7 @@ version = "0.1.7"
 path = "../genv"
 
 [dependencies.reqwest]
-version = "0.11.26"
+version = "0.12.2"
 features = ["json"]
 
 [dependencies.serde]

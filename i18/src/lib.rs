@@ -23,9 +23,8 @@ pub use from_to::FromTo;
 // pub use watch::{Change, Watch};
 // mod tran_parent;
 
-mod conf;
-pub use conf::Conf;
-pub mod mirror;
+pub mod conf;
+pub use conf::{Conf, I18nConf};
 // mod tran_dir;
 // pub use tran_dir::tran_dir;
 
@@ -116,9 +115,7 @@ extern "C" fn init() {
 const CACHE: &str = "cache";
 
 pub async fn run() -> Result<()> {
-  if let Some(cmd) = cmdv!(i18) {
-    let cmd = cmd.arg(arg!(-d --workdir [path] "workdir"));
-    let m = cmd.get_matches();
+  if let Some((m, _)) = cmdv!(arg!(-d --workdir [path] "workdir")) {
     let workdir = m
       .get_one("workdir")
       .map(|s: &String| s.into())
@@ -147,16 +144,14 @@ pub async fn run() -> Result<()> {
 
     let conf = workdir.join("conf.yml");
     let conf = ifs::r(conf)?;
-    let conf: Conf = serde_yaml::from_slice(&conf)?;
-
+    let conf = serde_yaml::from_slice::<Conf>(&conf)?.i18n;
     if let Some(token) = env::token() {
       macro_rules! ext {
         ($($ext:ident),*) => {
           $(
             let $ext = if let Some($ext) = &conf.$ext
-              && let Some(ft) = &$ext.fromTo
             {
-              ft
+              &$ext.fromTo
             } else {
               &conf.fromTo
             };

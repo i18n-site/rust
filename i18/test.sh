@@ -5,4 +5,4 @@ cd $DIR
 set -ex
 
 # direnv exec . cargo test --all-features -- --nocapture
-direnv exec . cargo run -- -d /Users/z/3Ti/site/i18n
+direnv exec . cargo run -- -d $(realpath $DIR/../..)/site/i18n

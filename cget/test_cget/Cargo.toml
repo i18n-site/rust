@@ -7,7 +7,7 @@ edition = "2021"
 aok = "0.1.3"
 
 [dependencies.clap]
-version = "4.5.3"
+version = "4.5.4"
 features = ["cargo"]
 
 [dependencies.cget]

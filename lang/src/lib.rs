@@ -1,3 +1,7 @@
+pub use strum::IntoEnumIterator;
+
+mod lang_name;
+pub use lang_name::LANG_NAME;
 mod lang;
 pub use lang::Lang;
 mod code_lang;

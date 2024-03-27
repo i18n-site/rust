@@ -1,14 +1,23 @@
+use std::env;
+
 pub use clap;
 use clap::{arg, Command};
 use current_platform::CURRENT_PLATFORM;
 
-pub fn cmdv(name: impl Into<clap::builder::Str>, ver: impl AsRef<str>) -> Option<Command> {
-  let ver = ver.as_ref();
-  let cmd = Command::new(name)
+pub static NAME: &str = env!("CARGO_PKG_NAME");
+
+pub static VER: &str = env!("CARGO_PKG_VERSION");
+
+pub fn cmdv() -> Option<Command> {
+  let cmd = Command::new(NAME)
     .disable_version_flag(true)
+    .disable_help_flag(true)
     .arg(arg!(-v --version ...))
     .arg(arg!(
-        - -vv "version detail"
+      - -vv "version detail"
+    ))
+    .arg(arg!(
+      -h --help "print help"
     ));
 
   let m = cmd.clone().ignore_errors(true).get_matches();
@@ -19,7 +28,7 @@ pub fn cmdv(name: impl Into<clap::builder::Str>, ver: impl AsRef<str>) -> Option
     let n = *n;
     if n > 0 {
       if n == 1 {
-        println!("{ver}");
+        println!("{VER}");
         return None;
       }
       vv = true;
@@ -30,7 +39,7 @@ pub fn cmdv(name: impl Into<clap::builder::Str>, ver: impl AsRef<str>) -> Option
     println!(
       r#"ver:{}
 target:{}"#,
-      ver, CURRENT_PLATFORM
+      VER, CURRENT_PLATFORM
     );
     return None;
   }
@@ -40,7 +49,21 @@ target:{}"#,
 
 #[macro_export]
 macro_rules! cmdv {
-  ($name:ident) => {
-    $crate::cmdv(stringify!($name), $crate::clap::crate_version!())
-  };
+  (
+    $($arg:expr),*
+    $(,)?
+  ) => {{
+    if let Some(mut cmd) = $crate::cmdv() {
+      let mut cmd = cmd$(.arg($arg))*;
+      let m = cmd.clone().get_matches();
+      if let Some(help) = m.get_one::<bool>("help") && *help {
+        cmd.print_help()?;
+        None
+      }else{
+        Some((m, cmd))
+      }
+    } else {
+      None
+    }
+  }};
 }

@@ -1,3 +1,5 @@
+#![feature(let_chains)]
+
 use aok::{Result, OK};
 use base64::prelude::{Engine, BASE64_STANDARD};
 use cget::cget;
@@ -26,13 +28,11 @@ https://docs.rs/ed25519-dalek/latest/ed25519_dalek/
 
 #[tokio::main]
 async fn main() -> Result<()> {
-  if let Some(mut cmd) = cmdv!(hsc) {
-    cmd = cmd
-      .arg(arg!(-k --key <key> "key file path").required(false))
-      .arg(arg!(-c --create "create key if not exist"))
-      .arg(arg!([fp] "file path"));
-    let m = cmd.clone().get_matches();
-
+  if let Some((m, mut cmd)) = cmdv!(
+    arg!(-k --key <key> "key file path").required(false),
+    arg!(-c --create "create key if not exist"),
+    arg!([fp] "file path")
+  ) {
     if let Some::<&String>(fp) = m.get_one("fp") {
       cget!(
         m:
@@ -48,7 +48,7 @@ async fn main() -> Result<()> {
 
       hsc::hsc(fp, key).await?;
     } else {
-      cmd.print_long_help()?;
+      cmd.print_help()?;
     }
   }
   OK

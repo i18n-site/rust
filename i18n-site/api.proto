@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package api;
+
+message Nav
+{
+  string code = 1;
+  string url = 2;
+}
+
+message Render
+{
+  string func = 1;
+  repeated string url_li = 2;
+}
+
+message Lang
+{
+  string name = 1;
+  string en = 2;
+  string url = 3;
+}
+
+message Site
+{
+  string host = 1;
+  repeated Render render_li = 2;
+  repeated Nav nav_li = 3;
+  repeated Lang lang_li = 4;
+  repeated string url_li = 5;
+}
+
+message SiteLang
+{
+  repeated string nav_i18n_li = 1;
+  repeated string url_v_li = 2;
+}

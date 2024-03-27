@@ -4,4 +4,4 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
-cargo test -- --nocapture
+cargo run -- --dir $(realpath $DIR/../..)/md

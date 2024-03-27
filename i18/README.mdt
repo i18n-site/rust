@@ -3,9 +3,13 @@
 1. 读取 i18n/conf.yml
 
 ```
-from_to:
-  zh: en zh-TW ja ko
-  en: *
+fromTo:
+  zh:
+
+yml:
+  fromTo:
+    zh: en zh-TW ja ko
+    en:
 ```
 
 3. 扫描 i18n/zh 下面的 yml

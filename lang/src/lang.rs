@@ -1,7 +1,8 @@
 use int_enum::IntEnum;
+use strum::EnumIter;
 
 #[repr(u16)]
-#[derive(Hash, PartialEq, Eq, Clone, Debug, Copy, IntEnum)]
+#[derive(EnumIter, Hash, PartialEq, Eq, Clone, Debug, Copy, IntEnum)]
 pub enum Lang {
   En = 0,
   Zh = 1,

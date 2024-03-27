@@ -1,5 +1,11 @@
 #![feature(trait_alias)]
 
+#[cfg(feature = "is_hidden")]
+mod is_hidden;
+
+#[cfg(feature = "is_hidden")]
+pub use is_hidden::is_hidden;
+
 #[cfg(feature = "fs")]
 mod fs;
 
