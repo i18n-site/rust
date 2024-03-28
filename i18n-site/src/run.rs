@@ -71,6 +71,7 @@ pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
   Up::run(
     Site {
       host: conf.host,
+      ver: conf.ver,
       render_li,
       nav_li,
     },

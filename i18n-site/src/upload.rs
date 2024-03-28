@@ -59,12 +59,12 @@ pub trait Upload {
     let mut url_li = url_set.into_iter().collect::<Vec<_>>();
     url_li.sort();
     let site = api::Site {
-      ver: EMPTY,
+      ver: site.ver,
       ver_li_url: EMPTY,
       host: site.host,
-      render_li: site.render_li,
-      nav_li: site.nav_li,
       lang_li: Self::upload_lang(&dir, nav_li, &url_li, lang_url_li).await?,
+      nav_li: site.nav_li,
+      render_li: site.render_li,
       url_li,
     };
     Self::upload_site(dir, site).await
