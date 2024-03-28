@@ -85,7 +85,7 @@ pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
   OK
 }
 
-pub async fn run(dir: PathBuf, upload: bool) -> Result<()> {
+pub async fn run(dir: PathBuf, upload_s3: bool) -> Result<()> {
   let conf_fp = dir.join("conf.yml");
   let conf = ifs::r(&conf_fp)?;
 
@@ -96,7 +96,7 @@ pub async fn run(dir: PathBuf, upload: bool) -> Result<()> {
           run_conf::<$up>(dir, conf).await
         };
       }
-      if upload {
+      if upload_s3 {
         run_conf!(upload::S3)
       } else {
         run_conf!(NoUpload)
