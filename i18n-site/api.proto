@@ -23,9 +23,9 @@ message Lang
 
 message Site
 {
-  string host = 1;
-  string ver = 2;
-  repeated string ver_li = 3;
+  string ver = 1;
+  repeated string ver_li = 2;
+  string host = 3;
   repeated Render render_li = 4;
   repeated Nav nav_li = 5;
   repeated Lang lang_li = 6;
