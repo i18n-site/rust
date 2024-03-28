@@ -147,7 +147,6 @@ pub struct S3;
 impl Upload for S3 {
   async fn upload_site(dir: PathBuf, site: api::Site) -> Result<()> {
     let site_bin = site.encode_to_vec();
-    todo!();
     OK
   }
 
