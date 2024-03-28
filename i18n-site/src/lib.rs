@@ -1,8 +1,9 @@
 #![feature(let_chains)]
-
 pub mod api {
   include!(concat!(env!("OUT_DIR"), "/api.rs"));
 }
+
+pub const EMPTY: String = String::new();
 
 pub struct Site {
   pub host: String,

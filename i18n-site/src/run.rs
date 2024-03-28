@@ -6,7 +6,7 @@ use lang::{IntoEnumIterator, Lang, LANG_CODE, LANG_NAME};
 use crate::{
   api,
   upload::{self, NoUpload},
-  Conf, Err, Site, Upload,
+  Conf, Err, Site, Upload, EMPTY,
 };
 
 pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
@@ -56,7 +56,7 @@ pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
       nav_code_li.push(code.clone());
       api::Nav {
         code,
-        url: url.unwrap_or("".into()),
+        url: url.unwrap_or(EMPTY),
       }
     })
     .collect::<Vec<_>>();

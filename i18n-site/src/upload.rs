@@ -10,9 +10,8 @@ use ifs::is_hidden;
 use prost::Message;
 use walkdir::WalkDir;
 
-use crate::{api, Site};
+use crate::{api, Site, EMPTY};
 
-const EMPTY: String = String::new();
 pub type LangDirName = (u32, String, &'static str);
 
 #[allow(async_fn_in_trait)]
