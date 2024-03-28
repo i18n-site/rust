@@ -24,14 +24,16 @@ message Lang
 message Site
 {
   string host = 1;
-  repeated Render render_li = 2;
-  repeated Nav nav_li = 3;
-  repeated Lang lang_li = 4;
-  repeated string url_li = 5;
+  string ver = 2;
+  repeated string ver_li = 3;
+  repeated Render render_li = 4;
+  repeated Nav nav_li = 5;
+  repeated Lang lang_li = 6;
+  repeated string url_li = 7;
 }
 
 message SiteLang
 {
-  repeated string i18n_li = 1;
+  repeated string nav_i18n_li = 1;
   repeated string url_v_li = 2;
 }
