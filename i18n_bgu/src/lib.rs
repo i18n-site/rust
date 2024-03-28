@@ -18,10 +18,16 @@ pub const MIRROR: &[(bool, &str)] = &[
   // (false, "huggingface.co/datasets/i18n-site/dist/raw/"),
 ];
 
-pub static NAME: &str = env!("CARGO_PKG_NAME");
-
 pub fn boot<F: Future<Output = Result<()>>>(
+  name: impl Into<String>,
   main: impl Fn() -> F,
 ) -> impl Future<Output = Result<()>> {
-  bgu::boot(PK, MIRROR, NAME, main)
+  bgu::boot(PK, MIRROR, name, main)
+}
+
+#[macro_export]
+macro_rules! boot {
+  ($main:expr) => {{
+    $crate::boot(env!("CARGO_PKG_NAME"), $main)
+  }};
 }
