@@ -12,9 +12,6 @@ pub struct I18n {
 pub struct Render(pub HashMap<String, Vec<String>>);
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Nav(pub HashMap<String, Option<String>>);
-
-#[derive(Debug, Serialize, Deserialize)]
 pub struct Upload {
   pub ext: Vec<String>,
 }
@@ -26,6 +23,6 @@ pub struct Conf {
   pub ver: String,
   pub i18n: i18::I18nConf,
   pub render: Render,
-  pub nav: Nav,
+  pub nav: Vec<String>,
   pub upload: Upload,
 }
