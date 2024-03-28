@@ -31,7 +31,7 @@ version = "2.1.1"
 features = [ "signature", "rand_core" ]
 
 [dependencies.cmdv]
-version = "0.1.6"
+version = "0.1.7"
 path = "../cmdv"
 
 [dependencies.cget]
@@ -47,7 +47,7 @@ version = "0.1.7"
 path = "../genv"
 
 [dependencies.ifs]
-version = "0.1.25"
+version = "0.1.26"
 path = "../ifs"
 default-features = false
 features = [ "hash" ]

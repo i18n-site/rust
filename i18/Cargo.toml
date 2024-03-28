@@ -52,7 +52,7 @@ path = "../dot_hide"
 features = [ "walkdir" ]
 
 [dependencies.ifs]
-version = "0.1.25"
+version = "0.1.26"
 path = "../ifs"
 default-features = false
 features = [ "fs", "hash", "conf", "b3_len", "confdir" ]
@@ -74,7 +74,7 @@ version = "4.5.4"
 features = [ "cargo" ]
 
 [dependencies.cmdv]
-version = "0.1.6"
+version = "0.1.7"
 path = "../cmdv"
 
 [dependencies.tokio]

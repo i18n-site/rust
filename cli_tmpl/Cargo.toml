@@ -8,17 +8,25 @@ homepage = "https://github.com/i18n-site/rust/tree/main/cli_tmpl"
 description = "cli_tmpl"
 
 [dependencies]
-ifs = { version = "0.1.25", path = "../ifs", default-features = false, features = ["hash", "fs"] }
-serde = { version = "1.0.197", features = ["derive"] }
 serde_yaml = "0.9.34"
 thiserror = "1.0.58"
+
+[dependencies.ifs]
+version = "0.1.26"
+path = "../ifs"
+default-features = false
+features = [ "hash", "fs" ]
+
+[dependencies.serde]
+version = "1.0.197"
+features = [ "derive" ]
 
 [dependencies.clap]
 version = "4.5.4"
 features = [ "cargo" ]
 
 [dependencies.cmdv]
-version = "0.1.6"
+version = "0.1.7"
 path = "../cmdv"
 
 [dependencies.i18n_bgu]

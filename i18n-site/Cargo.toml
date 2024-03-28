@@ -12,17 +12,20 @@ prost = "0.12.3"
 serde_yaml = "0.9.34"
 thiserror = "1.0.58"
 walkdir = "2.5.0"
-xerr = { version = "0.1.11", path = "../xerr" }
+
+[dependencies.xerr]
+version = "0.1.11"
+path = "../xerr"
 
 [dependencies.i18]
 version = "0.1.189"
 path = "../i18"
 
 [dependencies.ifs]
-version = "0.1.25"
+version = "0.1.26"
 path = "../ifs"
 default-features = false
-features = ["fs", "is_hidden"]
+features = [ "fs", "is_hidden" ]
 
 [dependencies.lang]
 version = "0.1.14"
@@ -30,14 +33,14 @@ path = "../lang"
 
 [dependencies.serde]
 version = "1.0.197"
-features = ["derive"]
+features = [ "derive" ]
 
 [dependencies.clap]
 version = "4.5.4"
-features = ["cargo"]
+features = [ "cargo" ]
 
 [dependencies.cmdv]
-version = "0.1.6"
+version = "0.1.7"
 path = "../cmdv"
 
 [dependencies.i18n_bgu]
@@ -46,7 +49,7 @@ path = "../i18n_bgu"
 
 [dependencies.tokio]
 version = "1.36.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.aok]
 version = "0.1.3"
