@@ -23,6 +23,7 @@ pub struct Upload {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Conf {
   pub host: String,
+  pub ver: String,
   pub i18n: i18::I18nConf,
   pub render: Render,
   pub nav: Nav,
