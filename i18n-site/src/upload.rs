@@ -89,10 +89,10 @@ pub struct NoUpload;
 impl Upload for NoUpload {
   async fn upload_site(dir: PathBuf, site: api::Site) -> Result<()> {
     let public = dir.join("public");
-    let fp = &site.ver;
+    let fp = format!("v/{}", &site.ver);
     ifs::w(public.join(".v"))?.write_all(fp.as_bytes())?;
     let site_bin = site.encode_to_vec();
-    ifs::w(public.join("v").join(fp))?.write_all(&site_bin)?;
+    ifs::w(public.join(fp))?.write_all(&site_bin)?;
     OK
   }
 
