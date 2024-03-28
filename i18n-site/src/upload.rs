@@ -128,7 +128,8 @@ impl Upload for NoUpload {
           })
           .collect(),
       };
-      ifs::w(public.join(&lang_dir_name.1))?.write_all(&site_lang.encode_to_vec())?;
+      let en = &lang_dir_name.1;
+      ifs::w(public.join(en))?.write_all(&site_lang.encode_to_vec())?;
     }
     Ok(r)
   }
