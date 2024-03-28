@@ -1,4 +1,3 @@
-
 pub use clap;
 use clap::{arg, Command};
 use current_platform::CURRENT_PLATFORM;
