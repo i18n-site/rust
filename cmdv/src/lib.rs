@@ -1,4 +1,3 @@
-use std::env;
 
 pub use clap;
 use clap::{arg, Command};

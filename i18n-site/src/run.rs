@@ -37,7 +37,7 @@ pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
     }
   }
 
-  let mut lang_path = lang_path
+  let lang_path = lang_path
     .into_iter()
     .map(|(code, en)| (code as u32, en, LANG_NAME[code]))
     .collect::<Vec<_>>();
