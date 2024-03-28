@@ -85,9 +85,9 @@ pub trait Upload {
   ) -> Result<Vec<api::Lang>>;
 }
 
-pub struct NoUpload;
+pub struct Fs;
 
-impl Upload for NoUpload {
+impl Upload for Fs {
   async fn upload_site(dir: PathBuf, site: api::Site) -> Result<()> {
     let public = dir.join("public");
     let fp = format!("v/{}", &site.ver);

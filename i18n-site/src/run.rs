@@ -3,11 +3,7 @@ use std::{collections::HashMap, path::PathBuf};
 use aok::{Result, OK};
 use lang::{IntoEnumIterator, Lang, LANG_CODE, LANG_NAME};
 
-use crate::{
-  api,
-  upload::{self, NoUpload},
-  Conf, Err, Site, Upload, EMPTY,
-};
+use crate::{api, upload, Conf, Err, Site, Upload, EMPTY};
 
 pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
   // if let Some(from_to) = conf.i18n.fromTo {
@@ -99,7 +95,7 @@ pub async fn run(dir: PathBuf, upload_s3: bool) -> Result<()> {
       if upload_s3 {
         run_conf!(upload::S3)
       } else {
-        run_conf!(NoUpload)
+        run_conf!(upload::Fs)
       }
     }
     Err(e) => Err(Err::Conf(conf_fp, e).into()),
