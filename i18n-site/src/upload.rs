@@ -68,7 +68,7 @@ pub trait Upload {
       ver_li_url: EMPTY,
       host: site.host,
       nav_li: site.nav_li,
-      render_li: site.render_li,
+      route_li: site.route_li,
       url_li,
     };
     Self::upload_site(dir, site).await

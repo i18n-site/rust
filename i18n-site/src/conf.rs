@@ -22,7 +22,7 @@ pub struct Conf {
   pub host: String,
   pub ver: String,
   pub i18n: i18::I18nConf,
-  pub render: Render,
+  pub route: Render,
   pub nav: Vec<String>,
   pub upload: Upload,
 }

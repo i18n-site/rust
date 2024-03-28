@@ -31,7 +31,7 @@ message Site
   string ver = 1;
   string ver_li_url = 2;
   string host = 3;
-  repeated Render render_li = 4;
+  repeated Render route_li = 4;
   repeated string nav_li = 5;
   repeated Lang lang_li = 6;
   repeated string url_li = 7;

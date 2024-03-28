@@ -57,8 +57,8 @@ pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
     })
     .collect::<Vec<_>>();
 
-  let render_li = conf
-    .render
+  let route_li = conf
+    .route
     .0
     .into_iter()
     .map(|(func, url_li)| api::Render { func, url_li })
@@ -68,7 +68,7 @@ pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
     Site {
       host: conf.host,
       ver: conf.ver,
-      render_li,
+      route_li,
       nav_li,
     },
     dir,
