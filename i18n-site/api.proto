@@ -2,12 +2,6 @@ syntax = "proto3";
 
 package api;
 
-message Nav
-{
-  string code = 1;
-  string url = 2;
-}
-
 message Render
 {
   string func = 1;
@@ -38,7 +32,7 @@ message Site
   string ver_li_url = 2;
   string host = 3;
   repeated Render render_li = 4;
-  repeated Nav nav_li = 5;
+  repeated string nav_li = 5;
   repeated Lang lang_li = 6;
   repeated string url_li = 7;
 }

@@ -50,10 +50,7 @@ pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
     .map(|(code, url)| {
       let code = code.to_owned();
       nav_code_li.push(code.clone());
-      api::Nav {
-        code,
-        url: url.unwrap_or(EMPTY),
-      }
+      url.unwrap_or(code)
     })
     .collect::<Vec<_>>();
 
