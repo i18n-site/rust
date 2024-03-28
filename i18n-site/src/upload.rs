@@ -12,7 +12,11 @@ use walkdir::WalkDir;
 
 use crate::{api, Site, EMPTY};
 
-pub type LangDirName = (u32, String, &'static str);
+pub type LangDirName = (
+  u32,
+  String,       // dir
+  &'static str, //name
+);
 
 #[allow(async_fn_in_trait)]
 pub trait Upload {
@@ -99,6 +103,7 @@ impl Upload for NoUpload {
     lang_url_li: Vec<(LangDirName, HashSet<String>)>,
   ) -> Result<Vec<api::Lang>> {
     let mut r = Vec::with_capacity(lang_url_li.len());
+    let public = dir.join("public");
     for (lang_dir_name, url_set) in lang_url_li {
       let nav_i18n = if let Ok(yml) = xerr::ok!(ifs::r(dir.join(&lang_dir_name.1).join("i18n.yml")))
         && let Ok(m) = xerr::ok!(serde_yaml::from_slice::<HashMap<String, String>>(&yml[..]))
@@ -123,6 +128,7 @@ impl Upload for NoUpload {
           })
           .collect(),
       };
+      ifs::w(public.join(&lang_dir_name.2))?.write_all(&site_lang.encode_to_vec())?;
     }
     Ok(r)
   }
