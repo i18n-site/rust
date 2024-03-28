@@ -63,10 +63,10 @@ pub trait Upload {
     let mut url_li = url_set.into_iter().collect::<Vec<_>>();
     url_li.sort();
     let site = api::Site {
-      lang_li: Self::upload_lang(&dir, &site.ver, nav_li, &url_li, lang_url_li).await?,
       ver: site.ver,
       ver_li_url: EMPTY,
       host: site.host,
+      lang_li: Self::upload_lang(&dir, nav_li, &url_li, lang_url_li).await?,
       nav_li: site.nav_li,
       render_li: site.render_li,
       url_li,
@@ -78,7 +78,6 @@ pub trait Upload {
 
   async fn upload_lang(
     dir: &PathBuf,
-    ver: &str,
     nav_li: Vec<String>,
     url_li: &[String],
     lang_url_li: Vec<(LangDirName, HashSet<String>)>,
@@ -99,13 +98,12 @@ impl Upload for NoUpload {
 
   async fn upload_lang(
     dir: &PathBuf,
-    ver: &str,
     nav_li: Vec<String>,
     url_li: &[String],
     lang_url_li: Vec<(LangDirName, HashSet<String>)>,
   ) -> Result<Vec<api::Lang>> {
     let mut r = Vec::with_capacity(lang_url_li.len());
-    let public = dir.join("public").join(ver);
+    let public = dir.join("public");
     for (lang_dir_name, url_set) in lang_url_li {
       let nav_i18n = if let Ok(yml) = xerr::ok!(ifs::r(dir.join(&lang_dir_name.1).join("i18n.yml")))
         && let Ok(m) = xerr::ok!(serde_yaml::from_slice::<HashMap<String, String>>(&yml[..]))
@@ -132,11 +130,6 @@ impl Upload for NoUpload {
       };
       let en = &lang_dir_name.1;
       ifs::w(public.join(en))?.write_all(&site_lang.encode_to_vec())?;
-      r.push(api::Lang {
-        en: en.into(),
-        name: lang_dir_name.2.into(),
-        url: en.into(),
-      });
     }
     Ok(r)
   }
@@ -152,7 +145,6 @@ impl Upload for S3 {
 
   async fn upload_lang(
     dir: &PathBuf,
-    ver: &str,
     nav_li: Vec<String>,
     url_li: &[String],
     lang_url_li: Vec<(LangDirName, HashSet<String>)>,
