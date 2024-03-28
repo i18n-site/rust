@@ -42,15 +42,18 @@ pub async fn run_conf<Up: Upload>(dir: PathBuf, conf: Conf) -> Result<()> {
     .map(|(code, en)| (code as u32, en, LANG_NAME[code]))
     .collect::<Vec<_>>();
 
-  let mut nav_code_li = Vec::with_capacity(conf.nav.0.len());
+  let mut nav_code_li = Vec::with_capacity(conf.nav.len());
   let nav_li = conf
     .nav
-    .0
     .into_iter()
-    .map(|(code, url)| {
-      let code = code.to_owned();
-      nav_code_li.push(code.clone());
-      url.unwrap_or(code)
+    .map(|code| {
+      let (code, url) = if let Some(pos) = code.rfind(' ') {
+        (code[..pos].into(), code[pos + 1..].into())
+      } else {
+        (code.clone(), code)
+      };
+      nav_code_li.push(code);
+      url
     })
     .collect::<Vec<_>>();
 
