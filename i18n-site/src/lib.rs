@@ -7,6 +7,7 @@ pub const EMPTY: String = String::new();
 
 pub struct Site {
   pub host: String,
+  pub ver: String,
   pub render_li: Vec<api::Render>,
   pub nav_li: Vec<api::Nav>,
 }
