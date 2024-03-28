@@ -135,7 +135,7 @@ impl Upload for NoUpload {
       r.push(api::Lang {
         en: en.into(),
         name: lang_dir_name.2.into(),
-        url: en.into(),
+        url: format!("{ver}/{en}"),
       });
     }
     Ok(r)
