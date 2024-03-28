@@ -1,4 +1,9 @@
-use std::{collections::HashSet, fs, io::Write, path::PathBuf};
+use std::{
+  collections::{HashMap, HashSet},
+  fs,
+  io::Write,
+  path::PathBuf,
+};
 
 use aok::{Result, OK};
 use ifs::is_hidden;
@@ -93,6 +98,11 @@ impl Upload for NoUpload {
   ) -> Result<Vec<api::Lang>> {
     let mut r = Vec::with_capacity(lang_url_li.len());
     for (lang_dir_name, url_set) in lang_url_li {
+      if let Ok(yml) = xerr::ok!(ifs::r(dir.join(&lang_dir_name.1).join("i18n.yml"))) {
+        if let Ok(m) = xerr::ok!(serde_yaml::from_slice::<HashMap<String, String>>(&yml[..])) {
+          dbg!(m);
+        }
+      }
       let site_lang = api::SiteLang {
         nav_i18n_li: nav_li.iter().map(|nav| "todo".to_owned()).collect(),
         url_v_li: url_li
