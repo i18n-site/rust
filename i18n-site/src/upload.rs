@@ -107,7 +107,7 @@ impl Upload for NoUpload {
         Default::default()
       };
       let site_lang = api::SiteLang {
-        nav_i18n_li: nav_li
+        i18n_li: nav_li
           .iter()
           .map(|nav| nav_i18n.get(nav).unwrap_or(&EMPTY).to_owned())
           .collect(),
