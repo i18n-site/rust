@@ -60,6 +60,8 @@ pub trait Upload {
     let mut url_li = url_set.into_iter().collect::<Vec<_>>();
     url_li.sort();
     let site = api::Site {
+      ver: EMPTY,
+      ver_li_url: EMPTY,
       host: site.host,
       render_li: site.render_li,
       nav_li: site.nav_li,

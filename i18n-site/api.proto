@@ -35,7 +35,7 @@ message VerLi
 message Site
 {
   string ver = 1;
-  string ver_li = 2; // 版本列表的 URL
+  string ver_li_url = 2;
   string host = 3;
   repeated Render render_li = 4;
   repeated Nav nav_li = 5;
