@@ -4,12 +4,8 @@ pub use clap;
 use clap::{arg, Command};
 use current_platform::CURRENT_PLATFORM;
 
-pub static NAME: &str = env!("CARGO_PKG_NAME");
-
-pub static VER: &str = env!("CARGO_PKG_VERSION");
-
-pub fn cmdv() -> Option<Command> {
-  let cmd = Command::new(NAME)
+pub fn cmdv(name: &'static str, ver: &str) -> Option<Command> {
+  let cmd = Command::new(name)
     .disable_version_flag(true)
     .disable_help_flag(true)
     .arg(arg!(-v --version ...))
@@ -28,7 +24,7 @@ pub fn cmdv() -> Option<Command> {
     let n = *n;
     if n > 0 {
       if n == 1 {
-        println!("{VER}");
+        println!("{ver}");
         return None;
       }
       vv = true;
@@ -39,7 +35,7 @@ pub fn cmdv() -> Option<Command> {
     println!(
       r#"ver:{}
 target:{}"#,
-      VER, CURRENT_PLATFORM
+      ver, CURRENT_PLATFORM
     );
     return None;
   }
@@ -53,7 +49,7 @@ macro_rules! cmdv {
     $($arg:expr),*
     $(,)?
   ) => {{
-    if let Some(mut cmd) = $crate::cmdv() {
+    if let Some(mut cmd) = $crate::cmdv(env!("CARGO_PKG_NAME"),env!("CARGO_PKG_VERSION")) {
       let mut cmd = cmd$(.arg($arg))*;
       let m = cmd.clone().get_matches();
       if let Some(help) = m.get_one::<bool>("help") && *help {
