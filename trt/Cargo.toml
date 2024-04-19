@@ -1,0 +1,24 @@
+[package]
+name = "trt"
+version = "0.1.28"
+edition = "2021"
+license = "Apache-2.0"
+homepage = "https://github.com/i18n-site/srv/tree/main/rust/lib/trt"
+repository = "https://github.com/i18n-site/srv.git"
+description = "tokio global runtime"
+
+[dependencies]
+anyhow = "1.0.82"
+tracing = "0.1.40"
+
+[dependencies.aok]
+version = "0.1.11"
+path = "../aok"
+
+[dependencies.static_init]
+version = "1.0.3"
+features = [ "lock_statistics", "parking_lot", "parking_lot_core" ]
+
+[dependencies.tokio]
+version = "1.37.0"
+features = [ "rt-multi-thread", "macros", "rt", "time", "sync" ]

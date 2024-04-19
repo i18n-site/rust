@@ -1,0 +1,25 @@
+[dependencies]
+aok = "0.1.11"
+axum = "0.7.5"
+
+[package]
+name = "axum_cors"
+version = "0.1.2"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/axum_cors"
+description = "axum_cors"
+
+[dev-dependencies]
+aok = "0.1.11"
+loginit = "0.1.10"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.37.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[package.metadata.docs.rs]
+all-features = true

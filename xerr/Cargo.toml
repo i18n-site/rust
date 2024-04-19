@@ -1,0 +1,16 @@
+[package]
+name = "xerr"
+version = "0.1.11"
+edition = "2021"
+license = "Apache-2.0"
+homepage = "https://github.com/i18n-site/rust/tree/main/xerr"
+repository = "https://github.com/i18n-site/rust.git"
+description = "log error util"
+
+[dependencies]
+anyhow = "1.0.82"
+tracing = "0.1.40"
+
+[dev-dependencies.loginit]
+path = "../loginit"
+version = "0.1.10"

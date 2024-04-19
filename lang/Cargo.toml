@@ -1,0 +1,32 @@
+features = { }
+
+[package]
+name = "lang"
+version = "0.1.15"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/lang"
+description = "lang"
+
+[dependencies]
+int-enum = "1.1.1"
+thiserror = "1.0.58"
+
+[dependencies.ifs]
+version = "0.1.27"
+path = "../ifs"
+default-features = false
+features = [ "hash" ]
+
+[dependencies.strum]
+version = "0.26.2"
+features = [ "derive" ]
+
+[dependencies.phf]
+version = "0.11.2"
+features = [ "macros" ]
+
+[dev-dependencies.aok]
+path = "../aok"
+version = "0.1.11"

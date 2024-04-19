@@ -1,0 +1,15 @@
+[package]
+name = "ok_or"
+version = "0.1.1"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/ok_or"
+description = "ok_or"
+
+[dependencies]
+anyhow = "1.0.82"
+
+[dev-dependencies]
+
+[features]

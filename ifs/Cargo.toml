@@ -1,0 +1,63 @@
+[package]
+name = "ifs"
+version = "0.1.27"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/ifs"
+description = "util for write / read file"
+
+[dependencies]
+aok = "0.1.11"
+crossbeam-channel = { version = "0.5.12", optional = true }
+digest = "0.10.7"
+dirs = { version = "5.0.1", optional = true }
+lzma-rs = { version = "0.3.0", optional = true }
+pipe = "0.4.0"
+prost = { version = "0.12.4", optional = true }
+static_init = { version = "1.0.3", optional = true }
+tar = { version = "0.4.40", optional = true }
+tokio = { version = "1.37.0", features = [
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "time",
+  "fs",
+  "io-util",
+] }
+xerr = { version = "0.1.11", path = "../xerr" }
+tracing = "0.1.40"
+walkdir = { version = "2.5.0", optional = true }
+blake3 = { version = "1.5.1", features = ["traits-preview"], optional = true }
+
+[features]
+default = [
+  "hash",
+  "fs",
+  "txz_hash_d",
+  "conf",
+  "rsync",
+  "b3_len",
+  "confdir",
+  "is_hidden",
+]
+is_hidden = ["dep:walkdir"]
+b3_len = ["dep:blake3"]
+rsync = ["dep:walkdir"]
+dir = ["dep:dirs", "dep:static_init"]
+hash = []
+fs = []
+conf = ["dir", "dep:prost"]
+confdir = ["dep:dirs"]
+txz_hash_d = ["dep:lzma-rs", "dep:tar", "hash"]
+
+[dev-dependencies]
+aok = "0.1.11"
+loginit = "0.1.10"
+tokio = { version = "1.37.0", features = [
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "time",
+  "sync",
+] }

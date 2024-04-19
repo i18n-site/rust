@@ -1,0 +1,91 @@
+on:
+  workflow_call:
+    inputs:
+      name:
+        required: true
+        type: string
+
+jobs:
+  build:
+    permissions:
+      contents: write
+      repository-projects: write
+    name: build
+    strategy:
+      matrix:
+        platform: [macos-latest,ubuntu-latest,mac-arm,windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - if: runner.os == 'macOS'
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      # - uses: GuillaumeFalourd/setup-rsync@v1.2
+      - uses: actions/checkout@v4
+        with:
+          set-safe-directory: false
+          lfs: true
+      - name: Install Protoc
+        if: runner.os != 'macOS'
+        uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ github.token }}
+
+      - if: runner.os == 'linux'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ./sh/dist/gh.draft.sh ${{inputs.name}}
+      - if: runner.os == 'linux'
+        uses: goto-bus-stop/setup-zig@v2
+        # with:
+        #   version: 0.11.0
+      - name: rust-toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+            # https://github.com/dalek-cryptography/curve25519-dalek/issues/618
+            toolchain: nightly
+            # toolchain: nightly-2024-02-04
+            components: rust-src
+            # components: rustfmt, clippy
+      - name: dist
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          B3S_SK: ${{ secrets.B3S_SK}}
+        run: |
+          cd sh/dist
+          ./prepare.sh
+          ./dist.sh ${{inputs.name}}
+
+  v:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: latest
+      - uses: actions/checkout@v4
+        with:
+          set-safe-directory: false
+          lfs: true
+  #     # - uses: HatsuneMiku3939/direnv-action@v1
+  #     #   with:
+  #     #     direnvVersion: 2.33.0
+  #     # - uses: AnimMouse/setup-rclone@v1
+      - name: dist
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # ENC_PASSWD: ${{ secrets.ENC_PASSWD }}
+        run: |
+          # npm i
+          # export PATH="$PATH:$(pwd)/.direnv/bin"
+          cd sh/dist
+          ./dist.ver.sh ${{inputs.name}}
+          # ./os.sh
+  #     # - name: verify
+  #     #   shell: bash
+  #     #   run: |
+  #     #     PATH="$PATH:$(pwd)/.direnv/bin" ./sh/dist/verify.coffee

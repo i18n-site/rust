@@ -1,0 +1,32 @@
+[package]
+name = "hi"
+version = "0.1.13"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/hi"
+description = "hi with mail & wxpusher"
+
+[dependencies]
+aok = { version = "0.1.11" }
+genv = { version = "0.1.7" }
+ireq = { version = "0.1.8" }
+reqwest = { version = "0.12.3", features = ["h3"] }
+sonic-rs = "0.3.4"
+static_init = "1.0.3"
+tokio = { version = "1.37.0", features = [
+  "macros",
+  "rt",
+  "rt-multi-thread",
+  "time",
+  "sync",
+] }
+tracing = "0.1.40"
+wxpush = { version = "0.1.11" }
+xerr = { version = "0.1.11" }
+xsmtp = { version = "0.1.9" }
+xstr = { version = "0.1.10" }
+
+[dev-dependencies]
+
+[features]

@@ -1,0 +1,95 @@
+[package]
+name = "i18n-site"
+version = "0.2.1"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/i18n_site"
+description = "i18n_site"
+
+[dependencies]
+chrono = "0.4.38"
+intbin = "0.1.2"
+mime_guess = "2.0.4"
+prost = "0.12.4"
+serde_yaml = "0.9.34"
+thiserror = "1.0.58"
+tracing = "0.1.40"
+walkdir = "2.5.0"
+
+[dependencies.loginit]
+version = "0.1.10"
+path = "../loginit"
+
+[dependencies.burl]
+version = "0.1.1"
+path = "../burl"
+
+[dependencies.genv]
+version = "0.1.7"
+path = "../genv"
+
+[dependencies.map_await]
+version = "0.1.8"
+path = "../map_await"
+
+[dependencies.blake3]
+version = "1.5.1"
+features = [ "traits-preview" ]
+
+[dependencies.mysql_macro]
+version = "0.1.35"
+path = "../mysql_macro"
+
+[dependencies.s3_put]
+version = "0.1.8"
+path = "../s3_put"
+
+[dependencies.xerr]
+version = "0.1.11"
+path = "../xerr"
+
+[dependencies.i18]
+version = "0.1.189"
+path = "../i18"
+
+[dependencies.ifs]
+version = "0.1.27"
+path = "../ifs"
+default-features = false
+features = [ "fs", "is_hidden" ]
+
+[dependencies.lang]
+version = "0.1.15"
+path = "../lang"
+
+[dependencies.serde]
+version = "1.0.198"
+features = [ "derive" ]
+
+[dependencies.clap]
+version = "4.5.4"
+features = [ "cargo" ]
+
+[dependencies.cmdv]
+version = "0.1.7"
+path = "../cmdv"
+
+[dependencies.i18n_bgu]
+version = "0.1.2"
+path = "../i18n_bgu"
+
+[dependencies.tokio]
+version = "1.37.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
+
+[dependencies.aok]
+version = "0.1.11"
+path = "../aok"
+
+[build-dependencies]
+prost-build = "0.12.4"
+
+[build-dependencies.aok]
+version = "0.1.11"
+path = "../aok"

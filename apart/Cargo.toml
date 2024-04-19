@@ -1,0 +1,17 @@
+[package]
+name = "apart"
+version = "0.1.8"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/apart"
+description = "from_request_parts for axum"
+
+[dependencies]
+anyhow = "1.0.82"
+axum = "0.7.5"
+tracing = "0.1.40"
+
+[dev-dependencies]
+
+[features]

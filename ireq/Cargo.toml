@@ -1,0 +1,33 @@
+dev-dependencies = { }
+features = { }
+
+[package]
+name = "ireq"
+version = "0.1.8"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/ireq"
+description = "ireq"
+
+[dependencies]
+static_init = "1.0.3"
+thiserror = "1.0.58"
+
+[dependencies.aok]
+version = "0.1.11"
+path = "../aok"
+
+[dependencies.reqwest]
+version = "0.12.3"
+features = [
+"h3",
+"rustls-tls",
+"rustls-tls-native-roots",
+"brotli",
+"stream"
+]
+
+[dependencies.tokio]
+version = "1.37.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

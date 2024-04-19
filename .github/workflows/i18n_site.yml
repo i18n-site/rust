@@ -1,0 +1,17 @@
+name: i18n-site
+
+on:
+  push:
+    tags:
+      - i18n-site/[0-9]+.[0-9]+.[0-9]+
+  workflow_dispatch:
+
+jobs:
+  s3:
+    permissions:
+      contents: write
+      repository-projects: write
+    uses: ./.github/workflows/s3.yml
+    with:
+      name: i18n-site
+    secrets: inherit

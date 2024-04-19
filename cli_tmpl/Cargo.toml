@@ -1,0 +1,42 @@
+[package]
+name = "cli_tmpl"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/cli_tmpl"
+description = "cli_tmpl"
+
+[dependencies]
+serde_yaml = "0.9.34"
+thiserror = "1.0.58"
+
+[dependencies.ifs]
+version = "0.1.27"
+path = "../ifs"
+default-features = false
+features = [ "hash", "fs" ]
+
+[dependencies.serde]
+version = "1.0.198"
+features = [ "derive" ]
+
+[dependencies.clap]
+version = "4.5.4"
+features = [ "cargo" ]
+
+[dependencies.cmdv]
+version = "0.1.7"
+path = "../cmdv"
+
+[dependencies.i18n_bgu]
+version = "0.1.2"
+path = "../i18n_bgu"
+
+[dependencies.tokio]
+version = "1.37.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
+
+[dependencies.aok]
+version = "0.1.11"
+path = "../aok"

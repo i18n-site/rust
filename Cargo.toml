@@ -1,0 +1,88 @@
+[workspace]
+members = [
+  "amid",
+  "aok",
+  "apart",
+  "axum_cors",
+  "b62",
+  "bgu",
+  "burl",
+  "cfha",
+  "cget",
+  "cget/test_cget",
+  "cli_tmpl",
+  "click_captcha",
+  "cmdv",
+  "cnu",
+  "cookiestr",
+  "dot_hide",
+  "genv",
+  "getc",
+  "hi",
+  "hsc",
+  "i18",
+  "i18e",
+  "i18n-site",
+  "i18n_bgu",
+  "i18n_plugin",
+  "i18s",
+  "i_",
+  "idns",
+  "ifs",
+  "iget",
+  "ireq",
+  "jarg",
+  "kvcache",
+  "lang",
+  "loginit",
+  "map_await",
+  "mreplace",
+  "mysql_macro",
+  "ok_or",
+  "ping_ver",
+  "preq",
+  "preq1",
+  "radix_str",
+  "rany",
+  "re",
+  "s3_put",
+  "s_",
+  "set_header",
+  "sline",
+  "sts",
+  "svg2webp",
+  "t3",
+  "t_",
+  "tls_ping",
+  "tmpl",
+  "tp",
+  "trt",
+  "vb",
+  "wxpush",
+  "xbin",
+  "xerr",
+  "xhash",
+  "xkv",
+  "xmail",
+  "xsmtp",
+  "xstr",
+  "xtld",
+]
+resolver = "2"
+
+[profile.release]
+lto = true
+opt-level = 3
+incremental = true
+codegen-units = 1
+overflow-checks = false
+panic = 'abort'
+debug-assertions = false
+strip = true
+
+[profile.dev]
+split-debuginfo = "unpacked"
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3

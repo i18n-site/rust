@@ -1,0 +1,23 @@
+[package]
+name = "mreplace"
+version = "0.1.5"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/mreplace"
+description = "use daachorse::CharwiseDoubleArrayAhoCorasick for multiple string replace"
+
+[dependencies]
+const-str = { version = "0.5.7", optional = true }
+daachorse = "1.0.0"
+
+[dev-dependencies.static_init]
+version = "1.0.3"
+features = ["lock_statistics", "parking_lot", "parking_lot_core"]
+
+[features]
+default = ["macro"]
+macro = ["dep:const-str"]
+
+[package.metadata.docs.rs]
+all-features = true

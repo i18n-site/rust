@@ -1,0 +1,40 @@
+[package]
+name = "iget"
+version = "0.1.8"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/iget"
+description = "iget"
+
+[dependencies]
+bytes = "1.6.0"
+futures-util = "0.3.30"
+indicatif = "0.17.8"
+static_init = "1.0.3"
+thiserror = "1.0.58"
+
+[dependencies.ifs]
+version = "0.1.27"
+path = "../ifs"
+features = ["fs"]
+default-features = false
+
+[dependencies.aok]
+version = "0.1.11"
+path = "../aok"
+
+[dependencies.reqwest]
+version = "0.11.27"
+features = [
+  "http3",
+  "rustls-tls",
+  "rustls-tls-native-roots",
+  "brotli",
+  "stream",
+]
+default-features = false
+
+[dependencies.tokio]
+version = "1.37.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync", "fs"]
