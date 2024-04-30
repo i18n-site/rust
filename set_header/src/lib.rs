@@ -1,6 +1,11 @@
 use std::{ops::Deref, sync::Arc};
 
-use axum::{extract::Request, http::HeaderName, middleware::Next, response::Response};
+use axum::{
+  extract::Request,
+  http::{header::CONTENT_TYPE, HeaderName, HeaderValue},
+  middleware::Next,
+  response::Response,
+};
 use parking_lot::Mutex;
 
 #[derive(Default, Debug, Clone)]
@@ -35,15 +40,30 @@ async fn _set_header(mut req: Request, next: Next) -> anyhow::Result<Response> {
   let header = Header::default();
   req.extensions_mut().insert(header.clone());
   let mut r = next.run(req).await;
-  for (k, v) in &header.lock().0 {
-    match v.parse() {
-      Ok(v) => {
-        r.headers_mut().append(k, v);
-      }
-      Err(err) => {
-        tracing::error!("{}", err);
+
+  let mut has_content_type = false;
+  {
+    if let Ok(header) = Arc::try_unwrap(header.0) {
+      let header = header.into_inner().0;
+      for (k, v) in header {
+        if k == CONTENT_TYPE {
+          has_content_type = true;
+        }
+        match v.parse() {
+          Ok(v) => {
+            r.headers_mut().append(k, v);
+          }
+          Err(err) => {
+            tracing::error!("{}", err);
+          }
+        }
       }
     }
+  }
+  if !has_content_type {
+    // for cloudflare compress : https://developers.cloudflare.com/speed/optimization/content/brotli/content-compression/
+    r.headers_mut()
+      .insert(CONTENT_TYPE, HeaderValue::from_static("text/js"));
   }
   Ok(r)
 }

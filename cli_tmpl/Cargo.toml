@@ -9,7 +9,8 @@ description = "cli_tmpl"
 
 [dependencies]
 serde_yaml = "0.9.34"
-thiserror = "1.0.58"
+thiserror = "1.0.59"
+tracing = "0.1.40"
 
 [dependencies.ifs]
 version = "0.1.27"
@@ -18,7 +19,7 @@ default-features = false
 features = [ "hash", "fs" ]
 
 [dependencies.serde]
-version = "1.0.198"
+version = "1.0.199"
 features = [ "derive" ]
 
 [dependencies.clap]
@@ -30,7 +31,7 @@ version = "0.1.7"
 path = "../cmdv"
 
 [dependencies.i18n_bgu]
-version = "0.1.2"
+version = "0.1.3"
 path = "../i18n_bgu"
 
 [dependencies.tokio]

@@ -10,7 +10,7 @@ pub fn trim_start(s: impl AsRef<str>, trimer: impl Fn(char) -> bool) -> usize {
 
 pub fn trim_end(s: impl AsRef<str>, trimer: impl Fn(char) -> bool) -> usize {
   let s = s.as_ref();
-  let mut p = 0;
+  let mut p = s.len();
   for (pos, i) in s.char_indices().rev() {
     if !trimer(i) {
       break;

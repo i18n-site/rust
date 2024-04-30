@@ -36,12 +36,10 @@ async fn test() -> Result<()> {
   //       DnsContent::AAAA { content } => {
   //         //2a02:c206:2140:481::1
   //         if content.to_string() == ip {
-  //           dbg!(&i.id, content);
   //           // cfha.rm_record(&zone_id, &i.id).await?;
   //         }
   //       }
   //       DnsContent::A { content } => {
-  //         // dbg!(i.id, content);
   //       }
   //       _ => {}
   //     }

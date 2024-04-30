@@ -9,7 +9,3 @@ description = "b62"
 
 [dependencies]
 base-x = "0.2.11"
-
-[dev-dependencies]
-
-[features]

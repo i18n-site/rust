@@ -1,15 +1,18 @@
 #![feature(coroutines, coroutine_trait)]
 #![feature(let_chains)]
 
+use pbar::pbar;
+mod txn;
+pub use txn::Txn;
+
 pub mod api {
   include!(concat!(env!("OUT_DIR"), "/api.rs"));
 }
 
 pub mod env;
-use aok::{Result, OK};
-use clap::arg;
-use cmdv::cmdv;
-use static_init::constructor;
+mod need_tran;
+use aok::Result;
+use need_tran::need_tran;
 
 mod lang_name;
 pub use lang_name::lang_name_li;
@@ -19,170 +22,115 @@ mod tran_ext;
 pub use tran_ext::tran_ext;
 mod from_to;
 pub use from_to::FromTo;
-// mod watch;
-// pub use watch::{Change, Watch};
-// mod tran_parent;
 
 pub mod conf;
-pub use conf::{Conf, I18nConf};
-// mod tran_dir;
-// pub use tran_dir::tran_dir;
+pub use conf::{Conf, Config, I18nConf};
 
 pub const NAME: &str = "i18";
 
-#[constructor(0)]
-extern "C" fn init() {
-  loginit::init()
-}
-
-// pub async fn tran_by_conf(
-//   conf: &Conf,
-//   from_to: &HashMap<String, String>,
-//   dir: &PathBuf,
-// ) -> Result<()> {
-//   let mut to_from = HashMap::new();
-//   let mut from_to = HashMap::new();
-//   let mut default_from_lang = None;
-//
-//   let mut exist = HashSet::new();
-//
-//   for (kstr, v) in &conf.fromTo {
-//     let kstr = kstr.to_owned();
-//     if let Ok::<Lang, _>(klang) = kstr.as_str().try_into() {
-//       exist.insert(klang);
-//       let k = LangStr {
-//         lang: klang,
-//         str: kstr,
-//       };
-//       if v.is_empty() {
-//         default_from_lang = Some(k);
-//       } else {
-//         let v = v.split(' ').collect::<Vec<_>>();
-//         let mut li = Vec::with_capacity(v.len());
-//         for i in v {
-//           if let Ok::<Lang, _>(lang) = i.try_into() {
-//             if lang == klang {
-//               continue;
-//             }
-//             exist.insert(lang);
-//             let lang_str = LangStr {
-//               lang,
-//               str: i.into(),
-//             };
-//             li.push(lang_str.clone());
-//             to_from.insert(lang_str, k.clone());
-//           }
-//         }
-//         from_to.insert(k, li);
-//       }
-//     }
-//   }
-//
-//   if let Some(default_from_lang) = default_from_lang {
-//     let mut li = Vec::with_capacity(CODE_LANG.len());
-//     for i in &CODE_LANG {
-//       if !exist.contains(i.1) {
-//         li.push(LangStr {
-//           lang: *i.1,
-//           str: (*i.0).into(),
-//         })
-//       }
-//     }
-//     from_to.insert(default_from_lang, li);
-//   }
-//
-//   let mut watch = Watch::new(dir);
-//
-//   let mut traned_from = HashSet::new();
-//
-//   for (k, to_lang_li) in &from_to {
-//     tran_parent(
-//       &mut traned_from,
-//       &from_to,
-//       &to_from,
-//       dir,
-//       k,
-//       to_lang_li,
-//       &mut watch,
-//     )
-//     .await?;
-//   }
-//
-//   watch.purge();
-//   OK
-// }
-
 const CACHE: &str = "cache";
 
-pub async fn run() -> Result<()> {
-  if let Some((m, _)) = cmdv!(arg!(-d --workdir [path] "workdir")) {
-    let workdir = m
-      .get_one("workdir")
-      .map(|s: &String| s.into())
-      .unwrap_or_else(|| std::env::current_dir().unwrap_or_else(|_| ".".into()));
-
-    let gen = workdir.join(".gen");
-
-    let cache = gen.join(CACHE);
-    let cache: std::path::PathBuf = (&*cache.as_os_str().to_string_lossy()).into();
-
-    #[allow(clippy::never_loop)]
-    loop {
-      if let Ok(meta) = std::fs::metadata(&cache) {
-        if meta.is_file() {
-          break;
-        }
-        std::fs::remove_dir_all(&cache)?;
-      }
-
-      use std::io::Write;
-      ifs::w(gen.join(".gitignore"))?.write_all(CACHE.as_bytes())?;
-      break;
-    }
-
-    let db = redb::Database::create(cache)?;
-
-    let conf = workdir.join("conf.yml");
-    let conf = ifs::r(conf)?;
-    let conf = serde_yaml::from_slice::<Conf>(&conf)?.i18n;
-    if let Some(token) = env::token() {
-      macro_rules! ext {
-        ($($ext:ident),*) => {
-          $(
-            let $ext = if let Some($ext) = &conf.$ext
-            {
-              &$ext.fromTo
-            } else {
-              &conf.fromTo
-            };
-          )*
-          tokio::try_join!(
-            $(
-              tran_ext(
-                token.as_ref(),
-                &workdir,
-                $ext,
-                stringify!($ext),
-                &db,
-              )
-            ),*
-          )?;
-        };
-      }
-      ext!(md, yml);
-    } else {
-      eprintln!(
-        r#"
+pub fn token() -> String {
+  if let Some(token) = env::token() {
+    return token;
+  }
+  eprintln!(
+    r#"
 Please Set Token
 
 1. found token in https://i18n.site/token
 
 2. set env 'I18N_SITE_TOKEN' or config `token: your_token` in ~/.config/i18n.site.yml
 "#
-      );
-      std::process::exit(1);
+  );
+  std::process::exit(1);
+}
+
+pub fn conf(workdir: &std::path::Path) -> Result<Conf> {
+  let conf = workdir.join("conf.yml");
+  let conf = ifs::r(conf)?;
+  let conf = serde_yaml::from_slice::<Conf>(&conf)?;
+  Ok(conf)
+}
+
+pub async fn run(workdir: &std::path::PathBuf, conf: &Config, token: String) -> Result<usize> {
+  let gen = workdir.join(".gen");
+
+  let cache = gen.join(CACHE);
+  let cache: std::path::PathBuf = (&*cache.as_os_str().to_string_lossy()).into();
+
+  #[allow(clippy::never_loop)]
+  loop {
+    if let Ok(meta) = std::fs::metadata(&cache) {
+      if meta.is_dir() {
+        break;
+      }
+      std::fs::remove_file(&cache)?;
     }
+    std::fs::create_dir_all(&cache)?;
+
+    use std::io::Write;
+    ifs::w(gen.join(".gitignore"))?.write_all((CACHE.to_owned() + "/").as_bytes())?;
+    break;
   }
 
-  OK
+  macro_rules! ext {
+    ($($ext:ident),*) => {{
+      [
+$({
+    let from_to = if let Some(i) = &conf.i18n.$ext
+    {
+      &i.fromTo
+    } else {
+      &conf.i18n.fromTo
+    };
+    let db = redb::Database::create(cache.join(stringify!($ext)))?;
+
+    (
+      tran_ext(
+        &conf.ignore,
+        &workdir,
+        from_to,
+        stringify!($ext),
+        &db,
+      )?,
+      db,
+      stringify!($ext),
+      from_to,
+    )
+}),*
+      ]
+    }}
+  }
+  //token.as_ref(),
+  let all_li = ext!(md, yml);
+
+  let mut total_len = 0;
+  for (li, ..) in &all_li {
+    for i in li {
+      total_len += i.len;
+    }
+  }
+  let pb = pbar(total_len);
+
+  let mut err_count = 0;
+
+  for (li, db, ext, from_to) in all_li {
+    let from_to = from_to.into();
+    for i in li {
+      let rel = i.rel.clone();
+      let len = i.len;
+      pb.set_message(rel.clone());
+      if let Err(err) = tran_path(i, &token, &db, ext, workdir, &from_to).await {
+        err_count += 1;
+        eprintln!("❌ {rel} : {:?}", err);
+      }
+
+      pb.inc(len);
+    }
+  }
+  pb.finish();
+
+  println!("\n✅ i18n.site translate");
+  Ok(err_count)
 }

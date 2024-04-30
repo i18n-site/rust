@@ -11,7 +11,7 @@ description = "gen click captcha"
 rand = "0.8.5"
 
 [dependencies.svg2webp]
-version = "0.1.6"
+version = "0.1.7"
 path = "../svg2webp"
 
 [dev-dependencies]

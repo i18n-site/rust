@@ -8,11 +8,10 @@ use map_await::{MapAwait, StreamExt};
 use mysql_macro::{args, e, last_id, q, q01};
 use prost::Message;
 use s3_put::IntoByteStream;
-use tracing::info;
 
 use crate::{
   api,
-  upload::{LangUrlLi, UrlLiExt},
+  upload::{LangUrl, UrlLiExt},
   Upload, EMPTY,
 };
 
@@ -134,7 +133,7 @@ pub async fn hash_upload<T: IntoByteStream + Send>(
         let url = urle(id);
         let file_path = file_path.clone();
         async move {
-          info!("⇧ {fp} → {url}");
+          println!("⇧ {fp} → {url}");
           let path = file_path(fp);
           s3.put(&url, mime, path).await?;
           OK
@@ -162,6 +161,9 @@ impl Upload for S3 {
     _dir: &Path,
     site: api::Site,
   ) -> Result<()> {
+    // Fs.upload_site(channel.clone(), ver.clone(), dir, site.clone())
+    //   .await?;
+
     let host = &site.host.to_lowercase();
 
     let site_id: Option<u64> = q01!("SELECT id FROM site WHERE name=?", &host);
@@ -212,15 +214,17 @@ impl Upload for S3 {
     &mut self,
     dir: &Path,
     _ver: &str,
-    nav_li: Vec<String>,
+    nav_li: &[String],
     url_li_ext: &[UrlLiExt],
-    ext_url_li: LangUrlLi,
+    ext_url_li: &[LangUrl],
   ) -> Result<Vec<api::Lang>> {
+    // Fs.upload_lang(dir, ver, nav_li.clone(), url_li_ext, ext_url_li.clone())
+    //   .await?;
     let s3 = &mut self.s3;
     let ext_url_li_len = ext_url_li.len();
     let mut m = HashMap::with_capacity(ext_url_li_len);
     let mut hashmap = HashMap::new();
-    for (lang_dir_name, url_set) in &ext_url_li {
+    for (lang_dir_name, url_set) in ext_url_li {
       let mut map = HashMap::with_capacity(url_li_ext.len());
       for (ext, li) in url_set {
         let mut extmap = HashMap::with_capacity(li.len());
@@ -244,7 +248,7 @@ impl Upload for S3 {
     let mut r = Vec::with_capacity(ext_url_li_len);
     let mut hashmap = HashMap::with_capacity(ext_url_li_len);
     let mut name_bin = HashMap::with_capacity(ext_url_li_len);
-    for (lang_dir_name, url_set) in &ext_url_li {
+    for (lang_dir_name, url_set) in ext_url_li {
       let mut url_v_li = Vec::with_capacity(url_li_ext.iter().map(|i| i.url_li.len()).sum());
       let map = m.get(&lang_dir_name.0).unwrap();
       for i in url_li_ext {
@@ -266,7 +270,7 @@ impl Upload for S3 {
           });
         }
       }
-      let bin = crate::site_lang(&nav_li, dir, &lang_dir_name.1, url_v_li).encode_to_vec();
+      let bin = crate::site_lang(nav_li, dir, &lang_dir_name.1, url_v_li).encode_to_vec();
       let hash = *blake3::hash(&bin).as_bytes();
       let name = lang_dir_name.1.to_owned();
       name_bin.insert(name.clone(), bin);

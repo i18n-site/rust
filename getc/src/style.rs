@@ -18,7 +18,7 @@ lang_style!(
   RUST: "rust" "rs";
   JS: "js" "ts" "javascript" "typescript";
   PYTHON: "py" "python";
-  TOML: "toml" "yaml";
+  TOML: "toml" "yaml" "yml";
   BASH: "shell" "bash" "zsh";
   COFFEE: "coffee" "coffeescript";
 );

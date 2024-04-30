@@ -6,7 +6,3 @@ license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/main/xstre"
 description = "xstr"
-
-[dependencies]
-
-[dev-dependencies]

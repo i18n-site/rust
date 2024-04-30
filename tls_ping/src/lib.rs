@@ -53,7 +53,7 @@ pub async fn tls_ping(host: impl Into<String>, ip: IpAddr, timeout: u64) -> Null
         if name == host || (name.starts_with("*.") && host == name[2..]) {
           has_host_cert = true;
           break;
-        } else if let Some(h) = host.splitn(2, '.').nth(1) {
+        } else if let Some(h) = host.split_once('.').map(|x| x.1) {
           if h == name {
             has_host_cert = true;
             break;
@@ -63,7 +63,6 @@ pub async fn tls_ping(host: impl Into<String>, ip: IpAddr, timeout: u64) -> Null
         if let Some(expire_after) = i.validity.time_to_expiration() {
           let expire_after = (expire_after.as_seconds_f32() as u64) / 86400;
           ensure!(expire_after > 14, "{name} expire after {expire_after} days",);
-          dbg!((&name, expire_after));
         } else {
           throw!("{host} : {name} has not valid expire");
         }

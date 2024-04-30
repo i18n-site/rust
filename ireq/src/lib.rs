@@ -11,12 +11,37 @@ pub enum ReqError {
 }
 
 #[static_init::dynamic]
-pub static REQ: Client = Client::builder()
-  .timeout(Duration::from_secs(120))
-  .connect_timeout(Duration::from_secs(16))
-  .danger_accept_invalid_certs(true)
-  .build()
-  .unwrap();
+pub static REQ: Client = {
+  let b = Client::builder()
+    .timeout(Duration::from_secs(300))
+    .brotli(true)
+    .zstd(true)
+    .connect_timeout(Duration::from_secs(8));
+
+  #[cfg(feature = "proxy")]
+  let b = {
+    use reqwest::Proxy;
+    // export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+    let mut b = b;
+    #[allow(clippy::never_loop)]
+    'out: loop {
+      for i in ["all", "http"] {
+        if let Ok(url) = std::env::var(format!("{i}_proxy")) {
+          b = b.proxy(Proxy::http(url).unwrap());
+          break 'out;
+        }
+      }
+      if let Ok(url) = std::env::var("https_proxy") {
+        b = b.proxy(Proxy::https(url).unwrap());
+      }
+
+      break;
+    }
+    b
+  };
+
+  b.build().unwrap()
+};
 
 pub async fn req(req: RequestBuilder) -> Result<String> {
   let res = req.send().await?;

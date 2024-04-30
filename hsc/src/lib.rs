@@ -55,7 +55,6 @@ pub async fn hsc(fp: impl AsRef<Path>, key: SigningKey) -> Result<()> {
   use ed25519_dalek::Verifier;
   let verifying_key = key.verifying_key();
   let r = verifying_key.verify(&hash, &Signature::from_bytes(&sign));
-  dbg!(r);
   */
   OK
 }

@@ -1,6 +1,6 @@
 [package]
 name = "kvcache"
-version = "0.1.30"
+version = "0.1.31"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -17,12 +17,12 @@ hset_cache = [ ]
 user_cache = [ "dep:rany" ]
 
 [dependencies]
-fred = "9.0.1"
+fred = "9.0.2"
 intbin = "0.1.2"
 tracing = "0.1.40"
 
 [dependencies.rany]
-version = "0.1.9"
+version = "0.1.10"
 path = "../rany"
 features = [ "b255" ]
 optional = true

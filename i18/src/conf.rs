@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use globset::{Glob, GlobSet, GlobSetBuilder};
 use serde::{Deserialize, Serialize};
 
 #[allow(non_snake_case)]
@@ -20,4 +21,29 @@ pub struct I18nConf {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Conf {
   pub i18n: I18nConf,
+  pub ignore: Option<Vec<String>>,
+}
+
+#[derive(Debug)]
+pub struct Config {
+  pub i18n: I18nConf,
+  pub ignore: GlobSet,
+}
+
+impl From<Conf> for Config {
+  fn from(conf: Conf) -> Self {
+    Self {
+      i18n: conf.i18n,
+      ignore: {
+        let mut builder = GlobSetBuilder::new();
+        if let Some(ignore) = conf.ignore {
+          ignore.into_iter().for_each(|regex| {
+            builder.add(Glob::new(&regex).unwrap());
+          });
+        }
+
+        builder.build().unwrap()
+      },
+    }
+  }
 }

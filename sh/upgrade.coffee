@@ -32,6 +32,11 @@ upgrade = (dir)=>
               changed = 1
               o.version = v
 
+  for [k,v] from Object.entries toml
+    if Object.keys(v).length == 0
+      delete toml[k]
+      changed = 1
+
   if not changed
     return
 

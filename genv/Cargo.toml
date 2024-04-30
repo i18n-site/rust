@@ -9,9 +9,8 @@ description = "global static var from environment"
 
 [dependencies]
 const-str = "0.5.7"
-static_init = { version = "1.0.3", features = ["parking_lot"] }
 tracing = "0.1.40"
 
-[dev-dependencies]
-
-[features]
+[dependencies.static_init]
+version = "1.0.3"
+features = [ "parking_lot" ]

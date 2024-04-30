@@ -3,23 +3,27 @@ use std::{collections::HashMap, path::PathBuf};
 use aok::{Result, OK};
 use lang::{IntoEnumIterator, Lang, LANG_CODE, LANG_NAME};
 
-use crate::{upload, Conf, Err, Site, Upload};
+use crate::{
+  upload::{upload, Fs, Payload, S3},
+  Conf, Err, Site, Upload,
+};
 
-pub async fn run_conf<Up: Upload + Default>(
-  channel: String,
-  ver: String,
-  dir: PathBuf,
-  conf: Conf,
-) -> Result<()> {
+pub async fn run_conf(channel: String, ver: String, dir: PathBuf, conf: Conf) -> Result<Payload> {
   // if let Some(from_to) = conf.i18n.fromTo {
-  //   dbg!(from_to);
   // }
 
+  let config: i18::Config = i18::Conf {
+    i18n: conf.i18n,
+    ignore: conf.ignore,
+  }
+  .into();
+
+  i18::run(&dir, &config, i18::token()).await?;
   let mut lang_path = HashMap::<usize, _>::new();
 
   let mut has_all = false;
 
-  for (from_str, to_li) in conf.i18n.fromTo {
+  for (from_str, to_li) in config.i18n.fromTo {
     if let Ok::<Lang, _>(from) = from_str.clone().try_into() {
       lang_path.insert(from as _, from_str);
       if to_li.is_empty() {
@@ -53,7 +57,11 @@ pub async fn run_conf<Up: Upload + Default>(
     .into_iter()
     .map(|code| {
       let (code, url) = if let Some(pos) = code.rfind(' ') {
-        (code[..pos].into(), code[pos + 1..].into())
+        let url = &code[pos + 1..];
+        (
+          code[..pos].into(),
+          (if url == "/" { "" } else { url }).into(),
+        )
       } else {
         (code.clone(), code)
       };
@@ -62,24 +70,21 @@ pub async fn run_conf<Up: Upload + Default>(
     })
     .collect::<Vec<_>>();
 
-  Up::default()
-    .run(
-      Site {
-        host: conf.host,
-        channel,
-        ver,
-        route_li: conf.route,
-        nav_li,
-      },
-      dir,
-      lang_path,
-      conf.upload.ext,
-      nav_code_li,
-    )
-    .await?;
-
-  println!("✅");
-  OK
+  upload(
+    Site {
+      host: conf.host,
+      channel,
+      ver,
+      route_li: conf.route,
+      nav_li,
+    },
+    dir,
+    lang_path,
+    conf.upload.ext,
+    &config.ignore,
+    nav_code_li,
+  )
+  .await
 }
 
 pub async fn run(channel: String, ver: String, dir: PathBuf, upload_s3: bool) -> Result<()> {
@@ -88,16 +93,13 @@ pub async fn run(channel: String, ver: String, dir: PathBuf, upload_s3: bool) ->
 
   match serde_yaml::from_slice::<Conf>(&conf[..]) {
     Ok(conf) => {
-      macro_rules! run_conf {
-        ($up:ty) => {
-          run_conf::<$up>(channel, ver, dir, conf).await
-        };
-      }
+      let payload = run_conf(channel, ver, dir, conf).await?;
+      Fs.upload(&payload).await?;
       if upload_s3 {
-        run_conf!(upload::S3)
-      } else {
-        run_conf!(upload::Fs)
-      }
+        S3::default().upload(&payload).await?;
+      };
+      println!("✅ i18n.site build");
+      OK
     }
     Err(e) => Err(Err::Conf(conf_fp, e).into()),
   }

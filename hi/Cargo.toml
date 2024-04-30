@@ -8,25 +8,35 @@ homepage = "https://github.com/i18n-site/rust/tree/main/hi"
 description = "hi with mail & wxpusher"
 
 [dependencies]
-aok = { version = "0.1.11" }
-genv = { version = "0.1.7" }
-ireq = { version = "0.1.8" }
-reqwest = { version = "0.12.3", features = ["h3"] }
-sonic-rs = "0.3.4"
+sonic-rs = "0.3.5"
 static_init = "1.0.3"
-tokio = { version = "1.37.0", features = [
-  "macros",
-  "rt",
-  "rt-multi-thread",
-  "time",
-  "sync",
-] }
 tracing = "0.1.40"
-wxpush = { version = "0.1.11" }
-xerr = { version = "0.1.11" }
-xsmtp = { version = "0.1.9" }
-xstr = { version = "0.1.10" }
 
-[dev-dependencies]
+[dependencies.aok]
+version = "0.1.11"
 
-[features]
+[dependencies.genv]
+version = "0.1.7"
+
+[dependencies.ireq]
+version = "0.1.11"
+
+[dependencies.reqwest]
+version = "0.12.4"
+features = [ "h3" ]
+
+[dependencies.tokio]
+version = "1.37.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+
+[dependencies.wxpush]
+version = "0.1.11"
+
+[dependencies.xerr]
+version = "0.1.11"
+
+[dependencies.xsmtp]
+version = "0.1.9"
+
+[dependencies.xstr]
+version = "0.1.10"

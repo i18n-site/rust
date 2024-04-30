@@ -9,7 +9,3 @@ description = "ok_or"
 
 [dependencies]
 anyhow = "1.0.82"
-
-[dev-dependencies]
-
-[features]

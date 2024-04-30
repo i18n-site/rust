@@ -1,5 +1,3 @@
-features = {}
-
 [package]
 name = "wxpush"
 version = "0.1.11"
@@ -12,25 +10,25 @@ description = "api for https://wxpusher.zjiecode.com"
 [dependencies]
 anyhow = "1.0.82"
 const-str = "0.5.7"
-serde_with = "3.7.0"
-sonic-rs = "0.3.4"
-thiserror = "1.0.58"
+serde_with = "3.8.1"
+sonic-rs = "0.3.5"
+thiserror = "1.0.59"
 
 [dependencies.genv]
 version = "0.1.7"
 path = "../genv"
 
 [dependencies.reqwest]
-version = "0.12.3"
-features = ["json"]
+version = "0.12.4"
+features = [ "json" ]
 
 [dependencies.serde]
-version = "1.0.198"
-features = ["derive"]
+version = "1.0.199"
+features = [ "derive" ]
 
 [dependencies.static_init]
 version = "1.0.3"
-features = ["lock_statistics", "parking_lot", "parking_lot_core"]
+features = [ "lock_statistics", "parking_lot", "parking_lot_core" ]
 
 [dependencies.xstr]
 version = "0.1.10"
@@ -41,4 +39,4 @@ anyhow = "1.0.82"
 
 [dev-dependencies.tokio]
 version = "1.37.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

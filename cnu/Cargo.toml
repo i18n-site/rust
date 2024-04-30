@@ -1,5 +1,3 @@
-dev-dependencies = { }
-
 [package]
 name = "cnu"
 version = "0.1.11"
@@ -17,7 +15,7 @@ version = "0.3.13"
 optional = true
 
 [dependencies.lang]
-version = "0.1.15"
+version = "0.1.19"
 path = "../lang"
 optional = true
 

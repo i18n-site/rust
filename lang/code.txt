@@ -54,7 +54,6 @@ co
 hr
 qu
 ku
-ckb
 la
 lv
 lo
@@ -86,9 +85,6 @@ ny
 ak
 sv
 sm
-sr
-nso
-st
 si
 eo
 sk
@@ -104,7 +100,6 @@ tr
 tk
 cy
 ur
-uk
 uz
 he
 el
@@ -124,4 +119,3 @@ yo
 vi
 zh-TW
 ts
-ug

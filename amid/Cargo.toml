@@ -11,7 +11,3 @@ description = "amid"
 anyhow = "1.0.82"
 axum = "0.7.5"
 tracing = "0.1.40"
-
-[dev-dependencies]
-
-[features]

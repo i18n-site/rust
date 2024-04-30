@@ -11,14 +11,12 @@ fn test() {
       use rany::URL;
       let encode = URL.estr(num);
       let decode = URL.dstr(&encode);
-      dbg!((&encode, &decode));
       assert_eq!(num, decode);
     }
     #[cfg(feature = "b255")]
     {
       use rany::{Rany, B255};
       let encode = B255.e(num);
-      dbg!(&encode);
       assert_eq!(num, B255.d(&encode));
     }
   }

@@ -16,13 +16,12 @@ extern "C" fn init() {
 }
 
 async fn main() -> Result<()> {
-  dbg!("test main");
   OK
 }
 
 #[tokio::test]
 async fn test() -> Result<()> {
-  boot(PK, mirror::MIRROR, "i18", main).await?;
+  boot(PK, mirror::MIRROR, "i18", [0, 0, 0], main).await?;
   OK
 }
 ```

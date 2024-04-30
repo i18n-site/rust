@@ -18,6 +18,7 @@ pub struct Upload {
 pub struct Conf {
   pub host: String,
   pub i18n: i18::I18nConf,
+  pub ignore: Option<Vec<String>>,
   pub route: Vec<String>,
   pub nav: Vec<String>,
   pub upload: Upload,

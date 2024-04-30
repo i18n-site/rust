@@ -10,7 +10,6 @@ use std::{
 
 use aok::Result;
 pub use boot::boot;
-pub use const_str;
 use current_platform::CURRENT_PLATFORM;
 pub use ed25519_dalek::{PUBLIC_KEY_LENGTH, SIGNATURE_LENGTH};
 use ifs::{conf, dir::BIN_HOME, rsync};
@@ -95,6 +94,8 @@ async fn bgu(
   if now_ver >= ver {
     return Ok(None);
   }
+
+  println!("{now_ver} → {ver_txt}");
   let tar = format!("{name}/{ver_txt}/{CURRENT_PLATFORM}.tar");
   let dir: String = temp_dir().as_os_str().to_string_lossy().into();
 

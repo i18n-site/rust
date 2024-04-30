@@ -5,7 +5,7 @@ use prost::Message;
 
 use crate::{
   api,
-  upload::{LangUrlLi, UrlLiExt, LANG, PUBLIC, V},
+  upload::{LangUrl, UrlLiExt, LANG, PUBLIC, V},
   Upload, EMPTY,
 };
 
@@ -32,9 +32,9 @@ impl Upload for Fs {
     &mut self,
     dir: &Path,
     ver: &str,
-    nav_li: Vec<String>,
+    nav_li: &[String],
     url_li_ext: &[UrlLiExt],
-    ext_url_li: LangUrlLi,
+    ext_url_li: &[LangUrl],
   ) -> Result<Vec<api::Lang>> {
     let mut r = Vec::with_capacity(ext_url_li.len());
     let public = dir.join(PUBLIC).join(V).join(ver).join(LANG);
@@ -58,7 +58,7 @@ impl Upload for Fs {
         }
       }
 
-      let site_lang = crate::site_lang(&nav_li, dir, &lang_dir_name.1, url_v_li);
+      let site_lang = crate::site_lang(nav_li, dir, &lang_dir_name.1, url_v_li);
       let en = &lang_dir_name.1;
       ifs::w(public.join(en))?.write_all(&site_lang.encode_to_vec())?;
       r.push(api::Lang {

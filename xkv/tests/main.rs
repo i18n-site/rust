@@ -10,7 +10,6 @@ async fn conn() -> Result<()> {
   let val = "值 abc";
   redis.set(key, val, None, None, false).await?;
   let get_val = redis.get::<Option<String>, _>(key).await?;
-  dbg!(&get_val);
   assert_eq!(get_val, Some(val.into()));
   redis.del(key).await?;
   assert_eq!(redis.get::<Option<String>, _>(key).await?, None);

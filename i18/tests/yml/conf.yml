@@ -1,0 +1,19 @@
+# i18n:
+#   fromTo:
+#     zh: en
+#
+#   yml:
+#     fromTo:
+#       zh: en
+ignore:
+  - _*
+
+i18n:
+  fromTo:
+    zh: en
+    en: fr
+
+  # yml:
+  #   fromTo:
+  #     zh: en
+  #     en: fr

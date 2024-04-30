@@ -1,3 +1,4 @@
+#![feature(iterator_try_collect)]
 #![feature(const_trait_impl)]
 #![feature(let_chains)]
 #![feature(effects)]

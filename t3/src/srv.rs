@@ -3,6 +3,13 @@ use std::net::{IpAddr, Ipv6Addr, SocketAddr};
 use axum::{error_handling::HandleErrorLayer, http::StatusCode, BoxError, Router};
 use coarsetime::Duration;
 use tower::ServiceBuilder;
+use tower_http::{
+  self,
+  compression::{
+    predicate::{NotForContentType, Predicate, SizeAbove},
+    CompressionLayer,
+  },
+};
 
 const TIMEOUT: u64 = 600;
 
@@ -35,9 +42,19 @@ pub async fn srv_catch(router: Router, addr: SocketAddr) {
     .layer(ServiceBuilder::new());
 
   srv_addr(
-    router
-      .layer(crate::compression_layer!())
-      .layer(middleware.into_inner()),
+    router.layer(middleware.into_inner()).layer(
+      CompressionLayer::new()
+        .zstd(true)
+        .br(true)
+        .quality(CompressionLevel::Best)
+        .compress_when(
+          SizeAbove::new(256)
+        // still don't compress gRPC
+        .and(NotForContentType::GRPC)
+        // still don't compress images
+        .and(NotForContentType::IMAGES),
+        ),
+    ),
     addr,
   )
   .await;

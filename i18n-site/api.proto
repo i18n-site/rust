@@ -40,3 +40,10 @@ message SiteLang
   repeated string nav_i18n_li = 1;
   repeated string url_v_li = 2;
 }
+
+message Vtab
+{
+  string url = 1;
+  string ver_li_url = 2;
+  repeated UrlLiExt url_li_ext = 3;
+}

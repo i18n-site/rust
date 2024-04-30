@@ -1,8 +1,6 @@
-features = { }
-
 [package]
 name = "lang"
-version = "0.1.15"
+version = "0.1.19"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -11,7 +9,7 @@ description = "lang"
 
 [dependencies]
 int-enum = "1.1.1"
-thiserror = "1.0.58"
+thiserror = "1.0.59"
 
 [dependencies.ifs]
 version = "0.1.27"

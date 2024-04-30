@@ -32,3 +32,6 @@ git add -u
 git commit -m. || true
 git push
 cargo publish --registry crates-io || true
+cd $DIR
+direnv exec . ./sh/upgrade.coffee
+rm Cargo.lock

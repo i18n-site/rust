@@ -43,23 +43,19 @@ pub fn auto_ver(name: &str, now_ver: Ver) -> bool {
   false
 }
 
-pub static VER: Ver = {
-  use crate::const_str::{parse, split};
-  let r: [&str; 3] = split!(env!("CARGO_PKG_VERSION"), ".");
-  Ver([parse!(r[0], u32), parse!(r[1], u32), parse!(r[2], u32)])
-};
-
 pub async fn boot<'a, F: Future<Output = Result<()>>>(
   pk: &'a [u8; PUBLIC_KEY_LENGTH],
   li: &[(bool, impl AsRef<str>)],
   name: impl Into<String>,
+  ver: [u32; 3],
   run: impl Fn() -> F,
 ) -> Result<()> {
+  let ver = Ver(ver);
   let name = name.into();
-  if auto_ver(&name, VER.clone()) {
+  if auto_ver(&name, ver.clone()) {
     return OK;
   }
-  let bgu = Bgu::new(pk, name, VER.clone(), li);
+  let bgu = Bgu::new(pk, name, ver.clone(), li);
 
   if let Err(err) = run().await {
     eprintln!("❌ {}", err);

@@ -2,7 +2,7 @@ use std::{fmt::Display, io::Write, sync::Arc, time::Duration};
 
 use aok::{Result, OK};
 use futures_util::StreamExt;
-use indicatif::{ProgressBar, ProgressStyle};
+use pbar::ProgressBar;
 use reqwest::{header::RANGE, Client, ClientBuilder, StatusCode};
 use thiserror::Error;
 use tokio::{sync::RwLock, task::JoinHandle, time::timeout};
@@ -26,10 +26,10 @@ pub fn builder() -> ClientBuilder {
 }
 
 #[static_init::dynamic]
-pub static HTTP: Client = builder().build().unwrap();
+pub static H3: Client = builder().http3_prior_knowledge().build().unwrap();
 
 #[static_init::dynamic]
-pub static H3: Client = builder().http3_prior_knowledge().build().unwrap();
+pub static HTTP: Client = builder().build().unwrap();
 
 pub const MB16: u64 = 1048576 * 16;
 
@@ -102,10 +102,7 @@ impl Down {
       {
         let mut bar = i.bar.write().await;
         if let UrlOrProgressBar::Url(url) = &bar.pb {
-          let pb = { ProgressBar::new(bar.total) };
-          pb.set_style(ProgressStyle::default_bar()
-          .template("{msg}\n{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({bytes_per_sec}, {eta})")?
-          .progress_chars("─> "));
+          let pb = pbar::pbar(bar.total);
           pb.set_message(url.to_string());
           bar.pb = UrlOrProgressBar::ProgressBar(pb);
         }

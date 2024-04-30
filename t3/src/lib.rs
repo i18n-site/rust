@@ -13,7 +13,6 @@ pub use axum::{
   Extension,
 };
 pub use host::{host, host_tld};
-pub use tower_http;
 pub use tracing;
 mod log;
 mod srv;
@@ -36,20 +35,4 @@ pub type E<T> = Extension<T>;
 pub fn ok() -> Response {
   let r = (StatusCode::OK, "").into_response();
   Ok(r)
-}
-
-#[macro_export]
-macro_rules! compression_layer {
-  () => {{
-    use tower_http::compression::{
-        predicate::{NotForContentType, Predicate, SizeAbove},
-        CompressionLayer,
-    };
-    let predicate = SizeAbove::new(256)
-        // still don't compress gRPC
-        .and(NotForContentType::GRPC)
-        // still don't compress images
-        .and(NotForContentType::IMAGES);
-    CompressionLayer::new().compress_when(predicate)
-  }};
 }

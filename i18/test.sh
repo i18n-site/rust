@@ -4,5 +4,11 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
+if [ -z "$1" ]; then
+  PROJECT=$(realpath $DIR)/tests/yml
+else
+  PROJECT=$1
+fi
+
 # direnv exec . cargo test --all-features -- --nocapture
-direnv exec . cargo run -- -d $(realpath $DIR/../..)/site/i18n
+direnv exec . cargo run -- -d $PROJECT

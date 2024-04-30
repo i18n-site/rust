@@ -9,9 +9,10 @@ description = "convert mail address to low trim case , use punycode decode domai
 
 [dependencies]
 punycode = "0.4.1"
-xstr = { version = "0.1.10" }
-xtld = { version = "0.1.1", path = "../xtld" }
 
-[dev-dependencies]
+[dependencies.xstr]
+version = "0.1.10"
 
-[features]
+[dependencies.xtld]
+version = "0.1.1"
+path = "../xtld"

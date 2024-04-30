@@ -38,7 +38,7 @@ members = [
   "map_await",
   "mreplace",
   "mysql_macro",
-  "ok_or",
+  "ok_or", "pbar",
   "ping_ver",
   "preq",
   "preq1",
@@ -52,7 +52,7 @@ members = [
   "sts",
   "svg2webp",
   "t3",
-  "t_",
+  "t_", "title_case",
   "tls_ping",
   "tmpl",
   "tp",
@@ -78,7 +78,7 @@ codegen-units = 1
 overflow-checks = false
 panic = 'abort'
 debug-assertions = false
-strip = true
+strip = false
 
 [profile.dev]
 split-debuginfo = "unpacked"

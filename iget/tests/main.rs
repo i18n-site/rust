@@ -5,7 +5,6 @@ async fn main() -> Result<()> {
   // let github = iget::Site::new(true, "https://github.com/i18n-site/bin/releases/download/");
 
   // let txt = github.txt("_/v").await?;
-  // dbg!(txt);
 
   let bar = iget::Site::new(false, "https://www.win-rar.com/")
     .down(

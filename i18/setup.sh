@@ -34,7 +34,7 @@ if [[ "$ARCH" == "arm64" || "$ARCH" == "arm" ]]; then
   ARCH="aarch64"
 fi
 
-MIRROR="atomgit.com/i18n-site/dist/raw github.com/i18n-site/rust/releases/download codeberg.org/i18n-site/dist/raw/branch raw.githubusercontent.com/i18n-site/dist bitbucket.org/i18nsite/dist/raw xxai.eu.org"
+MIRROR="github.com/i18n-site/rust/releases/download codeberg.org/i18n-site/dist/raw/branch raw.githubusercontent.com/i18n-site/dist bitbucket.org/i18nsite/dist/raw xxai.eu.org"
 
 CURL="curl -L --connect-timeout 9 --max-time 10 --retry 99 --retry-delay 0"
 

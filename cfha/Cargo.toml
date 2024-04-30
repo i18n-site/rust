@@ -2,14 +2,14 @@
 aok = "0.1.11"
 cfapi = "0.11.0"
 serde_yaml = "0.9.34"
-thiserror = "1.0.58"
+thiserror = "1.0.59"
 
 [dependencies.genv]
 version = "0.1.7"
 path = "../genv"
 
 [dependencies.serde]
-version = "1.0.198"
+version = "1.0.199"
 features = [ "derive" ]
 
 [package]

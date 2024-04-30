@@ -1,5 +1,8 @@
 pub use strum::IntoEnumIterator;
 
+mod case;
+pub use case::CASE;
+
 mod lang_name;
 pub use lang_name::LANG_NAME;
 mod lang;
