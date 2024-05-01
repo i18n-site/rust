@@ -51,7 +51,7 @@ path = "../dot_hide"
 features = [ "walkdir" ]
 
 [dependencies.i18]
-version = "0.1.200"
+version = "0.1.201"
 path = "../i18"
 
 [dependencies.serde]
