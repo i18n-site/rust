@@ -36,4 +36,4 @@ cd $DIR
 direnv exec . ./sh/upgrade.coffee
 rm Cargo.lock
 git add -u
-git commit -m.
+git commit -m. || true

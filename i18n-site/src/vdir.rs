@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use daachorse::{DoubleArrayAhoCorasick, DoubleArrayAhoCorasickBuilder, MatchKind};
 use walkdir::WalkDir;
@@ -25,7 +25,7 @@ impl VDir {
     None
   }
 
-  pub fn new(root: &PathBuf) -> Self {
+  pub fn new(root: &Path) -> Self {
     let mut li = vec![];
 
     let dir_v = root.join("v");

@@ -21,22 +21,22 @@ path = "../i18n_bgu"
 
 [dependencies.globset]
 version = "0.4.14"
-features = [ "simd-accel" ]
+features = ["simd-accel"]
 
 [dependencies.tokio]
 version = "1.37.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
 
 [dependencies.ifs]
 path = "../ifs"
 default-features = false
-features = [ "fs" ]
+features = ["fs"]
 version = "0.1.27"
 
 [dependencies.dot_hide]
 version = "0.1.2"
 path = "../dot_hide"
-features = [ "walkdir" ]
+features = ["walkdir"]
 
 [dependencies.i18]
 version = "0.1.199"
@@ -44,7 +44,7 @@ path = "../i18"
 
 [dependencies.serde]
 version = "1.0.199"
-features = [ "derive" ]
+features = ["derive"]
 
 [dependencies.xerr]
 version = "0.1.11"
@@ -52,7 +52,7 @@ path = "../xerr"
 
 [package]
 name = "i18n-site"
-version = "0.1.0"
+version = "0.2.3"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -68,7 +68,7 @@ tracing = "0.1.40"
 
 [dev-dependencies.tokio]
 version = "1.37.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
 
 [build-dependencies]
 aok = "0.1.11"
