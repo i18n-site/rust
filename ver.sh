@@ -35,8 +35,14 @@ git add .
 git commit -m $PV || true
 
 git tag $PV
-git push origin main
-git push origin $PV
+
+push() {
+  git push $1 main
+  git push $1 $PV
+}
+
+push origin
+push github
 
 if [ "$branch" != "main" ]; then
   git checkout $branch
