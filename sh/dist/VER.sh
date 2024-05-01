@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-
-[ -z "${VER}" ] && export VER=$(cat $(dirname $(realpath $BASH_SOURCE))/../../$PROJECT/Cargo.toml | grep -E "^\s*version" | awk -F'"' '{print $2}' | head -1) || true
+[ -z "${VER}" ] && export VER=$(cargo metadata --format-version=1 --no-deps | jq '.packages[] | .name + " " + .version' -r | grep "$PROJECT " | awk '{print $2}') || true
