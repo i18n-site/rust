@@ -13,7 +13,11 @@ jobs:
     name: build
     strategy:
       matrix:
-        platform: [macos-latest,ubuntu-latest,mac-arm,windows-latest]
+        platform:
+          - macos-latest
+          - ubuntu-latest
+          - [self-hosted, macOS, ARM64]
+          - windows-latest
     runs-on: ${{ matrix.platform }}
     steps:
       - if: runner.os == 'macOS'

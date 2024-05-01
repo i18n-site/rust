@@ -111,7 +111,7 @@ pub async fn tran_path(
       }
 
       for (i, name) in traned.li.iter().zip(lang_name_li(
-        traned.li.iter().map(|i| i.lang as _).collect::<Vec<_>>(),
+        traned.li.iter().map(|i| i.lang as u16).collect::<Vec<_>>(),
         &from_to.lang_str,
       )) {
         let lang = i.lang as u16;

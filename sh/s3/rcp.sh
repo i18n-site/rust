@@ -6,4 +6,4 @@ set -e
 
 source $DIR/conf/S3.sh
 
-rclone copy $1 $S3/$(basename $1)
+rclone copy $1 $S3/

@@ -32,7 +32,7 @@ impl VDir {
 
     if dir_v.exists() {
       for entry in WalkDir::new(&dir_v).into_iter().filter_entry(dot_hide::not) {
-        if let Ok(entry) = entry {
+        if let Ok(entry) = xerr::ok!(entry) {
           if entry.file_type().is_file() {
             if let Some(file_name) = entry.file_name().to_str() {
               if file_name == "@" {
