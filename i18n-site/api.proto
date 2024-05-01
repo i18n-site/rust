@@ -6,24 +6,19 @@ message Lang
 {
   string name = 1;
   string en = 2;
-  string url = 3;
+  string url = 3; // LangIndex 的 url
 }
 
-message Ver
+message LangIndex
 {
-  string url = 1;
-  string name = 2;
+  repeated string nav_i18n_li = 1;
+  repeated string url_file_li = 2;
 }
 
-message VerLi
+message ExtUrlLi
 {
-  repeated Ver li = 1;
-}
-
-message UrlLiExt
-{
-  repeated string url_li = 1;
-  string ext = 2;
+  string ext = 1;
+  repeated string url_li = 2;
 }
 
 message Site
@@ -31,19 +26,20 @@ message Site
   string host = 1;
   repeated string route_li = 2;
   repeated string nav_li = 3;
-  repeated Lang lang_li = 4;
-  repeated UrlLiExt url_li_ext = 5;
-}
-
-message SiteLang
-{
-  repeated string nav_i18n_li = 1;
-  repeated string url_v_li = 2;
+  repeated Lang lang_li = 4;    // 里面有虚拟路径索引的文件地址
+  repeated ExtUrlLi url_li = 5; // 根路径的 url
+  repeated Vtab vtab_li = 6;    // 类似 fstab , 按 prefix 长度倒序排
 }
 
 message Vtab
 {
-  string url = 1;
+  string prefix = 1;
   string ver_li_url = 2;
-  repeated UrlLiExt url_li_ext = 3;
+  repeated string lang_url_li = 3;
+  repeated ExtUrlLi url_li = 4;
+}
+
+message VLang
+{
+  repeated string url_file_li = 1;
 }

@@ -4,6 +4,7 @@ use std::{
 };
 
 use aok::{Null, Result, OK};
+use ft::FromTo;
 use lang::Lang;
 use redb::{Database, ReadableTable};
 use speedy::Readable;
@@ -11,7 +12,7 @@ use speedy::Readable;
 use crate::{
   lang_name_li,
   tran_path::{TranedCache, TranedLang},
-  FromTo, Txn,
+  Txn,
 };
 
 pub fn lmfp(lang: u16, t_ml: &mut redb::Table<u16, (u64, u64)>, fp: &Path) -> Null {

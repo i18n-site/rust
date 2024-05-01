@@ -1,6 +1,7 @@
 #![feature(coroutines, coroutine_trait)]
 #![feature(let_chains)]
 
+use globset::GlobSet;
 use pbar::pbar;
 mod txn;
 pub use txn::Txn;
@@ -20,11 +21,9 @@ mod tran_path;
 pub use tran_path::tran_path;
 mod tran_ext;
 pub use tran_ext::tran_ext;
-mod from_to;
-pub use from_to::FromTo;
 
 pub mod conf;
-pub use conf::{Conf, Config, I18nConf};
+pub use conf::{build_ignore, Conf, I18nConf};
 
 pub const NAME: &str = "i18";
 
@@ -53,7 +52,12 @@ pub fn conf(workdir: &std::path::Path) -> Result<Conf> {
   Ok(conf)
 }
 
-pub async fn run(workdir: &std::path::PathBuf, conf: &Config, token: String) -> Result<usize> {
+pub async fn run(
+  workdir: &std::path::PathBuf,
+  conf: &I18nConf,
+  ignore: &GlobSet,
+  token: String,
+) -> Result<usize> {
   let gen = workdir.join(".gen");
 
   let cache = gen.join(CACHE);
@@ -78,17 +82,17 @@ pub async fn run(workdir: &std::path::PathBuf, conf: &Config, token: String) -> 
     ($($ext:ident),*) => {{
       [
 $({
-    let from_to = if let Some(i) = &conf.i18n.$ext
+    let from_to = if let Some(i) = &conf.$ext
     {
       &i.fromTo
     } else {
-      &conf.i18n.fromTo
+      &conf.fromTo
     };
     let db = redb::Database::create(cache.join(stringify!($ext)))?;
 
     (
       tran_ext(
-        &conf.ignore,
+        &ignore,
         &workdir,
         from_to,
         stringify!($ext),

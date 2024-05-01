@@ -9,6 +9,7 @@ use tower_http::{
     predicate::{NotForContentType, Predicate, SizeAbove},
     CompressionLayer,
   },
+  CompressionLevel,
 };
 
 const TIMEOUT: u64 = 600;

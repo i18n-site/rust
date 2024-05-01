@@ -1,5 +1,5 @@
 [package]
-version = "0.1.191"
+version = "0.1.197"
 name = "i18"
 edition = "2021"
 license = "Apache-2.0"
@@ -18,9 +18,7 @@ path = "src/main.rs"
 [dependencies]
 aok = "0.1.11"
 current_platform = "0.2.0"
-globset = { version = "0.4.14", features = ["simd-accel"] }
 loginit = "0.1.10"
-pbar = { version = "0.1.1", path = "../pbar" }
 prost = "0.12.4"
 redb = "2.1.0"
 serde_yaml = "0.9.34"
@@ -31,10 +29,23 @@ tracing = "0.1.40"
 vb = "0.1.3"
 walkdir = "2.5.0"
 
+[dependencies.ft]
+version = "0.1.3"
+path = "../ft"
+features = [ "str" ]
+
+[dependencies.globset]
+version = "0.4.14"
+features = [ "simd-accel" ]
+
+[dependencies.pbar]
+version = "0.1.1"
+path = "../pbar"
+
 [dependencies.ireq]
 version = "0.1.11"
 path = "../ireq"
-features = ["proxy"]
+features = [ "proxy" ]
 
 [dependencies.i18n_bgu]
 version = "0.1.3"
@@ -42,7 +53,7 @@ path = "../i18n_bgu"
 
 [dependencies.blake3]
 version = "1.5.1"
-features = ["traits-preview"]
+features = [ "traits-preview" ]
 
 [dependencies.genv]
 version = "0.1.7"
@@ -51,13 +62,13 @@ path = "../genv"
 [dependencies.dot_hide]
 version = "0.1.2"
 path = "../dot_hide"
-features = ["walkdir"]
+features = [ "walkdir" ]
 
 [dependencies.ifs]
 version = "0.1.27"
 path = "../ifs"
 default-features = false
-features = ["fs", "hash", "conf", "b3_len", "confdir"]
+features = [ "fs", "hash", "conf", "b3_len", "confdir" ]
 
 [dependencies.lang]
 version = "0.1.19"
@@ -65,7 +76,7 @@ path = "../lang"
 
 [dependencies.serde]
 version = "1.0.199"
-features = ["derive"]
+features = [ "derive" ]
 
 [dependencies.xerr]
 version = "0.1.11"
@@ -73,7 +84,7 @@ path = "../xerr"
 
 [dependencies.clap]
 version = "4.5.4"
-features = ["cargo"]
+features = [ "cargo" ]
 
 [dependencies.cmdv]
 version = "0.1.7"
@@ -81,16 +92,16 @@ path = "../cmdv"
 
 [dependencies.tokio]
 version = "1.37.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.reqwest]
 version = "0.12"
 features = [
-  "http2",
-  "rustls-tls",
-  "rustls-tls-native-roots",
-  "brotli",
-  "stream",
+"http2",
+"rustls-tls",
+"rustls-tls-native-roots",
+"brotli",
+"stream"
 ]
 default-features = false
 
@@ -101,7 +112,7 @@ static_init = "1.0.3"
 
 [dev-dependencies.tokio]
 version = "1.37.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]
 aok = "0.1.11"

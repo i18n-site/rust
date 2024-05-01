@@ -17,7 +17,7 @@ hset_cache = [ ]
 user_cache = [ "dep:rany" ]
 
 [dependencies]
-fred = "9.0.2"
+fred = "9.0.3"
 intbin = "0.1.2"
 tracing = "0.1.40"
 

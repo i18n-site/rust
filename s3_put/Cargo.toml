@@ -10,7 +10,7 @@ description = "s3_put"
 [dependencies]
 aok = "0.1.11"
 aws-sdk-s3 = "1.24.0"
-aws-smithy-runtime-api = "1.4.0"
+aws-smithy-runtime-api = "1.5.0"
 bytes = "1.6.0"
 tracing = "0.1.40"
 

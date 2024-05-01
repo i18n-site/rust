@@ -17,7 +17,7 @@ path = "src/main.rs"
 
 [dependencies]
 aok = "0.1.11"
-base64 = "0.22.0"
+base64 = "0.22.1"
 current_platform = "0.2.0"
 rand = "0.8.5"
 static_init = "1.0.3"

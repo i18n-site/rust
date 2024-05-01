@@ -1,6 +1,7 @@
 use std::{collections::HashMap, io::Write, path::Path};
 
 use aok::{Null, OK};
+use ft::FromTo;
 use prost::Message;
 use redb::Database;
 use reqwest::StatusCode;
@@ -9,7 +10,7 @@ use static_init::dynamic;
 use thiserror::Error;
 use tracing::warn;
 
-use crate::{api, api::Ext, lang_name_li, need_tran, need_tran::lmfp, FromTo, Txn};
+use crate::{api, api::Ext, lang_name_li, need_tran, need_tran::lmfp, Txn};
 
 #[derive(Error, Debug)]
 pub enum Error {
@@ -84,7 +85,6 @@ pub async fn tran_path(
       .send()
       .await?;
 
-    dbg!(res.headers());
     let status = res.status();
     if status != StatusCode::OK {
       if status == StatusCode::UNAUTHORIZED {

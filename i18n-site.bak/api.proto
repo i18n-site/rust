@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package api;
+
+message Lang
+{
+  string name = 1;
+  string en = 2;
+  string url = 3;
+}
+
+message Ver
+{
+  string url = 1;
+  string name = 2;
+}
+
+message VerLi
+{
+  repeated Ver li = 1;
+}
+
+message UrlLiExt
+{
+  repeated string url_li = 1;
+  string ext = 2;
+}
+
+message Site
+{
+  string host = 1;
+  repeated string route_li = 2;
+  repeated string nav_li = 3;
+  repeated Lang lang_li = 4;
+  repeated UrlLiExt url_li_ext = 5;
+}
+
+message SiteLang
+{
+  repeated string nav_i18n_li = 1;
+  repeated string url_v_li = 2;
+}
+
+message Vtab
+{
+  string url = 1;
+  string ver_li_url = 2;
+  repeated UrlLiExt url_li_ext = 3;
+}

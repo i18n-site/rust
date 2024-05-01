@@ -1,12 +1,13 @@
 use std::{collections::HashSet, path::Path};
 
 use aok::Result;
+use ft::FromTo;
 use globset::GlobSet;
 use lang::Lang;
 use redb::Database;
 use walkdir::WalkDir;
 
-use crate::{need_tran, need_tran::NeedTran, FromTo};
+use crate::{need_tran, need_tran::NeedTran};
 
 pub fn _tran_ext(
   ignore: &GlobSet,

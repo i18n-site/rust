@@ -24,26 +24,14 @@ pub struct Conf {
   pub ignore: Option<Vec<String>>,
 }
 
-#[derive(Debug)]
-pub struct Config {
-  pub i18n: I18nConf,
-  pub ignore: GlobSet,
-}
-
-impl From<Conf> for Config {
-  fn from(conf: Conf) -> Self {
-    Self {
-      i18n: conf.i18n,
-      ignore: {
-        let mut builder = GlobSetBuilder::new();
-        if let Some(ignore) = conf.ignore {
-          ignore.into_iter().for_each(|regex| {
-            builder.add(Glob::new(&regex).unwrap());
-          });
-        }
-
-        builder.build().unwrap()
-      },
-    }
+pub fn build_ignore(ignore: Option<Vec<String>>) -> GlobSet {
+  let mut builder = GlobSetBuilder::new();
+  if let Some(ignore) = ignore {
+    ignore.into_iter().for_each(|regex| {
+      builder.add(Glob::new(&regex).unwrap());
+    });
   }
+  builder.add(Glob::new(".*").unwrap());
+
+  builder.build().unwrap()
 }

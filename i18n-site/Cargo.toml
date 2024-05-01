@@ -1,76 +1,15 @@
-[package]
-name = "i18n-site"
-version = "0.2.1"
-edition = "2021"
-license = "Apache-2.0"
-repository = "https://github.com/i18n-site/rust.git"
-homepage = "https://github.com/i18n-site/rust/tree/main/i18n_site"
-description = "i18n_site"
-
 [dependencies]
+aok = "0.1.11"
+loginit = "0.1.10"
 chrono = "0.4.38"
-globset = { version = "0.4.14", features = ["simd-accel"] }
-intbin = "0.1.2"
-mime_guess = "2.0.4"
-prost = "0.12.4"
-serde_yaml = "0.9.34"
-thiserror = "1.0.59"
+clap = "4.5.4"
 tracing = "0.1.40"
 walkdir = "2.5.0"
-
-[dependencies.loginit]
-version = "0.1.10"
-path = "../loginit"
-
-[dependencies.burl]
-version = "0.1.1"
-path = "../burl"
-
-[dependencies.genv]
-version = "0.1.7"
-path = "../genv"
-
-[dependencies.map_await]
-version = "0.1.8"
-path = "../map_await"
-
-[dependencies.blake3]
-version = "1.5.1"
-features = ["traits-preview"]
-
-[dependencies.mysql_macro]
-version = "0.1.35"
-path = "../mysql_macro"
-
-[dependencies.s3_put]
-version = "0.1.8"
-path = "../s3_put"
-
-[dependencies.xerr]
-version = "0.1.11"
-path = "../xerr"
-
-[dependencies.i18]
-version = "0.1.191"
-path = "../i18"
-
-[dependencies.ifs]
-version = "0.1.27"
-path = "../ifs"
-default-features = false
-features = ["fs", "is_hidden"]
-
-[dependencies.lang]
-version = "0.1.19"
-path = "../lang"
-
-[dependencies.serde]
-version = "1.0.199"
-features = ["derive"]
-
-[dependencies.clap]
-version = "4.5.4"
-features = ["cargo"]
+prost = "0.12.4"
+mime_guess = "2.0.4"
+daachorse = "1.0.0"
+serde_yaml = "0.9.34"
+thiserror = "1.0.59"
 
 [dependencies.cmdv]
 version = "0.1.7"
@@ -80,17 +19,57 @@ path = "../cmdv"
 version = "0.1.3"
 path = "../i18n_bgu"
 
+[dependencies.globset]
+version = "0.4.14"
+features = [ "simd-accel" ]
+
 [dependencies.tokio]
 version = "1.37.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
-[dependencies.aok]
+[dependencies.ifs]
+path = "../ifs"
+default-features = false
+features = [ "fs" ]
+version = "0.1.27"
+
+[dependencies.dot_hide]
+version = "0.1.2"
+path = "../dot_hide"
+features = [ "walkdir" ]
+
+[dependencies.i18]
+version = "0.1.197"
+path = "../i18"
+
+[dependencies.serde]
+version = "1.0.199"
+features = [ "derive" ]
+
+[dependencies.xerr]
 version = "0.1.11"
-path = "../aok"
+path = "../xerr"
+
+[package]
+name = "i18n-site"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/i18n-site"
+description = "i18n-site"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.37.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]
+aok = "0.1.11"
 prost-build = "0.12.4"
-
-[build-dependencies.aok]
-version = "0.1.11"
-path = "../aok"

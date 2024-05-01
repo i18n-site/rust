@@ -1,36 +1,23 @@
-#![feature(iterator_try_collect)]
-#![feature(const_trait_impl)]
 #![feature(let_chains)]
-#![feature(effects)]
-
-pub mod api {
-  include!(concat!(env!("OUT_DIR"), "/api.rs"));
-}
-
-pub const EMPTY: String = String::new();
-
-pub struct Site {
-  pub host: String,
-  pub route_li: Vec<String>,
-  pub nav_li: Vec<String>,
-  pub channel: String,
-  pub ver: String,
-}
-
-pub mod upload;
-pub use upload::Upload;
 
 mod err;
 pub use err::Err;
 
-pub mod conf;
+mod conf;
 pub use conf::Conf;
 
-mod cli;
-pub use cli::cli;
+pub mod api;
 
-mod run;
-pub use run::run;
+mod vdir;
+pub use vdir::VDir;
 
-mod site_lang;
-pub use site_lang::site_lang;
+macro_rules! r#mod {
+  ($($name:ident),*) => {
+    $(
+      mod $name;
+      pub use $name::$name;
+    )*
+  }
+}
+
+r#mod!(cli, run, gen, nav_li);
