@@ -69,13 +69,13 @@ pub fn conf(workdir: &std::path::Path) -> Result<Conf> {
 }
 
 pub fn ensure_cache(cache: &std::path::Path) -> Null {
-  if let Ok(meta) = std::fs::metadata(&cache) {
+  if let Ok(meta) = std::fs::metadata(cache) {
     if meta.is_dir() {
       return OK;
     }
-    std::fs::remove_file(&cache)?;
+    std::fs::remove_file(cache)?;
   }
-  std::fs::create_dir_all(&cache)?;
+  std::fs::create_dir_all(cache)?;
   use std::io::Write;
 
   ifs::w(cache.join(".gitignore"))?.write_all(
