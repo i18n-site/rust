@@ -1,15 +1,15 @@
 use std::{collections::HashMap, io::Write, path::Path};
 
 use aok::{Null, OK};
+use fjall::PartitionHandle;
 use ft::FromTo;
 use prost::Message;
-use redb::Database;
 use reqwest::StatusCode;
 use speedy::{Readable, Writable};
 use static_init::dynamic;
 use tracing::warn;
 
-use crate::{api, api::Ext, lang_name_li, need_tran, need_tran::lmfp, Err, Txn};
+use crate::{api, api::Ext, lang_name_li, need_tran, need_tran::lmfp, Err};
 
 genv::def!(API:String | "https://s.i18n.site".to_owned());
 
@@ -32,7 +32,7 @@ pub struct TranedCache {
 pub async fn tran_path(
   need_tran: need_tran::NeedTran,
   token: &str,
-  db: &Database,
+  db: &PartitionHandle,
   ext: &str,
   root: &Path,
   from_to: &FromTo,
@@ -101,9 +101,6 @@ pub async fn tran_path(
         api::Traned::decode(bin)?
       };
 
-      let tx = Txn::open(db)?;
-      let mut t_ml = tx.table(rel, ext)?;
-
       for i in traned.src_hash.into_iter() {
         // t_hash.insert(i.0 as u16, i.1)?;
         traned_cache.src_hash.insert(i.0 as _, i.1);
@@ -126,7 +123,7 @@ pub async fn tran_path(
           );
           let fp = &root.join(name).join(rel);
           ifs::w(fp)?.write_all(txt)?;
-          lmfp(lang, &mut t_ml, fp)?;
+          lmfp(lang, db, fp)?;
         }
       }
       ifs::w(need_tran.hashfp)?.write_all(&traned_cache.write_to_vec()?)?;

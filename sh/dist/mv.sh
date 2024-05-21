@@ -17,7 +17,15 @@ rm -rf $OUT
 
 mkdir -p $OUT
 
-find $TARGET/$arch/release -maxdepth 1 -type f -perm 755 | while read file; do
+cd $TARGET/$arch/release
+
+rename=$DIR/rename.sh
+
+if [ -f "$rename" ]; then
+  $rename
+fi
+
+find . -maxdepth 1 -type f -perm 755 | while read file; do
   # if [ "$(uname -s)" == "Darwin" ]; then
   #   # 很奇怪, 不这么mac运行会报错
   #   strip $file

@@ -1,10 +1,10 @@
 use std::{collections::HashSet, path::Path};
 
 use aok::Result;
+use fjall::PartitionHandle;
 use ft::FromTo;
 use globset::GlobSet;
 use lang::{Lang, LANG_CODE};
-use redb::Database;
 use walkdir::WalkDir;
 
 use crate::{need_tran, need_tran::NeedTran};
@@ -15,12 +15,11 @@ pub fn _tran_ext(
   from: Lang,
   from_to: &FromTo,
   ext: &str,
-  db: &Database,
+  db: &PartitionHandle,
   traned: &mut HashSet<String>,
 ) -> Result<Vec<NeedTran>> {
   let root = dir.join(LANG_CODE[from as usize]);
   let root_len = root.as_os_str().to_string_lossy().len() + 1;
-  let pure_ext = &ext[1..];
   let mut li = vec![];
   if !root.exists() {
     return Ok(li);
@@ -49,7 +48,7 @@ pub fn _tran_ext(
             }
 
             traned.insert(key.into());
-            let need_tran = need_tran(db, pure_ext, dir, from_to, rel)?;
+            let need_tran = need_tran(db, dir, from_to, rel)?;
             if need_tran.len > 0 {
               li.push(need_tran);
             }
@@ -67,7 +66,7 @@ pub fn tran_ext(
   dir: &Path,
   from_to: impl Into<FromTo>,
   ext: &str,
-  db: &Database,
+  db: &PartitionHandle,
 ) -> Result<Vec<NeedTran>> {
   /*
   扫描每个key, 如果key有上级, 就优先做上级

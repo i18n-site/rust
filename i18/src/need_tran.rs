@@ -4,20 +4,20 @@ use std::{
 };
 
 use aok::{Null, Result, OK};
+use fjall::PartitionHandle;
 use ft::FromTo;
 use lang::{Lang, LANG_CODE};
-use redb::{Database, ReadableTable};
 use speedy::Readable;
 
 use crate::{
   lang_name_li,
   tran_path::{TranedCache, TranedLang},
-  Txn, DOT_I18N,
+  DOT_I18N,
 };
 
-pub fn lmfp(lang: u16, t_ml: &mut redb::Table<u16, (u64, u64)>, fp: &Path) -> Null {
+pub fn lmfp(lang: u16, db: &PartitionHandle, fp: &Path) -> Null {
   if let Some(i) = ifs::len_mtime(fp) {
-    t_ml.insert(lang, i)?;
+    db.insert(lang.to_le_bytes(), vb::e([i.0, i.1]))?;
   }
   OK
 }
@@ -32,8 +32,7 @@ pub struct NeedTran {
 }
 
 pub fn need_tran(
-  db: &Database,
-  ext: &str,
+  db: &PartitionHandle,
   root: &Path,
   from_to: &FromTo,
   rel: String,
@@ -41,8 +40,6 @@ pub fn need_tran(
   let gendir = root.join(DOT_I18N);
   let hashfp = gendir.join("hash").join(&rel);
   let mut from_set: HashSet<Lang> = HashSet::from_iter(from_to.from_lang_li());
-  let tx = Txn::open(db)?;
-  let mut t_ml = tx.table(&rel, ext)?;
   let mut to_tran = vec![];
   let mut src_hash = HashMap::new();
   let mut total_len = 0;
@@ -52,7 +49,7 @@ pub fn need_tran(
 
   macro_rules! lm_push {
     ($lang:expr,$len:expr, $mtime:expr) => {{
-      t_ml.insert($lang, ($len, $mtime))?;
+      db.insert($lang.to_le_bytes(), vb::e([$len, $mtime]))?;
     }};
   }
 
@@ -79,13 +76,14 @@ pub fn need_tran(
       let fp = root.join(lang_name).join(&rel);
       // 检查文件修改时间，若相同则跳过
       if let Some((len, mtime)) = ifs::len_mtime(&fp) {
-        if let Some(v) = t_ml.get(lang)?
-          && let (pre_len, pre_mtime) = v.value()
-          && pre_len == len
-          && pre_mtime == mtime
-        {
-          // tracing::info!("{rel} {:?} len mtime same", TryInto::<Lang>::try_into(lang));
-          continue;
+        if let Some(v) = db.get(lang.to_le_bytes())? {
+          let lm = vb::d(v)?;
+          if lm.len() >= 2 {
+            if lm[0] == len && lm[1] == mtime {
+              // tracing::info!("{rel} {:?} len mtime same", TryInto::<Lang>::try_into(lang));
+              continue;
+            }
+          }
         }
 
         lm_push!(lang, len, mtime);
@@ -152,7 +150,7 @@ pub fn need_tran(
             },
           );
           to_tran.push((from_lang as _, bin));
-          lmfp(from_lang, &mut t_ml, &fp)?;
+          lmfp(from_lang, db, &fp)?;
         }
       }
     }

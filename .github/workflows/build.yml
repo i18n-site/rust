@@ -49,8 +49,8 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
             # https://github.com/dalek-cryptography/curve25519-dalek/issues/618
-            toolchain: nightly
-            # toolchain: nightly-2024-02-04
+            # toolchain: nightly
+            toolchain: nightly-2024-05-01
             components: rust-src
             # components: rustfmt, clippy
       - name: dist

@@ -1,6 +1,6 @@
 [package]
 name = "i18n-site"
-version = "0.2.4"
+version = "0.2.5"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -29,9 +29,15 @@ static_init = "1.0.3"
 const-str = "0.5.7"
 sonic-rs = "0.3.5"
 ipug = "0.2.0"
-i18n_parse = { version = "0.1.0", path = "../i18n_parse" }
-minjs = { version = "0.1.1", path = "../minjs" }
 lightningcss = "1.0.0-alpha.56"
+
+[dependencies.i18n_parse]
+version = "0.1.1"
+path = "../i18n_parse"
+
+[dependencies.minjs]
+version = "0.1.1"
+path = "../minjs"
 
 [dependencies.bjs]
 version = "0.1.1"
@@ -39,7 +45,7 @@ path = "../bjs"
 
 [dependencies.tokio-postgres]
 version = "0.7.10"
-features = ["array-impls"]
+features = [ "array-impls" ]
 
 [dependencies.map_await]
 version = "0.1.8"
@@ -75,22 +81,22 @@ path = "../i18n_bgu"
 
 [dependencies.globset]
 version = "0.4.14"
-features = ["simd-accel"]
+features = [ "simd-accel" ]
 
 [dependencies.tokio]
 version = "1.37.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.ifs]
 path = "../ifs"
 default-features = false
-features = ["fs", "hash", "unix_path", "b3"]
+features = [ "fs", "hash", "unix_path", "b3" ]
 version = "0.1.31"
 
 [dependencies.dot_hide]
 version = "0.1.2"
 path = "../dot_hide"
-features = ["walkdir"]
+features = [ "walkdir" ]
 
 [dependencies.i18]
 version = "0.1.201"
@@ -98,7 +104,7 @@ path = "../i18"
 
 [dependencies.serde]
 version = "1.0.202"
-features = ["derive"]
+features = [ "derive" ]
 
 [dependencies.xerr]
 version = "0.1.11"
@@ -117,4 +123,4 @@ regex = "1.10.4"
 version = "0.1.31"
 path = "../ifs"
 default-features = false
-features = ["fs"]
+features = [ "fs" ]

@@ -3,10 +3,9 @@
 #![feature(const_trait_impl)]
 #![feature(effects)]
 
+use fjall::{Config, FlushMode};
 use globset::GlobSet;
 use pbar::pbar;
-mod txn;
-pub use txn::Txn;
 
 mod err;
 pub use err::Err;
@@ -94,6 +93,8 @@ pub async fn run(
     break;
   }
 
+  let fjall = Config::new(&cache).open()?;
+
   macro_rules! ext {
     ($($ext:ident),*) => {{
       [
@@ -104,7 +105,8 @@ $({
     } else {
       &conf.fromTo
     };
-    let db = redb::Database::create(cache.join(stringify!($ext)))?;
+
+    let db = fjall.open_partition(stringify!($ext), Default::default())?;
 
     (
       tran_ext(
@@ -122,8 +124,11 @@ $({
       ]
     }}
   }
+
   //token.as_ref(),
   let all_li = ext!(md, yml);
+
+  fjall.persist(FlushMode::SyncAll)?;
 
   let mut total_len = 0;
   for (li, ..) in &all_li {
