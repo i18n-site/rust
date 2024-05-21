@@ -1,0 +1,23 @@
+[dependencies]
+aok = "0.1.11"
+swc = "0.275.1"
+swc_common = "0.33.26"
+swc_ecma_ast = "0.113.4"
+
+[package]
+name = "minjs"
+version = "0.1.1"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/minjs"
+description = "minjs"
+
+[dev-dependencies]
+aok = "0.1.11"
+loginit = "0.1.10"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[package.metadata.docs.rs]
+all-features = true

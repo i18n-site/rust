@@ -1,0 +1,14 @@
+[package]
+name = "xtld"
+version = "0.1.1"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/xtld"
+description = "xtld"
+
+[dependencies]
+psl = "2.1.39"
+
+[dependencies.xstr]
+version = "0.1.10"

@@ -1,0 +1,18 @@
+[package]
+name = "click_captcha"
+version = "0.1.15"
+edition = "2021"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/click_captcha"
+license = "BUSL-1.1"
+description = "gen click captcha"
+
+[dependencies]
+rand = "0.8.5"
+
+[dependencies.svg2webp]
+version = "0.1.7"
+path = "../svg2webp"
+
+[dev-dependencies]
+anyhow = "1.0.86"

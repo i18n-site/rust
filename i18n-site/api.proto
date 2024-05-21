@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package api;
+
+message Lang
+{
+  string name = 1;
+  string en = 2;
+  string url = 3;
+}
+
+message ExtUrlLi
+{
+  string ext = 1;
+  repeated string url_li = 2;
+}
+
+message Vlang
+{
+  repeated string lang_url_li = 1;
+  // 开发版为空, s3上传为对应的 Lang url, 用空格隔开
+  repeated ExtUrlLi ext_url_li = 2;
+}
+
+message Nav
+{
+  string i18n = 1;
+  string url = 2;
+  string page = 3;
+  string menu = 4;
+  optional string arg = 5;
+}
+
+message Vtab
+{
+  repeated string vlang_url_li = 1;
+  string prefix = 2;
+  repeated string ver_li = 3;
+}
+
+// Site -> Vtab -> Vlang -> lang_url_li[lang]
+message Site
+{
+  string css = 1;
+  string js = 2;
+  string id = 3;
+  repeated Vtab vtab_li = 4; // 类似 fstab , 按 prefix 长度倒序排
+  repeated Nav nav_li = 5;
+  repeated Lang lang_li = 6;
+}

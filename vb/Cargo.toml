@@ -1,0 +1,15 @@
+[dependencies]
+thiserror = "1.0.61"
+vbyte = "0.1.0"
+
+[package]
+name = "vb"
+version = "0.1.3"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/vb"
+description = "vb"
+
+[package.metadata.docs.rs]
+all-features = true
