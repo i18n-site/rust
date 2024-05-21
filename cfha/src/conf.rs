@@ -13,7 +13,7 @@ pub struct Host {
 
 pub fn yml(conf: &str) -> Result<()> {
   let conf: HashMap<String, HashMap<String, Vec<String>>> = serde_yaml::from_str(conf)?;
-
-  for (k, v) in conf {}
+  println!("{:?}", conf);
+  // for (k, v) in conf {}
   Ok(())
 }

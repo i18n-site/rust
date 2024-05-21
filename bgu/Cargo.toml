@@ -40,7 +40,7 @@ version = "0.1.11"
 path = "../aok"
 
 [dependencies.ifs]
-version = "0.1.31"
+version = "0.1.32"
 path = "../ifs"
 default-features = false
 features = [ "hash", "txz_hash_d", "fs", "dir", "conf", "rsync" ]

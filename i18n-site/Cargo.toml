@@ -1,6 +1,6 @@
 [package]
 name = "i18n-site"
-version = "0.2.8"
+version = "0.2.10"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -68,7 +68,7 @@ version = "0.1.21"
 path = "../lang"
 
 [dependencies.ft]
-version = "0.1.7"
+version = "0.1.8"
 path = "../ft"
 
 [dependencies.cmdv]
@@ -91,7 +91,7 @@ features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 path = "../ifs"
 default-features = false
 features = [ "fs", "hash", "unix_path", "b3" ]
-version = "0.1.31"
+version = "0.1.32"
 
 [dependencies.dot_hide]
 version = "0.1.2"
@@ -99,7 +99,7 @@ path = "../dot_hide"
 features = [ "walkdir" ]
 
 [dependencies.i18]
-version = "0.1.201"
+version = "0.1.203"
 path = "../i18"
 
 [dependencies.serde]
@@ -120,7 +120,7 @@ prost-build = "0.12.6"
 regex = "1.10.4"
 
 [build-dependencies.ifs]
-version = "0.1.31"
+version = "0.1.32"
 path = "../ifs"
 default-features = false
 features = [ "fs" ]

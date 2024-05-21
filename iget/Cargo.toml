@@ -18,9 +18,9 @@ version = "0.1.1"
 path = "../pbar"
 
 [dependencies.ifs]
-version = "0.1.31"
+version = "0.1.32"
 path = "../ifs"
-features = ["fs"]
+features = [ "fs" ]
 default-features = false
 
 [dependencies.aok]
@@ -30,14 +30,14 @@ path = "../aok"
 [dependencies.reqwest]
 version = "0.11"
 features = [
-  "http3",
-  "rustls-tls",
-  "rustls-tls-native-roots",
-  "brotli",
-  "stream",
+"http3",
+"rustls-tls",
+"rustls-tls-native-roots",
+"brotli",
+"stream"
 ]
 default-features = false
 
 [dependencies.tokio]
 version = "1.37.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync", "fs"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync", "fs" ]

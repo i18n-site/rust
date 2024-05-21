@@ -12,7 +12,7 @@ int-enum = "1.1.2"
 thiserror = "1.0.61"
 
 [dependencies.ifs]
-version = "0.1.31"
+version = "0.1.32"
 path = "../ifs"
 default-features = false
 features = [ "hash" ]
