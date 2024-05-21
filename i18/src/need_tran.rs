@@ -78,11 +78,9 @@ pub fn need_tran(
       if let Some((len, mtime)) = ifs::len_mtime(&fp) {
         if let Some(v) = db.get(lang.to_le_bytes())? {
           let lm = vb::d(v)?;
-          if lm.len() >= 2 {
-            if lm[0] == len && lm[1] == mtime {
-              // tracing::info!("{rel} {:?} len mtime same", TryInto::<Lang>::try_into(lang));
-              continue;
-            }
+          if lm.len() >= 2 && lm[0] == len && lm[1] == mtime {
+            // tracing::info!("{rel} {:?} len mtime same", TryInto::<Lang>::try_into(lang));
+            continue;
           }
         }
 
