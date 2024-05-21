@@ -34,13 +34,13 @@ ginit() {
 ap() {
   ginit
   git checkout -b $1 || true
-
   git pull --depth=1 origin $1
-
   # 清空历史避免过大
   rm -rf .git
   ginit
+  git checkout -b $1 || true
 }
+
 gpush() {
   git add . && git commit -m. || true
   git push -f --set-upstream origin $1

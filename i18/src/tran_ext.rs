@@ -1,13 +1,12 @@
 use std::{collections::HashSet, path::Path};
 
 use aok::Result;
-use fjall::PartitionHandle;
 use ft::FromTo;
 use globset::GlobSet;
 use lang::{Lang, LANG_CODE};
 use walkdir::WalkDir;
 
-use crate::{need_tran, need_tran::NeedTran};
+use crate::{need_tran, need_tran::NeedTran, Table};
 
 pub fn _tran_ext(
   ignore: &GlobSet,
@@ -15,7 +14,7 @@ pub fn _tran_ext(
   from: Lang,
   from_to: &FromTo,
   ext: &str,
-  db: &PartitionHandle,
+  db: &Table,
   traned: &mut HashSet<String>,
 ) -> Result<Vec<NeedTran>> {
   let root = dir.join(LANG_CODE[from as usize]);
@@ -66,7 +65,7 @@ pub fn tran_ext(
   dir: &Path,
   from_to: impl Into<FromTo>,
   ext: &str,
-  db: &PartitionHandle,
+  db: &Table,
 ) -> Result<Vec<NeedTran>> {
   /*
   扫描每个key, 如果key有上级, 就优先做上级

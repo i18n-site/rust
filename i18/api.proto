@@ -32,7 +32,7 @@ enum ErrCode {
   UpdateCacheLen = 1;
 }
 
-message Err
+message TranErr
 {
   uint32 lang = 1;
   ErrCode code = 2;
@@ -44,5 +44,11 @@ message Traned
   repeated File li = 1;
   // 语言代码 - 译文原文内容的散列, 用来缓存译文修改
   map<uint32, bytes> src_hash = 2;
-  repeated Err err = 3;
+  repeated TranErr err = 3;
 }
+
+// message TranResult
+// {
+//   optional Err err = 1;
+//   optional Traned traned = 2;
+// }

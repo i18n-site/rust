@@ -3,8 +3,7 @@ use std::{
   path::{Path, PathBuf},
 };
 
-use aok::{Null, Result, OK};
-use fjall::PartitionHandle;
+use aok::Result;
 use ft::FromTo;
 use lang::{Lang, LANG_CODE};
 use speedy::Readable;
@@ -12,14 +11,13 @@ use speedy::Readable;
 use crate::{
   lang_name_li,
   tran_path::{TranedCache, TranedLang},
-  DOT_I18N,
+  Table, DOT_I18N,
 };
 
-pub fn lmfp(lang: u16, db: &PartitionHandle, fp: &Path) -> Null {
+pub fn lmfp(lang: u16, batch: &mut fjall::Batch, db: &Table, fp: &Path) {
   if let Some(i) = ifs::len_mtime(fp) {
-    db.insert(lang.to_le_bytes(), vb::e([i.0, i.1]))?;
+    batch.insert(&db.table, lang.to_le_bytes(), vb::e([i.0, i.1]));
   }
-  OK
 }
 
 pub struct NeedTran {
@@ -31,12 +29,7 @@ pub struct NeedTran {
   pub len: u64,
 }
 
-pub fn need_tran(
-  db: &PartitionHandle,
-  root: &Path,
-  from_to: &FromTo,
-  rel: String,
-) -> Result<NeedTran> {
+pub fn need_tran(db: &Table, root: &Path, from_to: &FromTo, rel: String) -> Result<NeedTran> {
   let gendir = root.join(DOT_I18N);
   let hashfp = gendir.join("hash").join(&rel);
   let mut from_set: HashSet<Lang> = HashSet::from_iter(from_to.from_lang_li());
@@ -78,11 +71,9 @@ pub fn need_tran(
       if let Some((len, mtime)) = ifs::len_mtime(&fp) {
         if let Some(v) = db.get(lang.to_le_bytes())? {
           let lm = vb::d(v)?;
-          if lm.len() >= 2 {
-            if lm[0] == len && lm[1] == mtime {
-              // tracing::info!("{rel} {:?} len mtime same", TryInto::<Lang>::try_into(lang));
-              continue;
-            }
+          if lm.len() >= 2 && lm[0] == len && lm[1] == mtime {
+            // tracing::info!("{rel} {:?} len mtime same", TryInto::<Lang>::try_into(lang));
+            continue;
           }
         }
 
@@ -133,6 +124,8 @@ pub fn need_tran(
     }
   }
 
+  let mut batch = db.db.batch();
+
   if !from_set.is_empty() {
     for lang in from_set.iter() {
       let fp = root.join(LANG_CODE[*lang as usize]).join(&rel);
@@ -150,11 +143,13 @@ pub fn need_tran(
             },
           );
           to_tran.push((from_lang as _, bin));
-          lmfp(from_lang, db, &fp)?;
+          lmfp(from_lang, &mut batch, db, &fp);
         }
       }
     }
   }
+
+  batch.commit()?;
 
   Ok(NeedTran {
     len: if file > 0 { total_len / file } else { 0 },

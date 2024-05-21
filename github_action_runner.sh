@@ -15,4 +15,7 @@ export HOME=/Users/$USER
 
 cd /Volumes/d/actions-runner
 
+sudo chown -R runner /opt/homebrew/Library/Homebrew/
+sudo chown -R runner /opt/homebrew/var/homebrew
+
 exec sudo -u runner USER=$USER HOME=$HOME bash -c "exec ./run.sh"

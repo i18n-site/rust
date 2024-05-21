@@ -19,7 +19,7 @@ mkdir -p $OUT
 
 cd $TARGET/$arch/release
 
-rename=$DIR/rename.sh
+rename=$DIR/$PROJECT/rename.sh
 
 if [ -f "$rename" ]; then
   $rename

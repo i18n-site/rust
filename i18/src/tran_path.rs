@@ -1,15 +1,15 @@
 use std::{collections::HashMap, io::Write, path::Path};
 
 use aok::{Null, OK};
-use fjall::PartitionHandle;
 use ft::FromTo;
+use lang::LANG_CODE;
 use prost::Message;
 use reqwest::StatusCode;
 use speedy::{Readable, Writable};
 use static_init::dynamic;
 use tracing::warn;
 
-use crate::{api, api::Ext, lang_name_li, need_tran, need_tran::lmfp, Err};
+use crate::{api, api::Ext, lang_name_li, need_tran, need_tran::lmfp, Err, Table};
 
 genv::def!(API:String | "https://s.i18n.site".to_owned());
 
@@ -29,10 +29,10 @@ pub struct TranedCache {
   pub src_hash: HashMap<u16, Vec<u8>>,
 }
 
-pub async fn tran_path(
+pub async fn tran_path<'a>(
   need_tran: need_tran::NeedTran,
   token: &str,
-  db: &PartitionHandle,
+  db: &Table<'a>,
   ext: &str,
   root: &Path,
   from_to: &FromTo,
@@ -40,6 +40,7 @@ pub async fn tran_path(
   let to_tran = need_tran.to_tran;
   let rel = &need_tran.rel;
 
+  dbg!(rel);
   if !to_tran.is_empty() {
     let mut ft: Vec<_> = from_to
       .ft
@@ -101,11 +102,22 @@ pub async fn tran_path(
         api::Traned::decode(bin)?
       };
 
+      for i in traned.err {
+        let p = i.lang as usize;
+        let lang = if p < LANG_CODE.len() {
+          LANG_CODE[p].into()
+        } else {
+          format!("LANG_CODE {}", p)
+        };
+        eprintln!("❌ {} {} {} : {}", i.code, lang, rel, i.msg);
+      }
+
       for i in traned.src_hash.into_iter() {
         // t_hash.insert(i.0 as u16, i.1)?;
         traned_cache.src_hash.insert(i.0 as _, i.1);
       }
 
+      let mut batch = db.db.batch();
       for (i, name) in traned.li.iter().zip(lang_name_li(
         traned.li.iter().map(|i| i.lang as u16).collect::<Vec<_>>(),
       )) {
@@ -123,9 +135,10 @@ pub async fn tran_path(
           );
           let fp = &root.join(name).join(rel);
           ifs::w(fp)?.write_all(txt)?;
-          lmfp(lang, db, fp)?;
+          lmfp(lang, &mut batch, db, fp);
         }
       }
+      batch.commit()?;
       ifs::w(need_tran.hashfp)?.write_all(&traned_cache.write_to_vec()?)?;
     } else {
       warn!("❌ {rel}");

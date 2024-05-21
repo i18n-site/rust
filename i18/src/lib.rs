@@ -2,11 +2,12 @@
 #![feature(let_chains)]
 #![feature(const_trait_impl)]
 #![feature(effects)]
-
-use fjall::{Config, FlushMode};
+use aok::{Null, OK};
+pub use db::{Db, Table};
 use globset::GlobSet;
 use pbar::pbar;
 
+mod db;
 mod err;
 pub use err::Err;
 
@@ -67,6 +68,23 @@ pub fn conf(workdir: &std::path::Path) -> Result<Conf> {
   Ok(conf)
 }
 
+pub fn ensure_cache(cache: &std::path::Path) -> Null {
+  if let Ok(meta) = std::fs::metadata(&cache) {
+    if meta.is_dir() {
+      return OK;
+    }
+    std::fs::remove_file(&cache)?;
+  }
+  std::fs::create_dir_all(&cache)?;
+  use std::io::Write;
+
+  ifs::w(cache.join(".gitignore"))?.write_all(
+    br#"**/*
+!**/.gitignore"#,
+  )?;
+  OK
+}
+
 pub async fn run(
   workdir: &std::path::Path,
   conf: &I18nConf,
@@ -78,22 +96,9 @@ pub async fn run(
   let cache = i18n_gen.join(CACHE);
   let cache: std::path::PathBuf = (&*cache.as_os_str().to_string_lossy()).into();
 
-  #[allow(clippy::never_loop)]
-  loop {
-    if let Ok(meta) = std::fs::metadata(&cache) {
-      if meta.is_dir() {
-        break;
-      }
-      std::fs::remove_file(&cache)?;
-    }
-    std::fs::create_dir_all(&cache)?;
+  ensure_cache(&cache)?;
 
-    use std::io::Write;
-    ifs::w(i18n_gen.join(".gitignore"))?.write_all(format!("/{}/", CACHE).as_bytes())?;
-    break;
-  }
-
-  let fjall = Config::new(&cache).open()?;
+  let fjall = db::open(&cache)?;
 
   macro_rules! ext {
     ($($ext:ident),*) => {{
@@ -106,7 +111,7 @@ $({
       &conf.fromTo
     };
 
-    let db = fjall.open_partition(stringify!($ext), Default::default())?;
+    let db = fjall.table(stringify!($ext))?;
 
     (
       tran_ext(
@@ -128,7 +133,7 @@ $({
   //token.as_ref(),
   let all_li = ext!(md, yml);
 
-  fjall.persist(FlushMode::SyncAll)?;
+  fjall.flush()?;
 
   let mut total_len = 0;
   for (li, ..) in &all_li {

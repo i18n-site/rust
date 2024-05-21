@@ -18,7 +18,7 @@ path = "src/main.rs"
 [dependencies]
 aok = "0.1.11"
 current_platform = "0.2.0"
-fjall = "1.0.3"
+fjall = { version = "1.0.3", features = ["bloom"] }
 loginit = "0.1.10"
 prost = "0.12.6"
 serde_yaml = "0.9.34"
