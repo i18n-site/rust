@@ -43,7 +43,7 @@ version = "0.1.9"
 path = "../cmdv"
 
 [dependencies.i18n_bgu]
-version = "0.1.5"
+version = "0.1.6"
 path = "../i18n_bgu"
 
 [dependencies.tokio]
@@ -51,7 +51,7 @@ version = "1.38.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.i18]
-version = "0.1.204"
+version = "0.1.205"
 path = "../i18"
 
 [dev-dependencies]
