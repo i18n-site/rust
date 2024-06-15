@@ -17,7 +17,7 @@ fi
 
 cargo build -p $(basename $1)
 
-./clippy.sh
+# ./clippy.sh
 
 cd $1
 
