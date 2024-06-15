@@ -1,0 +1,19 @@
+[‼️]: ✏️README.mdt
+
+# cli_tmpl
+
+1. 软件包的签名
+2. 动态库的加载
+3. 架构编译期固化
+
+```rust
+/*
+#[test]
+fn test() {
+}
+
+#[cfg(feature = "macro")]
+mod test_macro {
+}
+*/
+```
