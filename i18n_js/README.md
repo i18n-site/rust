@@ -1,0 +1,15 @@
+[‼️]: ✏️README.mdt
+
+# i18n_js
+
+upload
+
+  add
+    path : content -> hash
+
+  end
+
+
+LANG_LI
+NAV_LI
+
