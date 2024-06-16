@@ -47,7 +47,9 @@ wait
 # fi
 
 . RUSTFLAGS.sh
-build="cargo $build -p $PROJECT -Z build-std=std --release --target"
+
+NAME=$(echo $PROJECT | sed 's/\./-/g')
+build="cargo $build -p $NAME -Z build-std=std,panic_abort --release --target"
 
 # echo $TARGET_LI | xargs -n1 -P$(nproc) $build
 for target in ${TARGET_LI[@]}; do
