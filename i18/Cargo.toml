@@ -61,7 +61,7 @@ path = "../ireq"
 features = [ "proxy" ]
 
 [dependencies.i18n_bgu]
-version = "0.1.9"
+version = "0.1.10"
 path = "../i18n_bgu"
 
 [dependencies.blake3]

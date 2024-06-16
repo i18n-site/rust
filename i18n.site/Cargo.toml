@@ -1,6 +1,6 @@
 [package]
 name = "i18n-site"
-version = "0.2.26"
+version = "0.2.27"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -43,7 +43,7 @@ version = "0.1.9"
 path = "../cmdv"
 
 [dependencies.i18n_bgu]
-version = "0.1.9"
+version = "0.1.10"
 path = "../i18n_bgu"
 
 [dependencies.tokio]
