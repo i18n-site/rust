@@ -10,10 +10,10 @@ pub use const_str::{parse, split};
 pub const PK: &[u8; PUBLIC_KEY_LENGTH] = include_bytes!("i18n.pk");
 
 pub const MIRROR: &[&str] = &[
-  // (false, "atomgit.com/i18n-site/dist/raw/"),
+  // atomgit.com/i18n-site/dist/raw/
   // "jsd.onmicrosoft.cn/gh/i18n-site/dist@",
   "cdn.jsdelivr.net/gh/i18n-site/dist@",
-  "mirror.ghproxy.com/github.com/i18n-site/rust/releases/download/",
+  // "mirror.ghproxy.com/github.com/i18n-site/rust/releases/download/",
   "fastly.jsdelivr.net/gh/i18n-site/dist@",
   "codeberg.org/i18n-site/dist/raw/branch/",
   "github.com/i18n-site/rust/releases/download/",
