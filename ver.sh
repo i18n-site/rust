@@ -6,6 +6,7 @@ source $DIST/project.sh
 cd $ROOT
 
 set -ex
+
 git add . && git commit -m. || true
 
 branch=$(git symbolic-ref --short -q HEAD || echo main)
