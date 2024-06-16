@@ -6,17 +6,17 @@ source $DIST/project.sh
 cd $ROOT
 
 set -ex
+git add . && git commit -m. || true
+
+branch=$(git symbolic-ref --short -q HEAD || echo main)
+if [ "$branch" != "main" ]; then
+  git fetch origin $branch
+  git merge origin/$branch -m merge
+fi
+
+$ROOT/cargo.dist.sh $@
 
 dist() {
-  git add . && git commit -m. || true
-
-  branch=$(git symbolic-ref --short -q HEAD || echo main)
-  if [ "$branch" != "main" ]; then
-    git fetch origin $branch
-    git merge origin/$branch -m merge
-  fi
-
-  $ROOT/cargo.dist.sh $PROJECT
   beginhash=$(git log --format=%H -1 main)
 
   . $DIST/VER.sh
