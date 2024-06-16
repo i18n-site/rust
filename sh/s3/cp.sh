@@ -6,7 +6,7 @@ cd $DIR
 export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new"
 
 . ../dist/project.sh
-. ../dist/VER.sh
+VER=$(../dist/VER.sh)
 
 set -ex
 bun i

@@ -5,6 +5,6 @@ cd $DIR
 set -ex
 
 . project.sh
-. VER.sh
+VER=$(./VER.sh)
 
 gh release edit $PROJECT/$VER --draft=false

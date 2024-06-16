@@ -17,10 +17,10 @@ fi
 $ROOT/cargo.dist.sh $@
 
 dist() {
-  PROJECT=$1
+  export PROJECT=$1
   beginhash=$(git log --format=%H -1 main)
 
-  . $DIST/VER.sh
+  VER=$($DIST/VER.sh)
   PV=$PROJECT/$VER
 
   if [ "$branch" != "main" ]; then

@@ -7,7 +7,7 @@ set -ex
 
 source project.sh
 
-. $DIR/VER.sh
+VER=$($DIR/VER.sh)
 
 BIN=$ROOT/target/bin/$PROJECT
 

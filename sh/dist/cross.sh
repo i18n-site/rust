@@ -32,7 +32,7 @@ Darwin)
   ;;
 esac
 
-. $DIR/VER.sh
+VER=$($DIR/VER.sh)
 
 for target in ${TARGET_LI[@]}; do
   rm -rf $ROOT/target/$target/release

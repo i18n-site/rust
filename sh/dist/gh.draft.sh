@@ -6,7 +6,7 @@ ROOT=${ROOT%/*/*}
 set -ex
 
 . project.sh
-. VER.sh
+VER=$(./VER.sh)
 
 LOG=$ROOT/$PROJECT/log/$VER.md
 if [ -f "$LOG" ]; then
