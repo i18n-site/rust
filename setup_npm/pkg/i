@@ -85,7 +85,7 @@ host_li=(
   "github.com/i18n-site/rust/releases/download/"
   "jsd.onmicrosoft.cn/gh/i18n-site/dist@"
   "cdn.jsdelivr.net/gh/i18n-site/dist@"
-  "jsd.cdn.zzko.cn/gh/i18n-site/dist@"
+  "cdn.jsdmirror.com/gh/i18n-site/dist@"
   "fastly.jsdelivr.net/gh/i18n-site/dist@"
   "codeberg.org/i18n-site/dist/raw/branch/"
   "xxai.eu.org/"
@@ -115,6 +115,25 @@ if [ -z "$ver" ]; then
   exit 1
 else
   echo "$PROJECT version $ver"
+fi
+
+if command -v $PROJECT &>/dev/null; then
+  exe=$(which $PROJECT)
+  exever=$($exe -v)
+  if [[ $? -eq 0 ]]; then
+    if [[ "$ver" == "$exever" ]]; then
+      egreen "$exe ( version $ver ) ALREADY INSTALLED\n"
+      exit 0
+    else
+      sorted=$(printf "%s\n%s" "$exever" "$ver" | sort -V)
+      first=$(echo "$sorted" | head -n1)
+      if [[ $first == $ver ]]; then
+        egreen "$exe ( version $exever > $ver )  ALREADY INSTALLED\n"
+        exit 0
+      fi
+    fi
+  fi
+  rm -rf $exe || ered "CAN'T rm $exe\n"
 fi
 
 _TMP=$(mktemp -d)
@@ -165,10 +184,6 @@ for ((i = 0; i < host_li_len; i++)); do
     if ! [ -w $BIN ]; then
       ered "CAN'T WRITE $BIN\n"
       exit 1
-    fi
-
-    if command -v $PROJECT &>/dev/null; then
-      rm -rf $(which $PROJECT)
     fi
 
     exe_li=()

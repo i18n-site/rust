@@ -12,4 +12,3 @@ cd ..
 git add -u
 git commit -m"$(basename $(pwd)) v$ver"
 git push
-./test.sh

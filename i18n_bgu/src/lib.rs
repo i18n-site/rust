@@ -17,7 +17,7 @@ pub const MIRROR: &[&str] = &[
   "fastly.jsdelivr.net/gh/i18n-site/dist@",
   "codeberg.org/i18n-site/dist/raw/branch/",
   "github.com/i18n-site/rust/releases/download/",
-  "jsd.cdn.zzko.cn/gh/i18n-site/dist@",
+  "cdn.jsdmirror.com/gh/i18n-site/dist@",
   "raw.githubusercontent.com/i18n-site/dist/",
   "xxai.eu.org/",
   "bitbucket.org/i18nsite/dist/raw/",

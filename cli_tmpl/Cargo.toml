@@ -25,7 +25,7 @@ version = "0.1.9"
 path = "../cmdv"
 
 [dependencies.i18n_bgu]
-version = "0.1.10"
+version = "0.1.11"
 path = "../i18n_bgu"
 
 [dependencies.tokio]
