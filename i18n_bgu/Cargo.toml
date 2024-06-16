@@ -1,0 +1,22 @@
+[dependencies]
+const-str = "0.5.7"
+
+[dependencies.aok]
+version = "0.1.12"
+path = "../aok"
+
+[dependencies.bgu]
+version = "0.1.22"
+path = "../bgu"
+
+[package]
+name = "i18n_bgu"
+version = "0.1.9"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/i18n_bgu"
+description = "i18n_bgu"
+
+[package.metadata.docs.rs]
+all-features = true
