@@ -27,14 +27,14 @@ $DIR/rcp.sh .
 bun run --bun $DIR/cf.clean.js -- $PROJECT
 
 ginit() {
-  git init
+  git init -b main
   cp -f $DIR/conf/git.config .git/config
 }
 
 ap() {
   ginit
   git checkout -b $1 || true
-  git pull --depth=1 origin $1
+  git pull --depth=1 origin $1 || true
   # 清空历史避免过大
   rm -rf .git
   ginit

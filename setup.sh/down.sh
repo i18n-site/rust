@@ -7,6 +7,52 @@ else
   export PROJECT=$1
 fi
 
+CURL="curl --retry 3 -L --connect-timeout 6"
+
+if [ -t 0 ]; then
+  line() {
+    echo -ne "\033[4m$@\033[0m"
+  }
+  ered() {
+    echo -ne "\033[31m$@\033[0m"
+  }
+  egray() {
+    echo -en "\033[90m$@\033[0m"
+  }
+  egreen() {
+    echo -ne "\033[32m$@\033[0m"
+  }
+  eyellow() {
+    echo -ne "\033[93m$@\033[0m"
+  }
+  eblue() {
+    echo -ne "\033[94m$@\033[0m"
+  }
+else
+  line() {
+    echo -en "$@"
+  }
+  ered() {
+    line $@
+  }
+  egray() {
+    line $@
+  }
+  egreen() {
+    line $@
+  }
+  eyellow() {
+    line $@
+  }
+  eblue() {
+    line $@
+  }
+fi
+
+eurl() {
+  echo "$(egray '>') $(line $(eblue $1))"
+}
+
 get_arch() {
   arch=$(uname -m)
   case $arch in
@@ -57,8 +103,8 @@ for ((i = 0; i < host_li_len; i++)); do
   idx=$(((start_idx + i) % host_li_len))
   prefix=${host_li[$idx]}
   url="https://${prefix}v/${PROJECT}"
-  echo "> $url"
-  ver=$(curl -sSL $url)
+  eurl $url
+  ver=$($CURL -sS $url)
   if [[ $? -eq 0 ]]; then
     break
   fi
@@ -68,7 +114,7 @@ if [ -z "$ver" ]; then
   echo "can't get version"
   exit 1
 else
-  echo "version $ver"
+  echo "$PROJECT version $ver"
 fi
 
 _TMP=$(mktemp -d)
@@ -94,9 +140,9 @@ for ((i = 0; i < host_li_len; i++)); do
   idx=$(((start_idx + i) % host_li_len))
   prefix=${host_li[$idx]}
   url="https://${prefix}${PROJECT}/${ver}/${name}.tar"
-  echo "> $url"
+  eurl $url
 
-  curl --retry 5 -C - -OL "$url"
+  $CURL -C - -OL "$url"
   if [[ $? -eq 0 ]]; then
     tar -xf "${name}.tar"
     mkdir -p o
@@ -130,8 +176,10 @@ for ((i = 0; i < host_li_len; i++)); do
     mv -f o/* $BIN/
 
     for file in "${exe_li[@]}"; do
-      echo "+ $BIN/$file"
+      echo "$(egray +) $(egreen $BIN/$file)"
     done
+
+    bin="export PATH=$BIN:\$PATH"
 
     for shell in "${auto_add_shells[@]}"; do
       RC=.${shell}rc
@@ -143,26 +191,25 @@ for ((i = 0; i < host_li_len; i++)); do
           echo $PATH | grep -q "$BIN" && continue
         fi
         if ! grep -q "export PATH=$BIN:\$PATH" "$FILE"; then
-          bin="export PATH=$BIN:\$PATH"
           echo -e "$bin\n$(cat $FILE)" >"$FILE"
-          echo "added '$bin' → $FILE"
+          egray "added '$bin' → $FILE\n"
         fi
         if [[ "$shell" == "$current_shell" ]]; then
-          echo -e "PLEASE RUN:\n  source ~/$RC"
+          echo -e "$(egreen PLEASE RUN:)\n  $(eyellow source \~/$RC)"
         fi
       else
         if [[ "$shell" == "$current_shell" ]]; then
           echo $PATH | grep -q "$BIN" && continue
-          echo "PLEASE ADD $BIN TO PATH"
+          echo "PLEASE ADD $(eyellow $bin) TO ENV PATH"
         fi
       fi
     done
 
     exit 0
   else
-    echo "$url download failed, try next ..."
+    echo "DOWNLOAD $(ered FAILED), TRY NEXT ..."
   fi
 done
 
-echo "install failed !"
+ered "INSTALL FAILED !\n"
 exit 1
