@@ -1,0 +1,106 @@
+[workspace]
+members = [
+  "amid",
+  "aok",
+  "apart",
+  "axum_cors",
+  "b62",
+  "bgu",
+  "burl",
+  "cfha",
+  "cget",
+  # "cget/test_cget",
+  "cli_tmpl",
+  "click_captcha",
+  "cmdv",
+  "cnu",
+  "cookiestr",
+  "dot_hide",
+  "ft",
+  "genv",
+  "getc",
+  "hi",
+  "hsc",
+  "i18",
+  "i18e",
+  "i18n.site",
+  "i18n_bgu",
+  "i18n_plugin",
+  "i18s",
+  "i_",
+  "idns",
+  "ifs",
+  "iget",
+  "ireq",
+  "jarg",
+  "kvcache",
+  "lang",
+  "loginit",
+  "map_await",
+  "mreplace",
+  "mysql_macro",
+  "ok_or",
+  "pbar",
+  "ping_ver",
+  "preq",
+  "preq1",
+  "radix_str",
+  "rany",
+  "re",
+  "s3_put",
+  "s_",
+  "set_header",
+  "sline",
+  "sts",
+  "svg2webp",
+  "t3",
+  "t_",
+  "title_case",
+  "tls_ping",
+  "tmpl",
+  "tp",
+  "trt",
+  "vb",
+  "wxpush",
+  "xbin",
+  "xerr",
+  "xhash",
+  "bjs",
+  "xkv",
+  "xmail",
+  "xsmtp",
+  "xstr",
+  "xtld",
+  "minjs",
+  "rvar",
+  "i18n_js",
+  "init_dir",
+  "yconf",
+  "i18_conf",
+  "bintxt",
+  "npm",
+  "yml_dict_li",
+  "verfs",
+  "ver_incr",
+  "cmp_len_str",
+  "li_pos",
+  "ver_count",
+]
+resolver = "2"
+
+[profile.release]
+lto = true
+opt-level = 3
+incremental = true
+codegen-units = 1
+overflow-checks = false
+debug-assertions = false
+# panic = 'abort'
+# strip = false
+
+[profile.dev]
+split-debuginfo = "unpacked"
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
