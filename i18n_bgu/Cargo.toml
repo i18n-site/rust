@@ -6,12 +6,12 @@ version = "0.1.12"
 path = "../aok"
 
 [dependencies.bgu]
-version = "0.1.21"
+version = "0.1.22"
 path = "../bgu"
 
 [package]
 name = "i18n_bgu"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"

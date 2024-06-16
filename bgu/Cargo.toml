@@ -1,6 +1,6 @@
 [package]
 name = "bgu"
-version = "0.1.21"
+version = "0.1.22"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -47,7 +47,7 @@ default-features = false
 features = [ "hash", "txz_hash_d", "fs", "dir", "conf", "rsync" ]
 
 [dependencies.iget]
-version = "0.1.10"
+version = "0.1.12"
 path = "../iget"
 
 [dependencies.tokio]
