@@ -83,6 +83,13 @@ TMP=$_TMP/$PROJECT/$ver
 mkdir -p $TMP
 cd $TMP
 
+auto_add_shells=("bash" "zsh")
+current_shell=$(basename "$SHELL")
+
+if [[ ! " ${auto_add_shells[@]} " =~ " ${current_shell} " ]]; then
+  auto_add_shells+=("$current_shell")
+fi
+
 for ((i = 0; i < host_li_len; i++)); do
   idx=$(((start_idx + i) % host_li_len))
   prefix=${host_li[$idx]}
@@ -92,13 +99,70 @@ for ((i = 0; i < host_li_len; i++)); do
   curl --retry 5 -C - -OL "$url"
   if [[ $? -eq 0 ]]; then
     tar -xf "${name}.tar"
-    tar -xJvf $ver.txz
-    ls -alh
+    mkdir -p o
+    tar -xJf $ver.txz -C o
+
+    if mkdir -p /opt/bin; then
+      BIN="/opt/bin"
+    elif mkdir -p "$HOME/.bin"; then
+      BIN="$HOME/.bin"
+    else
+      echo "can't create /opt/bin or $HOME/.bin"
+      exit 1
+    fi
+
+    if command -v $PROJECT &>/dev/null; then
+      rm -rf $(which $PROJECT)
+    fi
+
+    exe_li=()
+
+    cd o
+    for file in *; do
+      # 检查文件是否具有可执行权限
+      if [ -x "$file" ]; then
+        # 将文件名添加到数组中
+        exe_li+=("$file")
+      fi
+    done
+    cd ..
+
+    mv -f o/* $BIN/
+
+    for file in "${exe_li[@]}"; do
+      echo "+ $BIN/$file"
+    done
+
+    for shell in "${auto_add_shells[@]}"; do
+      RC=.${shell}rc
+
+      FILE="$HOME/$RC"
+
+      if [ -f "$FILE" ]; then
+        if [[ "$shell" == "$current_shell" ]]; then
+          echo $PATH | grep -q "$BIN" && continue
+        fi
+        if ! grep -q "export PATH=$BIN:\$PATH" "$FILE"; then
+          bin="export PATH=$BIN:\$PATH"
+          echo -e "$bin\n$(cat $FILE)" >"$FILE"
+          echo "added '$bin' → $FILE"
+        fi
+        if [[ "$shell" == "$current_shell" ]]; then
+          echo -e "PLEASE RUN:\n  source ~/$RC"
+        fi
+      else
+        if [[ "$shell" == "$current_shell" ]]; then
+          echo $PATH | grep -q "$BIN" && continue
+          echo "PLEASE ADD $BIN TO PATH"
+        fi
+      fi
+    done
+
     exit 0
   else
     echo "$url download failed, try next ..."
   fi
 done
 
-echo "download failed !"
+echo "install failed !"
 exit 1
