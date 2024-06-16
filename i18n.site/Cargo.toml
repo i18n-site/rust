@@ -36,7 +36,7 @@ path = "../npm"
 
 [dependencies.serde]
 version = "1.0.203"
-features = ["derive"]
+features = [ "derive" ]
 
 [dependencies.cmdv]
 version = "0.1.9"
@@ -48,10 +48,10 @@ path = "../i18n_bgu"
 
 [dependencies.tokio]
 version = "1.38.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.i18]
-version = "0.1.210"
+version = "0.1.211"
 path = "../i18"
 
 [dev-dependencies]
