@@ -17,11 +17,9 @@ fi
 $ROOT/cargo.dist.sh $@
 
 dist() {
-  export PROJECT=$1
+  VER=$($DIST/VER.sh $1)
+  PV=$1/$VER
   beginhash=$(git log --format=%H -1 main)
-
-  VER=$($DIST/VER.sh)
-  PV=$PROJECT/$VER
 
   if [ "$branch" != "main" ]; then
     git fetch origin main

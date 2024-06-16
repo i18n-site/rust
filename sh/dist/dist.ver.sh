@@ -5,7 +5,7 @@ cd $DIR
 set -ex
 
 . project.sh
-VER=$(./VER.sh)
+VER=$(./VER.sh $PROJECT)
 
 mkdir -p v
 cd v
