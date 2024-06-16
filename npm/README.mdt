@@ -1,0 +1,7 @@
+# npm
+
+publish dir to npm
+
+```rust
+<+ ./tests/main.rs>
+```
