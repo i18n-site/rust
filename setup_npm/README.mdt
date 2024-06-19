@@ -1,0 +1,5 @@
+# setup_npm
+
+```
+bash <(curl -sSL https://registry.npmmirror.com/@i18n.site/i/latest/files/i) i18
+```

@@ -1,0 +1,31 @@
+[dependencies]
+aok = "0.1.12"
+swc = "0.278.0"
+swc_common = "0.34.2"
+swc_ecma_ast = "0.115.1"
+swc_ecma_minifier = "0.197.0"
+tracing = "0.1.40"
+
+[dependencies.ifs]
+version = "0.1.36"
+path = "../ifs"
+default-features = false
+features = [ "fs" ]
+
+[package]
+name = "minjs"
+version = "0.1.2"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/minjs"
+description = "minjs"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.12"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"

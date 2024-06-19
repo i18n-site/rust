@@ -1,0 +1,5 @@
+# radix_str : use proc_macro convert number radix to static str
+
+```rust
+<+ ./tests/main.rs>
+```

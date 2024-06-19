@@ -1,0 +1,95 @@
+[dependencies]
+aok = "0.1.12"
+walkdir = "2.5.0"
+lightningcss = "1.0.0-alpha.57"
+tracing = "0.1.40"
+ipug = "0.2.1"
+serde_yaml = "0.9.34"
+serde = "1.0.203"
+sonic-rs = "0.3.7"
+
+[dependencies.yml_dict_li]
+version = "0.1.1"
+path = "../yml_dict_li"
+
+[dependencies.ver_count]
+version = "0.1.1"
+path = "../ver_count"
+
+[dependencies.globset]
+version = "0.4.14"
+features = ["simd-accel"]
+
+[dependencies.indexmap]
+version = "2.2.6"
+features = ["serde"]
+
+[dependencies.verfs]
+version = "0.2.3"
+path = "../verfs"
+
+[dependencies.minjs]
+version = "0.1.2"
+path = "../minjs"
+
+[dependencies.yconf]
+version = "0.1.3"
+path = "../yconf"
+
+[dependencies.i18_conf]
+version = "0.1.1"
+path = "../i18_conf"
+
+[dependencies.rvar]
+version = "0.1.2"
+path = "../rvar"
+
+[dependencies.ft]
+version = "0.1.10"
+path = "../ft"
+
+[dependencies.lang]
+version = "0.1.23"
+path = "../lang"
+
+[dependencies.bjs]
+version = "0.1.3"
+path = "../bjs"
+
+[dependencies.ifs]
+version = "0.1.36"
+path = "../ifs"
+default-features = false
+features = ["fs", "unix_path", "rsync", "b3_len", "ln"]
+
+[dependencies.dot_hide]
+version = "0.1.3"
+path = "../dot_hide"
+features = ["walkdir"]
+
+[dependencies.xerr]
+version = "0.1.14"
+path = "../xerr"
+
+[package]
+name = "i18n_js"
+version = "0.1.4"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/i18n_js"
+description = "i18n_js"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.12"
+dirs = "5.0.1"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.38.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
