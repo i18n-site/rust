@@ -120,8 +120,8 @@ impl Build {
       root.join(".i18n").join(V).join(conf_name).join("v.hash"),
     )?;
 
-    if vfs.outver.exists() {
-      std::fs::remove_dir_all(&vfs.outver)?;
+    if vfs.verdir.exists() {
+      std::fs::remove_dir_all(&vfs.verdir)?;
     }
 
     let conf = &self.htm_conf;
@@ -188,7 +188,7 @@ impl Build {
 
     if vfs.has_new() {
       let v = format!("{js_ver}>{prefix_index_ver}");
-      for i in [vfs.outver.join(".v"), vfs.out.join(".v")] {
+      for i in [vfs.verdir.join(".v"), vfs.out.join(".v")] {
         ifs::wbin(i, &v)?;
       }
     }

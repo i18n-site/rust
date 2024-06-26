@@ -22,7 +22,7 @@ pub enum Error {
 pub struct VerFs {
   pub root: PathBuf,
   pub out: PathBuf,
-  pub outver: PathBuf,
+  pub verdir: PathBuf,
   pub log: PathBuf,
   pub hash_ver: HashMap<Box<[u8]>, Box<str>>,
   pub ver: Box<str>,
@@ -83,7 +83,7 @@ impl VerFs {
         // println!("new wbin {rel}");
         self.new_hash.insert(hash.clone());
         self.hash_ver.insert(hash, ver);
-        ifs::wbin(self.outver.join(&rel), bin)?;
+        ifs::wbin(self.verdir.join(&rel), bin)?;
         &self.ver
       }
     };
@@ -126,7 +126,7 @@ impl VerFs {
         // println!("new cp {to}");
         self.new_hash.insert(hash.clone());
         self.hash_ver.insert(hash, ver);
-        ifs::cp_rel(&self.root, &from, &self.outver, &to)?;
+        ifs::cp_rel(&self.root, &from, &self.verdir, &to)?;
         &self.ver
       }
     };
@@ -165,13 +165,13 @@ impl VerFs {
       }
     }
     let ver = latest.unwrap_or_else(|| "0.1.0".into());
-    let outver = out.join(&*ver);
+    let verdir = out.join(&*ver);
     Ok(Self {
       root,
       out,
       log,
       ver,
-      outver,
+      verdir,
       hash_ver,
       rel_ver: HashMap::new(),
       new_hash: HashSet::new(),
