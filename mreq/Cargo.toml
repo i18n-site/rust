@@ -1,0 +1,41 @@
+[dependencies]
+aok = "0.1.12"
+bytes = "1.6.0"
+reqwest = "0.12.5"
+thiserror = "1.0.61"
+tracing = "0.1.40"
+
+[dependencies.citer]
+version = "0.1.6"
+path = "../citer"
+
+[dependencies.ireq]
+version = "0.1.13"
+path = "../ireq"
+features = [ "proxy" ]
+
+[dependencies.xerr]
+version = "0.1.14"
+path = "../xerr"
+
+[package]
+name = "mreq"
+version = "0.1.3"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/mreq"
+description = "mreq"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.12"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.38.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

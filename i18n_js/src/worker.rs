@@ -11,13 +11,6 @@ pub fn worker(root: &Path, conf: &HtmConf, outdir: &Path) -> Null {
     if fp.exists() {
       let mut js = minjs::file(&fp)?
         .replace("{conf.v}", &conf.v)
-        .replace(
-          "{conf.dot_v}",
-          &conf
-            .dot_v
-            .clone()
-            .unwrap_or_else(|| format!("{}/.v", &conf.v)),
-        )
         .replace("{conf.x}", &conf.x);
 
       if let Some(api) = &conf.api {

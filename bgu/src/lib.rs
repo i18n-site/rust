@@ -1,6 +1,5 @@
 #![feature(trait_alias)]
 #![feature(const_trait_impl)]
-#![feature(effects)]
 
 use std::{
   env::{consts::EXE_SUFFIX, temp_dir},

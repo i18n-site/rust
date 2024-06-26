@@ -1,7 +1,6 @@
 #![feature(coroutines, coroutine_trait)]
 #![feature(let_chains)]
 #![feature(const_trait_impl)]
-#![feature(effects)]
 use std::path::{Path, PathBuf};
 
 pub use db::{Db, Table};
@@ -21,6 +20,7 @@ pub use err::Err;
 pub mod api {
   include!(concat!(env!("OUT_DIR"), "/api.rs"));
 }
+
 genv::def!(API:String | "https://s.i18n.site".to_owned());
 
 pub const DOT_I18N: &str = ".i18n";

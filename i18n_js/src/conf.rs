@@ -45,8 +45,6 @@ pub struct HtmConf {
   // pub site: Option<Site>,
   // pub outdir: Option<String>,
   pub importmap: HashMap<String, String>,
-  #[serde(rename = ".v")]
-  pub dot_v: Option<String>,
   pub v: String,
   pub x: String,
 }

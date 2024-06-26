@@ -1,6 +1,5 @@
 #![feature(let_chains)]
 #![feature(const_trait_impl)]
-#![feature(effects)]
 
 mod mnt;
 pub use mnt::Mnt;

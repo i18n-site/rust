@@ -25,7 +25,7 @@ impl IntoResponse for Err {
       } else if err.is::<crate::bad_request::Error>() {
         (StatusCode::BAD_REQUEST, err.to_string())
       } else {
-        error!("{}\n{}", err, err.backtrace());
+        error!("{}\n{}", err.backtrace(), err);
         (StatusCode::INTERNAL_SERVER_ERROR, format!("ERR: {}", err))
       }
       .into_response(),

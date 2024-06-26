@@ -28,13 +28,20 @@ pub struct Build {
   pub nav: String,
   pub pug: String,
   pub mnt: Mnt,
+  pub htm_conf: HtmConf,
+  pub htm_conf_name: String,
   pub bjs_after: BjsAfter,
-  pub index_js: String,
   pub lang: Vec<(Lang, Vec<u8>)>,
 }
 
 impl Build {
-  pub fn new(root: impl Into<PathBuf>, conf: Conf, ignore: &GlobSet) -> Result<Self> {
+  pub fn new(
+    root: impl Into<PathBuf>,
+    conf: Conf,
+    ignore: &GlobSet,
+    htm_conf_name: impl Into<String>,
+  ) -> Result<Self> {
+    let htm_conf_name = htm_conf_name.into();
     let root = root.into();
     let i18n = root.join(DOT_I18N);
     let htm = i18n.join(HTM);
@@ -49,9 +56,6 @@ impl Build {
       "{{{}}}",
       pug.iter().map(|i| i.to_fn()).collect::<Vec<_>>().join(",")
     );
-
-    let fp = htm.join("index.js");
-    let index_js = minjs::file(&fp)?;
 
     let from_to: FromTo = (&conf.i18n.fromTo).into();
 
@@ -89,9 +93,10 @@ impl Build {
 
     // _LANG = en name url
     let i = Self {
+      htm_conf: yconf::load(&htm.join(format!("{}.yml", htm_conf_name)))?,
+      htm_conf_name,
       lang,
       bjs_after,
-      index_js,
       conf,
       css,
       root,
@@ -104,8 +109,9 @@ impl Build {
     Ok(i)
   }
 
-  pub async fn build(&self, conf_name: &str) -> Result<VerFs> {
+  pub async fn build(&self) -> Result<VerFs> {
     let root = &self.root;
+    let conf_name = &self.htm_conf_name;
     let outdir = root.join("out").join(conf_name);
     let outv = outdir.join(V);
     let mut vfs = VerFs::load(
@@ -118,7 +124,7 @@ impl Build {
       std::fs::remove_dir_all(&vfs.outver)?;
     }
 
-    let conf: HtmConf = yconf::load(&self.htm.join(format!("{}.yml", conf_name)))?;
+    let conf = &self.htm_conf;
     // let upload = upload(&conf)?;
     // let outdir = if let Some(ref outdir) = conf.outdir {
     // outdir
@@ -175,9 +181,9 @@ impl Build {
       &outhtm,
     )?;
 
-    worker(root, &conf, &outhtm)?;
+    worker(root, conf, &outhtm)?;
 
-    let js_ver = self.js(&mut vfs, conf_name, &conf).await?;
+    let js_ver = self.js(&mut vfs, conf_name, conf).await?;
     let prefix_index_ver = self.mnt.build(&mut vfs, &self.bjs_after.lang_path_bin)?;
 
     if vfs.has_new() {

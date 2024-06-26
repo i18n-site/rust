@@ -1,5 +1,4 @@
 #![feature(const_trait_impl)]
-#![feature(effects)]
 
 use std::future::Future;
 

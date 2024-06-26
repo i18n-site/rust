@@ -16,7 +16,7 @@ version = "0.11.2"
 features = [ "macros" ]
 
 [dependencies.strum]
-version = "0.26.2"
+version = "0.26.3"
 features = [ "derive" ]
 
 [dev-dependencies.aok]

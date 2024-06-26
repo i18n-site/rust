@@ -1,6 +1,6 @@
 [dependencies]
 aok = "0.1.12"
-strum = "0.26.2"
+strum = "0.26.3"
 
 [dependencies.lang]
 version = "0.1.23"

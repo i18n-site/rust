@@ -84,7 +84,7 @@ members = [
   "ver_incr",
   "cmp_len_str",
   "li_pos",
-  "ver_count", "setup_npm",
+  "ver_count", "setup_npm", "bls", "iver", "refresh_v", "mreq", "citer",
 ]
 resolver = "2"
 

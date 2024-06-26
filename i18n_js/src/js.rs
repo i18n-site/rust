@@ -40,8 +40,10 @@ impl Build {
     let mut importmap = conf.importmap.clone();
     let site_i = importmap.remove("i/").unwrap();
     let site_i_json = to_string(&site_i)?;
-
-    let index_js = minjs::minjs(rtxt(htm.join("index.js"))?)?;
+    let index_js =
+      rtxt(htm.join("index.js"))?.replace("__CONF__", &("'".to_owned() + conf_name + "'"));
+    let index_js = minjs::minjs(index_js)?;
+    // println!("{index_js}");
     let index_js = to_string(&index_js)?;
 
     let lv = if lang_ver_map.li.len() == 1 {
@@ -84,14 +86,14 @@ impl Build {
     );
 
     let css = to_string(&self.css)?;
+
     let mut importmap = importmap
       .iter()
-      .map(|(k, v)| format!(r#""{k}":"{v}""#))
+      .map(|(k, v)| format!(r#","{k}":"{v}""#))
       .collect::<Vec<_>>();
 
     importmap.sort(); // 保证顺序稳定以防verfs变化
-
-    let importmap = importmap.join(",");
+    let importmap = importmap.join("");
 
     let boot = format!(
       r#"(conf_x)=>{{
@@ -107,13 +109,16 @@ let _I='{site_i_json}',script='script',D=document,New=(tag, o)=>{{
   if(type)attr.type=type;
   New(tag,attr)
 }};
-typeContent(script,'{{"imports":{{"x/":"'+conf_x+'","i/":'+_I+',{importmap}}}}}','importmap');
+typeContent(script,'{{"imports":{{"x/":"'+conf_x+'","i/":'+_I+'{importmap}}}}}','importmap');
 typeContent('style',{css},'text/css');
 typeContent(script,{const_js});
 return ()=>typeContent(script,{index_js},'module');
 }}"#
     );
-    let boot_js = minjs::minjs_no_mangle(&boot)?;
+    let mut boot_js = minjs::minjs_no_mangle(&boot)?;
+    if boot_js.ends_with(';') {
+      boot_js.pop();
+    }
     vfs.wstr("B.js", boot_js)
   }
 }

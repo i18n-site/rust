@@ -13,7 +13,7 @@ futures = "0.3.30"
 tracing = "0.1.40"
 thiserror = "1.0.61"
 xtld = "0.1.1"
-re = "0.1.6"
+re = "0.1.7"
 
 [dependencies.tower]
 version = "0.4.13"

@@ -5,7 +5,7 @@ use i18::token;
 use i18_conf::build_ignore;
 use i18n_js::{Build, Conf};
 
-use crate::package_json_ver;
+use crate::{package_json_ver, refresh_v};
 
 pub const DOT_YML: &str = ".yml";
 
@@ -24,8 +24,10 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
   let token = token();
   let ignore = build_ignore(&conf.ignore);
   i18::run(&dir, &conf.i18n, &ignore, token).await?;
-  let build = Build::new(&dir, conf, &ignore)?;
-  let vfs = build.build(&htm_conf).await?;
+
+  let build = Build::new(&dir, conf, &ignore, &htm_conf)?;
+
+  let vfs = build.build().await?;
   if npm {
     let package_json = dir
       .join(".i18n/htm")
@@ -36,6 +38,7 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
       if vfs.has_new() {
         npm::publish(&npm::token(), &out, package_json).await?;
         vfs.save()?;
+        refresh_v(&build.htm_conf).await?;
         println!("✅ i18n.site publish {}", vfs.ver);
         return OK;
       }

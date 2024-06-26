@@ -13,4 +13,6 @@ macro_rules! r#mod {
   }
 }
 
-r#mod!(cli, run, package_json_ver);
+r#mod!(cli, run, package_json_ver, refresh_v);
+
+mod api;

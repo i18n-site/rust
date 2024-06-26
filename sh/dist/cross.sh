@@ -59,14 +59,14 @@ done
 if [[ "$unameOut" == MINGW* ]]; then
   wait
   # https://github.com/briansmith/ring/issues/1514
-  # target=aarch64-pc-windows-msvc
-  # TARGET_LI="$TARGET_LI $target"
-  # # Get Visual Studio installation directory
-  # VSINSTALLDIR=$(vswhere.exe -latest -requires Microsoft.VisualStudio.Component.VC.Llvm.Clang -property installationPath)/VC
-  # LLVM_ROOT=$VCINSTALLDIR/Tools/Llvm/x64
-  # export PATH=$PATH:/usr/local/bin/nasm:$LLVM_ROOT/bin
-  # ./target.sh $target
-  # $build $target
+  target=aarch64-pc-windows-msvc
+  TARGET_LI="$TARGET_LI $target"
+  # Get Visual Studio installation directory
+  VSINSTALLDIR=$(vswhere.exe -latest -requires Microsoft.VisualStudio.Component.VC.Llvm.Clang -property installationPath)/VC
+  LLVM_ROOT=$VCINSTALLDIR/Tools/Llvm/x64
+  export PATH=$PATH:/usr/local/bin/nasm:$LLVM_ROOT/bin
+  ./target.sh $target
+  $build $target
 fi
 
 for target in ${TARGET_LI[@]}; do
