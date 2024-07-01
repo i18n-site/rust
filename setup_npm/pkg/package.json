@@ -1,0 +1,14 @@
+{
+  "name": "@i18n.site/i",
+  "version": "0.1.6",
+  "description": "setup.sh",
+  "repository": {
+    "type": "git",
+    "url": "git+https://atomgit.com/i18n/rust.git"
+  },
+  "homepage": "https://atomgit.com/i18n/rust/tree/dev",
+  "author": "i18n.site@gmail.com",
+  "license": "Apache-2.0",
+  "keywords": [],
+  "type": "module"
+}
