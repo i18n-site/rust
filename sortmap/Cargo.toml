@@ -4,7 +4,7 @@ indexmap = { version = "2.2.6", features = ["serde"] }
 
 [package]
 name = "sortmap"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
