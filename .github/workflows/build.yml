@@ -14,9 +14,10 @@ jobs:
     strategy:
       matrix:
         platform:
-          - macos-latest
+          - macos-latest # arm
+          - macos-13 # x86
           - ubuntu-latest
-          - [self-hosted, macOS, ARM64]
+          # - [self-hosted, macOS, ARM64]
           - windows-latest
     runs-on: ${{ matrix.platform }}
     steps:
