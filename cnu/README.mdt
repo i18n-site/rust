@@ -1,0 +1,40 @@
+# CN Util
+
+## 中文繁简体转换
+
+```rust
+<+ ./tests/main.rs>
+```
+
+输出
+
+```
+<+ ./out.txt>
+```
+
+## 参考资料
+
+中文汉字和常见英文数字等的 unicode 编码范围实例
+
+| 字符集 | 字数 | Unicode 编码 |
+| - | - | -  |
+| 基本汉字 | 20902 | 4E00-9FA5 |
+| 基本汉字补充 | 38 | 9FA6-9FCB |
+| 扩展 A | 6582 | 3400-4DB5 |
+| 扩展 B | 42711 | 20000-2A6D6 |
+| 扩展 C | 4149 | 2A700-2B734 |
+| 扩展 D | 222 | 2B740-2B81D |
+| 康熙部首 | 214 | 2F00-2FD5 |
+| 部首扩展 | 115 | 2E80-2EF3 |
+| 兼容汉字 | 477 | F900-FAD9 |
+| 兼容扩展 | 542 | 2F800-2FA1D |
+| PUA(GBK) 部件 | 81 | E815-E86F |
+| 部件扩展 | 452 | E400-E5E8 |
+| PUA 增补 | 207 | E600-E6CF |
+| 汉字笔画 | 36 | 31C0-31E3 |
+| 汉字结构 | 12 | 2FF0-2FFB |
+| 汉语注音 | 22 | 3105-3120 |
+| 注音扩展 | 22 | 31A0-31BA |
+| 〇 | 1 | 3007 |
+
+[Detecting Chinese Characters in Unicode Strings](https://medium.com/the-artificial-impostor/detecting-chinese-characters-in-unicode-strings-4ac839ba313a)
