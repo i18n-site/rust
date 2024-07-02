@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 if [ -z "$1" ]; then
-  echo "USAGE : $0 PROJECT"
+  echo "USAGE : $0 APP"
   exit 1
 else
-  export PROJECT=$1
+  APP=$1
 fi
 
 CURL="curl --retry 3 -L --connect-timeout 6"
@@ -71,7 +71,6 @@ eurl() {
   echo "$(egray '>') $(line $(eblue $1))"
 }
 
-
 get_libc() {
   local os=$(uname -s)
   case $os in
@@ -83,8 +82,9 @@ get_libc() {
       echo "unknown-linux-gnu"
     fi
     ;;
-  CYGWIN*|MINGW*|MSYS*)
-    echo "pc-windows-msvc" ;;
+  CYGWIN* | MINGW* | MSYS*)
+    echo "pc-windows-msvc"
+    ;;
   *)
     throw unknown libc
     ;;
@@ -121,7 +121,7 @@ start_idx=$((RANDOM % HOST_LI_LEN))
 for ((i = 0; i < HOST_LI_LEN; i++)); do
   idx=$(((start_idx + i) % HOST_LI_LEN))
   prefix=${HOST_LI[$idx]}
-  url="https://${prefix}v/${PROJECT}"
+  url="https://${prefix}v/${APP}"
   eurl $url
   ver=$($CURL -sS $url)
   if [[ -n "$ver" && "$ver" =~ ^[a-zA-Z0-9._-]+$ ]]; then
@@ -137,11 +137,11 @@ if [ -z "$ver" ]; then
   echo "can't get version"
   exit 1
 else
-  echo "$PROJECT version $ver"
+  echo "$APP version $ver"
 fi
 
-if command -v $PROJECT &>/dev/null; then
-  exe=$(which $PROJECT)
+if command -v $APP &>/dev/null; then
+  exe=$(which $APP)
   exever=$($exe -v)
   if [[ $? -eq 0 ]]; then
     if [[ "$ver" == "$exever" ]]; then
@@ -167,7 +167,7 @@ onExit() {
 
 trap onExit EXIT
 
-TMP=$_TMP/$PROJECT/$ver
+TMP=$_TMP/$APP/$ver
 mkdir -p $TMP
 cd $TMP
 
@@ -181,7 +181,7 @@ fi
 for ((i = 0; i < HOST_LI_LEN; i++)); do
   idx=$(((start_idx + i) % HOST_LI_LEN))
   prefix=${HOST_LI[$idx]}
-  url="https://${prefix}${PROJECT}/${ver}/${name}.tar"
+  url="https://${prefix}${APP}/${ver}/${name}.tar"
   eurl $url
 
   $CURL -C - -OL "$url"
@@ -190,7 +190,7 @@ for ((i = 0; i < HOST_LI_LEN; i++)); do
     mkdir -p o
     tar -xJf $ver.txz -C o
 
-    if [ -z "$INSTALL_DIR" ]; then
+    if [ -z "$TO" ]; then
       OPT_BIN=/opt/bin
       mkdir -p $OPT_BIN
       if [ -w $OPT_BIN ]; then
@@ -199,7 +199,7 @@ for ((i = 0; i < HOST_LI_LEN; i++)); do
         BIN="$HOME/.bin"
       fi
     else
-      BIN=$INSTALL_DIR
+      BIN=$TO
     fi
 
     mkdir -p $BIN
