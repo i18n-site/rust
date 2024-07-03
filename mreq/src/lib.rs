@@ -52,10 +52,10 @@ impl Mreq {
 
       loop {
         if let Some(r) = req.try_clone() {
-          let r = ireq::REQ.execute(r);
+          let res = ireq::REQ.execute(r);
           if let Some(h) = host_iter.next() {
             host = h;
-            if let Ok(r) = xerr::ok!(r.await) {
+            if let Ok(r) = xerr::ok!(res.await) {
               let status = r.status();
               if status.is_success() {
                 if let Ok(bin) = xerr::ok!(r.bytes().await) {
@@ -87,14 +87,21 @@ impl Mreq {
                     .into(),
                   );
                 } else {
-                  tracing::warn!("❌ {} : {} ", url, status);
+                  let headers = r
+                    .headers()
+                    .into_iter()
+                    .map(|(k, v)| format!("  {k}: {}", v.to_str().unwrap_or_default()))
+                    .collect::<Vec<_>>()
+                    .join("\n");
+                  let text = r.text().await.unwrap_or_default();
+                  tracing::warn!("\n❌ {}\n{}\n{}\n{}", status, url, headers, text);
                 }
               }
             }
             req.url_mut().set_host(Some(host))?;
           } else {
             self.pos = host_iter.pos();
-            return Ok(r.await?.bytes().await?);
+            return Ok(res.await?.bytes().await?);
           }
         } else {
           return Err(Error::RequestEmpty(req).into());

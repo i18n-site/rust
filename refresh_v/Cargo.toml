@@ -4,7 +4,7 @@ tokio = "1.38.0"
 tracing = "0.1.40"
 
 [dependencies.mreq]
-version = "0.1.8"
+version = "0.1.9"
 path = "../mreq"
 
 [package]
