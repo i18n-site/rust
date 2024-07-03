@@ -19,12 +19,21 @@ pub async fn url(
         if !&pkg[1..].contains("@") && ["unpkg.com"].contains(&host) {
           let mut req = Mreq::new(["upv.i18n.site", "upv.x01.site"], [("t", token)]);
 
-          let mut max_retry = 9;
-          while max_retry > 0 {
-            max_retry -= 1;
-            if new_ver != req.get(pkg).await? {
-              eprintln!("❌ .v refresh {} != {}", pkg, new_ver);
-              sleep(Duration::from_secs(1)).await;
+          let mut retry = 0;
+          loop {
+            if retry > 30 {
+              eprintln!("❌ {pkg} version refresh failed");
+              break;
+            }
+            retry += 1;
+            let r_ver = req.get(pkg).await?;
+            let r_ver = String::from_utf8_lossy(&r_ver);
+            if new_ver != r_ver {
+              eprintln!(
+                "{retry} : {} version refresh: remote {} != {} ; wait for 3s",
+                pkg, r_ver, new_ver
+              );
+              sleep(Duration::from_secs(3)).await;
             } else {
               break;
             }

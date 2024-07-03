@@ -1,6 +1,6 @@
 [package]
 name = "i18n-site"
-version = "0.2.35"
+version = "0.2.36"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -19,7 +19,7 @@ static_init = "1.0.3"
 sonic-rs = "0.3.7"
 
 [dependencies.refresh_v]
-version = "0.1.2"
+version = "0.1.4"
 path = "../refresh_v"
 
 [dependencies.yconf]
