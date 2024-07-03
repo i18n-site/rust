@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 if [ -z "$1" ]; then
-  echo "USAGE : $0 PROJECT"
+  echo "USAGE : $0 APP"
   exit 1
 else
-  export PROJECT=$1
+  APP=$1
 fi
 
 CURL="curl --retry 3 -L --connect-timeout 6"
@@ -71,7 +71,6 @@ eurl() {
   echo "$(egray '>') $(line $(eblue $1))"
 }
 
-
 get_libc() {
   local os=$(uname -s)
   case $os in
@@ -83,8 +82,9 @@ get_libc() {
       echo "unknown-linux-gnu"
     fi
     ;;
-  CYGWIN*|MINGW*|MSYS*)
-    echo "pc-windows-msvc" ;;
+  CYGWIN* | MINGW* | MSYS*)
+    echo "pc-windows-msvc"
+    ;;
   *)
     throw unknown libc
     ;;
@@ -121,7 +121,7 @@ start_idx=$((RANDOM % HOST_LI_LEN))
 for ((i = 0; i < HOST_LI_LEN; i++)); do
   idx=$(((start_idx + i) % HOST_LI_LEN))
   prefix=${HOST_LI[$idx]}
-  url="https://${prefix}v/${PROJECT}"
+  url="https://${prefix}v/${APP}"
   eurl $url
   ver=$($CURL -sS $url)
   if [[ -n "$ver" && "$ver" =~ ^[a-zA-Z0-9._-]+$ ]]; then
@@ -137,11 +137,11 @@ if [ -z "$ver" ]; then
   echo "can't get version"
   exit 1
 else
-  echo "$PROJECT version $ver"
+  echo "$APP version $ver"
 fi
 
-if command -v $PROJECT &>/dev/null; then
-  exe=$(which $PROJECT)
+if command -v $APP &>/dev/null; then
+  exe=$(which $APP)
   exever=$($exe -v)
   if [[ $? -eq 0 ]]; then
     if [[ "$ver" == "$exever" ]]; then
@@ -167,7 +167,7 @@ onExit() {
 
 trap onExit EXIT
 
-TMP=$_TMP/$PROJECT/$ver
+TMP=$_TMP/$APP/$ver
 mkdir -p $TMP
 cd $TMP
 
@@ -181,7 +181,7 @@ fi
 for ((i = 0; i < HOST_LI_LEN; i++)); do
   idx=$(((start_idx + i) % HOST_LI_LEN))
   prefix=${HOST_LI[$idx]}
-  url="https://${prefix}${PROJECT}/${ver}/${name}.tar"
+  url="https://${prefix}${APP}/${ver}/${name}.tar"
   eurl $url
 
   $CURL -C - -OL "$url"
@@ -190,22 +190,20 @@ for ((i = 0; i < HOST_LI_LEN; i++)); do
     mkdir -p o
     tar -xJf $ver.txz -C o
 
-    if [ -z "$INSTALL_DIR" ]; then
-      OPT_BIN=/opt/bin
-      mkdir -p $OPT_BIN
-      if [ -w $OPT_BIN ]; then
-        BIN=$OPT_BIN
+    if [ -z "$TO" ]; then
+      TO=/usr/local/bin
+      mkdir -p $TO
+      if [ -w $TO ]; then
+        TO=$TO
       else
-        BIN="$HOME/.bin"
+        TO="$HOME/.bin"
       fi
-    else
-      BIN=$INSTALL_DIR
     fi
 
-    mkdir -p $BIN
+    mkdir -p $TO
 
-    if ! [ -w $BIN ]; then
-      throw "CAN'T WRITE $BIN"
+    if ! [ -w $TO ]; then
+      throw "CAN'T WRITE $TO"
     fi
 
     exe_li=()
@@ -220,37 +218,36 @@ for ((i = 0; i < HOST_LI_LEN; i++)); do
     done
     cd ..
 
-    mv -f o/* $BIN/
+    mv -f o/* $TO/
 
     for file in "${exe_li[@]}"; do
-      echo "$(egray +) $(egreen $BIN/$file)"
+      echo "$(egray +) $(egreen $TO/$file)"
     done
 
-    bin="export PATH=$BIN:\$PATH"
+    bin="export PATH=$TO:\$PATH"
 
-    for shell in "${auto_add_shells[@]}"; do
-      RC=.${shell}rc
+    if ! echo "$PATH" | grep -q "$TO"; then
+      for shell in "${auto_add_shells[@]}"; do
+        RC=.${shell}rc
 
-      FILE="$HOME/$RC"
+        FILE="$HOME/$RC"
 
-      if [ -f "$FILE" ]; then
-        if [[ "$shell" == "$current_shell" ]]; then
-          echo $PATH | grep -q "$BIN" && continue
+        if [ -f "$FILE" ]; then
+          if ! grep -q "export PATH=$TO:\$PATH" "$FILE"; then
+            echo -e "$bin\n$(cat $FILE)" >"$FILE"
+            egray "added '$bin' → $FILE\n"
+          fi
+          if [[ "$shell" == "$current_shell" ]]; then
+            echo -e "$(egreen PLEASE RUN:)\n  $(eyellow . \~/$RC)"
+          fi
+        else
+          if [[ "$shell" == "$current_shell" ]]; then
+            echo $PATH | grep -q "$TO" && continue
+            echo "PLEASE ADD $(eyellow $bin) TO ENV PATH"
+          fi
         fi
-        if ! grep -q "export PATH=$BIN:\$PATH" "$FILE"; then
-          echo -e "$bin\n$(cat $FILE)" >"$FILE"
-          egray "added '$bin' → $FILE\n"
-        fi
-        if [[ "$shell" == "$current_shell" ]]; then
-          echo -e "$(egreen PLEASE RUN:)\n  $(eyellow source \~/$RC)"
-        fi
-      else
-        if [[ "$shell" == "$current_shell" ]]; then
-          echo $PATH | grep -q "$BIN" && continue
-          echo "PLEASE ADD $(eyellow $bin) TO ENV PATH"
-        fi
-      fi
-    done
+      done
+    fi
 
     exit 0
   else

@@ -84,7 +84,16 @@ members = [
   "ver_incr",
   "cmp_len_str",
   "li_pos",
-  "ver_count", "setup_npm", "bls", "iver", "refresh_v", "mreq", "citer", "str2ts", "tlsinit", "sortmap", "header_map",
+  "ver_count",
+  "bls",
+  "iver",
+  "refresh_v",
+  "mreq",
+  "citer",
+  "str2ts",
+  "tlsinit",
+  "sortmap",
+  "header_map",
 ]
 resolver = "2"
 

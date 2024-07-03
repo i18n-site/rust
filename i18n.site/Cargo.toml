@@ -1,6 +1,6 @@
 [package]
 name = "i18n-site"
-version = "0.2.33"
+version = "0.2.35"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -55,7 +55,7 @@ version = "1.38.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.i18]
-version = "0.1.222"
+version = "0.1.225"
 path = "../i18"
 
 [dev-dependencies]

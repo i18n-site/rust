@@ -31,6 +31,7 @@ pub static POOL: Pool = Pool::new({
     .prefer_socket(MYSQL_PREFER_SOCKET())
     .ip_or_hostname(MYSQL_HOST())
     .tcp_port(MYSQL_PORT())
+    .conn_ttl(std::time::Duration::from_secs(120))
     .user(Some(MYSQL_USER::<String>()))
     .pass(Some(MYSQL_PWD::<String>()))
     .db_name(Some(MYSQL_DB::<String>()));
