@@ -30,14 +30,17 @@ pub static API: Vec<String> = {
   if let Ok(host_li) = std::env::var("API") {
     host_li.split(' ').map(|i| i.into()).collect()
   } else {
-    vec![
-      "s.i18n.site".into(),
-      "c0.018007.xyz".into(),
-      "a0.3ti.site".into(),
-      "c1.018007.xyz".into(),
-      "a1.3ti.site".into(),
-      "c2.018007.xyz".into(),
+    [
+      "s.i18n.site",
+      "c0.018007.xyz",
+      "a0.3ti.site",
+      "c1.018007.xyz",
+      "a1.3ti.site",
+      "c2.018007.xyz",
     ]
+    .into_iter()
+    .map(|i| i.into())
+    .collect()
   }
 };
 
