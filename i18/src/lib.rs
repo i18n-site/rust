@@ -31,9 +31,11 @@ pub static API: Vec<String> = {
     host_li.split(' ').map(|i| i.into()).collect()
   } else {
     vec![
+      "s.i18n.site".into(),
       "c0.018007.xyz".into(),
-      "a1.3ti.site".into(),
+      "a0.3ti.site".into(),
       "c1.018007.xyz".into(),
+      "a1.3ti.site".into(),
       "c2.018007.xyz".into(),
     ]
   }
