@@ -1,6 +1,6 @@
 [package]
 name = "i18n-site"
-version = "0.2.37"
+version = "0.2.38"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -40,7 +40,7 @@ path = "../npm"
 
 [dependencies.serde]
 version = "1.0.203"
-features = [ "derive" ]
+features = ["derive"]
 
 [dependencies.cmdv]
 version = "0.1.9"
@@ -52,7 +52,7 @@ path = "../i18n_bgu"
 
 [dependencies.tokio]
 version = "1.38.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
 
 [dependencies.i18]
 version = "0.1.229"

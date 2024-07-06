@@ -91,7 +91,7 @@ async fn _bgu(url: String, name: &str, now_ver: &Ver) -> Result<Option<Downing>>
     return Ok(None);
   }
 
-  println!("{now_ver} → {ver_txt}");
+  println!("AUTO UPGRADE {now_ver} → {ver_txt}");
   let tar = format!("{name}/{ver_txt}/{CURRENT_PLATFORM}.tar");
   let dir: String = temp_dir().as_os_str().to_string_lossy().into();
 
