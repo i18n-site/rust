@@ -1,9 +1,9 @@
 [dependencies]
 aok = "0.1.12"
-swc = "0.279.0"
-swc_common = "0.34.3"
+swc = "0.279.1"
+swc_common = "0.34.4"
 swc_ecma_ast = "0.115.1"
-swc_ecma_minifier = "0.197.1"
+swc_ecma_minifier = "0.197.3"
 tracing = "0.1.40"
 
 [dependencies.ifs]

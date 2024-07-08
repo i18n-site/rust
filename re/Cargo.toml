@@ -11,12 +11,12 @@ description = "error like anyhow for axum"
 anyhow = "1.0.86"
 axum = "0.7.5"
 bytes = "1.6.0"
-sonic-rs = "0.3.7"
+sonic-rs = "0.3.8"
 tracing = "0.1.40"
 
 [dependencies.prost]
 version = "0.12.6"
 
 [dependencies.serde]
-version = "1.0.203"
+version = "1.0.204"
 features = [ "derive" ]

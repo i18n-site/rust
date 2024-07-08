@@ -2,7 +2,7 @@
 aok = "0.1.12"
 blake3 = "1.5.1"
 intbin = "0.1.2"
-sonic-rs = "0.3.7"
+sonic-rs = "0.3.8"
 thiserror = "1.0.61"
 
 [dependencies.burl]
@@ -28,7 +28,7 @@ version = "0.1.1"
 path = "../li_pos"
 
 [dependencies.serde]
-version = "1.0.203"
+version = "1.0.204"
 features = [ "derive" ]
 
 [dependencies.ver_incr]

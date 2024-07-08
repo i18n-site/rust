@@ -1,5 +1,5 @@
 [package]
-version = "0.1.229"
+version = "0.1.230"
 name = "i18"
 edition = "2021"
 license = "Apache-2.0"
@@ -87,7 +87,7 @@ version = "0.1.23"
 path = "../lang"
 
 [dependencies.serde]
-version = "1.0.203"
+version = "1.0.204"
 features = ["derive"]
 
 [dependencies.xerr]

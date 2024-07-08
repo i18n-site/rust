@@ -5,8 +5,8 @@ lightningcss = "1.0.0-alpha.57"
 tracing = "0.1.40"
 ipug = "0.2.1"
 serde_yaml = "0.9.34"
-serde = "1.0.203"
-sonic-rs = "0.3.7"
+serde = "1.0.204"
+sonic-rs = "0.3.8"
 
 [dependencies.sortmap]
 version = "0.1.2"
