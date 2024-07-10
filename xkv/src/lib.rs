@@ -195,7 +195,7 @@ pub async fn connect(
   /*
   https://docs.rs/fred/6.2.1/fred/types/enum.ReconnectPolicy.html#method.new_constant
   */
-  let policy = ReconnectPolicy::new_constant(6, 1);
+  let policy = ReconnectPolicy::new_linear(u32::MAX, 8, 1);
   let client = RedisClient::new(conf, None, None, Some(policy));
   client.connect();
   client.wait_for_connect().await?;
