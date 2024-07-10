@@ -17,7 +17,7 @@ version = "1.0.204"
 features = [ "derive" ]
 
 [dependencies.clap]
-version = "4.5.8"
+version = "4.5.9"
 features = [ "cargo" ]
 
 [dependencies.cmdv]

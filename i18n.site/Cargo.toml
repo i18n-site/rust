@@ -13,7 +13,7 @@ all-features = true
 [dependencies]
 aok = "0.1.12"
 loginit = "0.1.13"
-clap = "4.5.8"
+clap = "4.5.9"
 tracing = "0.1.40"
 static_init = "1.0.3"
 sonic-rs = "0.3.8"

@@ -13,7 +13,7 @@ ignored = ["prost"]
 [dependencies]
 current_platform = "0.2.0"
 ed25519-dalek = "2.1.1"
-prost = "0.12.6"
+prost = "0.13.1"
 rand = "0.8.5"
 scopeguard = "1.2.0"
 static_init = "1.0.3"
@@ -62,7 +62,7 @@ version = "1.38.0"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
 
 [build-dependencies]
-prost-build = "0.12.6"
+prost-build = "0.13.1"
 
 [build-dependencies.aok]
 version = "0.1.12"

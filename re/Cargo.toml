@@ -15,7 +15,7 @@ sonic-rs = "0.3.8"
 tracing = "0.1.40"
 
 [dependencies.prost]
-version = "0.12.6"
+version = "0.13.1"
 
 [dependencies.serde]
 version = "1.0.204"
