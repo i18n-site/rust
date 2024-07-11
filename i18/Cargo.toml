@@ -122,7 +122,6 @@ version = "0.10"
 features = ["vendored"]
 
 [dev-dependencies]
-aok = "0.1.12"
 loginit = "0.1.13"
 static_init = "1.0.3"
 

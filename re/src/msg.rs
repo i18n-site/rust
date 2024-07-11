@@ -6,7 +6,6 @@ use axum::{
   response::{IntoResponse, Response},
 };
 pub use bytes::Bytes;
-pub use prost::Message;
 
 // pub trait ToResponse {
 //   fn to_response(self, req: &Request) -> Response;
@@ -15,15 +14,27 @@ pub use prost::Message;
 pub struct Msg(pub Bytes);
 
 impl<T: prost::Message> From<T> for Msg {
-  default fn from(t: T) -> Self {
-    let msg = t.encode_to_vec();
-    Msg(if msg.is_empty() {
+  default fn from(msg: T) -> Self {
+    let msg = msg.encode_to_vec();
+    Self(if msg.is_empty() {
       [0][..].into()
     } else {
       msg.into()
     })
   }
 }
+
+// impl<T: Buf> From<T> for Msg {
+//   default fn from(mut buf: T) -> Self {
+//     // let t = t.to_bytes();
+//     // Msg(if msg.is_empty() {
+//     //   [0][..].into()
+//     // } else {
+//     //   msg.into()
+//     // })
+//     Self(buf.copy_to_bytes(buf.remaining()))
+//   }
+// }
 
 macro_rules! impl_from {
 ($($ty:ty),*) => {
