@@ -1,9 +1,9 @@
 [dependencies]
 aok = "0.1.12"
-blake3 = "1.5.1"
+blake3 = "1.5.2"
 intbin = "0.1.2"
 sonic-rs = "0.3.8"
-thiserror = "1.0.61"
+thiserror = "1.0.62"
 
 [dependencies.burl]
 version = "0.1.2"

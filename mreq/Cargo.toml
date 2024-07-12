@@ -1,17 +1,20 @@
 [dependencies]
 aok = "0.1.12"
 bytes = "1.6.0"
-header_map = { version = "0.1.2", path = "../header_map" }
 reqwest = "0.12.5"
-thiserror = "1.0.61"
+thiserror = "1.0.62"
 tracing = "0.1.40"
+
+[dependencies.header_map]
+version = "0.1.2"
+path = "../header_map"
 
 [dependencies.citer]
 version = "0.1.7"
 path = "../citer"
 
 [dependencies.ireq]
-version = "0.1.13"
+version = "0.1.14"
 path = "../ireq"
 features = [ "proxy" ]
 

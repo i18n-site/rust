@@ -1,11 +1,11 @@
 [dependencies]
 aok = "0.1.12"
 base64 = "0.22.1"
-blake3 = "1.5.1"
+blake3 = "1.5.2"
 bls12_381 = { version = "0.8.0", features = ["experimental"] }
 group = "0.13.0"
 rand = "0.8.5"
-thiserror = "1.0.61"
+thiserror = "1.0.62"
 
 [package]
 name = "bls"

@@ -1,8 +1,8 @@
 [dependencies]
 aok = "0.1.12"
-boa_engine = "0.18.0"
-boa_runtime = "0.18.0"
-thiserror = "1.0.61"
+boa_engine = "0.19.0"
+boa_runtime = "0.19.0"
+thiserror = "1.0.62"
 tracing = "0.1.40"
 
 [package]

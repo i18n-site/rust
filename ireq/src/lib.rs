@@ -13,7 +13,7 @@ pub enum ReqError {
 #[static_init::dynamic]
 pub static REQ: Client = {
   let b = Client::builder()
-    .timeout(Duration::from_secs(300))
+    .timeout(Duration::from_secs(100))
     .brotli(true)
     .zstd(true)
     .connect_timeout(Duration::from_secs(8));

@@ -21,7 +21,7 @@ base64 = "0.22.1"
 rand = "0.8.5"
 
 [dependencies.blake3]
-version = "1.5.1"
+version = "1.5.2"
 features = [ "traits-preview" ]
 
 [dependencies.ed25519-dalek]

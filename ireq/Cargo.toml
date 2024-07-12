@@ -1,6 +1,6 @@
 [package]
 name = "ireq"
-version = "0.1.13"
+version = "0.1.14"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -9,7 +9,7 @@ description = "ireq"
 
 [dependencies]
 static_init = "1.0.3"
-thiserror = "1.0.61"
+thiserror = "1.0.62"
 
 [dependencies.aok]
 version = "0.1.12"

@@ -1,5 +1,5 @@
 [dependencies]
-thiserror = "1.0.61"
+thiserror = "1.0.62"
 vbyte = "0.1.0"
 
 [package]

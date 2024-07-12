@@ -19,7 +19,7 @@ version = "1.0.3"
 optional = true
 
 [dependencies.thiserror]
-version = "1.0.61"
+version = "1.0.62"
 optional = true
 
 [dependencies.xhash]

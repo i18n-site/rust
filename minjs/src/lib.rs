@@ -55,7 +55,7 @@ fn _minjs(code: impl Into<String>, mangle: bool) -> Result<String> {
   let c = swc::Compiler::new(cm.clone());
   let output = GLOBALS.set(&Default::default(), || {
     try_with_handler(cm.clone(), Default::default(), |handler| {
-      let fm = cm.new_source_file(swc_common::source_map::FileName::Anon, code);
+      let fm = cm.new_source_file(swc_common::source_map::FileName::Anon.into(), code);
       c.process_js_file(fm, handler, &opts)
     })
   })?;

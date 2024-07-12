@@ -136,7 +136,7 @@ impl Mnt {
 
       for (prefix, trie) in pl.0 {
         let trie = to_string(&trie)?;
-        let ver = vfs.wstr(&format!("{lang}/{prefix}.json"), trie)?;
+        let ver = vfs.wstr(format!("{lang}/{prefix}.json"), trie)?;
         prefix_ver_id.entry(prefix).or_default().push(ver);
       }
     }
@@ -155,7 +155,7 @@ impl Mnt {
       let json = to_string(&(ver_li, sortmap(lang_pos.into_iter().collect())))?;
       // println!("{json}");
       // i18.js
-      let index_ver = vfs.wstr(&format!("{prefix}.js"), json)?;
+      let index_ver = vfs.wstr(format!("{prefix}.js"), json)?;
       let mut li = vec![prefix.clone(), index_ver.clone().into()];
       if let Some(pv) = self.prefix_ver.get(&prefix).cloned() {
         if !pv.is_empty() {
