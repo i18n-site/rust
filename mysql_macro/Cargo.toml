@@ -1,0 +1,47 @@
+[package]
+name = "mysql_macro"
+version = "0.1.40"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/mysql_macro"
+description = "mysql macro for mysql_async"
+
+[dependencies]
+genv = "0.1.10"
+rustc-hex = "2.1.0"
+trt = "0.1.29"
+
+[dependencies.mysql_async]
+version = "0.34.1"
+features = [ "tracing", "derive", "nightly" ]
+
+[dependencies.static_init]
+version = "1.0.3"
+features = [ "lock_statistics", "parking_lot", "parking_lot_core" ]
+
+[dependencies.tokio]
+version = "1.38.0"
+features = [ "time", "rt-multi-thread", "macros", "rt" ]
+
+[dependencies.xstr]
+version = "0.1.11"
+path = "../xstr"
+
+[dev-dependencies]
+tokio-test = "0.4.4"
+
+[dev-dependencies.tokio]
+version = "1.38.0"
+features = [ "time", "rt-multi-thread", "macros", "rt" ]
+
+[dev-dependencies.aok]
+version = "0.1.12"
+path = "../aok"
+
+[dev-dependencies.loginit]
+path = "../loginit"
+version = "0.1.13"
+
+[dev-dependencies.tracing]
+version = "0.1.40"

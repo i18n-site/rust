@@ -1,0 +1,134 @@
+[package]
+version = "0.1.232"
+name = "i18"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/i18"
+description = "i18"
+
+[lib]
+name = "i18"
+path = "src/lib.rs"
+
+[[bin]]
+name = "i18"
+path = "src/main.rs"
+
+[dependencies]
+aok = "0.1.12"
+loginit = "0.1.13"
+prost = "0.13.1"
+serde_yaml = "0.9.34"
+speedy = "0.8.7"
+static_init = "1.0.3"
+thiserror = "1.0.62"
+tracing = "0.1.40"
+vb = "0.1.3"
+walkdir = "2.5.0"
+
+[dependencies.mreq]
+version = "0.1.9"
+path = "../mreq"
+
+[dependencies.i18_conf]
+version = "0.1.1"
+path = "../i18_conf"
+
+[dependencies.yconf]
+version = "0.1.3"
+path = "../yconf"
+
+[dependencies.init_dir]
+version = "0.1.3"
+path = "../init_dir"
+
+[dependencies.fjall]
+version = "1.3.0"
+features = ["bloom"]
+
+[dependencies.ft]
+version = "0.1.10"
+path = "../ft"
+
+[dependencies.globset]
+version = "0.4.14"
+features = ["simd-accel"]
+
+[dependencies.pbar]
+version = "0.1.3"
+path = "../pbar"
+
+[dependencies.i18n_bgu]
+version = "0.1.11"
+path = "../i18n_bgu"
+
+[dependencies.blake3]
+version = "1.5.2"
+features = ["traits-preview"]
+
+[dependencies.genv]
+version = "0.1.10"
+path = "../genv"
+
+[dependencies.dot_hide]
+version = "0.1.3"
+path = "../dot_hide"
+features = ["walkdir"]
+
+[dependencies.ifs]
+version = "0.1.36"
+path = "../ifs"
+default-features = false
+features = ["fs", "hash", "conf", "b3_len", "confdir"]
+
+[dependencies.lang]
+version = "0.1.23"
+path = "../lang"
+
+[dependencies.serde]
+version = "1.0.204"
+features = ["derive"]
+
+[dependencies.xerr]
+version = "0.1.14"
+path = "../xerr"
+
+[dependencies.clap]
+version = "4.5.9"
+features = ["cargo"]
+
+[dependencies.cmdv]
+version = "0.1.9"
+path = "../cmdv"
+
+[dependencies.tokio]
+version = "1.38.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
+
+[dependencies.reqwest]
+version = "0.12"
+features = [
+  "http2",
+  "rustls-tls",
+  "rustls-tls-native-roots",
+  "brotli",
+  "stream",
+]
+default-features = false
+
+[target."cfg(target_os=\"linux\")".dependencies.openssl]
+version = "0.10"
+features = ["vendored"]
+
+[dev-dependencies]
+loginit = "0.1.13"
+static_init = "1.0.3"
+
+[dev-dependencies.tokio]
+version = "1.38.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[build-dependencies]
+aok = "0.1.12"
+prost-build = "0.13.1"

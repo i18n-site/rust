@@ -1,0 +1,33 @@
+[dependencies]
+aok = "0.1.12"
+serde = "1.0.204"
+serde_yaml = "0.9.34"
+thiserror = "1.0.62"
+
+[dependencies.ifs]
+version = "0.1.36"
+path = "../ifs"
+default-features = false
+features = [ "fs" ]
+
+[package]
+name = "yconf"
+version = "0.1.3"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/yconf"
+description = "yconf"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.12"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.38.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
