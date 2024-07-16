@@ -7,7 +7,7 @@ swc_ecma_minifier = "0.198.0"
 tracing = "0.1.40"
 
 [dependencies.ifs]
-version = "0.1.36"
+version = "0.1.37"
 path = "../ifs"
 default-features = false
 features = [ "fs" ]

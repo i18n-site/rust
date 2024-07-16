@@ -10,9 +10,8 @@ pub async fn cli() -> Result<()> {
   if let Some((m, _)) = cmdv!(
     i18::purge_arg!(),
     arg!(-d --dir [PATH] "workdir"),
-    arg!(-n --npm "publish to npm ( default htm_conf is .i18n/htm/ol.yml )"),
     arg!(-c --htm_conf [CONF] "use which .i18n/htm/ conf ( default is dev.yml )"),
-    arg!(-o --ol "use ol htm conf & publish to npm"),
+    arg!(-n --npm "publish to npm ( default use .i18n/htm/ol.yml as htm_conf )"),
     arg!(-s --save "save & update root version"),
   ) {
     let workdir = m

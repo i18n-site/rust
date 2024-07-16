@@ -14,14 +14,14 @@ version = "0.1.1"
 path = "../cmp_len_str"
 
 [dependencies.ifs]
-version = "0.1.36"
+version = "0.1.37"
 path = "../ifs"
 default-features = false
-features = ["fs", "cp"]
+features = [ "fs", "cp" ]
 
 [dependencies.indexmap]
 version = "2.2.6"
-features = ["serde"]
+features = [ "serde" ]
 
 [dependencies.li_pos]
 version = "0.1.1"
@@ -29,7 +29,7 @@ path = "../li_pos"
 
 [dependencies.serde]
 version = "1.0.204"
-features = ["derive"]
+features = [ "derive" ]
 
 [dependencies.ver_incr]
 version = "0.1.2"
@@ -59,4 +59,4 @@ tracing = "0.1.40"
 
 [dev-dependencies.tokio]
 version = "1.38.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

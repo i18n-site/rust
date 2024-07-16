@@ -1,6 +1,6 @@
 [package]
 name = "bgu"
-version = "0.1.22"
+version = "0.1.24"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/bgu"
 description = "bgu"
 
 [package.metadata.cargo-machete]
-ignored = ["prost"]
+ignored = [ "prost" ]
 
 [dependencies]
 current_platform = "0.2.0"
@@ -26,7 +26,7 @@ path = "../sts"
 
 [dependencies.blake3]
 version = "1.5.2"
-features = ["traits-preview"]
+features = [ "traits-preview" ]
 
 [dependencies.genv]
 version = "0.1.10"
@@ -41,10 +41,10 @@ version = "0.1.12"
 path = "../aok"
 
 [dependencies.ifs]
-version = "0.1.36"
+version = "0.1.37"
 path = "../ifs"
 default-features = false
-features = ["hash", "txz_hash_d", "fs", "dir", "conf", "rsync"]
+features = [ "hash", "txz_hash_d", "fs", "dir", "conf", "rsync" ]
 
 [dependencies.iget]
 version = "0.1.12"
@@ -52,14 +52,14 @@ path = "../iget"
 
 [dependencies.tokio]
 version = "1.38.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dev-dependencies]
 loginit = "0.1.13"
 
 [dev-dependencies.tokio]
 version = "1.38.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]
 prost-build = "0.13.1"
