@@ -1,0 +1,15 @@
+Cargo.lock
+rustc-ice-*.txt
+
+.DS_Store
+.env
+__pycache__/
+bun.lockb
+bundle/
+lib/
+node_modules
+out/
+pnpm-lock.yaml      
+target/
+
+/.dev

@@ -1,0 +1,30 @@
+[dependencies]
+aok = "0.1.12"
+tokio = "1.38.1"
+tracing = "0.1.40"
+
+[dependencies.mreq]
+version = "0.1.10"
+path = "../mreq"
+
+[package]
+name = "refresh_v"
+version = "0.1.5"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/refresh_v"
+description = "refresh_v"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.12"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.38.1"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
