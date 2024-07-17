@@ -40,7 +40,6 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
         npm::publish(&npm::token(), &out, package_json).await?;
         vfs.save()?;
         refresh_v::url(&token, &build.htm_conf.v, &vfs.ver).await?;
-        println!("✅ i18n.site publish {}", vfs.ver);
         return OK;
       }
     } else {
