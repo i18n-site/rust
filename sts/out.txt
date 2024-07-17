@@ -1,0 +1,11 @@
++ cargo test -- --nocapture
+warning: profiles for the non root package will be ignored, specify profiles at the workspace root:
+package:   /Volumes/d/3Ti/rust/sts/Cargo.toml
+workspace: /Volumes/d/3Ti/rust/Cargo.toml
+   Compiling sts v0.1.0 (/Volumes/d/3Ti/rust/sts)
+    Finished test [optimized + debuginfo] target(s) in 0.44s
+     Running unittests src/lib.rs (/Volumes/d/3Ti/rust/target/debug/deps/sts-24382c6802499c0e)
+     Running tests/main.rs (/Volumes/d/3Ti/rust/target/debug/deps/main-c10ed0e555bdb37b)
+[sts/tests/main.rs:5] sec() = 1702000505
+[sts/tests/main.rs:6] ms() = 1702000505950
+   Doc-tests sts
