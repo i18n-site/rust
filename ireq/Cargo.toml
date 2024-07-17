@@ -1,0 +1,30 @@
+[package]
+name = "ireq"
+version = "0.1.14"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/ireq"
+description = "ireq"
+
+[dependencies]
+static_init = "1.0.3"
+thiserror = "1.0.62"
+
+[dependencies.aok]
+version = "0.1.12"
+path = "../aok"
+
+[dependencies.reqwest]
+version = "0.12.5"
+features = [
+"rustls-tls",
+"rustls-tls-native-roots",
+"brotli",
+"zstd",
+"stream"
+]
+
+[features]
+default = [ ]
+proxy = [ "reqwest/socks" ]

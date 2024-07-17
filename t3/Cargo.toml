@@ -1,0 +1,37 @@
+[package]
+version = "0.1.19"
+name = "t3"
+edition = "2021"
+license = "Apache-2.0"
+homepage = "https://github.com/i18n-site/srv/tree/main/rust/t3/src"
+repository = "https://github.com/i18n-site/srv.git"
+description = "wrap axum for easy use"
+
+[dependencies]
+coarsetime = "0.1.34"
+futures = "0.3.30"
+tracing = "0.1.40"
+thiserror = "1.0.62"
+xtld = "0.1.3"
+re = "0.1.8"
+
+[dependencies.tower]
+version = "0.4.13"
+features = ["timeout"]
+
+[dependencies.tower-http]
+version = "0.5.2"
+features = ["compression-br"]
+
+[dependencies.tokio]
+version = "1.38.1"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[dependencies.axum]
+version = "0.7.5"
+features = ["ws"]
+
+[features]
+stackdriver = []
+zstd = ["tower-http/compression-zstd"]
+default = []
