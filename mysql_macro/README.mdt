@@ -1,0 +1,5 @@
+# mysql macro: mysql macro for mysql_async
+
+```rust
+<+ ./tests/main.rs>
+```

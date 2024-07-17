@@ -1,0 +1,69 @@
+[package]
+name = "bgu"
+version = "0.1.24"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/bgu"
+description = "bgu"
+
+[package.metadata.cargo-machete]
+ignored = [ "prost" ]
+
+[dependencies]
+current_platform = "0.2.0"
+ed25519-dalek = "2.1.1"
+prost = "0.13.1"
+rand = "0.8.5"
+scopeguard = "1.2.0"
+static_init = "1.0.3"
+tar = "0.4.41"
+tracing = "0.1.40"
+
+[dependencies.sts]
+version = "0.1.23"
+path = "../sts"
+
+[dependencies.blake3]
+version = "1.5.3"
+features = [ "traits-preview" ]
+
+[dependencies.genv]
+version = "0.1.10"
+path = "../genv"
+
+[dependencies.xerr]
+version = "0.1.14"
+path = "../xerr"
+
+[dependencies.aok]
+version = "0.1.12"
+path = "../aok"
+
+[dependencies.ifs]
+version = "0.1.37"
+path = "../ifs"
+default-features = false
+features = [ "hash", "txz_hash_d", "fs", "dir", "conf", "rsync" ]
+
+[dependencies.iget]
+version = "0.1.12"
+path = "../iget"
+
+[dependencies.tokio]
+version = "1.38.1"
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
+
+[dev-dependencies]
+loginit = "0.1.13"
+
+[dev-dependencies.tokio]
+version = "1.38.1"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+
+[build-dependencies]
+prost-build = "0.13.1"
+
+[build-dependencies.aok]
+version = "0.1.12"
+path = "../aok"
