@@ -31,7 +31,7 @@ dist() {
   direnv exec . ./sh/upgrade.coffee
   rm Cargo.lock
   git add -u
-  git commit -m. || true
+  gme $(cargo metadata --format-version=1 --no-deps | jq '.packages[] | .name + ":" + .version' -r | grep "$name:") || true
 
 }
 
