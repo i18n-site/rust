@@ -45,9 +45,9 @@ pub fn boot<F: Future<Output = Result<()>>>(
 
 #[macro_export]
 macro_rules! boot {
-  ($main:expr) => {{
+  ($name:expr,$main:expr) => {{
     $crate::boot(
-      env!("CARGO_PKG_NAME"),
+      $name,
       {
         const ver: [&str; 3] = $crate::split!(env!("CARGO_PKG_VERSION"), ".");
         [
@@ -58,5 +58,8 @@ macro_rules! boot {
       },
       $main,
     )
+  }};
+  ($main:expr) => {{
+    $crate::boot!(env!("CARGO_PKG_NAME"), $main)
   }};
 }
