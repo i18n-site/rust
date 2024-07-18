@@ -8,6 +8,8 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
+git pull
+
 dist() {
   name=$(basename $1 | sed 's/\./-/g')
 
