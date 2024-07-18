@@ -143,7 +143,6 @@ impl<'a> Bgu<'a> {
 
     let name = name.into();
     let conf = Into::<Conf>::into(CACHE.join(&name));
-    dbg!(&conf);
     let pre_check = conf.preCheck();
     if do_update != DO_UPDATE_FORCE {
       let now = sts::sec();
