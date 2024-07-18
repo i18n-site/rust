@@ -9,11 +9,11 @@ use std::{
 use aok::Result;
 pub use boot::boot;
 use current_platform::CURRENT_PLATFORM;
+use defer_lite::defer;
 pub use ed25519_dalek::{PUBLIC_KEY_LENGTH, SIGNATURE_LENGTH};
 use ifs::{conf, dir::CACHE, rsync, rsync::WalkDir};
 use iget::Down;
 use mreq::Mreq;
-use scopeguard::defer;
 use tokio::{
   fs::{self, remove_dir_all},
   task::JoinHandle,
@@ -103,6 +103,11 @@ async fn bgu(
   let mut req = Mreq::new(v_li, []);
   let name = name.into();
   let new_ver = req.get(format!("v/{name}")).await?;
+
+  defer! {
+    pre_check.set(api::Ts { v: sts::sec() });
+  }
+
   let mut new_ver = new_ver.as_ref();
   if let Some(p) = new_ver.iter().position(|&b| b == b'\n') {
     new_ver = &new_ver[..p];
@@ -115,7 +120,6 @@ async fn bgu(
 
   while let Some(url) = li.pop() {
     if let Ok(r) = xerr::ok!(_bgu(url, &name, &now_ver, &new_ver).await) {
-      pre_check.set(api::Ts { v: sts::sec() });
       return Ok(r);
     }
   }
