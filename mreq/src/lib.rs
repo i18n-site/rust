@@ -1,3 +1,5 @@
+#![feature(let_chains)]
+
 use aok::Result;
 use bytes::Bytes;
 use citer::CIter;
@@ -43,14 +45,14 @@ impl Mreq {
   pub async fn execute(
     &mut self,
     method: Method,
-    url: impl Into<String>,
+    url_suffix: impl Into<String>,
     build: impl FnOnce(&mut Request),
   ) -> Result<Bytes> {
     let mut host_iter = CIter::new(&self.host_li[..], self.pos);
 
     if let Some(host) = host_iter.next() {
-      let url = url.into();
-      let mut req = Request::new(method, format!("https://{host}/{url}").parse()?);
+      let url_suffix = format!("/{}", url_suffix.into());
+      let mut req = Request::new(method, format!("https://{host}{url_suffix}").parse()?);
       *req.headers_mut() = self.headers.clone();
       build(&mut req);
 
@@ -116,8 +118,18 @@ impl Mreq {
             }
             Err(err) => {
               tracing::warn!("{} {}", req.url(), err);
-              if let Some(host) = host_iter.next() {
-                req.url_mut().set_host(Some(host))?;
+              if let Some(host_path) = host_iter.next() {
+                let url = req.url_mut();
+                let host = if let Some(p) = host_path.find('/')
+                  && (1 + p) < host_path.len()
+                {
+                  url.set_path(&format!("{}{url_suffix}", &host[p + 1..]));
+                  &host[..p]
+                } else {
+                  url.set_path(&url_suffix);
+                  host_path.as_ref()
+                };
+                url.set_host(Some(host))?;
               } else {
                 self.pos = host_iter.pos();
                 return Err(err.into());
