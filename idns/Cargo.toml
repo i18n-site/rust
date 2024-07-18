@@ -1,0 +1,35 @@
+[package]
+name = "idns"
+version = "0.1.19"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/idns"
+description = "idns"
+
+[dependencies]
+enum_dispatch = "0.3.13"
+futures = "0.3.30"
+hickory-proto = "0.24.1"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dependencies.hickory-resolver]
+version = "0.24.1"
+features = [
+"tokio",
+"dns-over-https",
+"tokio-rustls",
+"rustls",
+"tokio-native-tls",
+"dns-over-tls",
+"dns-over-https-rustls"
+]
+
+[dependencies.tokio]
+version = "1.38.1"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+
+[dev-dependencies.aok]
+path = "../aok"
+version = "0.1.12"

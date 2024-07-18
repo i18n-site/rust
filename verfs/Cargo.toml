@@ -1,0 +1,62 @@
+[dependencies]
+aok = "0.1.12"
+blake3 = "1.5.3"
+intbin = "0.1.2"
+sonic-rs = "0.3.8"
+thiserror = "1.0.62"
+
+[dependencies.burl]
+version = "0.1.2"
+path = "../burl"
+
+[dependencies.cmp_len_str]
+version = "0.1.1"
+path = "../cmp_len_str"
+
+[dependencies.ifs]
+version = "0.1.38"
+path = "../ifs"
+default-features = false
+features = [ "fs", "cp" ]
+
+[dependencies.indexmap]
+version = "2.2.6"
+features = [ "serde" ]
+
+[dependencies.li_pos]
+version = "0.1.1"
+path = "../li_pos"
+
+[dependencies.serde]
+version = "1.0.204"
+features = [ "derive" ]
+
+[dependencies.ver_incr]
+version = "0.1.2"
+path = "../ver_incr"
+
+[dependencies.xerr]
+version = "0.1.14"
+path = "../xerr"
+
+[package]
+name = "verfs"
+version = "0.2.4"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/verfs"
+description = "verfs"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.12"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.38.1"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

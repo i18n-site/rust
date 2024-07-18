@@ -1,0 +1,25 @@
+[package]
+name = "xhash"
+version = "0.1.24"
+edition = "2021"
+license = "Apache-2.0"
+description = "wrap gxhash for easy use"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/xhash"
+
+[dependencies]
+gxhash = "3.4.1"
+intbin = "0.1.2"
+speedy = { optional = true, version = "0.8.7" }
+
+[features]
+default = ["xhash"]
+xhash = []
+hasher = []
+bin_li = []
+speedy = ["dep:speedy", "bin_li"]
+hash_li = ["hasher", "xhash", "bin_li"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["-C", "target-feature=+aes"]
