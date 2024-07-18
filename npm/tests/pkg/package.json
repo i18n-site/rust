@@ -1,0 +1,25 @@
+{
+  "name": "@xx/x",
+  "version": "0.1.1",
+  "description": "util js for build web site",
+  "repository": {
+    "type": "git",
+    "url": "git+https://atomgit.com/i18n/18x.git"
+  },
+  "homepage": "https://atomgit.com/i18n/18x/tree/dev",
+  "author": "i18n.site@gmail.com",
+  "license": "Apache-2.0",
+  "exports": {
+    "./*": "./*"
+  },
+  "files": [
+    "*"
+  ],
+  "keywords": [
+    "misc",
+    "lightbox",
+    "popup",
+    "dialog"
+  ],
+  "type": "module"
+}
