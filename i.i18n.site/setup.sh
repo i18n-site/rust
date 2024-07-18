@@ -18,6 +18,8 @@ V_HOST=(
 
 V_HOST_LEN=${#V_HOST[@]}
 
+GH=/gh/i18n-site/dist@
+
 BIN_HOST=(
   "github.com/i18n-site/rust/releases/download/"
   "cdn.jsdmirror.com$GH"
@@ -30,8 +32,6 @@ BIN_HOST=(
 BIN_HOST_LEN=${#BIN_HOST[@]}
 
 CURL="curl --retry 3 -L --connect-timeout 6"
-
-GH=/gh/i18n-site/dist@
 
 if [ -t 0 ]; then
   line() {
