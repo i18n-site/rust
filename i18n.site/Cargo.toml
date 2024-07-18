@@ -55,7 +55,7 @@ version = "1.38.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.i18]
-version = "0.1.242"
+version = "0.1.243"
 path = "../i18"
 
 [dev-dependencies]
