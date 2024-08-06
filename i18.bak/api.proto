@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package api;
+
+message FromTo
+{
+  uint32 from = 1;
+  repeated uint32 to_li = 2;
+}
+
+message File
+{
+  uint32 lang = 1;
+  string txt = 2;
+}
+
+enum Ext {
+  Md = 0;
+  Yml = 1;
+}
+
+message Tran
+{
+  Ext ext = 1;
+  repeated FromTo from_to = 2;
+  repeated File li = 3;
+  map<uint32, bytes> src_hash = 4;
+}
+
+enum TranErrCode {
+  Parse = 0;
+  UpdateCacheLen = 1;
+}
+
+message TranErr
+{
+  uint32 lang = 1;
+  TranErrCode code = 2;
+  string msg = 3;
+}
+
+message Traned
+{
+  repeated File li = 1;
+  // 语言代码 - 译文原文内容的散列, 用来缓存译文修改
+  map<uint32, bytes> src_hash = 2;
+  repeated TranErr err = 3;
+}
+
+enum Err {
+  InvalidPayload = 0; // invalid payload 无效的 payload
+  PayOff = 1;         // no binding payment method/Debt exceeds 没有绑定付费方式/欠费超过$100
+  TooOften = 2;       // call too often 调用太频繁
+}
+
+message TranInitResult
+{
+  optional Err err = 1;
+  optional Traned traned = 2;
+}
+
+message Asset
+{
+  uint64 threshold = 1;
+  uint64 threshold_amount = 2;
+  int64 cent = 3;
+}

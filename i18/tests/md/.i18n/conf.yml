@@ -1,0 +1,17 @@
+i18n:
+  fromTo:
+    zh: en ja zh-TW
+
+  path:
+    blog:
+      fromTo:
+        en: zh
+    blog/1.md:
+      fromTo:
+        ja: zh
+    test:
+      fromTo:
+        zh: de en
+
+ignore:
+  - _*
