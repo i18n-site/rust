@@ -1,0 +1,118 @@
+[package]
+name = "i18"
+version = "0.1.245"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/i18"
+description = "i18"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+static_init = "1.0.3"
+loginit = "0.1.13"
+aok = "0.1.12"
+clap = "4.5.14"
+globset = "0.4.14"
+serde_yaml = "0.9.34"
+serde = "1.0.205"
+prost = "0.13.1"
+thiserror = "1.0.63"
+walkdir = "2.5.0"
+reqwest = "0.12.5"
+sonic-rs = "0.3.10"
+ub64 = "0.0.10"
+gxhash = "3.4.1"
+
+[dependencies.roaring]
+version = "0.10.6"
+features = [ "simd" ]
+
+[dependencies.vb]
+version = "0.1.5"
+path = "../vb"
+
+[dependencies.pbar]
+version = "0.1.4"
+path = "../pbar"
+
+[dependencies.xhash]
+version = "0.1.29"
+path = "../xhash"
+
+[dependencies.i18_json]
+version = "0.1.6"
+path = "../i18_json"
+
+[dependencies.tzst]
+version = "0.1.16"
+path = "../tzst"
+features = [ "w" ]
+
+[dependencies.i18_hash]
+version = "0.1.11"
+path = "../i18_hash"
+
+[dependencies.len_mtime]
+version = "0.1.10"
+path = "../len_mtime"
+
+[dependencies.i18_conf]
+version = "0.1.5"
+path = "../i18_conf"
+
+[dependencies.cmdv]
+version = "0.1.9"
+path = "../cmdv"
+
+[dependencies.i18n_bgu]
+version = "0.1.19"
+path = "../i18n_bgu"
+
+[dependencies.mreq]
+version = "0.1.14"
+path = "../mreq"
+
+[dependencies.lang]
+version = "0.1.29"
+path = "../lang"
+
+[dependencies.ft]
+version = "0.1.18"
+path = "../ft"
+
+[dependencies.init_dir]
+version = "0.1.3"
+path = "../init_dir"
+
+[dependencies.xerr]
+version = "0.1.14"
+path = "../xerr"
+
+[dependencies.yconf]
+version = "0.1.3"
+path = "../yconf"
+
+[dependencies.tokio]
+version = "1.39.2"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+
+[dependencies.ifs]
+version = "0.1.41"
+path = "../ifs"
+default-features = false
+features = [ "is_dir", "fs", "unix_path", "confdir" ]
+
+[[bin]]
+name = "i18"
+path = "src/main.rs"
+
+[build-dependencies]
+aok = "0.1.12"
+prost-build = "0.13.1"
+
+[target."cfg(target_os=\"linux\")".dependencies.openssl]
+version = "0.10"
+features = [ "vendored" ]

@@ -1,0 +1,13 @@
+[package]
+name = "amid"
+version = "0.1.6"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/amid"
+description = "amid"
+
+[dependencies]
+anyhow = "1.0.86"
+axum = "0.7.5"
+tracing = "0.1.40"

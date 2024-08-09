@@ -1,0 +1,36 @@
+[dependencies]
+tar = "0.4.41"
+# tokio = { version = "1.39.1", features = ["io-util"] }
+# async-compression = { version = "0.4.12", features = ["tokio", "zstd"] }
+# async-tar = "0.4.2"
+tracing = "0.1.40"
+zstd = "0.13.2"
+
+[package]
+name = "tzst"
+version = "0.1.16"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/tzst"
+description = "tzst"
+
+[dev-dependencies]
+aok = "0.1.12"
+gxhash = "3.4.1"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.39.2"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = []
+w = []
+r = []
+zst = []
