@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 
 use aok::{Null, OK};
 use globset::GlobSet;
+use gxhash::HashSet;
 use i18_conf::I18nConf;
 use lang::LANG_CODE;
 use prepare_li::prepare_li;
@@ -167,8 +168,20 @@ pub async fn _run(
   let r = tran(token, &id, body).await?;
   let traning = print_tran_result(r).await?;
 
+  let updated_cache = HashSet::from_iter(traning.update_cache);
   // 会在save创建的时候, 更新译文修改的缓存时间和hash
-  let mut save = Save::new(workdir, lm, i18_hash, scan.rel_ft, update_cache_file_li);
+  let mut save = Save::new(
+    workdir,
+    lm,
+    i18_hash,
+    scan.rel_ft,
+    update_cache_file_li
+      .into_iter()
+      .filter(|i| {
+        updated_cache.contains(format!("{}/{}", LANG_CODE[i.lang as usize], i.rel).as_str())
+      })
+      .collect(),
+  );
 
   let has_traned = !traning.traned.is_empty();
   if has_traned || !traning.end {

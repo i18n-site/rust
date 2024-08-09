@@ -49,7 +49,7 @@ jobs:
       - name: install rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-            toolchain: nightly-2024-08-04
+            toolchain: nightly
             components: rust-src
 
       - name: dist
