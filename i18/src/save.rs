@@ -35,7 +35,7 @@ impl<'a> Save<'a> {
     rel_ft: Vec<(String, FromTo)>,
     to_update_path_hash: Vec<i18_hash::File>,
   ) -> Save {
-    let mut update_mtime = vec![];
+    let mut utime_path_li = vec![];
     let mut update_hash = HashMap::default();
     let mut waiting = HashMap::default();
     let mut total = 0;
@@ -52,7 +52,7 @@ impl<'a> Save<'a> {
               .entry(rel.clone())
               .or_insert_with(Vec::new)
               .push((lang, file.meta));
-            update_mtime.push(format!("{}/{}", LANG_CODE[lang as usize], rel));
+            utime_path_li.push(format!("{}/{}", LANG_CODE[lang as usize], rel));
           } else {
             total += to_li.len() * file.len;
             if entry.len == 0 {
@@ -71,7 +71,7 @@ impl<'a> Save<'a> {
     for (rel, li) in update_hash {
       xerr::log!(i18_hash.save(rel, li));
     }
-    xerr::log!(len_mtime.save(update_mtime));
+    xerr::log!(len_mtime.save(utime_path_li));
 
     let pbar = if total > 0 {
       pbar::pbar(total as _)
@@ -97,7 +97,7 @@ impl<'a> Save<'a> {
     &mut self,
     traned: &std::collections::HashMap<String, api::TranedLi>,
   ) -> std::io::Result<bool> {
-    let mut update_mtime = vec![];
+    let mut utime_path_li = vec![];
     let mut update_mtime_fp = vec![];
     let mut update_hash = HashMap::default();
     for (rel, api::TranedLi { li }) in traned {
@@ -132,7 +132,7 @@ impl<'a> Save<'a> {
           if w.to_li.is_empty() {
             for (lang, meta) in w.lang_meta.drain() {
               let path = format!("{}/{}", LANG_CODE[lang as usize], rel);
-              update_mtime.push(path);
+              utime_path_li.push(path);
               update_hash.push((lang, meta));
             }
             self.waiting.remove(rel);
@@ -146,7 +146,7 @@ impl<'a> Save<'a> {
         xerr::log!(self.i18_hash.save(rel, li));
       }
       xerr::log!(self.len_mtime.save_fp(update_mtime_fp));
-      xerr::log!(self.len_mtime.save(update_mtime));
+      xerr::log!(self.len_mtime.save(utime_path_li));
     }
     Ok(self.has_waiting())
   }

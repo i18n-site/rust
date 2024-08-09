@@ -8,10 +8,11 @@ pub async fn print_tran_result(tran_result: api::TranInitResult) -> Result<api::
     State::Traning(traning) => {
       if !traning.update_cache.is_empty() {
         println!(
-          "\n✅ update translate cache\n{}",
+          "\n✅ update cache\n{}\n──────",
           traning.update_cache.join("\n")
         );
       }
+
       print_err(&traning.err);
       Ok(traning)
     }

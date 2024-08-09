@@ -94,7 +94,7 @@ pub async fn run(
 ) -> Result<bool> {
   match _run(workdir, conf, ignore, token).await {
     Ok(_) => {
-      println!("✅ i18n.site translate");
+      println!("──────\n✅ i18n.site translate");
       // if r.err_count == 0 {
       //   println!("✅ i18n.site translate");
       // } else {
@@ -167,9 +167,11 @@ pub async fn _run(
   let r = tran(token, &id, body).await?;
   let traning = print_tran_result(r).await?;
 
+  // 会在save创建的时候, 更新译文修改的缓存时间和hash
+  let mut save = Save::new(workdir, lm, i18_hash, scan.rel_ft, update_cache_file_li);
+
   let has_traned = !traning.traned.is_empty();
   if has_traned || !traning.end {
-    let mut save = Save::new(workdir, lm, i18_hash, scan.rel_ft, update_cache_file_li);
     if has_traned {
       println!("\n# Cached Translation");
       for (rel, TranedLi { li }) in &traning.traned {

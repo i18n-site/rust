@@ -1,6 +1,6 @@
-# good i18n.site
+# v2 i18n.site
 
-On that stormy night, Winnie (`Winny`) stood at the threshold of her rickety cabin, clutching a faded letter.
+Winnie (`Winny`) stood at the threshold of her rickety cabin, clutching a faded letter.
 
 ```python
 # Welcome to the world of Python
