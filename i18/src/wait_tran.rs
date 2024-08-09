@@ -1,8 +1,6 @@
 use aok::{Result, OK};
 
-use crate::{fetch_tran, print_err, Save, COST_BASE, COST_BASE_U64};
-
-const BASE: f64 = 100.0;
+use crate::{fetch_tran, print_err, Save, ASSET_BASE, COST_BASE};
 
 pub async fn wait_tran<'a>(id: &str, mut save: Save<'a>) -> Result<()> {
   loop {
@@ -14,13 +12,9 @@ pub async fn wait_tran<'a>(id: &str, mut save: Save<'a>) -> Result<()> {
 
         if let Some(bill) = r.bill {
           save.end();
-          let asset = (bill.asset as f64) / BASE;
-          println!(
-            "ASSET ${} - COST ${} = ${}",
-            asset,
-            bill.cost as f64 / COST_BASE,
-            asset - (bill.cost / COST_BASE_U64) as f64 / BASE
-          );
+          let asset = (bill.asset as f64) / ASSET_BASE;
+          let cost = bill.cost as f64 / COST_BASE;
+          println!("ASSET ${} - COST ${} = ${}", asset, cost, asset - cost);
           break;
         }
       } else {

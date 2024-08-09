@@ -37,8 +37,8 @@ pub mod api {
 }
 use api::TranedLi;
 
-pub const COST_BASE_U64: u64 = 1000 * 100;
-pub const COST_BASE: f64 = COST_BASE_U64 as f64;
+pub const ASSET_BASE: f64 = 100.0;
+pub const COST_BASE: f64 = 1000.0 * ASSET_BASE;
 pub const DOT_I18N: &str = ".i18n";
 pub const EMPTY: String = String::new();
 pub const CONF_YML: &str = "conf.yml";
@@ -197,7 +197,7 @@ pub async fn _run(
   if traning.end {
     println!(
       "COST $0\nREMAIN ASSET ${}",
-      traning.asset / (COST_BASE_U64 as i64)
+      (traning.asset as f64) / ASSET_BASE
     );
   }
   OK
