@@ -27,7 +27,3 @@ features = ["b255"]
 [dependencies.xbin]
 version = "0.1.4"
 path = "../xbin"
-
-[dependencies.aok]
-version = "0.1.12"
-path = "../aok"
