@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use ft::FromTo;
-use gxhash::HashMap;
+use gxhash::{HashMap, HashSet};
 use i18_hash::{I18Hash, Meta};
 use lang::LANG_CODE;
 use len_mtime::LenMtime;
@@ -34,7 +34,9 @@ impl<'a> Save<'a> {
     mut i18_hash: I18Hash,
     rel_ft: Vec<(String, FromTo)>,
     to_update_path_hash: Vec<i18_hash::File>,
-  ) -> Save {
+    updated_cache: &[String],
+  ) -> Self {
+    let updated_cache = HashSet::from_iter(updated_cache);
     let mut utime_path_li = vec![];
     let mut update_hash = HashMap::default();
     let mut waiting = HashMap::default();
@@ -48,11 +50,14 @@ impl<'a> Save<'a> {
           let to_li = ft.to_li_recursive(lang);
           // 如果只是更新缓存, Save初始化的时候已经更新了, 就设置
           if to_li.is_empty() {
-            update_hash
-              .entry(rel.clone())
-              .or_insert_with(Vec::new)
-              .push((lang, file.meta));
-            utime_path_li.push(format!("{}/{}", LANG_CODE[lang as usize], rel));
+            let fp = format!("{}/{}", LANG_CODE[lang as usize], rel);
+            if updated_cache.contains(&fp) {
+              update_hash
+                .entry(rel.clone())
+                .or_insert_with(Vec::new)
+                .push((lang, file.meta));
+            }
+            utime_path_li.push(fp);
           } else {
             total += to_li.len() * file.len;
             if entry.len == 0 {
