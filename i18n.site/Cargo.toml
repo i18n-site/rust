@@ -27,7 +27,7 @@ version = "0.1.3"
 path = "../yconf"
 
 [dependencies.i18n_js]
-version = "0.1.13"
+version = "0.1.14"
 path = "../i18n_js"
 
 [dependencies.i18_conf]
