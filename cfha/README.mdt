@@ -1,0 +1,5 @@
+# cfapi 高可用 ( high availability )
+
+```rust
+<+ ./tests/main.rs>
+```
