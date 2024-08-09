@@ -1,6 +1,6 @@
 [package]
 name = "i18"
-version = "0.1.246"
+version = "0.1.247"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
