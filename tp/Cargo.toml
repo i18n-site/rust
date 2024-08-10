@@ -1,0 +1,27 @@
+[package]
+name = "tp"
+version = "0.1.23"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/tp"
+description = "text processing utilities"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+roaring = { version = "0.10.6", features = ["simd"] }
+
+[dependencies.daachorse]
+version = "1.0.0"
+optional = true
+
+[dependencies.static_init]
+version = "1.0.3"
+optional = true
+
+[features]
+default = []
+mut = ["dep:daachorse", "dep:static_init"]
+extend = []

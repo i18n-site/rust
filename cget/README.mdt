@@ -1,0 +1,5 @@
+# cget : macro for clip get_one easy
+
+```rust
+<+ ./test_cget/src/main.rs>
+```

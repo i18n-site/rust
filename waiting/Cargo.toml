@@ -1,0 +1,19 @@
+[dependencies]
+aok = "0.1.12"
+indicatif = "0.17.8"
+kanal = "0.1.0-pre8"
+
+[package]
+name = "waiting"
+version = "0.1.4"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/waiting"
+description = "waiting"
+
+[dev-dependencies]
+aok = "0.1.12"
+
+[package.metadata.docs.rs]
+all-features = true

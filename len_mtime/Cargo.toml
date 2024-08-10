@@ -1,0 +1,49 @@
+[dependencies]
+bincode = "2.0.0-rc.3"
+aok = "0.1.12"
+bytes = "1.7.1"
+gxhash = "3.4.1"
+
+[dependencies.bce]
+version = "0.1.2"
+path = "../bce"
+
+[dependencies.trait_len]
+version = "0.2.8"
+path = "../trait_len"
+
+[dependencies.fjall]
+version = "1.5.0"
+features = [ "bloom" ]
+
+[dependencies.ifs]
+version = "0.1.41"
+path = "../ifs"
+default-features = false
+features = [ "fs" ]
+
+[dependencies.xerr]
+version = "0.1.14"
+path = "../xerr"
+
+[package]
+name = "len_mtime"
+version = "0.1.10"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/len_mtime"
+description = "len_mtime"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.12"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.39.2"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
