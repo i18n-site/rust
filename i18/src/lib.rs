@@ -3,6 +3,8 @@
 #![feature(const_trait_impl)]
 use std::path::{Path, PathBuf};
 
+pub mod print_li;
+
 use aok::{Null, OK};
 use globset::GlobSet;
 use i18_conf::I18nConf;
@@ -182,11 +184,22 @@ pub async fn _run(
   if has_traned || !traning.end {
     if has_traned {
       println!("\n# Cached");
-      for (rel, TranedLi { li }) in &traning.traned {
-        for i in li {
-          println!("{}/{rel}", LANG_CODE[i.lang as usize]);
-        }
-      }
+
+      crate::print_li::stdout(
+        traning
+          .traned
+          .iter()
+          .map(|(_, TranedLi { li })| li.len())
+          .sum(),
+        traning
+          .traned
+          .iter()
+          .map(|(rel, TranedLi { li })| {
+            li.iter()
+              .map(move |i| format!("{}/{rel}", LANG_CODE[i.lang as usize]))
+          })
+          .flatten(),
+      );
       println!("{}", HR);
       save.save(&traning.traned)?;
     }

@@ -88,7 +88,6 @@ pub fn purge(root: &Path, conf: &I18nConf) -> std::io::Result<()> {
   // _purge(root, "", &prefix_li, &conf.fromTo)?;
   // for prefix in prefix_li {}
   // unix_path
-  // dbg!(&d);
 
   if let Some(is) = is_dir(root)
     && is
