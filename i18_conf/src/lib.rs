@@ -18,7 +18,7 @@ pub struct DirI18nConf {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct I18nConf {
   pub fromTo: HashMap<String, String>,
-  pub path: HashMap<String, DirI18nConf>,
+  pub path: Option<HashMap<String, DirI18nConf>>,
 }
 
 pub fn build_ignore(ignore: &Option<Vec<String>>) -> GlobSet {
