@@ -191,14 +191,10 @@ pub async fn _run(
           .iter()
           .map(|(_, TranedLi { li })| li.len())
           .sum(),
-        traning
-          .traned
-          .iter()
-          .map(|(rel, TranedLi { li })| {
-            li.iter()
-              .map(move |i| format!("{}/{rel}", LANG_CODE[i.lang as usize]))
-          })
-          .flatten(),
+        traning.traned.iter().flat_map(|(rel, TranedLi { li })| {
+          li.iter()
+            .map(move |i| format!("{}/{rel}", LANG_CODE[i.lang as usize]))
+        }),
       );
       println!("{}", HR);
       save.save(&traning.traned)?;

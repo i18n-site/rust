@@ -161,20 +161,12 @@ impl<'a> Save<'a> {
     if self.has_waiting() {
       println!("❌ MISS TRANSLATE");
       crate::print_li::stderr(
-        self
-          .waiting
-          .iter()
-          .map(|(_, w)| w.to_li.len() as usize)
-          .sum(),
-        self
-          .waiting
-          .iter()
-          .map(|(rel, w)| {
-            w.to_li
-              .iter()
-              .map(move |lang| format!("  {}/{}", LANG_CODE[lang as usize], rel))
-          })
-          .flatten(),
+        self.waiting.values().map(|w| w.to_li.len() as usize).sum(),
+        self.waiting.iter().flat_map(|(rel, w)| {
+          w.to_li
+            .iter()
+            .map(move |lang| format!("  {}/{}", LANG_CODE[lang as usize], rel))
+        }),
       );
     }
   }
