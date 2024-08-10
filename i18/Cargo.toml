@@ -1,6 +1,6 @@
 [package]
 name = "i18"
-version = "0.1.250"
+version = "0.1.251"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -14,7 +14,7 @@ all-features = true
 static_init = "1.0.3"
 loginit = "0.1.13"
 aok = "0.1.12"
-clap = "4.5.14"
+clap = "4.5.15"
 globset = "0.4.14"
 serde_yaml = "0.9.34"
 serde = "1.0.205"

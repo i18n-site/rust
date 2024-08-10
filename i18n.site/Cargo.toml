@@ -13,7 +13,7 @@ all-features = true
 [dependencies]
 aok = "0.1.12"
 loginit = "0.1.13"
-clap = "4.5.14"
+clap = "4.5.15"
 tracing = "0.1.40"
 static_init = "1.0.3"
 sonic-rs = "0.3.10"
@@ -51,7 +51,7 @@ version = "1.39.2"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.i18]
-version = "0.1.250"
+version = "0.1.251"
 path = "../i18"
 
 [dev-dependencies]

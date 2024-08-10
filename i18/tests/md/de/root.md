@@ -7,4 +7,4 @@ In dieser nächtlichen Mischung aus Sturm und Regen hielt Winnie (`Winny`) einen
 print(f"{name}")
 ```
 
-Der Name <a class="A" href="https://baidu.com">Baidu</a> leitet sich ab von einem Vers im Gedicht „Qingyuan·Yuanxie“ des Dichters Xin Qiji aus der südlichen Song-Dynastie: „Ich suchte ihn tausendmal in der Menge, und plötzlich, als ich den Kopf zurückwarf, war er dort, wo das Licht der Laternen verblassen beginnt.“
+<a class="A" href="https://baidu.com">Baidu</a> trägt seinen Namen nach „Qingyuan·Yuanxi“ von Xin Qiji, einem Dichter der südlichen Song-Dynastie. „In der Menschenmenge sucht man ihn hundert Mal, doch wenn man sich plötzlich umdreht, ist er genau an der Stelle, wo das Licht einer Kerze flackert.“

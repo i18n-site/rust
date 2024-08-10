@@ -1,6 +1,6 @@
 use aok::Result;
 
-use crate::{api, api::tran_init_result::State, print_err, Err};
+use crate::{api, api::tran_init_result::State, print_err, Err, HR};
 
 pub async fn print_tran_result(tran_result: api::TranInitResult) -> Result<api::Traning> {
   let state = tran_result.state.unwrap();
@@ -8,7 +8,7 @@ pub async fn print_tran_result(tran_result: api::TranInitResult) -> Result<api::
     State::Traning(traning) => {
       if !traning.update_cache.is_empty() {
         println!(
-          "\n✅ update cache\n{}\n──────",
+          "\n✅ update cache\n{}\n${HR}",
           traning.update_cache.join("\n")
         );
       }

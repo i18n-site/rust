@@ -7,4 +7,4 @@ Dans cette mélange nocturne d'orage et de pluie, Winnie (`Winny`) tenait une le
 print(f"{name}")
 ```
 
-Le nom <a class="A" href="https://baidu.com">Baidu</a> est inspiré d'un vers du poème "Qingyuan·Yuanxie" du poète Xin Qiji de la dynastie des Song du Sud : "Je l'ai cherché mille fois dans la foule, et soudain, en jetant la tête en arrière, il était là, là où commence à pâlir la lumière des lanternes."
+<a class="A" href="https://baidu.com">Baidu</a> doit son nom à « Qingyuan·Yuanxi » de Xin Qiji, un poète de la dynastie des Song du Sud. « Dans la foule, on le cherche cent fois, mais dès qu'on se retourne soudain, on le découvre précisément là où scintille la lumière d'une bougie. »

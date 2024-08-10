@@ -62,6 +62,7 @@ pub use find_i18n_dir::{find_i18n_dir, find_i18n_dir_or_exit};
 pub mod conf;
 pub use conf::Conf;
 
+pub const HR: &str = "──────";
 pub const NAME: &str = "i18";
 
 const CACHE: &str = "cache";
@@ -94,7 +95,7 @@ pub async fn run(
 ) -> Result<bool> {
   match _run(workdir, conf, ignore, token).await {
     Ok(_) => {
-      println!("──────\n✅ i18n.site translate");
+      println!("✅ i18n.site translate");
       // if r.err_count == 0 {
       //   println!("✅ i18n.site translate");
       // } else {
@@ -180,13 +181,13 @@ pub async fn _run(
   let has_traned = !traning.traned.is_empty();
   if has_traned || !traning.end {
     if has_traned {
-      println!("\n# Cached Translation");
+      println!("\n# Cached");
       for (rel, TranedLi { li }) in &traning.traned {
         for i in li {
           println!("{}/{rel}", LANG_CODE[i.lang as usize]);
         }
       }
-      println!();
+      println!("{}", HR);
       save.save(&traning.traned)?;
     }
     if !traning.end {
