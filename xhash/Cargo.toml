@@ -1,0 +1,33 @@
+[package]
+name = "xhash"
+version = "0.1.29"
+edition = "2021"
+license = "MulanPSL-2.0"
+description = "wrap xxhash-rust for easy use"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/xhash"
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["-C", "target-feature=+aes"]
+
+[dependencies]
+# gxhash = "3.4.1"
+intbin = "0.1.2"
+xxhash-rust = { version = "0.8.12", features = ["const_xxh3", "xxh3"] }
+
+[features]
+default = ["xhash"]
+xhash = []
+hash_li = ["xhash"]
+fs = []
+hasher = []
+
+[dev-dependencies.aok]
+path = "../aok"
+version = "0.1.12"
+
+[dev-dependencies.ifs]
+path = "../ifs"
+features = ["fs"]
+version = "0.1.41"

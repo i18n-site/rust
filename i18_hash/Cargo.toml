@@ -1,0 +1,64 @@
+[dependencies]
+aok = "0.1.12"
+bincode = "2.0.0-rc.3"
+bytes = "1.7.1"
+gxhash = "3.4.1"
+
+[dependencies.bce]
+version = "0.1.2"
+path = "../bce"
+
+[dependencies.refmt]
+version = "0.1.4"
+path = "../refmt"
+features = [ "fs" ]
+
+[dependencies.xhash]
+version = "0.1.29"
+path = "../xhash"
+features = [ ]
+
+[dependencies.vb]
+version = "0.1.5"
+path = "../vb"
+
+[dependencies.ifs]
+version = "0.1.41"
+path = "../ifs"
+default-features = false
+features = [ "fs" ]
+
+[dependencies.lang]
+version = "0.1.29"
+path = "../lang"
+
+[dependencies.tzst]
+version = "0.1.16"
+path = "../tzst"
+features = [ "zst" ]
+
+[dependencies.xerr]
+version = "0.1.14"
+path = "../xerr"
+
+[package]
+name = "i18_hash"
+version = "0.1.11"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/i18_hash"
+description = "i18_hash"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.12"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.39.2"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

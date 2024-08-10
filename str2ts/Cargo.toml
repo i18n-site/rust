@@ -1,0 +1,25 @@
+[dependencies]
+thiserror = "1.0.63"
+
+[package]
+name = "str2ts"
+version = "0.1.2"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/str2ts"
+description = "str2ts"
+
+[dev-dependencies]
+aok = "0.1.12"
+chrono = "0.4.38"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.39.2"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[package.metadata.docs.rs]
+all-features = true
