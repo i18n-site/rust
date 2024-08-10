@@ -20,7 +20,7 @@ pub fn proxy(url: impl AsRef<str>) -> reqwest::Client {
   );
   Client::builder()
         .proxy(reqwest::Proxy::https(url).unwrap())
-        .brotli(true)
+        .zstd(true)
         // .http3_prior_knowledge()
         .timeout(TIMEOUT)
         .danger_accept_invalid_certs(true)

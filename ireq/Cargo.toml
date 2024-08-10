@@ -17,7 +17,7 @@ path = "../aok"
 
 [dependencies.reqwest]
 version = "0.12.5"
-features = ["rustls-tls", "rustls-tls-native-roots", "brotli", "zstd", "stream"]
+features = ["rustls-tls", "rustls-tls-native-roots", "zstd", "stream"]
 
 [features]
 default = []

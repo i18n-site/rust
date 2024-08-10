@@ -14,9 +14,8 @@ pub enum ReqError {
 pub static REQ: Client = {
   let b = Client::builder()
     .timeout(Duration::from_secs(100))
-    .brotli(true)
     .zstd(true)
-    .connect_timeout(Duration::from_secs(8));
+    .connect_timeout(Duration::from_secs(9));
 
   #[cfg(feature = "proxy")]
   let b = {

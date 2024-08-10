@@ -42,16 +42,11 @@ pub async fn srv_catch(router: Router, addr: SocketAddr) {
     .timeout(Duration::from_secs(TIMEOUT).into())
     .layer(ServiceBuilder::new());
 
-  let layer = CompressionLayer::new();
-
-  #[cfg(feature = "zstd")]
-  let layer = layer.zstd(true);
-
-  let layer = layer
-    .br(true)
-    .quality(CompressionLevel::Best)
+  let layer = CompressionLayer::new()
+    .zstd(true)
+    .quality(CompressionLevel::Precise(16))
     .compress_when(
-      SizeAbove::new(256)
+      SizeAbove::new(512)
         // still don't compress gRPC
         .and(NotForContentType::GRPC)
         // still don't compress images
