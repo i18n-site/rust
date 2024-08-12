@@ -1,7 +1,7 @@
 [dependencies]
 aok = "0.1.12"
 reqwest = "0.12.5"
-serde = "1.0.205"
+serde = "1.0.206"
 sonic-rs = "0.3.10"
 tracing = "0.1.40"
 

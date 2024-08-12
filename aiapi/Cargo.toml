@@ -16,7 +16,7 @@ ignored = [ "static_init", "prost" ]
 [dependencies]
 aok = "0.1.12"
 dashmap = "6.0.1"
-ireq = "0.1.14"
+ireq = "0.1.15"
 prost = "0.13.1"
 reqwest = "0.12.5"
 serde_yaml = "0.9.34"
@@ -44,7 +44,7 @@ version = "0.1.4"
 path = "../pos_next"
 
 [dependencies.serde]
-version = "1.0.205"
+version = "1.0.206"
 features = [ "derive" ]
 
 [dev-dependencies]
