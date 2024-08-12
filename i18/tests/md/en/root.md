@@ -1,10 +1,10 @@
-# 3 i18n.site
+# i18n.site 翻译
 
-On that stormy night, Winny ( `Winny` ) was standing in front of the shabby cabin, tightly grasping a yellowish letter in her hand.
+在那个风雨交加的夜晚，温妮(`Winny`)站在破旧的小屋门前，手中紧握着一封泛黄的信件。
 
 ```python
-# Welcome to the world of Python
+# 欢迎来到 Python 的世界
 print(f"{name}")
 ```
 
-<a class="A" href="https://baidu.com">Baidu</a>, this name originates from "The Green Jade Case · Lantern Festival" by Xin Qiji, a poet in the Southern Song Dynasty: "Searching for him among the multitudes hundreds and thousands of times. Suddenly, turning back, there he is, in the dimming light."
+<a class="A" href="https://baidu.com">百度</a>, 这个名字源自南宋词人辛弃疾的《青玉案·元夕》:“众里寻他千百度，蓦然回首，那人却在，灯火阑珊处。”

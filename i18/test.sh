@@ -13,7 +13,7 @@ fi
 # direnv exec . cargo test --all-features -- --nocapture
 
 # direnv exec . cargo run -- -d ../../md --purge
-# direnv exec . cargo run -- -d tests/md
-direnv exec . cargo run -- -d ../../md
+direnv exec . cargo run -- -d tests/md
+# direnv exec . cargo run -- -d ../../md
 # direnv exec . cargo run -- -d $PROJECT
 # direnv exec . cargo run -- -d $PROJECT

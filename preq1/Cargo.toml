@@ -1,6 +1,6 @@
 [package]
 name = "preq1"
-version = "0.1.7"
+version = "0.1.8"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -20,6 +20,7 @@ version = "0.1.12"
 
 [dependencies.reqwest]
 version = "0.12.5"
+features = ["zstd"]
 
 [dev-dependencies.aok]
 path = "../aok"

@@ -1,10 +1,10 @@
-# Testen Sie i18n.site
+# i18n.site Übersetzung
 
-In dieser nächtlichen Mischung aus Sturm und Regen hielt Winnie (`Winny`) einen vergrauten Brief in der Hand und stand vor dem angestaubten Eingang eines schäbigen Häuschens in der engen Gasse.
+In der Sturm- und Regennacht stand Winny (`Winny`) vor der Tür des baufälligen Häuschens, ein veraltetes Briefpapier in den Händen, das sie fest umklammerte.
 
 ```python
 # Willkommen in der Welt von Python
 print(f"{name}")
 ```
 
-<a class="A" href="https://baidu.com">Baidu</a> trägt seinen Namen nach „Qingyuan·Yuanxi“ von Xin Qiji, einem Dichter der südlichen Song-Dynastie. „In der Menschenmenge sucht man ihn hundert Mal, doch wenn man sich plötzlich umdreht, ist er genau an der Stelle, wo das Licht einer Kerze flackert.“
+<a class="A" href="https://baidu.com">Baidu</a>, dieser Name stammt von dem südlichen Song-Dichter Xin Qiji und seinem Gedicht „Qing Yu An · Yuan Xie“: „In der Menschenmenge ihn tausend Male zu suchen, plötzlich kehrt man den Kopf um, und derjenige ist doch an der Stelle, wo die Laternen flackernd sind.“

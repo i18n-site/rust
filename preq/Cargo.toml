@@ -16,12 +16,12 @@ version = "0.1.12"
 path = "../genv"
 
 [dependencies.preq1]
-version = "0.1.7"
+version = "0.1.8"
 path = "../preq1"
 
 [dependencies.reqwest]
 version = "0.12.5"
-features = ["zstd"]
+features = [ "zstd" ]
 
 [dependencies.static_init]
 version = "1.0.3"
@@ -39,4 +39,4 @@ version = "0.1.13"
 
 [dev-dependencies.tokio]
 version = "1.39.2"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
