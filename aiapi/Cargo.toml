@@ -44,7 +44,7 @@ version = "0.1.4"
 path = "../pos_next"
 
 [dependencies.serde]
-version = "1.0.206"
+version = "1.0.207"
 features = [ "derive" ]
 
 [dev-dependencies]

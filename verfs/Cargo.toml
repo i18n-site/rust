@@ -28,7 +28,7 @@ version = "0.1.1"
 path = "../li_pos"
 
 [dependencies.serde]
-version = "1.0.206"
+version = "1.0.207"
 features = [ "derive" ]
 
 [dependencies.ver_incr]

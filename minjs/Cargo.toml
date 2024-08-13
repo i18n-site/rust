@@ -2,7 +2,7 @@
 aok = "0.1.12"
 swc = "0.283.0"
 swc_common = "0.37.2"
-swc_ecma_ast = "0.118.0"
+swc_ecma_ast = "0.118.1"
 swc_ecma_minifier = "0.201.0"
 tracing = "0.1.40"
 
