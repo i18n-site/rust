@@ -1,0 +1,11 @@
+# len_mtime
+
+len mtime 用 db 存
+
+语言文件存
+
+lang hash_len src_hash
+
+```rust
+<+ ./tests/main.rs>
+```

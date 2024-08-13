@@ -1,0 +1,15 @@
+[dependencies.serde]
+version = "1.0.206"
+features = [ "derive" ]
+
+[package]
+name = "i18_json"
+description = "i18_json"
+version = "0.1.6"
+edition = "2021"
+license = "BUSL-1.1"
+repository = "https://atomgit.com/i18n-in/in.git"
+homepage = "https://atomgit.com/i18n-in/in/tree/dev/i18_json"
+
+[package.metadata.docs.rs]
+all-features = true
