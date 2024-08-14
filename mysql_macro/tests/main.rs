@@ -1,12 +1,12 @@
-use mysql_macro::e;
+use mysql_macro::q1;
 
 #[tokio::test]
 async fn main() -> aok::Result<()> {
   loginit::init();
 
   let sql = format!("SELECT {}", 1);
-
-  e(sql.clone(), vec![]).await?;
+  let r: u64 = q1!(sql);
+  // e(sql.clone(), vec![]).await?;
 
   // tracing::debug!("test");
   // let id_li = vec![1];

@@ -1,6 +1,6 @@
 [dependencies]
 aok = "0.1.12"
-indexmap = { version = "2.3.0", features = ["serde"] }
+indexmap = { version = "2.4.0", features = ["serde"] }
 
 [package]
 name = "sortmap"

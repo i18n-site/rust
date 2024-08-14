@@ -16,6 +16,12 @@ use mysql_async::{prelude::StatementLike, OptsBuilder, Pool, SslOpts};
 pub use mysql_val::MysqlVal;
 pub use trt::bg;
 
+#[derive(thiserror::Error, Debug)]
+pub enum QueryError {
+  #[error("q1 but none")]
+  Q1Empty,
+}
+
 pub const MYSQL_DEFAULT_PORT: u16 = 3306;
 
 def!(MYSQL_HOST: String | "127.0.0.1".to_owned());
@@ -167,9 +173,13 @@ macro_rules! bg {
 
 #[macro_export]
 macro_rules! q1 {
-    ($conn:expr; $sql:expr $(,$arg:expr)* $(,)?) => {
-        $crate::q01!($conn;$sql $(,$arg)*).unwrap()
-    };
+    ($conn:expr; $sql:expr $(,$arg:expr)* $(,)?) => {{
+      if let Some(r) = $crate::q01!($conn;$sql $(,$arg)*) {
+        r
+      }else{
+        Err($crate::Error::Other($crate::QueryError::Q1Empty.into()))?
+      }
+    }};
     ($sql:expr $(,$arg:expr)* $(,)?) => {{
         let mut conn = $crate::conn!();
         $crate::q1!(conn; $sql $(,$arg)*)

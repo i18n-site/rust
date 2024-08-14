@@ -43,4 +43,4 @@ async fn test() -> Result<()> {
 }
 ```
 
-https://github.com/login/oauth/authorize?client_id=Ov23liuGAmK0plc9FgB3&scope=user:email,user:follow,public_repo
+https://github.com/login/oauth/authorize?client_id=Ov23liDwySGj2KNMIGYf&scope=user:email,user:follow,public_repo
