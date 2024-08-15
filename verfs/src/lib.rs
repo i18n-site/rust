@@ -153,7 +153,7 @@ impl VerFs {
       Some(ver) => ver,
       None => {
         let ver = self.ver.clone();
-        println!("{from} -> {to}");
+        // println!("{from} -> {to}");
         self.new_hash.insert(hash.clone());
         self.hash_ver.insert(hash, ver);
         ifs::cp_rel(&self.root, &from, &self.verdir, &to)?;
