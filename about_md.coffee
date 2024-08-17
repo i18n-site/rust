@@ -41,8 +41,8 @@ do =>
     if existsSync readmeFp i
       li.push i
   li.sort()
-  # p = li.indexOf('i18')
-  # li = li.slice(p+1)
+  p = li.indexOf('i18n_bgu')
+  li = li.slice(p+1)
   for i from li
     console.log i
     try
