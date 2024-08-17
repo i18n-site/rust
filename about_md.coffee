@@ -4,6 +4,7 @@
   @3-/write
   zx/globals:
   @3-/sleep
+  @3-/retry
 
 import { readdirSync,  existsSync } from 'fs'
 import { join, dirname, basename } from 'path'
@@ -12,8 +13,13 @@ about_md='<+ ../about.md >'
 
 ROOT = import.meta.dirname
 
-replace = (pkg)=>
-  url = "https://crates.io/api/v1/crates/i18_hash"
+replace = retry (pkg)=>
+  url = "https://crates.io/api/v1/crates/"+pkg
+  json = await (await fetch(url)).json()
+  crate_updated_at = json.crate.updated_at
+  if crate_updated_at.startsWith '2024-08-17T'
+    return
+
   fp = readmeFp pkg
   txt = read fp
   if ! txt.includes(about_md)
@@ -23,6 +29,7 @@ replace = (pkg)=>
     await $"./cargo.dist.sh #{name}"
   catch err
     console.log err
+
   await sleep(10000)
   return
 
