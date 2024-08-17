@@ -9,7 +9,7 @@ version = "0.1.4"
 path = "../bce"
 
 [dependencies.refmt]
-version = "0.1.4"
+version = "0.1.5"
 path = "../refmt"
 features = [ "fs" ]
 
