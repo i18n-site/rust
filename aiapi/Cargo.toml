@@ -40,7 +40,7 @@ default-features = false
 features = [ "conf", "confdir" ]
 
 [dependencies.pos_next]
-version = "0.1.4"
+version = "0.1.5"
 path = "../pos_next"
 
 [dependencies.serde]
