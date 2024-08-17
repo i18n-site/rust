@@ -46,5 +46,6 @@ do =>
   # li = li.slice(p+1)
   for i from li
     console.log i
-    await replace i
+    try
+      await replace i
   return
