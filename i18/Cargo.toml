@@ -92,7 +92,7 @@ version = "0.1.15"
 path = "../xerr"
 
 [dependencies.yconf]
-version = "0.1.3"
+version = "0.1.4"
 path = "../yconf"
 
 [dependencies.tokio]
