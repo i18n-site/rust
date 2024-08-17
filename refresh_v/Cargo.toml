@@ -8,7 +8,7 @@ version = "0.1.5"
 path = "../waiting"
 
 [dependencies.mreq]
-version = "0.1.15"
+version = "0.1.16"
 path = "../mreq"
 
 [package]
