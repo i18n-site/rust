@@ -28,7 +28,7 @@ path = "../xerr"
 
 [package]
 name = "len_mtime"
-version = "0.1.11"
+version = "0.1.12"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
