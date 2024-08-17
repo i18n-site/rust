@@ -33,7 +33,7 @@ version = "0.1.31"
 path = "../lang"
 
 [dependencies.tzst]
-version = "0.1.17"
+version = "0.1.18"
 path = "../tzst"
 features = [ "zst" ]
 
