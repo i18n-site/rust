@@ -1,41 +1,51 @@
-# bls
+# verfs
 
 ```rust
+use std::{collections::HashMap, path::PathBuf};
+
 use aok::{Result, OK};
-use bls::PublicKey;
-use rand::Rng;
 use static_init::constructor;
+use verfs::latest_ver;
 
 #[constructor(0)]
 extern "C" fn init() {
   loginit::init()
 }
 
+// #[tokio::test]
+// async fn test() -> Result<()> {
+//   info!("{}", 123456);
+//   OK
+// }
+
 #[test]
 fn test() -> Result<()> {
-  let mut rng = rand::thread_rng();
+  let dir: PathBuf = env!("CARGO_MANIFEST_DIR").into();
+  let yml = dir.join("tests/test.yml");
+  let mut hash = HashMap::new();
+  let r = latest_ver(&yml, &mut hash)?;
+  dbg!(r);
+  // let tests = dir.join("tests");
+  //
+  // let mut verfs = VerFs::load(&tests, tests.join("out"), tests.join("log"))?;
+  //
+  // verfs.cp("main.rs")?;
+  // verfs.wstr("a/b/c.txt", "123\n456")?;
+  // verfs.wstr("ab/b/c.txt", "123\n456")?;
+  // verfs.wstr("b/1/2.txt", "123\n")?;
+  // verfs.wstr("b/2/2.txt", "123\n456")?;
+  // verfs.save()?;
+  //
+  // let mut prefix_li = PrefixLi::new(vec!["a".into(), "b".into()]);
+  //
+  // for (k, v) in verfs.sorted_rel_ver() {
+  //   info!("{k} {v}");
+  //   prefix_li.add(k, v);
+  // }
+  // for (prefix, i) in prefix_li.0 {
+  //   println!("{prefix} {}", to_string(&i)?);
+  // }
 
-  for _ in 0..10000 {
-    let mut array = [0u8; 48];
-    for i in &mut array {
-      *i = rng.gen();
-    }
-    let pk = PublicKey(array);
-    if let Ok::<bls12_381::G1Projective, _>(pk) = (&pk).try_into() {
-      dbg!(pk);
-    }
-  }
-  // let sk = SecretKey::default();
-  // let pk: PublicKey = sk.pk();
-  //
-  // println!("SK: {}", sk);
-  // println!("PK: {}", pk);
-  //
-  // let data_to_sign = b"Hello, world!"; // Example data to sign
-  // let signature = sign(&sk, data_to_sign);
-  // dbg!(signature.len());
-  // let is_valid = verify(&pk, data_to_sign, &signature);
-  // println!("Signature is valid: {}", is_valid);
   OK
 }
 ```

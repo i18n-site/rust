@@ -10,7 +10,6 @@ members = [
   "bgu",
   "bintxt",
   "bjs",
-  "bls",
   "burl",
   "cfha",
   "cget",
@@ -107,7 +106,9 @@ members = [
   "refmt",
   "trait_len",
   "pli",
-  "bce", "str0", "only_url",
+  "bce",
+  "str0",
+  "only_url",
 ]
 # "cget/test_cget",
 resolver = "2"

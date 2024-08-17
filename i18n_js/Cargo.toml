@@ -30,7 +30,7 @@ version = "2.4.0"
 features = [ "serde" ]
 
 [dependencies.verfs]
-version = "0.2.5"
+version = "0.2.6"
 path = "../verfs"
 
 [dependencies.minjs]
@@ -78,7 +78,7 @@ path = "../xerr"
 
 [package]
 name = "i18n_js"
-version = "0.1.18"
+version = "0.1.19"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
