@@ -72,7 +72,7 @@ version = "0.1.21"
 path = "../i18n_bgu"
 
 [dependencies.mreq]
-version = "0.1.14"
+version = "0.1.15"
 path = "../mreq"
 
 [dependencies.lang]
