@@ -5,7 +5,7 @@ static_init = "1.0.3"
 
 [package]
 name = "tlsinit"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
