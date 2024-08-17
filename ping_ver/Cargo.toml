@@ -5,7 +5,7 @@ const-str = "0.5.7"
 
 [package]
 name = "ping_ver"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
