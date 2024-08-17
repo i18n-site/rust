@@ -43,7 +43,7 @@ path = "../xerr"
 
 [package]
 name = "i18_hash"
-version = "0.1.13"
+version = "0.1.14"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
