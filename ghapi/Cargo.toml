@@ -4,11 +4,14 @@ futures = "0.3.30"
 reqwest = "0.12.5"
 serde = "1.0.208"
 sonic-rs = "0.3.10"
-tokio = { version = "1.39.2", features = ["time", "macros"] }
 tracing = "0.1.40"
 
+[dependencies.tokio]
+version = "1.39.2"
+features = [ "time", "macros" ]
+
 [dependencies.ireq]
-version = "0.1.15"
+version = "0.1.16"
 path = "../ireq"
 
 [package]
@@ -31,4 +34,4 @@ tracing = "0.1.40"
 
 [dev-dependencies.tokio]
 version = "1.39.2"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
