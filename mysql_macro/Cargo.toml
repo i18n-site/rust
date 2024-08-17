@@ -1,6 +1,6 @@
 [package]
 name = "mysql_macro"
-version = "0.1.44"
+version = "0.1.45"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
