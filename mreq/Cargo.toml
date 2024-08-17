@@ -11,7 +11,7 @@ version = "0.1.15"
 path = "../genv"
 
 [dependencies.header_map]
-version = "0.1.3"
+version = "0.1.4"
 path = "../header_map"
 
 [dependencies.citer]
