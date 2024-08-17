@@ -52,7 +52,7 @@ path = "../tzst"
 features = [ "w" ]
 
 [dependencies.i18_hash]
-version = "0.1.14"
+version = "0.1.15"
 path = "../i18_hash"
 
 [dependencies.len_mtime]
