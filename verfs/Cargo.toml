@@ -32,7 +32,7 @@ version = "1.0.208"
 features = [ "derive" ]
 
 [dependencies.ver_incr]
-version = "0.1.5"
+version = "0.1.6"
 path = "../ver_incr"
 
 [dependencies.xerr]
