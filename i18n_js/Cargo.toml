@@ -62,7 +62,7 @@ version = "0.1.6"
 path = "../bjs"
 
 [dependencies.ifs]
-version = "0.1.42"
+version = "0.1.43"
 path = "../ifs"
 default-features = false
 features = [ "fs", "unix_path", "rsync", "ln" ]
