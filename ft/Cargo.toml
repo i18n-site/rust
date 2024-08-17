@@ -4,7 +4,7 @@ gxhash = "3.4.1"
 strum = "0.26.3"
 
 [dependencies.lang]
-version = "0.1.30"
+version = "0.1.31"
 path = "../lang"
 
 [dependencies.xerr]

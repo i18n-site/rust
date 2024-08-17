@@ -29,7 +29,7 @@ default-features = false
 features = [ "fs" ]
 
 [dependencies.lang]
-version = "0.1.30"
+version = "0.1.31"
 path = "../lang"
 
 [dependencies.tzst]
