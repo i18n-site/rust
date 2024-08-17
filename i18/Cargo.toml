@@ -31,7 +31,7 @@ version = "0.10.6"
 features = [ "simd" ]
 
 [dependencies.vb]
-version = "0.1.7"
+version = "0.1.8"
 path = "../vb"
 
 [dependencies.pbar]

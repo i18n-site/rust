@@ -19,7 +19,7 @@ path = "../xhash"
 features = [ ]
 
 [dependencies.vb]
-version = "0.1.7"
+version = "0.1.8"
 path = "../vb"
 
 [dependencies.ifs]
