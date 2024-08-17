@@ -16,7 +16,7 @@ version = "0.1.15"
 path = "../genv"
 
 [dependencies.preq1]
-version = "0.1.8"
+version = "0.1.9"
 path = "../preq1"
 
 [dependencies.reqwest]
