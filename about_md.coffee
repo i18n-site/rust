@@ -3,6 +3,7 @@
 > @3-/read
   @3-/write
   zx/globals:
+  @3-/sleep
 
 import { readdirSync,  existsSync } from 'fs'
 import { join, dirname, basename } from 'path'
@@ -20,6 +21,7 @@ replace = (fp)=>
     await $"./cargo.dist.sh #{name}"
   catch err
     console.log err
+  await sleep(10000)
   return
 
 readmeFp = (i)=>
@@ -31,7 +33,7 @@ do =>
     if existsSync readmeFp i
       li.push i
   li.sort()
-  p = li.indexOf('ft')
+  p = li.indexOf('i18')
   li = li.slice(p+1)
   for i from li
     console.log i

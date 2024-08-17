@@ -60,7 +60,7 @@ version = "0.1.10"
 path = "../len_mtime"
 
 [dependencies.i18_conf]
-version = "0.1.8"
+version = "0.1.9"
 path = "../i18_conf"
 
 [dependencies.cmdv]
