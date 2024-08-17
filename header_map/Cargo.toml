@@ -1,7 +1,10 @@
 [dependencies]
 aok = "0.1.14"
 reqwest = "0.12.5"
-xerr = { version = "0.1.14", path = "../xerr" }
+
+[dependencies.xerr]
+version = "0.1.15"
+path = "../xerr"
 
 [package]
 name = "header_map"
@@ -12,6 +15,9 @@ repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/main/header_map"
 description = "header_map"
 
+[package.metadata.docs.rs]
+all-features = true
+
 [dev-dependencies]
 aok = "0.1.14"
 loginit = "0.1.13"
@@ -20,7 +26,4 @@ tracing = "0.1.40"
 
 [dev-dependencies.tokio]
 version = "1.39.2"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
-
-[package.metadata.docs.rs]
-all-features = true
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

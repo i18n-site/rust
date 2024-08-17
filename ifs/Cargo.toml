@@ -7,6 +7,9 @@ repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/main/ifs"
 description = "util for write / read file"
 
+[package.metadata.docs.rs]
+all-features = true
+
 [dependencies]
 aok = "0.1.14"
 digest = "0.10.7"
@@ -35,10 +38,10 @@ optional = true
 
 [dependencies.tokio]
 version = "1.39.2"
-features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.xerr]
-version = "0.1.14"
+version = "0.1.15"
 path = "../xerr"
 
 [dependencies.walkdir]
@@ -47,7 +50,7 @@ optional = true
 
 [dependencies.blake3]
 version = "1.5.3"
-features = ["traits-preview"]
+features = [ "traits-preview" ]
 optional = true
 
 [dependencies.intbin]
@@ -55,21 +58,21 @@ version = "0.1.2"
 optional = true
 
 [features]
-default = []
-unix_path = []
-ln = []
-is_hidden = ["dep:walkdir"]
-b3_len = ["hash", "dep:intbin", "b3"]
-b3 = ["dep:blake3"]
-rsync = ["dep:walkdir"]
-dir = ["dep:dirs", "dep:static_init"]
-hash = []
-is_dir = []
-fs = []
-cp = []
-conf = ["dir", "dep:prost"]
-confdir = ["dep:dirs"]
-txz_hash_d = ["dep:lzma-rs", "dep:tar", "hash"]
+default = [ ]
+unix_path = [ ]
+ln = [ ]
+is_hidden = [ "dep:walkdir" ]
+b3_len = [ "hash", "dep:intbin", "b3" ]
+b3 = [ "dep:blake3" ]
+rsync = [ "dep:walkdir" ]
+dir = [ "dep:dirs", "dep:static_init" ]
+hash = [ ]
+is_dir = [ ]
+fs = [ ]
+cp = [ ]
+conf = [ "dir", "dep:prost" ]
+confdir = [ "dep:dirs" ]
+txz_hash_d = [ "dep:lzma-rs", "dep:tar", "hash" ]
 
 [dev-dependencies]
 aok = "0.1.14"
@@ -77,7 +80,4 @@ loginit = "0.1.13"
 
 [dev-dependencies.tokio]
 version = "1.39.2"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
-
-[package.metadata.docs.rs]
-all-features = true
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

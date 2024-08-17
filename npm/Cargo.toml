@@ -18,7 +18,7 @@ version = "0.1.15"
 path = "../genv"
 
 [dependencies.xerr]
-version = "0.1.14"
+version = "0.1.15"
 path = "../xerr"
 
 [package]

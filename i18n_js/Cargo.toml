@@ -73,7 +73,7 @@ path = "../dot_hide"
 features = [ "walkdir" ]
 
 [dependencies.xerr]
-version = "0.1.14"
+version = "0.1.15"
 path = "../xerr"
 
 [package]

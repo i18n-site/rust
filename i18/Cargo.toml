@@ -88,7 +88,7 @@ version = "0.1.6"
 path = "../init_dir"
 
 [dependencies.xerr]
-version = "0.1.14"
+version = "0.1.15"
 path = "../xerr"
 
 [dependencies.yconf]
