@@ -1,6 +1,6 @@
 [package]
 name = "tmpl"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
