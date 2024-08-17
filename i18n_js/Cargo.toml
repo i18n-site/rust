@@ -42,7 +42,7 @@ version = "0.1.3"
 path = "../yconf"
 
 [dependencies.i18_conf]
-version = "0.1.7"
+version = "0.1.8"
 path = "../i18_conf"
 
 [dependencies.rvar]
