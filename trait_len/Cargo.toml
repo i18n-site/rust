@@ -1,6 +1,6 @@
 [package]
 name = "trait_len"
-version = "0.2.9"
+version = "0.2.10"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
