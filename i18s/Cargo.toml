@@ -1,6 +1,6 @@
 [package]
 name = "i18s"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
