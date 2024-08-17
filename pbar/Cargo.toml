@@ -4,7 +4,7 @@ indicatif = { version = "0.17.8", features = ["improved_unicode"] }
 
 [package]
 name = "pbar"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
