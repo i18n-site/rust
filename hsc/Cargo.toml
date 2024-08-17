@@ -41,7 +41,7 @@ version = "4.5.16"
 features = [ "cargo" ]
 
 [dependencies.genv]
-version = "0.1.14"
+version = "0.1.15"
 path = "../genv"
 
 [dependencies.ifs]

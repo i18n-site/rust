@@ -14,7 +14,7 @@ sha1 = "0.10.6"
 version = "0.12.5"
 
 [dependencies.genv]
-version = "0.1.14"
+version = "0.1.15"
 path = "../genv"
 
 [dependencies.xerr]

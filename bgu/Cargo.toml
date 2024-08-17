@@ -33,7 +33,7 @@ version = "1.5.3"
 features = [ "traits-preview" ]
 
 [dependencies.genv]
-version = "0.1.14"
+version = "0.1.15"
 path = "../genv"
 
 [dependencies.xerr]

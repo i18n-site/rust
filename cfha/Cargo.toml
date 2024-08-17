@@ -5,7 +5,7 @@ serde_yaml = "0.9.34"
 thiserror = "1.0.63"
 
 [dependencies.genv]
-version = "0.1.14"
+version = "0.1.15"
 path = "../genv"
 
 [package]
@@ -27,7 +27,7 @@ tracing = "0.1.40"
 
 [dev-dependencies.genv]
 path = "../genv"
-version = "0.1.14"
+version = "0.1.15"
 
 [dev-dependencies.tokio]
 version = "1.39.2"

@@ -55,7 +55,7 @@ tracing = "0.1.40"
 
 [dev-dependencies.genv]
 path = "../genv"
-version = "0.1.14"
+version = "0.1.15"
 
 [dev-dependencies.tokio]
 version = "1.39.2"

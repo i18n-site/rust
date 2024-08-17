@@ -22,19 +22,18 @@ replace = (fp)=>
     console.log err
   return
 
+readmeFp = (i)=>
+  join ROOT, i, 'README.mdt'
+
 do =>
   li = []
-  add = false
   for i in readdirSync(ROOT)
-    if not add
-      if i == 'ft'
-        add = true
-      continue
-    readme = join ROOT, i, 'README.mdt'
-    if existsSync readme
-      li.push readme
+    if existsSync readmeFp i
+      li.push i
   li.sort()
+  p = li.indexOf('ft')
+  li = li.slice(p+1)
   for i from li
     console.log i
-    await replace i
+    await replace readmeFp i
   return

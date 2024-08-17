@@ -18,7 +18,7 @@ static_init = "1.0.3"
 thiserror = "1.0.63"
 
 [dependencies.genv]
-version = "0.1.14"
+version = "0.1.15"
 path = "../genv"
 
 [dependencies.reqwest]

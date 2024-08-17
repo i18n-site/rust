@@ -7,7 +7,7 @@ thiserror = "1.0.63"
 tracing = "0.1.40"
 
 [dependencies.genv]
-version = "0.1.14"
+version = "0.1.15"
 path = "../genv"
 
 [dependencies.header_map]
