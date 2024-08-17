@@ -9,7 +9,7 @@ version = "0.1.4"
 path = "../bce"
 
 [dependencies.trait_len]
-version = "0.2.11"
+version = "0.2.12"
 path = "../trait_len"
 
 [dependencies.fjall]
