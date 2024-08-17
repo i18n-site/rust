@@ -84,7 +84,7 @@ version = "0.1.22"
 path = "../ft"
 
 [dependencies.init_dir]
-version = "0.1.3"
+version = "0.1.4"
 path = "../init_dir"
 
 [dependencies.xerr]
