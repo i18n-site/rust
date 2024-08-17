@@ -1,0 +1,24 @@
+[package]
+name = "ireq"
+version = "0.1.15"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/ireq"
+description = "ireq"
+
+[dependencies]
+static_init = "1.0.3"
+thiserror = "1.0.63"
+
+[dependencies.aok]
+version = "0.1.15"
+path = "../aok"
+
+[dependencies.reqwest]
+version = "0.12.5"
+features = [ "rustls-tls", "rustls-tls-native-roots", "zstd", "stream" ]
+
+[features]
+default = [ ]
+proxy = [ "reqwest/socks" ]

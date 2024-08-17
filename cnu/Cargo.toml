@@ -1,0 +1,30 @@
+[package]
+name = "cnu"
+version = "0.1.15"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/cnu"
+description = "cnu"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies.enum_dispatch]
+version = "0.3.13"
+optional = true
+
+[dependencies.lang]
+version = "0.1.30"
+path = "../lang"
+optional = true
+
+[dependencies.phf]
+version = "0.11.2"
+features = [ "macros" ]
+
+[features]
+default = [ ]
+f2j = [ ]
+j2f = [ ]
+lang = [ "dep:lang", "dep:enum_dispatch", "f2j", "j2f" ]

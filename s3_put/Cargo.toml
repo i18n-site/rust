@@ -1,0 +1,36 @@
+[package]
+name = "s3_put"
+version = "0.1.10"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/s3_put"
+description = "s3_put"
+
+[dependencies]
+aok = "0.1.14"
+aws-sdk-s3 = "1.45.0"
+bytes = "1.7.1"
+tracing = "0.1.40"
+
+[dependencies.aws-config]
+version = "1.5.5"
+features = [ "behavior-version-latest" ]
+
+[dependencies.genv]
+version = "0.1.14"
+path = "../genv"
+
+[dependencies.tokio]
+version = "1.39.2"
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
+
+[dev-dependencies]
+aok = "0.1.14"
+loginit = "0.1.13"
+static_init = "1.0.3"
+walkdir = "2.5.0"
+
+[dev-dependencies.map_await]
+path = "../map_await"
+version = "0.1.9"

@@ -1,0 +1,44 @@
+[dependencies]
+aok = "0.1.14"
+defer-lite = "1.0.0"
+dirs = "5.0.1"
+flate2 = "1.0.31"
+serde = "1.0.208"
+sonic-rs = "0.3.10"
+static_init = "1.0.3"
+tar = "0.4.41"
+base64 = "0.22.1"
+sha1 = "0.10.6"
+
+[dependencies.reqwest]
+version = "0.12.5"
+
+[dependencies.genv]
+version = "0.1.14"
+path = "../genv"
+
+[dependencies.xerr]
+version = "0.1.14"
+path = "../xerr"
+
+[package]
+name = "npm"
+version = "0.1.4"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/npm"
+description = "npm"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.14"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.39.2"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

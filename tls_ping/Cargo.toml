@@ -1,0 +1,39 @@
+[dependencies]
+aok = "0.1.14"
+static_init = "1.0.3"
+tokio-rustls = "0.26.0"
+x509-parser = "0.16.0"
+
+[dependencies.rustls]
+version = "0.23.12"
+features = [ "ring" ]
+
+[dependencies.tlsinit]
+version = "0.1.2"
+path = "../tlsinit"
+
+[dependencies.tokio]
+version = "1.39.2"
+features = [ "time", "net" ]
+
+[package]
+name = "tls_ping"
+version = "0.1.7"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/tls_ping"
+description = "tls_ping"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.14"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.39.2"
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
