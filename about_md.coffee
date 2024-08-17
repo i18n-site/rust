@@ -30,7 +30,6 @@ replace = retry (pkg)=>
   catch err
     console.log err
 
-  await sleep(10000)
   return
 
 readmeFp = (i)=>

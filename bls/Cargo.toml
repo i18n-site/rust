@@ -9,7 +9,7 @@ thiserror = "1.0.63"
 
 [package]
 name = "bls"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"

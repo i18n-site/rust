@@ -34,7 +34,7 @@ version = "0.2.5"
 path = "../verfs"
 
 [dependencies.minjs]
-version = "0.1.4"
+version = "0.1.5"
 path = "../minjs"
 
 [dependencies.yconf]
