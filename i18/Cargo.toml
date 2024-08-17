@@ -100,7 +100,7 @@ version = "1.39.2"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dependencies.ifs]
-version = "0.1.41"
+version = "0.1.42"
 path = "../ifs"
 default-features = false
 features = [ "is_dir", "fs", "unix_path", "confdir" ]

@@ -1,5 +1,5 @@
 [dependencies.ifs]
-version = "0.1.41"
+version = "0.1.42"
 path = "../ifs"
 default-features = false
 features = [ "fs" ]
