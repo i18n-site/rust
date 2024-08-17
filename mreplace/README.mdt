@@ -5,3 +5,5 @@ use [daachorse::CharwiseDoubleArrayAhoCorasick](https://github.com/daac-tools/da
 ```rust
 <+ ./tests/main.rs>
 ```
+
+<+ ../about.md >
