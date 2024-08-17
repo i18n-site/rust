@@ -9,20 +9,20 @@ description = "kvcache"
 
 [package.metadata.docs.rs]
 all-features = true
-rustc-args = ["-C", "target-feature=+aes"]
+rustc-args = [ "-C", "target-feature=+aes" ]
 
 [features]
-default = []
-hset_cache = []
-user_cache = []
+default = [ ]
+hset_cache = [ ]
+user_cache = [ ]
 
 [dependencies]
 fred = "9.0.3"
 
 [dependencies.rany]
-version = "0.1.11"
+version = "0.1.12"
 path = "../rany"
-features = ["b255"]
+features = [ "b255" ]
 
 [dependencies.xbin]
 version = "0.1.4"
