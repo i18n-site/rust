@@ -4,7 +4,7 @@ tokio = "1.39.2"
 tracing = "0.1.40"
 
 [dependencies.waiting]
-version = "0.1.4"
+version = "0.1.5"
 path = "../waiting"
 
 [dependencies.mreq]
