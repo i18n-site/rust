@@ -12,7 +12,9 @@ about_md='<+ ../about.md >'
 
 ROOT = import.meta.dirname
 
-replace = (fp)=>
+replace = (pkg)=>
+  url = "https://crates.io/api/v1/crates/i18_hash"
+  fp = readmeFp pkg
   txt = read fp
   if ! txt.includes(about_md)
     write fp, "#{txt.trim()}\n\n#{about_md}"
@@ -33,9 +35,9 @@ do =>
     if existsSync readmeFp i
       li.push i
   li.sort()
-  p = li.indexOf('i18')
-  li = li.slice(p+1)
+  # p = li.indexOf('i18')
+  # li = li.slice(p+1)
   for i from li
     console.log i
-    await replace readmeFp i
+    await replace i
   return

@@ -9,3 +9,5 @@ lang hash_len src_hash
 ```rust
 <+ ./tests/main.rs>
 ```
+
+<+ ../about.md >

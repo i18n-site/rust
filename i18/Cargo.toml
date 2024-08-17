@@ -56,7 +56,7 @@ version = "0.1.15"
 path = "../i18_hash"
 
 [dependencies.len_mtime]
-version = "0.1.10"
+version = "0.1.11"
 path = "../len_mtime"
 
 [dependencies.i18_conf]
