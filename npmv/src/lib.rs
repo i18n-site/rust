@@ -23,10 +23,6 @@ pub struct Info {
   version: String,
 }
 
-pub struct Pkg {
-  pub name: String,
-}
-
 async fn response(pkg: &str, url: &str) -> reqwest::Result<Response> {
   let client = Client::builder()
     .timeout(Duration::from_secs(120))
@@ -65,71 +61,65 @@ async fn response(pkg: &str, url: &str) -> reqwest::Result<Response> {
   }
 }
 
-impl Pkg {
-  pub fn new(name: impl Into<String>) -> Self {
-    Self { name: name.into() }
-  }
+pub async fn latest(name: impl AsRef<str>) -> Result<String> {
+  let bin = response(name.as_ref(), "latest").await?.bytes().await?;
+  let info: Info = sonic_rs::from_slice(&bin)?;
+  Ok(info.version)
+}
 
-  pub async fn latest(&self) -> Result<String> {
-    let bin = response(&self.name, "latest").await?.bytes().await?;
-    let info: Info = sonic_rs::from_slice(&bin)?;
-    Ok(info.version)
-  }
+pub async fn tgz(name: impl AsRef<str>, ver: impl AsRef<str>, out: impl AsRef<Path>) -> Null {
+  let out = out.as_ref();
+  let name = name.as_ref();
+  let stream = response(
+    name,
+    &format!(
+      "-/{}-{}.tgz",
+      name.split("/").last().unwrap_or(""),
+      ver.as_ref()
+    ),
+  )
+  .await?
+  .bytes_stream();
 
-  pub async fn tgz(&self, ver: impl AsRef<str>, out: impl AsRef<Path>) -> Null {
-    let out = out.as_ref();
-    let stream = response(
-      &self.name,
-      &format!(
-        "-/{}-{}.tgz",
-        self.name.split("/").last().unwrap_or(""),
-        ver.as_ref()
-      ),
-    )
-    .await?
-    .bytes_stream();
+  let reader = StreamReader::new(
+    stream.map(|result| result.map_err(|e| tokio::io::Error::new(tokio::io::ErrorKind::Other, e))),
+  );
 
-    let reader = StreamReader::new(
-      stream
-        .map(|result| result.map_err(|e| tokio::io::Error::new(tokio::io::ErrorKind::Other, e))),
-    );
+  let gz_decoder = GzipDecoder::new(BufReader::new(reader)).compat();
 
-    let gz_decoder = GzipDecoder::new(BufReader::new(reader)).compat();
-
-    if let Ok(meta) = tokio::fs::metadata(out).await {
-      if meta.is_dir() {
-        tokio::fs::remove_dir_all(out).await?;
-      } else {
-        tokio::fs::remove_file(out).await?;
-      }
+  if let Ok(meta) = tokio::fs::metadata(out).await {
+    if meta.is_dir() {
+      tokio::fs::remove_dir_all(out).await?;
+    } else {
+      tokio::fs::remove_file(out).await?;
     }
+  }
 
-    let archive = Archive::new(gz_decoder);
-    let mut entries = archive.entries()?;
-    while let Some(entry) = entries.next().await {
-      if let Ok(mut f) = xerr::ok!(entry) {
-        if let Ok(path) = xerr::ok!(f.path()) {
-          let path = path.display().to_string();
-          if let Some(path) = path.strip_prefix("package") {
-            let path = &path[1..];
-            let fp = out.join(path);
+  let archive = Archive::new(gz_decoder);
+  let mut entries = archive.entries()?;
+  while let Some(entry) = entries.next().await {
+    if let Ok(mut f) = xerr::ok!(entry) {
+      if let Ok(path) = xerr::ok!(f.path()) {
+        let path = path.display().to_string();
+        if let Some(path) = path.strip_prefix("package") {
+          let path = &path[1..];
+          let fp = out.join(path);
 
-            if let Err(err) = f.unpack(&fp).await {
-              let kind = err.kind();
-              if kind == tokio::io::ErrorKind::NotFound {
-                if let Some(parent) = fp.parent() {
-                  tokio::fs::create_dir_all(parent).await?;
-                  f.unpack(&fp).await?;
-                }
-              } else {
-                tracing::error!("{}: {}", kind, err);
+          if let Err(err) = f.unpack(&fp).await {
+            let kind = err.kind();
+            if kind == tokio::io::ErrorKind::NotFound {
+              if let Some(parent) = fp.parent() {
+                tokio::fs::create_dir_all(parent).await?;
+                f.unpack(&fp).await?;
               }
+            } else {
+              tracing::error!("{}: {}", kind, err);
             }
           }
         }
       }
     }
-
-    OK
   }
+
+  OK
 }

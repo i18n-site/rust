@@ -1,3 +1,7 @@
+use std::path::PathBuf;
+
+use aok::{Null, Result, OK};
+
 #[derive(Debug)]
 pub struct Pkg {
   pub name: String,
@@ -26,6 +30,32 @@ impl Pkg {
 
     Self { name, ver }
   }
+
+  async fn ver(&self) -> Result<String> {
+    if let Some(ver) = &self.ver {
+      Ok(ver.clone())
+    } else {
+      npmv::latest(&self.name).await
+    }
+  }
 }
 
-pub fn npmi() {}
+pub struct Npm {
+  pub dir: PathBuf,
+}
+
+impl Npm {
+  pub fn new(dir: impl Into<PathBuf>) -> Self {
+    Self {
+      dir: dir.into().join("node_modules"),
+    }
+  }
+
+  pub async fn i(name_ver: impl AsRef<str>) -> Null {
+    let pkg = Pkg::new(name_ver);
+    let ver = pkg.ver().await?;
+    // pkg.tgz(&ver, &pkg.dir).await;
+
+    OK
+  }
+}

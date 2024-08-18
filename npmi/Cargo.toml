@@ -7,15 +7,18 @@ repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/main/npmi"
 description = "npmi"
 
-[features]
-default = []
-
 [package.metadata.docs.rs]
 all-features = true
 
+[features]
+default = [ ]
+
 [dependencies]
 aok = "0.1.14"
-npmv = { version = "0.1.8", path = "../npmv" }
+
+[dependencies.npmv]
+version = "0.1.9"
+path = "../npmv"
 
 [dev-dependencies]
 aok = "0.1.14"
@@ -25,4 +28,4 @@ tracing = "0.1.40"
 
 [dev-dependencies.tokio]
 version = "1.39.2"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

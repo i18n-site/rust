@@ -12,10 +12,10 @@ extern "C" fn init() {
 
 #[tokio::test]
 async fn test() -> Result<()> {
-  let pkg = npmv::Pkg::new("@3-/dbq");
-  let v = pkg.latest().await?;
+  let pkg = "@3-/dbq";
+  let v = npmv::latest(pkg).await?;
   info!("{}", v);
-  pkg.tgz(v, "/tmp/test").await?;
+  npmv::tgz(pkg, v, "/tmp/test").await?;
   OK
 }
 ```
