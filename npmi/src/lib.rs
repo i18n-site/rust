@@ -1,7 +1,10 @@
 use std::path::{Path, PathBuf};
 
 use aok::{Null, Result, OK};
+use futures::{stream::FuturesUnordered, StreamExt};
 use tracing::info;
+
+pub const NODE_MODULES: &str = "node_modules";
 
 #[derive(Debug)]
 pub struct Pkg {
@@ -73,7 +76,7 @@ pub async fn is_same_ver(ver: &str, dir: impl AsRef<Path>) -> Result<bool> {
 impl Npm {
   pub fn new(dir: impl Into<PathBuf>) -> Self {
     Self {
-      dir: dir.into().join("node_modules"),
+      dir: dir.into().join(NODE_MODULES),
     }
   }
 
@@ -111,4 +114,59 @@ impl Npm {
 
     OK
   }
+}
+
+macro_rules! func {
+  ($dir:expr, $name_ver_li:expr, $func:ident) => {{
+    let mut ing = FuturesUnordered::new();
+    let dir = $dir.into();
+    for name_ver in $name_ver_li {
+      let dir = dir.clone();
+      ing.push(async move {
+        let npm = Npm::new(dir);
+        let name_ver = name_ver.as_ref();
+        if let Err(err) = npm.$func(name_ver).await {
+          tracing::error!("{name_ver} {}", err);
+        }
+      });
+    }
+
+    while let Some(_) = ing.next().await {}
+
+    Ok(())
+  }};
+}
+
+pub async fn auto<S: AsRef<str>>(dir: impl Into<PathBuf>, name_ver_li: &[S]) -> Null {
+  let dir = dir.into();
+  let utime = dir.join(NODE_MODULES).join("pkg.utime");
+  let now = sts::sec();
+
+  if let Ok(meta) = tokio::fs::metadata(&utime).await {
+    if meta.is_file() {
+      if let Ok(utime) = xerr::ok!(tokio::fs::read_to_string(&utime).await) {
+        if let Ok(utime) = xerr::ok!(utime.parse::<u64>()) {
+          if (utime + 7 * 86400) > now {
+            i(dir, name_ver_li).await?;
+            return OK;
+          }
+        }
+      }
+      tokio::fs::remove_file(&utime).await?;
+    } else if meta.is_dir() {
+      tokio::fs::remove_dir_all(&dir).await?;
+    }
+  }
+
+  u(dir, name_ver_li).await?;
+  tokio::fs::write(utime, format!("{now}")).await?;
+  OK
+}
+
+pub async fn i<S: AsRef<str>>(dir: impl Into<PathBuf>, name_ver_li: &[S]) -> Null {
+  func!(dir, name_ver_li, i)
+}
+
+pub async fn u<S: AsRef<str>>(dir: impl Into<PathBuf>, name_ver_li: &[S]) -> Null {
+  func!(dir, name_ver_li, u)
 }

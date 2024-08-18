@@ -15,8 +15,13 @@ default = [ ]
 
 [dependencies]
 aok = "0.1.14"
+futures = "0.3.30"
 sonic-rs = "0.3.10"
 tracing = "0.1.40"
+
+[dependencies.sts]
+version = "0.1.23"
+path = "../sts"
 
 [dependencies.tokio]
 version = "1.39.2"
@@ -27,7 +32,7 @@ version = "0.1.15"
 path = "../xerr"
 
 [dependencies.npmv]
-version = "0.1.10"
+version = "0.1.11"
 path = "../npmv"
 
 [dev-dependencies]

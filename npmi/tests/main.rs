@@ -1,7 +1,6 @@
 use aok::{Result, OK};
 use npmi::Pkg;
 use static_init::constructor;
-use tracing::info;
 
 #[constructor(0)]
 extern "C" fn init() {
