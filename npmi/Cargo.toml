@@ -32,7 +32,7 @@ version = "0.1.15"
 path = "../xerr"
 
 [dependencies.npmv]
-version = "0.1.11"
+version = "0.1.12"
 path = "../npmv"
 
 [dev-dependencies]
