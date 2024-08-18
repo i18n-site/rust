@@ -11,7 +11,7 @@ version = "1.39.2"
 features = [ "time", "macros" ]
 
 [dependencies.ireq]
-version = "0.1.16"
+version = "0.1.17"
 path = "../ireq"
 
 [package]

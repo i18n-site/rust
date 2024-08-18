@@ -14,7 +14,6 @@ default = []
 all-features = true
 
 [dependencies]
-aok = "0.1.14"
 
 [dev-dependencies]
 aok = "0.1.14"

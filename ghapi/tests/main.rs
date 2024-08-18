@@ -10,29 +10,15 @@ extern "C" fn init() {
 
 use aok::{Result, OK};
 // use static_init::constructor;
-pub const FOLLOW_USER: &[&str] = &["i18n-site", "i18nsite", "i18n-api", "i18n-cron", "i18n-ops"];
+pub const FOLLOW_USER: &[&str] = &[
+  // "i18n-site"
+];
 
 pub const FOLLOW_REPO: &[(&str, &[&str])] = &[
-  (
-    "i18n-site",
-    &[
-      "site",
-      "18x",
-      "demo.i18n.site",
-      "demo.i18n.site.docker",
-      "lib",
-      "font",
-      "md",
-      "plugin",
-      "rust",
-      "ie",
-      "alive",
-      "site.conf",
-    ],
-  ),
-  ("i18n-api", &["pay_webhook", "pub", "srv", "srv.docker"]),
-  ("i18n-cron", &["cron"]),
-  ("i18n-ops", &["docker", "ops", "os", "ubuntu"]),
+  ("i18n-site", &["addon"]),
+  // ("i18n-api", &["pay_webhook", "pub", "srv", "srv.docker"]),
+  // ("i18n-cron", &["cron"]),
+  // ("i18n-ops", &["docker", "ops", "os", "ubuntu"]),
 ];
 
 #[tokio::test]

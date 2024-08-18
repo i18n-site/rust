@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 use aok::Result;
+use bytes::Bytes;
 use reqwest::{Body, Client, IntoUrl, RequestBuilder, StatusCode};
 use thiserror::Error;
 
@@ -42,20 +43,25 @@ pub static REQ: Client = {
   b.build().unwrap()
 };
 
-pub async fn req(req: RequestBuilder) -> Result<String> {
+pub async fn req(req: RequestBuilder) -> Result<Bytes> {
   let res = req.send().await?;
   let status = res.status();
-  let txt = res.text().await?;
+  let bin = res.bytes().await?;
   if status != StatusCode::OK {
-    Err(ReqError::Status(status, txt).into())
+    Err(ReqError::Status(status, String::from_utf8_lossy(&bin).into()).into())
   } else {
-    Ok(txt)
+    Ok(bin)
   }
+}
+
+pub async fn getbin(url: impl IntoUrl) -> Result<Bytes> {
+  let url = url.into_url()?;
+  req(REQ.get(url)).await
 }
 
 pub async fn get(url: impl IntoUrl) -> Result<String> {
   let url = url.into_url()?;
-  req(REQ.get(url)).await
+  Ok(String::from_utf8_lossy(&req(REQ.get(url)).await?).into())
 }
 
 macro_rules! method {
@@ -64,7 +70,7 @@ macro_rules! method {
     pub async fn $method(url: impl IntoUrl, body:impl Into<Body>) -> Result<String> {
       let url = url.into_url()?;
       let r = REQ.$method(url.clone()).body(body);
-      req(r).await
+      Ok(String::from_utf8_lossy(&req(r).await?).into())
     }
     )*
   };
