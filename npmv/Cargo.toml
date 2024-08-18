@@ -1,11 +1,11 @@
 [package]
-name = "npmreq"
-version = "0.1.7"
+name = "npmv"
+version = "0.1.8"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
-homepage = "https://github.com/i18n-site/rust/tree/main/npmreq"
-description = "npmreq"
+homepage = "https://github.com/i18n-site/rust/tree/main/npmv"
+description = "npmv"
 
 [package.metadata.docs.rs]
 all-features = true

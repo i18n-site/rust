@@ -1,4 +1,4 @@
-# npmreq
+# npmi
 
 ```rust
 use aok::{Result, OK};

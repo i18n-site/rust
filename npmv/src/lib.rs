@@ -32,9 +32,10 @@ async fn response(pkg: &str, url: &str) -> reqwest::Result<Response> {
     .timeout(Duration::from_secs(120))
     .connect_timeout(Duration::from_secs(6))
     .build()?;
-  let mut iter = SITE_LI.iter();
 
+  let mut iter = SITE_LI.iter();
   let mut site = iter.next().unwrap();
+
   loop {
     match client
       .get(format!("https://{site}/{pkg}/{url}"))
