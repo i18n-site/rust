@@ -1,5 +1,5 @@
 [dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 static_init = "1.0.3"
 tokio-rustls = "0.26.0"
 x509-parser = "0.16.0"
@@ -13,7 +13,7 @@ version = "0.1.4"
 path = "../tlsinit"
 
 [dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "time", "net" ]
 
 [package]
@@ -29,11 +29,11 @@ description = "tls_ping"
 all-features = true
 
 [dev-dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 loginit = "0.1.13"
 static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]

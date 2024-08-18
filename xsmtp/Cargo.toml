@@ -9,7 +9,7 @@ description = "smtp send mail"
 
 [dependencies]
 anyhow = "1.0.86"
-genv = "0.1.12"
+genv = "0.1.15"
 mail-builder = "0.3.2"
 tracing = "0.1.40"
 trt = "0.1.29"
@@ -26,15 +26,15 @@ version = "0.1.15"
 path = "../aok"
 
 [dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dependencies.idns]
-version = "0.1.19"
+version = "0.1.20"
 
 [dev-dependencies]
 anyhow = "1.0.86"
 
 [dev-dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

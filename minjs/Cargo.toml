@@ -1,5 +1,5 @@
 [dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 swc = "0.284.0"
 swc_common = "0.37.3"
 swc_ecma_ast = "0.118.1"
@@ -25,7 +25,7 @@ description = "minjs"
 all-features = true
 
 [dev-dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 loginit = "0.1.13"
 static_init = "1.0.3"
 tracing = "0.1.40"

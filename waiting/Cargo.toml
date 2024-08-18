@@ -1,5 +1,5 @@
 [dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 indicatif = "0.17.8"
 kanal = "0.1.0-pre8"
 
@@ -13,7 +13,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/waiting"
 description = "waiting"
 
 [dev-dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 
 [package.metadata.docs.rs]
 all-features = true

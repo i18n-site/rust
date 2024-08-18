@@ -1,5 +1,5 @@
 [dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 gxhash = "3.4.1"
 strum = "0.26.3"
 
@@ -24,13 +24,13 @@ description = "ft"
 all-features = true
 
 [dev-dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 loginit = "0.1.13"
 static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [features]

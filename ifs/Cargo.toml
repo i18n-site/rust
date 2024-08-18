@@ -11,7 +11,7 @@ description = "util for write / read file"
 all-features = true
 
 [dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 digest = "0.10.7"
 pipe = "0.4.0"
 tracing = "0.1.40"
@@ -37,7 +37,7 @@ version = "0.4.41"
 optional = true
 
 [dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.xerr]
@@ -75,9 +75,9 @@ confdir = [ "dep:dirs" ]
 txz_hash_d = [ "dep:lzma-rs", "dep:tar", "hash" ]
 
 [dev-dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 loginit = "0.1.13"
 
 [dev-dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

@@ -37,5 +37,5 @@ path = "../xstr"
 anyhow = "1.0.86"
 
 [dev-dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

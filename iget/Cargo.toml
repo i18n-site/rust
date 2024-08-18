@@ -33,5 +33,5 @@ features = [ "rustls-tls", "rustls-tls-native-roots", "stream" ]
 default-features = false
 
 [dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync", "fs" ]

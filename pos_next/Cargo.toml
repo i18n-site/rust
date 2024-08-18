@@ -11,7 +11,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/pos_next"
 description = "pos_next"
 
 [dev-dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 loginit = "0.1.13"
 static_init = "1.0.3"
 tracing = "0.1.40"

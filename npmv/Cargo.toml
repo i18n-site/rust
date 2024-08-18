@@ -14,14 +14,14 @@ all-features = true
 default = []
 
 [dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 async-compression = { version = "0.4.12", features = ["gzip", "tokio"] }
 async-tar = "0.4.2"
 futures-util = "0.3.30"
 reqwest = { version = "0.12.5", features = ["stream"] }
 serde = "1.0.208"
 sonic-rs = "0.3.10"
-tokio = { version = "1.39.2", features = ["fs"] }
+tokio = { version = "1.39.3", features = ["fs"] }
 tokio-util = { version = "0.7.11", features = ["compat"] }
 tracing = "0.1.40"
 
@@ -30,11 +30,11 @@ version = "0.1.15"
 path = "../xerr"
 
 [dev-dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 loginit = "0.1.13"
 static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

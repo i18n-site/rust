@@ -14,9 +14,9 @@ all-features = true
 ignored = [ "static_init", "prost" ]
 
 [dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 dashmap = "6.0.1"
-ireq = "0.1.15"
+ireq = "0.1.17"
 prost = "0.13.1"
 reqwest = "0.12.5"
 serde_yaml = "0.9.34"
@@ -30,7 +30,7 @@ version = "0.1.23"
 path = "../sts"
 
 [dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "rt-multi-thread", "macros", "sync" ]
 
 [dependencies.ifs]
@@ -48,7 +48,7 @@ version = "1.0.208"
 features = [ "derive" ]
 
 [dev-dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 loginit = "0.1.13"
 static_init = "1.0.3"
 tracing = "0.1.40"
@@ -58,9 +58,9 @@ path = "../genv"
 version = "0.1.15"
 
 [dev-dependencies.tokio]
-version = "1.39.2"
+version = "1.39.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]
-aok = "0.1.14"
+aok = "0.1.15"
 prost-build = "0.13.1"
