@@ -1,6 +1,7 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use aok::{Null, Result, OK};
+use tracing::info;
 
 #[derive(Debug)]
 pub struct Pkg {
@@ -13,6 +14,8 @@ impl Pkg {
     let name_ver = name_ver.as_ref();
     let name;
     let ver;
+
+    #[allow(clippy::never_loop)]
     loop {
       if name_ver.len() > 1 {
         if let Some(mut p) = name_ver[1..].find('@') {
@@ -44,6 +47,29 @@ pub struct Npm {
   pub dir: PathBuf,
 }
 
+pub async fn pkg_json_ver(dir: impl AsRef<Path>) -> Result<Option<String>> {
+  let dir = dir.as_ref();
+  let pkg_json = dir.join("package.json");
+  if let Ok(meta) = tokio::fs::metadata(&pkg_json).await {
+    if meta.is_file() {
+      if let Ok(bin) = xerr::ok!(tokio::fs::read(pkg_json).await) {
+        if let Ok::<npmv::Info, _>(info) = xerr::ok!(sonic_rs::from_slice(&bin)) {
+          return Ok(Some(info.version));
+        }
+      }
+    }
+  }
+
+  Ok(None)
+}
+
+pub async fn is_same_ver(ver: &str, dir: impl AsRef<Path>) -> Result<bool> {
+  if let Some(v) = pkg_json_ver(dir).await? {
+    return Ok(v == ver);
+  }
+  Ok(false)
+}
+
 impl Npm {
   pub fn new(dir: impl Into<PathBuf>) -> Self {
     Self {
@@ -51,10 +77,37 @@ impl Npm {
     }
   }
 
-  pub async fn i(name_ver: impl AsRef<str>) -> Null {
+  pub async fn i(&self, name_ver: impl AsRef<str>) -> Null {
+    let pkg = Pkg::new(name_ver);
+    let out = self.dir.join(&pkg.name);
+
+    if let Ok(Some(ver)) = xerr::ok!(pkg_json_ver(&out).await) {
+      if pkg.ver.is_none() {
+        return OK;
+      }
+      if let Some(ref v) = pkg.ver {
+        if *v == ver {
+          return OK;
+        }
+      }
+    }
+
+    let ver = pkg.ver().await?;
+    info!("install {}@{}", pkg.name, ver);
+    npmv::tgz(pkg.name, &ver, out).await?;
+
+    OK
+  }
+
+  pub async fn u(&self, name_ver: impl AsRef<str>) -> Null {
     let pkg = Pkg::new(name_ver);
     let ver = pkg.ver().await?;
-    // pkg.tgz(&ver, &pkg.dir).await;
+    let out = self.dir.join(&pkg.name);
+
+    if !is_same_ver(&ver, &out).await? {
+      info!("upgrade {}@{}", pkg.name, ver);
+      npmv::tgz(pkg.name, &ver, out).await?;
+    }
 
     OK
   }

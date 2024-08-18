@@ -1,6 +1,6 @@
 use aok::{Result, OK};
 use static_init::constructor;
-use tracing::info;
+// use tracing::info;
 
 #[constructor(0)]
 extern "C" fn init() {

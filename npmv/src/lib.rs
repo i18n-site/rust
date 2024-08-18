@@ -20,7 +20,7 @@ pub const SITE_LI: &[&str] = &[
 
 #[derive(Deserialize, Debug)]
 pub struct Info {
-  version: String,
+  pub version: String,
 }
 
 async fn response(pkg: &str, url: &str) -> reqwest::Result<Response> {

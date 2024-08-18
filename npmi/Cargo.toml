@@ -15,9 +15,19 @@ default = [ ]
 
 [dependencies]
 aok = "0.1.14"
+sonic-rs = "0.3.10"
+tracing = "0.1.40"
+
+[dependencies.tokio]
+version = "1.39.2"
+features = [ "fs" ]
+
+[dependencies.xerr]
+version = "0.1.15"
+path = "../xerr"
 
 [dependencies.npmv]
-version = "0.1.9"
+version = "0.1.10"
 path = "../npmv"
 
 [dev-dependencies]
