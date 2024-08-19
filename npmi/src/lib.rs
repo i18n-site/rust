@@ -26,7 +26,7 @@ impl Display for Pkg {
 impl Pkg {
   pub fn new(name_ver: impl AsRef<str>) -> Self {
     let name_ver = name_ver.as_ref();
-    let name;
+    let name: String;
     let ver;
 
     #[allow(clippy::never_loop)]
@@ -44,6 +44,12 @@ impl Pkg {
       ver = None;
       break;
     }
+
+    let name = if name.contains('/') && !name.starts_with('@') {
+      "@".to_owned() + &name
+    } else {
+      name
+    };
 
     Self { name, ver }
   }
@@ -158,7 +164,7 @@ macro_rules! func {
       ing.push(async move {
         let npm = Npm::new(dir);
         if let Err(err) = npm.$func(pkg).await {
-          tracing::error!("{pkg} {err}");
+          error!("{pkg} {err}");
         }
       });
     }

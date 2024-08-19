@@ -28,6 +28,7 @@ pub struct Conf {
   pub ignore: Option<Vec<String>>,
   pub nav: Vec<Nav>,
   pub upload: Upload,
+  pub addon: Option<Vec<String>>,
 }
 
 // #[allow(non_snake_case)]

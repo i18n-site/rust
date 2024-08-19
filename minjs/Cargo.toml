@@ -1,8 +1,8 @@
 [dependencies]
 aok = "0.1.15"
-swc = "0.284.0"
-swc_common = "0.37.3"
-swc_ecma_ast = "0.118.1"
+swc = "0.284.1"
+swc_common = "0.37.4"
+swc_ecma_ast = "0.118.2"
 swc_ecma_minifier = "0.203.1"
 tracing = "0.1.40"
 
@@ -10,7 +10,7 @@ tracing = "0.1.40"
 version = "0.1.43"
 path = "../ifs"
 default-features = false
-features = [ "fs" ]
+features = ["fs"]
 
 [package]
 name = "minjs"

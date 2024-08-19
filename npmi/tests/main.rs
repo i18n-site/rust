@@ -1,5 +1,4 @@
 use aok::{Result, OK};
-use npmi::Pkg;
 use static_init::constructor;
 
 #[constructor(0)]
