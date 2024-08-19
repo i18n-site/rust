@@ -1,9 +1,4 @@
-use std::{
-  fs::File,
-  io::{self, BufReader},
-  path::Path,
-  time::Duration,
-};
+use std::{io, path::Path, time::Duration};
 
 use aok::{Null, Result, OK};
 use flate2::read::GzDecoder;
