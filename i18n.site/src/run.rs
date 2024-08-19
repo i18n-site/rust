@@ -9,7 +9,7 @@ use crate::package_json_ver;
 
 pub const DOT_YML: &str = ".yml";
 
-pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
+pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
   let npm: bool = m.get_one("npm").cloned().unwrap_or(false);
   let save: bool = m.get_one("save").cloned().unwrap_or(false);
   let mut htm_conf: String = m
@@ -24,9 +24,17 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
   let token = token();
 
   let ignore = build_ignore(&conf.ignore);
+
+  let pkg_li = npmi::PkgLi::new(
+    &dir.join(".i18n").join("hook"),
+    &conf.addon.take().unwrap_or_default(),
+  );
+
+  pkg_li.auto().await?;
+
   i18::run(&dir, &conf.i18n, &ignore, &token).await?;
 
-  let build = Build::new(&dir, conf, &ignore, &htm_conf)?;
+  let build = Build::new(&dir, conf, &ignore, &htm_conf).await?;
 
   let vfs = build.build().await?;
   if npm {

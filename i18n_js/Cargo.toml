@@ -9,10 +9,6 @@ serde = "1.0.208"
 sonic-rs = "0.3.10"
 gxhash = "3.4.1"
 
-[dependencies.npmi]
-version = "0.1.11"
-path = "../npmi"
-
 [dependencies.sortmap]
 version = "0.1.3"
 path = "../sortmap"

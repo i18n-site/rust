@@ -197,7 +197,7 @@ impl PkgLi {
     u(&self.dir, &self.li).await
   }
 
-  pub fn rel_li(&self, rel: impl AsRef<str>) -> Vec<PathBuf> {
+  pub fn path_li(&self, rel: impl AsRef<str>) -> Vec<PathBuf> {
     self
       .li
       .iter()

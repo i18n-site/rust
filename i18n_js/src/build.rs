@@ -32,9 +32,9 @@ pub struct Build {
 }
 
 impl Build {
-  pub fn new(
+  pub async fn new(
     root: impl Into<PathBuf>,
-    mut conf: Conf,
+    conf: Conf,
     ignore: &GlobSet,
     htm_conf_name: impl Into<String>,
   ) -> Result<Self> {
@@ -58,7 +58,10 @@ impl Build {
 
     let lang_li = from_to.all_lang_li();
 
-    let pkg_li = npmi::PkgLi::new(&root, &conf.addon.take().unwrap_or_default());
+    let gitignore = i18n.join(".gitignore");
+    if !gitignore.exists() {
+      std::fs::write(&gitignore, "hook/\n")?;
+    }
 
     let bjs_after = bjs_after(&root, &nav.0[..], &from_to.root_all_lang_li())?;
 
