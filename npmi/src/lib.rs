@@ -197,14 +197,14 @@ impl PkgLi {
     u(&self.dir, &self.li).await
   }
 
-  pub fn path_li(&self, rel: impl AsRef<str>) -> Vec<PathBuf> {
+  pub fn rel_li(&self, rel: impl AsRef<str>) -> Vec<PathBuf> {
     self
       .li
       .iter()
       .filter_map(|pkg| {
         let fp = self.dir.join(&pkg.name).join(rel.as_ref());
         if fp.exists() {
-          Some(fp)
+          Some(fp.strip_prefix(&self.dir).unwrap().to_path_buf())
         } else {
           None
         }

@@ -1,4 +1,7 @@
-use std::{fs, path::PathBuf};
+use std::{
+  fs,
+  path::{Path, PathBuf},
+};
 
 use aok::Result;
 use ft::FromTo;
@@ -37,6 +40,8 @@ impl Build {
     conf: Conf,
     ignore: &GlobSet,
     htm_conf_name: impl Into<String>,
+    js_dir: &Path,
+    after_tran: &[PathBuf],
   ) -> Result<Self> {
     let htm_conf_name = htm_conf_name.into();
     let root = root.into();
@@ -58,12 +63,13 @@ impl Build {
 
     let lang_li = from_to.all_lang_li();
 
-    let gitignore = i18n.join(".gitignore");
-    if !gitignore.exists() {
-      std::fs::write(&gitignore, "hook/\n")?;
-    }
-
-    let bjs_after = bjs_after(&root, &nav.0[..], &from_to.root_all_lang_li())?;
+    let bjs_after = bjs_after(
+      &root,
+      &nav.0[..],
+      &from_to.root_all_lang_li(),
+      &js_dir,
+      &after_tran,
+    )?;
 
     let nav = nav.json()?;
     let mut lang = Vec::with_capacity(lang_li.len());

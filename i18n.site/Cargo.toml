@@ -19,7 +19,7 @@ static_init = "1.0.3"
 sonic-rs = "0.3.10"
 
 [dependencies.npmi]
-version = "0.1.13"
+version = "0.1.14"
 path = "../npmi"
 
 [dependencies.refresh_v]

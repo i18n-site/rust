@@ -25,8 +25,17 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
 
   let ignore = build_ignore(&conf.ignore);
 
+  let dir_i18n = dir.join(".i18n");
+
+  {
+    let gitignore = dir_i18n.join(".gitignore");
+    if !gitignore.exists() {
+      std::fs::write(&gitignore, "hook/\n")?;
+    }
+  }
+
   let pkg_li = npmi::PkgLi::new(
-    &dir.join(".i18n").join("hook"),
+    &dir_i18n.join("hook"),
     &conf.addon.take().unwrap_or_default(),
   );
 
@@ -34,7 +43,15 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
 
   i18::run(&dir, &conf.i18n, &ignore, &token).await?;
 
-  let build = Build::new(&dir, conf, &ignore, &htm_conf).await?;
+  let build = Build::new(
+    &dir,
+    conf,
+    &ignore,
+    &htm_conf,
+    &pkg_li.dir,
+    &pkg_li.rel_li("afterTran.js"),
+  )
+  .await?;
 
   let vfs = build.build().await?;
   if npm {
