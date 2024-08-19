@@ -34,7 +34,7 @@ pub struct Build {
 impl Build {
   pub fn new(
     root: impl Into<PathBuf>,
-    conf: Conf,
+    mut conf: Conf,
     ignore: &GlobSet,
     htm_conf_name: impl Into<String>,
   ) -> Result<Self> {
@@ -57,6 +57,8 @@ impl Build {
     let from_to = FromTo::from_iter(conf.i18n.fromTo.iter());
 
     let lang_li = from_to.all_lang_li();
+
+    let pkg_li = npmi::PkgLi::new(&root, &conf.addon.take().unwrap_or_default());
 
     let bjs_after = bjs_after(&root, &nav.0[..], &from_to.root_all_lang_li())?;
 

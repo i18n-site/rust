@@ -188,8 +188,6 @@ pub struct PkgLi {
   pub dir: PathBuf,
 }
 
-pub const NODE_MODULES: &str = "node_modules";
-
 impl PkgLi {
   pub async fn auto(&self) -> Null {
     auto(&self.dir, &self.li).await
@@ -217,7 +215,7 @@ impl PkgLi {
   pub fn new(dir: impl Into<PathBuf>, name_ver_li: &[impl AsRef<str>]) -> Self {
     let dir = dir.into();
     Self {
-      dir: dir.join(NODE_MODULES),
+      dir,
       li: name_ver_li
         .iter()
         .map(|name_ver| Pkg::new(name_ver))
