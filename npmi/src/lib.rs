@@ -1,15 +1,26 @@
-use std::path::{Path, PathBuf};
+use std::{
+  fmt::Display,
+  path::{Path, PathBuf},
+};
 
 use aok::{Null, Result, OK};
-use futures::{stream::FuturesUnordered, StreamExt};
-use tracing::info;
+use futures::stream::{FuturesUnordered, StreamExt};
+use tracing::{error, info};
 
-pub const NODE_MODULES: &str = "node_modules";
-
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Pkg {
   pub name: String,
   pub ver: Option<String>,
+}
+
+impl Display for Pkg {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    write!(f, "{}", self.name)?;
+    if let Some(ver) = &self.ver {
+      write!(f, "@{}", ver)?;
+    }
+    Ok(())
+  }
 }
 
 impl Pkg {
@@ -46,10 +57,6 @@ impl Pkg {
   }
 }
 
-pub struct Npm {
-  pub dir: PathBuf,
-}
-
 pub async fn pkg_json_ver(dir: impl AsRef<Path>) -> Result<Option<String>> {
   let dir = dir.as_ref();
   let pkg_json = dir.join("package.json");
@@ -73,15 +80,16 @@ pub async fn is_same_ver(ver: &str, dir: impl AsRef<Path>) -> Result<bool> {
   Ok(false)
 }
 
+pub struct Npm {
+  pub dir: PathBuf,
+}
+
 impl Npm {
   pub fn new(dir: impl Into<PathBuf>) -> Self {
-    Self {
-      dir: dir.into().join(NODE_MODULES),
-    }
+    Self { dir: dir.into() }
   }
 
-  pub async fn i(&self, name_ver: impl AsRef<str>) -> Null {
-    let pkg = Pkg::new(name_ver);
+  pub async fn i(&self, pkg: &Pkg) -> Null {
     let out = self.dir.join(&pkg.name);
 
     if let Ok(Some(ver)) = xerr::ok!(pkg_json_ver(&out).await) {
@@ -97,49 +105,27 @@ impl Npm {
 
     let ver = pkg.ver().await?;
     info!("install {}@{}", pkg.name, ver);
-    npmv::tgz(pkg.name, &ver, out).await?;
+    npmv::tgz(&pkg.name, &ver, out).await?;
 
     OK
   }
 
-  pub async fn u(&self, name_ver: impl AsRef<str>) -> Null {
-    let pkg = Pkg::new(name_ver);
+  pub async fn u(&self, pkg: &Pkg) -> Null {
     let ver = pkg.ver().await?;
     let out = self.dir.join(&pkg.name);
 
     if !is_same_ver(&ver, &out).await? {
       info!("upgrade {}@{}", pkg.name, ver);
-      npmv::tgz(pkg.name, &ver, out).await?;
+      npmv::tgz(&pkg.name, &ver, out).await?;
     }
 
     OK
   }
 }
 
-macro_rules! func {
-  ($dir:expr, $name_ver_li:expr, $func:ident) => {{
-    let mut ing = FuturesUnordered::new();
-    let dir = $dir.into();
-    for name_ver in $name_ver_li {
-      let dir = dir.clone();
-      ing.push(async move {
-        let npm = Npm::new(dir);
-        let name_ver = name_ver.as_ref();
-        if let Err(err) = npm.$func(name_ver).await {
-          tracing::error!("{name_ver} {}", err);
-        }
-      });
-    }
-
-    while let Some(_) = ing.next().await {}
-
-    Ok(())
-  }};
-}
-
-pub async fn auto<S: AsRef<str>>(dir: impl Into<PathBuf>, name_ver_li: &[S]) -> Null {
+pub async fn auto(dir: impl Into<PathBuf>, pkg_li: &[Pkg]) -> Null {
   let dir = dir.into();
-  let utime = dir.join(NODE_MODULES).join("pkg.utime");
+  let utime = dir.join("pkg.utime");
   let now = sts::sec();
 
   if let Ok(meta) = tokio::fs::metadata(&utime).await {
@@ -147,7 +133,7 @@ pub async fn auto<S: AsRef<str>>(dir: impl Into<PathBuf>, name_ver_li: &[S]) -> 
       if let Ok(utime) = xerr::ok!(tokio::fs::read_to_string(&utime).await) {
         if let Ok(utime) = xerr::ok!(utime.parse::<u64>()) {
           if (utime + 7 * 86400) > now {
-            i(dir, name_ver_li).await?;
+            i(dir, pkg_li).await?;
             return OK;
           }
         }
@@ -158,15 +144,78 @@ pub async fn auto<S: AsRef<str>>(dir: impl Into<PathBuf>, name_ver_li: &[S]) -> 
     }
   }
 
-  u(dir, name_ver_li).await?;
+  u(dir, pkg_li).await?;
   tokio::fs::write(utime, format!("{now}")).await?;
   OK
 }
 
-pub async fn i<S: AsRef<str>>(dir: impl Into<PathBuf>, name_ver_li: &[S]) -> Null {
-  func!(dir, name_ver_li, i)
+macro_rules! func {
+  ($dir:expr, $pkg_li:expr, $func:ident) => {{
+    let mut ing = FuturesUnordered::new();
+    let dir = $dir.into();
+    for pkg in $pkg_li {
+      let dir = dir.clone();
+      ing.push(async move {
+        let npm = Npm::new(dir);
+        if let Err(err) = npm.$func(pkg).await {
+          tracing::error!("{pkg} {err}");
+        }
+      });
+    }
+
+    while let Some(_) = ing.next().await {}
+
+    Ok(())
+  }};
 }
 
-pub async fn u<S: AsRef<str>>(dir: impl Into<PathBuf>, name_ver_li: &[S]) -> Null {
-  func!(dir, name_ver_li, u)
+pub async fn i(dir: impl Into<PathBuf>, pkg_li: &[Pkg]) -> Null {
+  func!(dir, pkg_li, i)
+}
+
+pub async fn u(dir: impl Into<PathBuf>, pkg_li: &[Pkg]) -> Null {
+  func!(dir, pkg_li, u)
+}
+
+pub struct PkgLi {
+  pub li: Vec<Pkg>,
+  pub dir: PathBuf,
+}
+
+pub const NODE_MODULES: &str = "node_modules";
+
+impl PkgLi {
+  pub async fn auto(&self) -> Null {
+    auto(&self.dir, &self.li).await
+  }
+
+  pub async fn u(&self) -> Null {
+    u(&self.dir, &self.li).await
+  }
+
+  pub fn rel_li(&self, rel: impl AsRef<str>) -> Vec<PathBuf> {
+    self
+      .li
+      .iter()
+      .filter_map(|pkg| {
+        let fp = self.dir.join(&pkg.name).join(rel.as_ref());
+        if fp.exists() {
+          Some(fp)
+        } else {
+          None
+        }
+      })
+      .collect()
+  }
+
+  pub fn new(dir: impl Into<PathBuf>, name_ver_li: &[impl AsRef<str>]) -> Self {
+    let dir = dir.into();
+    Self {
+      dir: dir.join(NODE_MODULES),
+      li: name_ver_li
+        .iter()
+        .map(|name_ver| Pkg::new(name_ver))
+        .collect(),
+    }
+  }
 }
