@@ -1,6 +1,6 @@
 [package]
 name = "npmv"
-version = "0.1.14"
+version = "0.1.15"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -15,12 +15,12 @@ default = []
 
 [dependencies]
 aok = "0.1.15"
-async-compression = { version = "0.4.12", features = ["gzip", "tokio"] }
-async-tar = "0.4.2"
+flate2 = "1.0.31"
 futures-util = "0.3.30"
 reqwest = { version = "0.12.5", features = ["stream"] }
 serde = "1.0.208"
 sonic-rs = "0.3.10"
+tar = "0.4.41"
 tokio = { version = "1.39.3", features = ["fs"] }
 tokio-util = { version = "0.7.11", features = ["compat"] }
 tracing = "0.1.40"

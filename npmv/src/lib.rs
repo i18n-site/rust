@@ -1,15 +1,15 @@
-#![feature(let_chains)]
-
-use std::{path::Path, time::Duration};
+use std::{
+  fs::File,
+  io::{self, BufReader},
+  path::Path,
+  time::Duration,
+};
 
 use aok::{Null, Result, OK};
-use async_compression::tokio::bufread::GzipDecoder;
-use async_tar::Archive;
-use futures_util::StreamExt;
+use flate2::read::GzDecoder;
 use reqwest::{Client, Response};
 use serde::Deserialize;
-use tokio::io::BufReader;
-use tokio_util::{compat::TokioAsyncReadCompatExt, io::StreamReader};
+use tar::Archive;
 
 pub const SITE_LI: &[&str] = &[
   "registry.npmjs.org",
@@ -70,7 +70,7 @@ pub async fn latest(name: impl AsRef<str>) -> Result<String> {
 pub async fn tgz(name: impl AsRef<str>, ver: impl AsRef<str>, out: impl AsRef<Path>) -> Null {
   let out = out.as_ref();
   let name = name.as_ref();
-  let stream = response(
+  let bytes = response(
     name,
     &format!(
       "-/{}-{}.tgz",
@@ -79,42 +79,37 @@ pub async fn tgz(name: impl AsRef<str>, ver: impl AsRef<str>, out: impl AsRef<Pa
     ),
   )
   .await?
-  .bytes_stream();
+  .bytes()
+  .await?;
 
-  let reader = StreamReader::new(
-    stream.map(|result| result.map_err(|e| tokio::io::Error::new(tokio::io::ErrorKind::Other, e))),
-  );
+  let tar_gz = GzDecoder::new(&bytes[..]);
+  let mut archive = Archive::new(tar_gz);
 
-  let gz_decoder = GzipDecoder::new(BufReader::new(reader)).compat();
-
-  if let Ok(meta) = tokio::fs::metadata(out).await {
+  if let Ok(meta) = std::fs::metadata(out) {
     if meta.is_dir() {
-      tokio::fs::remove_dir_all(out).await?;
+      std::fs::remove_dir_all(out)?;
     } else {
-      tokio::fs::remove_file(out).await?;
+      std::fs::remove_file(out)?;
     }
   }
 
-  let archive = Archive::new(gz_decoder);
-  let mut entries = archive.entries()?;
-  while let Some(entry) = entries.next().await {
-    if let Ok(mut f) = xerr::ok!(entry) {
-      if let Ok(path) = xerr::ok!(f.path()) {
-        let path = path.display().to_string();
-        if let Some(path) = path.strip_prefix("package") {
-          let path = &path[1..];
-          let fp = out.join(path);
+  for entry in archive.entries()? {
+    let mut entry = entry?;
+    if let Ok(path) = entry.path() {
+      let path = path.display().to_string();
+      if let Some(path) = path.strip_prefix("package") {
+        let path = &path[1..];
+        let fp = out.join(path);
 
-          if let Err(err) = f.unpack(&fp).await {
-            let kind = err.kind();
-            if kind == tokio::io::ErrorKind::NotFound {
-              if let Some(parent) = fp.parent() {
-                tokio::fs::create_dir_all(parent).await?;
-                f.unpack(&fp).await?;
-              }
-            } else {
-              tracing::error!("{}: {}", kind, err);
+        if let Err(err) = entry.unpack(&fp) {
+          let kind = err.kind();
+          if kind == io::ErrorKind::NotFound {
+            if let Some(parent) = fp.parent() {
+              std::fs::create_dir_all(parent)?;
+              entry.unpack(&fp)?;
             }
+          } else {
+            tracing::error!("{}: {}", kind, err);
           }
         }
       }
