@@ -68,7 +68,7 @@ default-features = false
 features = [ "fs", "unix_path", "rsync", "ln" ]
 
 [dependencies.dot_hide]
-version = "0.1.5"
+version = "0.1.6"
 path = "../dot_hide"
 features = [ "walkdir" ]
 
