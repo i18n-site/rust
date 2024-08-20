@@ -54,7 +54,7 @@ version = "0.1.22"
 path = "../ft"
 
 [dependencies.lang]
-version = "0.1.31"
+version = "0.1.32"
 path = "../lang"
 
 [dependencies.bjs]

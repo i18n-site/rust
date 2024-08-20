@@ -69,6 +69,46 @@ pub fn ctx(root: &str, read_root: impl Into<PathBuf>) -> Context {
 
   {
     ctx
+      .register_global_builtin_callable("rDir".into(), 1, unsafe {
+        NativeFunction::from_closure(move |_, args, ctx| {
+          let fp = args.get_or_undefined(0);
+          if fp.is_undefined() {
+            throw!("rDir: miss arg dir")
+          }
+
+          match std::fs::read_dir(fp.to_string(ctx)?.to_std_string_escaped()) {
+            Ok(r) => {
+              let dir_li = JsArray::new(ctx);
+              let file_li = JsArray::new(ctx);
+              for i in r {
+                if let Ok(i) = i {
+                  if let Ok(file_type) = i.file_type() {
+                    let li = if file_type.is_dir() {
+                      &dir_li
+                    } else {
+                      &file_li
+                    };
+                    let name = i.file_name().to_os_string().to_string_lossy().to_string();
+                    let name = JsString::from(name);
+                    li.push(name, ctx)?;
+                  }
+                }
+              }
+              let li = JsArray::new(ctx);
+              li.push(dir_li, ctx)?;
+              li.push(file_li, ctx)?;
+              return Ok(li.into());
+            }
+            Err(e) => {
+              throw!("rDir: {e}")
+            }
+          }
+        })
+      })
+      .unwrap();
+  };
+  {
+    ctx
       .register_global_builtin_callable("wPath".into(), 1, unsafe {
         NativeFunction::from_closure(move |_, args, ctx| {
           let fp = args.get_or_undefined(0);

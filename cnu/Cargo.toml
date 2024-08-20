@@ -15,7 +15,7 @@ version = "0.3.13"
 optional = true
 
 [dependencies.lang]
-version = "0.1.31"
+version = "0.1.32"
 path = "../lang"
 optional = true
 

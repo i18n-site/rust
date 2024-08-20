@@ -4,9 +4,10 @@ use strum::{EnumCount, EnumIter};
 #[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
 #[repr(u16)]
 #[derive(
-  EnumIter, Hash, PartialEq, Eq, Clone, Debug, Copy, IntEnum, EnumCount, Ord, PartialOrd,
+  Default, EnumIter, Hash, PartialEq, Eq, Clone, Debug, Copy, IntEnum, EnumCount, Ord, PartialOrd,
 )]
 pub enum Lang {
+  #[default]
   En = 0,
   Zh = 1,
   De = 2,

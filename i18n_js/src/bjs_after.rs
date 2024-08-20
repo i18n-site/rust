@@ -22,6 +22,7 @@ pub struct BjsAfter {
 
 pub fn bjs_after(
   root: &Path,
+  from_lang: Lang,
   conf_name: &str,
   // nav_li: &[crate::Nav],
   // lang_li: &[Lang],
