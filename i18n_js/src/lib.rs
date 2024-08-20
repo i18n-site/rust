@@ -27,3 +27,4 @@ pub const INDEX_PUG: &str = "index.pug";
 pub const DOT_I18N: &str = ".i18n";
 pub const HTM: &str = "htm";
 pub const PUBLIC: &str = "public";
+pub const OUT: &str = "out";

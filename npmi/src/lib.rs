@@ -8,6 +8,7 @@ use std::{
 use aok::{Null, Result, OK};
 use futures::stream::{FuturesUnordered, StreamExt};
 use serde::Deserialize;
+use sver::Ver;
 use tracing::{error, info};
 
 pub const PACKAGE_JSON: &str = "package.json";
@@ -155,9 +156,9 @@ pub async fn install_dep(out: &Path, name: &str) -> Null {
       if let Some(dep) = pkg.dependencies.as_ref() {
         for (pkg, ver) in dep {
           let mut pos = 0;
-          for (p, i) in pkg.char_indices() {
+          for (p, i) in ver.char_indices() {
+            pos = p;
             if i.is_ascii_digit() {
-              pos = p;
               break;
             }
           }
@@ -169,9 +170,20 @@ pub async fn install_dep(out: &Path, name: &str) -> Null {
   OK
 }
 
-pub async fn _tgz(name: impl AsRef<str>, ver: impl AsRef<str>, out: impl AsRef<Path>) -> Null {
-  // let name = name.as_ref();
-  // npmv::tgz(name, ver, out).await?;
+pub async fn _tgz(name: impl AsRef<str>, semver: impl AsRef<str>, out: impl AsRef<Path>) -> Null {
+  let semver = semver.as_ref();
+  let name = name.as_ref();
+  let out = out.as_ref();
+  let ver: Ver = semver.into();
+  if let Some(pkg_json) = PkgVer::load(out).await? {
+    let pkg_ver: Ver = pkg_json.version.into();
+    if ver <= pkg_ver {
+      return OK;
+    }
+  }
+  info!("install {name}@{semver}");
+  npmv::tgz(name, semver, out).await?;
+  Box::pin(install_dep(out, name)).await?;
   Ok(())
 }
 

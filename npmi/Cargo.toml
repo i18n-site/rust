@@ -20,6 +20,10 @@ serde = "1.0.208"
 sonic-rs = "0.3.10"
 tracing = "0.1.40"
 
+[dependencies.sver]
+version = "0.1.9"
+path = "../sver"
+
 [dependencies.sts]
 version = "0.1.23"
 path = "../sts"
@@ -33,7 +37,7 @@ version = "0.1.15"
 path = "../xerr"
 
 [dependencies.npmv]
-version = "0.1.16"
+version = "0.1.17"
 path = "../npmv"
 
 [dev-dependencies]

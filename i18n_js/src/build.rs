@@ -13,7 +13,7 @@ use walkdir::WalkDir;
 
 use crate::{
   bjs_after, bjs_after::BjsAfter, css, mnt::Mnt, pug, worker, Conf, HtmConf, NavLi, Scan, DOT_I18N,
-  HTM, PUBLIC,
+  HTM, OUT, PUBLIC,
 };
 
 const V: &str = "v";
@@ -65,8 +65,9 @@ impl Build {
 
     let bjs_after = bjs_after(
       &root,
-      &nav.0[..],
-      &from_to.root_all_lang_li(),
+      &htm_conf_name,
+      // &nav.0[..],
+      // &from_to.root_all_lang_li(),
       &js_dir,
       &after_tran,
     )?;
@@ -90,6 +91,7 @@ impl Build {
       }
       lang.push((i, bin));
     }
+
     let mnt = Mnt::load(
       &root,
       &conf.upload,
@@ -120,7 +122,7 @@ impl Build {
   pub async fn build(&self) -> Result<VerFs> {
     let root = &self.root;
     let conf_name = &self.htm_conf_name;
-    let outdir = root.join("out").join(conf_name);
+    let outdir = root.join(OUT).join(conf_name);
     let outv = outdir.join(V);
     let mut vfs = VerFs::load(
       root,

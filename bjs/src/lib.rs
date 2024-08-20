@@ -46,6 +46,15 @@ fn vec_to_uint8array(context: &mut Context, data: Vec<u8>) -> JsResult<JsValue> 
   ))
 }
 
+macro_rules! throw {
+  ($str:expr $(,$arg:tt)* $(,)?) => {{
+    let err: JsError = JsNativeError::typ()
+      .with_message(format!($str,$($arg,)*))
+      .into();
+    return Err(err);
+  }};
+}
+
 pub fn ctx(root: &str, read_root: impl Into<PathBuf>) -> Context {
   let loader = Rc::new(SimpleModuleLoader::new(root).unwrap());
   let mut binding = Context::builder()
@@ -59,17 +68,53 @@ pub fn ctx(root: &str, read_root: impl Into<PathBuf>) -> Context {
   let read_root = read_root.into();
 
   {
+    ctx
+      .register_global_builtin_callable("wPath".into(), 1, unsafe {
+        NativeFunction::from_closure(move |_, args, ctx| {
+          let fp = args.get_or_undefined(0);
+
+          if fp.is_undefined() {
+            throw!("wPath: miss arg path")
+          }
+
+          let fpstr = &fp.to_string(ctx)?.to_std_string_escaped();
+          let fp: PathBuf = fpstr.into();
+
+          let bin = args.get_or_undefined(1);
+          if bin.is_undefined() {
+            throw!("wPath {fpstr}: miss data")
+          }
+
+          if let Some(dir) = fp.parent() {
+            if let Err(err) = std::fs::create_dir_all(dir) {
+              throw!("wPath {fpstr}: {err}")
+            }
+          }
+
+          if let Some(txt) = bin.as_string() {
+            let txt = txt.to_std_string_escaped();
+            return match std::fs::write(fp, txt.as_bytes()) {
+              Ok(_) => Ok(JsValue::undefined()),
+              Err(e) => {
+                throw!("wPath {fpstr}: {e}")
+              }
+            };
+          };
+          throw!("wPath {fpstr}: unsupport data type")
+        })
+      })
+      .unwrap();
+  }
+
+  {
     let read_root = read_root.clone();
     ctx
-      .register_global_builtin_callable("readFile".into(), 1, unsafe {
+      .register_global_builtin_callable("rBin".into(), 1, unsafe {
         NativeFunction::from_closure(move |_, args, ctx| {
           let name = args.get_or_undefined(0);
 
           if name.is_undefined() {
-            let err: JsError = JsNativeError::typ()
-              .with_message("readFile: miss file path")
-              .into();
-            return Err(err);
+            throw!("rBin: miss arg path")
           }
 
           let fp = name.to_string(ctx)?.to_std_string_escaped();
@@ -77,36 +122,28 @@ pub fn ctx(root: &str, read_root: impl Into<PathBuf>) -> Context {
           match read_file_to_vec(&read_root.join(&fp)) {
             Ok(s) => Ok(vec_to_uint8array(ctx, s)?),
             Err(e) => {
-              let err: JsError = JsNativeError::typ()
-                .with_message(format!("readFile('{fp}') : {e}"))
-                .into();
-              Err(err)
+              throw!("rBin('{fp}') : {e}")
             }
           }
         })
       })
       .unwrap();
   }
+
   ctx
-    .register_global_builtin_callable("readStr".into(), 1, unsafe {
+    .register_global_builtin_callable("rStr".into(), 1, unsafe {
       NativeFunction::from_closure(move |_, args, ctx| {
         let name = args.get_or_undefined(0);
 
         if name.is_undefined() {
-          let err: JsError = JsNativeError::typ()
-            .with_message("readStr: miss file path")
-            .into();
-          return Err(err);
+          throw!("rStr: miss arg path")
         }
 
         let fp = name.to_string(ctx)?.to_std_string_escaped();
         match std::fs::read_to_string(read_root.join(&fp)) {
           Ok(s) => Ok(JsValue::String(JsString::from(s))),
           Err(e) => {
-            let err: JsError = JsNativeError::typ()
-              .with_message(format!("readStr('{fp}') : {e}"))
-              .into();
-            Err(err)
+            throw!("rStr('{fp}') : {e}")
           }
         }
       })
@@ -116,6 +153,7 @@ pub fn ctx(root: &str, read_root: impl Into<PathBuf>) -> Context {
   ctx
     .register_global_property(js_string!(Console::NAME), console, Attribute::all())
     .unwrap();
+
   binding
 }
 
@@ -233,32 +271,47 @@ pub fn li_str(ctx: &mut Context, li: JsValue) -> Vec<(String, String)> {
   }
 }
 
-pub fn li_str_to_jsvalue<S: Copy + Into<JsString>>(ctx: &mut Context, li: &[S]) -> JsValue {
-  let array = JsArray::new(ctx);
-  for (i, s) in li.iter().enumerate() {
-    let s: JsString = (*s).into();
-    array.set(i as u32, s, false, ctx).unwrap();
-  }
-  array.into()
-}
+pub fn jsmap<S1: AsRef<str>, S2: AsRef<str>>(
+  ctx: &mut Context,
+  iter: impl IntoIterator<Item = (S1, S2)>,
+) -> JsValue {
+  let obj = JsObject::with_object_proto(ctx.intrinsics());
 
-pub fn li_hashmap_to_jsvalue(ctx: &mut Context, li: &[HashMap<&str, String>]) -> JsValue {
-  let array = JsArray::new(ctx);
-
-  for (i, hashmap) in li.iter().enumerate() {
-    let obj = JsObject::with_object_proto(ctx.intrinsics());
-
-    for (key, value) in hashmap {
-      let key_js = PropertyKey::from(JsString::from(*key));
-      let value_js = JsString::from(value.as_str());
-      obj.set(key_js, value_js, false, ctx).unwrap();
-    }
-
-    array.set(i as u32, obj, false, ctx).unwrap();
+  for (key, value) in iter {
+    let key_js = PropertyKey::from(JsString::from(key.as_ref()));
+    let value_js = JsString::from(value.as_ref());
+    obj.set(key_js, value_js, false, ctx).unwrap();
   }
 
-  array.into()
+  obj.into()
 }
+
+// pub fn li_str_to_jsvalue<S: Copy + Into<JsString>>(ctx: &mut Context, li: &[S]) -> JsValue {
+//   let array = JsArray::new(ctx);
+//   for (i, s) in li.iter().enumerate() {
+//     let s: JsString = (*s).into();
+//     array.set(i as u32, s, false, ctx).unwrap();
+//   }
+//   array.into()
+// }
+//
+// pub fn li_hashmap_to_jsvalue(ctx: &mut Context, li: &[HashMap<&str, String>]) -> JsValue {
+//   let array = JsArray::new(ctx);
+//
+//   for (i, hashmap) in li.iter().enumerate() {
+//     let obj = JsObject::with_object_proto(ctx.intrinsics());
+//
+//     for (key, value) in hashmap {
+//       let key_js = PropertyKey::from(JsString::from(*key));
+//       let value_js = JsString::from(value.as_str());
+//       obj.set(key_js, value_js, false, ctx).unwrap();
+//     }
+//
+//     array.set(i as u32, obj, false, ctx).unwrap();
+//   }
+//
+//   array.into()
+// }
 
 pub fn to_str(value: JsValue) -> Option<String> {
   if let JsValue::String(s) = value {

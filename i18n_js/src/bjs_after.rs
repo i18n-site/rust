@@ -4,10 +4,12 @@ use std::{
 };
 
 use aok::Result;
-use bjs::{li_hashmap_to_jsvalue, li_str_to_jsvalue};
+use bjs::jsmap;
 use indexmap::IndexMap;
-use lang::{Lang, LANG_CODE};
+use lang::Lang;
 use tracing::error;
+
+use crate::OUT;
 
 pub const FILE: &str = "file";
 
@@ -20,8 +22,9 @@ pub struct BjsAfter {
 
 pub fn bjs_after(
   root: &Path,
-  nav_li: &[crate::Nav],
-  lang_li: &[Lang],
+  conf_name: &str,
+  // nav_li: &[crate::Nav],
+  // lang_li: &[Lang],
   js_dir: &Path,
   after_tran: &[PathBuf],
 ) -> Result<BjsAfter> {
@@ -29,28 +32,22 @@ pub fn bjs_after(
     return Ok(Default::default());
   }
 
-  let lang_li = lang_li
-    .iter()
-    .map(|i| LANG_CODE[*i as usize])
-    .collect::<Vec<_>>();
+  // let lang_li = lang_li
+  //   .iter()
+  //   .map(|i| LANG_CODE[*i as usize])
+  //   .collect::<Vec<_>>();
 
   let ctx = &mut bjs::ctx(js_dir.to_str().unwrap(), root);
-  let nav_li = nav_li
-    .iter()
-    .map(|i| {
-      HashMap::from([
-        ("i18n", i.i18n.clone()),
-        ("url", i.url.clone()),
-        ("use", i.r#use.clone()),
-        ("menu", i.menu.clone()),
-      ])
-    })
-    .collect::<Vec<_>>();
-
-  let arg = [
-    li_hashmap_to_jsvalue(ctx, &nav_li),
-    li_str_to_jsvalue(ctx, &lang_li),
-  ];
+  let arg = [jsmap(
+    ctx,
+    [
+      (
+        "out",
+        root.join(OUT).join(conf_name).to_str().unwrap_or_default(),
+      ),
+      ("root", root.to_str().unwrap_or_default()),
+    ],
+  )];
 
   let mut lang_path_bin = Lpb::new();
 
