@@ -47,6 +47,7 @@ pub fn bjs_after(
         root.join(OUT).join(conf_name).to_str().unwrap_or_default(),
       ),
       ("root", root.to_str().unwrap_or_default()),
+      ("from_lang", lang::LANG_CODE[from_lang as usize]),
     ],
   )];
 
