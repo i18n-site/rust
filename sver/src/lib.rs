@@ -1,7 +1,5 @@
 use std::fmt::{Debug, Display};
 
-use crate::api;
-
 #[derive(Default, Clone, PartialOrd, Ord, PartialEq, Eq)]
 pub struct Ver(pub [u32; 3]);
 
@@ -16,12 +14,6 @@ impl Debug for Ver {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     let li = self.0;
     write!(f, "Ver({}.{}.{})", li[0], li[1], li[2])
-  }
-}
-
-impl From<api::Ver> for Ver {
-  fn from(ver: api::Ver) -> Self {
-    Ver([ver.major, ver.minor, ver.patch])
   }
 }
 

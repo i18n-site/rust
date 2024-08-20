@@ -21,10 +21,14 @@ use tokio::{
 
 pub mod api {
   include!(concat!(env!("OUT_DIR"), "/api.rs"));
+  impl From<Ver> for sver::Ver {
+    fn from(ver: Ver) -> Self {
+      Self([ver.major, ver.minor, ver.patch])
+    }
+  }
 }
 
-mod ver;
-pub use ver::Ver;
+pub use sver::Ver;
 mod boot;
 mod randiter;
 

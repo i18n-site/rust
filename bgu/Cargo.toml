@@ -20,6 +20,10 @@ static_init = "1.0.3"
 tar = "0.4.41"
 tracing = "0.1.40"
 
+[dependencies.sver]
+version = "0.1.8"
+path = "../sver"
+
 [dependencies.mreq]
 version = "0.1.16"
 path = "../mreq"

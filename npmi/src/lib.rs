@@ -1,3 +1,5 @@
+#![feature(let_chains)]
+
 use std::{
   fmt::Display,
   path::{Path, PathBuf},
@@ -5,7 +7,10 @@ use std::{
 
 use aok::{Null, Result, OK};
 use futures::stream::{FuturesUnordered, StreamExt};
+use serde::Deserialize;
 use tracing::{error, info};
+
+pub const PACKAGE_JSON: &str = "package.json";
 
 #[derive(Debug, Clone)]
 pub struct Pkg {
@@ -63,27 +68,35 @@ impl Pkg {
   }
 }
 
-pub async fn pkg_json_ver(dir: impl AsRef<Path>) -> Result<Option<String>> {
+#[derive(Deserialize, Debug)]
+pub struct PkgVer {
+  pub version: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct PkgDep {
+  pub dependencies: Option<std::collections::HashMap<String, String>>,
+}
+
+pub async fn load<T: serde::de::DeserializeOwned>(dir: impl AsRef<Path>) -> Result<Option<T>> {
   let dir = dir.as_ref();
-  let pkg_json = dir.join("package.json");
+  let pkg_json = dir.join(PACKAGE_JSON);
   if let Ok(meta) = tokio::fs::metadata(&pkg_json).await {
     if meta.is_file() {
       if let Ok(bin) = xerr::ok!(tokio::fs::read(pkg_json).await) {
-        if let Ok::<npmv::Info, _>(info) = xerr::ok!(sonic_rs::from_slice(&bin)) {
-          return Ok(Some(info.version));
+        if let Ok(r) = xerr::ok!(sonic_rs::from_slice(&bin)) {
+          return Ok(Some(r));
         }
       }
     }
   }
-
   Ok(None)
 }
 
-pub async fn is_same_ver(ver: &str, dir: impl AsRef<Path>) -> Result<bool> {
-  if let Some(v) = pkg_json_ver(dir).await? {
-    return Ok(v == ver);
+impl PkgVer {
+  pub async fn load(dir: impl AsRef<Path>) -> Result<Option<Self>> {
+    load(dir).await
   }
-  Ok(false)
 }
 
 pub struct Npm {
@@ -98,12 +111,12 @@ impl Npm {
   pub async fn i(&self, pkg: &Pkg) -> Null {
     let out = self.dir.join(&pkg.name);
 
-    if let Ok(Some(ver)) = xerr::ok!(pkg_json_ver(&out).await) {
+    if let Some(pkg_json) = PkgVer::load(&out).await? {
       if pkg.ver.is_none() {
         return OK;
       }
       if let Some(ref v) = pkg.ver {
-        if *v == ver {
+        if *v == pkg_json.version {
           return OK;
         }
       }
@@ -111,7 +124,7 @@ impl Npm {
 
     let ver = pkg.ver().await?;
     info!("install {}@{}", pkg.name, ver);
-    npmv::tgz(&pkg.name, &ver, out).await?;
+    tgz(&pkg.name, &ver, out).await?;
 
     OK
   }
@@ -120,13 +133,54 @@ impl Npm {
     let ver = pkg.ver().await?;
     let out = self.dir.join(&pkg.name);
 
-    if !is_same_ver(&ver, &out).await? {
-      info!("upgrade {}@{}", pkg.name, ver);
-      npmv::tgz(&pkg.name, &ver, out).await?;
+    if let Some(pkg_json) = PkgVer::load(&out).await?
+      && pkg_json.version == ver
+    {
+      return OK;
     }
+    info!("upgrade {}@{}", pkg.name, ver);
+    tgz(&pkg.name, &ver, out).await?;
 
     OK
   }
+}
+
+pub async fn install_dep(out: &Path, name: &str) -> Null {
+  let root = out.display().to_string();
+  let strip = name.len() + 1;
+  let root_len = root.len();
+  if root_len > strip {
+    if let Some::<PkgDep>(pkg) = load(out).await? {
+      let root: PathBuf = root[..root_len - strip].into();
+      if let Some(dep) = pkg.dependencies.as_ref() {
+        for (pkg, ver) in dep {
+          let mut pos = 0;
+          for (p, i) in pkg.char_indices() {
+            if i.is_ascii_digit() {
+              pos = p;
+              break;
+            }
+          }
+          _tgz(pkg, &ver[pos..], root.join(pkg)).await?;
+        }
+      }
+    }
+  }
+  OK
+}
+
+pub async fn _tgz(name: impl AsRef<str>, ver: impl AsRef<str>, out: impl AsRef<Path>) -> Null {
+  // let name = name.as_ref();
+  // npmv::tgz(name, ver, out).await?;
+  Ok(())
+}
+
+pub async fn tgz(name: impl AsRef<str>, ver: impl AsRef<str>, out: impl AsRef<Path>) -> Null {
+  let name = name.as_ref();
+  let out = out.as_ref();
+  npmv::tgz(name, ver, out).await?;
+  install_dep(out, name).await?;
+  OK
 }
 
 pub async fn auto(dir: impl Into<PathBuf>, pkg_li: &[Pkg]) -> Null {
@@ -151,7 +205,9 @@ pub async fn auto(dir: impl Into<PathBuf>, pkg_li: &[Pkg]) -> Null {
   }
 
   u(dir, pkg_li).await?;
-  tokio::fs::write(utime, format!("{now}")).await?;
+  if !pkg_li.is_empty() {
+    tokio::fs::write(utime, format!("{now}")).await?;
+  }
   OK
 }
 

@@ -109,7 +109,7 @@ members = [
   "bce",
   "str0",
   "only_url",
-  "npmv", "npmi",
+  "npmv", "npmi", "sver",
 ]
 # "cget/test_cget",
 resolver = "2"
