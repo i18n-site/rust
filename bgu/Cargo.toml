@@ -1,6 +1,6 @@
 [package]
 name = "bgu"
-version = "0.1.28"
+version = "0.1.29"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
