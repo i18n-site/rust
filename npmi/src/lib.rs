@@ -254,21 +254,22 @@ pub async fn auto(dir: impl Into<PathBuf>, pkg_li: &[Pkg]) -> Null {
 
 macro_rules! func {
   ($dir:expr, $pkg_li:expr, $func:ident) => {{
-    let mut ing = FuturesUnordered::new();
     let dir = $dir.into();
-    for pkg in $pkg_li {
-      let dir = dir.clone();
-      let exist: DashMap<String, Ver> = DashMap::new();
-      ing.push(async move {
-        let npm = Npm::new(dir);
-        if let Err(err) = npm.$func(pkg, &exist).await {
-          error!("{pkg} {err}");
-        }
-      });
+    let exist: DashMap<String, Ver> = DashMap::new();
+    let exist = &exist;
+    {
+      let mut ing = FuturesUnordered::new();
+      for pkg in $pkg_li {
+        let dir = dir.clone();
+        ing.push(async move {
+          let npm = Npm::new(dir);
+          if let Err(err) = npm.$func(pkg, exist).await {
+            error!("{pkg} {err}");
+          }
+        });
+      }
+      while let Some(_) = ing.next().await {}
     }
-
-    while let Some(_) = ing.next().await {}
-
     Ok(())
   }};
 }
