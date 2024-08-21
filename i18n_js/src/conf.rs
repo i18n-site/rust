@@ -29,6 +29,7 @@ pub struct Conf {
   pub nav: Vec<Nav>,
   pub upload: Upload,
   pub addon: Option<Vec<String>>,
+  pub seo: Option<HashMap<String, HashMap<String, String>>>,
 }
 
 // #[allow(non_snake_case)]
