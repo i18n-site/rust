@@ -21,8 +21,8 @@ serde = "1.0.208"
 prost = "0.13.1"
 thiserror = "1.0.63"
 walkdir = "2.5.0"
-reqwest = "0.12.5"
-sonic-rs = "0.3.10"
+reqwest = "0.12.7"
+sonic-rs = "0.3.11"
 ub64 = "0.0.10"
 gxhash = "3.4.1"
 
@@ -47,7 +47,7 @@ version = "0.1.9"
 path = "../i18_json"
 
 [dependencies.tzst]
-version = "0.1.19"
+version = "0.1.20"
 path = "../tzst"
 features = [ "w" ]
 

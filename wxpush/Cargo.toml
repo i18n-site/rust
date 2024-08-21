@@ -13,7 +13,7 @@ ignored = [ "static_init" ]
 [dependencies]
 anyhow = "1.0.86"
 serde_with = "3.9.0"
-sonic-rs = "0.3.10"
+sonic-rs = "0.3.11"
 static_init = "1.0.3"
 thiserror = "1.0.63"
 
@@ -22,7 +22,7 @@ version = "0.1.15"
 path = "../genv"
 
 [dependencies.reqwest]
-version = "0.12.5"
+version = "0.12.7"
 features = [ "json" ]
 
 [dependencies.serde]

@@ -24,16 +24,11 @@ impl W {
     }
   }
 
-  pub fn add_path_li<A>(
-    &mut self,
-    root: impl AsRef<Path>,
-    mut rel_li: Vec<A>,
-  ) -> std::io::Result<()>
+  pub fn add_path_li<A>(&mut self, root: impl AsRef<Path>, rel_li: &[A]) -> std::io::Result<()>
   where
     A: AsRef<str>,
   {
     let root = root.as_ref();
-    rel_li.sort_by(|a, b| a.as_ref().cmp(b.as_ref()));
 
     for relative_path in rel_li {
       let relative_path = relative_path.as_ref();

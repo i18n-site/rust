@@ -311,19 +311,29 @@ pub fn li_str(ctx: &mut Context, li: JsValue) -> Vec<(String, String)> {
   }
 }
 
-pub fn jsmap<S1: AsRef<str>, S2: AsRef<str>>(
-  ctx: &mut Context,
-  iter: impl IntoIterator<Item = (S1, S2)>,
-) -> JsValue {
-  let obj = JsObject::with_object_proto(ctx.intrinsics());
+pub struct JsMap<'a> {
+  pub ctx: &'a mut Context,
+  pub obj: JsObject,
+}
 
-  for (key, value) in iter {
+impl<'a> JsMap<'a> {
+  pub fn new(ctx: &'a mut Context) -> JsMap {
+    let obj = JsObject::with_object_proto(ctx.intrinsics());
+    JsMap { ctx, obj }
+  }
+  pub fn set(&mut self, key: impl AsRef<str>, value: impl Into<JsValue>) {
     let key_js = PropertyKey::from(JsString::from(key.as_ref()));
-    let value_js = JsString::from(value.as_ref());
-    obj.set(key_js, value_js, false, ctx).unwrap();
+    self.obj.set(key_js, value, false, self.ctx).unwrap();
   }
 
-  obj.into()
+  pub fn value(self) -> JsValue {
+    self.obj.into()
+  }
+
+  pub fn set_str(&mut self, key: impl AsRef<str>, value: impl AsRef<str>) {
+    let value_js = JsString::from(value.as_ref());
+    self.set(key, value_js);
+  }
 }
 
 // pub fn li_str_to_jsvalue<S: Copy + Into<JsString>>(ctx: &mut Context, li: &[S]) -> JsValue {

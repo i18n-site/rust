@@ -4,9 +4,12 @@ use std::{
 };
 
 use aok::Result;
-use bjs::jsmap;
+use bjs::{
+  boa_engine::{object::builtins::JsArray, string::JsString},
+  JsMap,
+};
 use indexmap::IndexMap;
-use lang::Lang;
+use lang::{Lang, LANG_CODE};
 use tracing::error;
 
 use crate::OUT;
@@ -22,10 +25,8 @@ pub struct BjsAfter {
 
 pub fn bjs_after(
   root: &Path,
-  from_lang: Lang,
+  lang_li: &[Lang],
   conf_name: &str,
-  // nav_li: &[crate::Nav],
-  // lang_li: &[Lang],
   js_dir: &Path,
   after_tran: &[PathBuf],
 ) -> Result<BjsAfter> {
@@ -33,29 +34,39 @@ pub fn bjs_after(
     return Ok(Default::default());
   }
 
-  // let lang_li = lang_li
-  //   .iter()
-  //   .map(|i| LANG_CODE[*i as usize])
-  //   .collect::<Vec<_>>();
+  // lang_li
+  // .iter()
+  // .map(|i| lang::LANG_CODE[*i as usize])
+  // .collect::<Vec<_>>();
 
   let ctx = &mut bjs::ctx(js_dir.to_str().unwrap(), root);
-  let arg = [jsmap(
-    ctx,
-    [
-      (
-        "out",
-        root.join(OUT).join(conf_name).to_str().unwrap_or_default(),
-      ),
-      ("root", root.to_str().unwrap_or_default()),
-      ("from_lang", lang::LANG_CODE[from_lang as usize]),
-    ],
-  )];
+  let lang_li = {
+    let li = JsArray::new(ctx);
+    for lang in lang_li {
+      li.push(JsString::from(LANG_CODE[*lang as usize]), ctx)
+        .unwrap();
+    }
+    li
+  };
 
+  let mut map = JsMap::new(ctx);
+  for (k, v) in [
+    (
+      "out",
+      root.join(OUT).join(conf_name).to_str().unwrap_or_default(),
+    ),
+    ("root", root.to_str().unwrap_or_default()),
+  ] {
+    map.set_str(k, v);
+  }
+  map.set("lang_li", lang_li);
+
+  let arg = &[map.value()];
   let mut lang_path_bin = Lpb::new();
 
   for file in after_tran {
     println!("{}", file.display());
-    match bjs::default(ctx, js_dir.join(file), &arg) {
+    match bjs::default(ctx, js_dir.join(file), arg) {
       Ok(r) => {
         if let Ok(Some(file)) = bjs::obj_get(&r, FILE) {
           let mut li = bjs::li_str(ctx, file);

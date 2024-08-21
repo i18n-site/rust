@@ -65,10 +65,8 @@ impl Build {
 
     let bjs_after = bjs_after(
       &root,
-      from_to.root().unwrap_or_default(),
+      &from_to.root_all_lang_li(),
       &htm_conf_name,
-      // &nav.0[..],
-      // &from_to.root_all_lang_li(),
       &js_dir,
       &after_tran,
     )?;

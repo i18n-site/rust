@@ -162,9 +162,13 @@ pub async fn _run(
     return OK;
   }
 
-  let (lrs_li, path_li, update_cache_file_li) = prepare_li(to_tran, &scan);
+  let (lrs_li, mut path_li, update_cache_file_li) = prepare_li(to_tran, &scan);
 
-  let body = crate::tzst::tzst(workdir, path_li, lrs_li, &scan.rel_ft)?;
+  // 保证顺序一样
+  path_li.sort_by(|a, b| a.cmp(b));
+
+  let body = crate::tzst::tzst(workdir, &path_li, lrs_li, &scan.rel_ft)?;
+  dbg!(&path_li);
   let id = ub64::b64e(xhash::xhash(&body));
 
   let r = tran(token, &id, body).await?;

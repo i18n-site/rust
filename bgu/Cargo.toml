@@ -33,7 +33,7 @@ version = "0.1.23"
 path = "../sts"
 
 [dependencies.blake3]
-version = "1.5.3"
+version = "1.5.4"
 features = [ "traits-preview" ]
 
 [dependencies.genv]

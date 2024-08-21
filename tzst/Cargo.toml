@@ -1,14 +1,11 @@
 [dependencies]
 tar = "0.4.41"
-# tokio = { version = "1.39.1", features = ["io-util"] }
-# async-compression = { version = "0.4.12", features = ["tokio", "zstd"] }
-# async-tar = "0.4.2"
 tracing = "0.1.40"
 zstd = "0.13.2"
 
 [package]
 name = "tzst"
-version = "0.1.19"
+version = "0.1.20"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"

@@ -17,7 +17,7 @@ default = [ ]
 aok = "0.1.15"
 futures = "0.3.30"
 serde = "1.0.208"
-sonic-rs = "0.3.10"
+sonic-rs = "0.3.11"
 tracing = "0.1.40"
 
 [dependencies.sver]

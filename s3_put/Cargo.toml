@@ -9,7 +9,7 @@ description = "s3_put"
 
 [dependencies]
 aok = "0.1.15"
-aws-sdk-s3 = "1.45.0"
+aws-sdk-s3 = "1.46.0"
 bytes = "1.7.1"
 tracing = "0.1.40"
 

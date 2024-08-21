@@ -7,7 +7,7 @@ use crate::{api, RelFt};
 
 pub fn tzst(
   workdir: &Path,
-  path_li: Vec<String>,
+  path_li: &[String],
   lrs_li: Vec<api::LangRelSrcHash>,
   rel_ft: &[RelFt],
 ) -> Result<Vec<u8>> {

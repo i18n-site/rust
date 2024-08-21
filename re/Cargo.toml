@@ -11,7 +11,7 @@ description = "error like anyhow for axum"
 anyhow = "1.0.86"
 axum = "0.7.5"
 bytes = "1.7.1"
-sonic-rs = "0.3.10"
+sonic-rs = "0.3.11"
 tracing = "0.1.40"
 
 [dependencies.prost]
