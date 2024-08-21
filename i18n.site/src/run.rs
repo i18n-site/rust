@@ -41,7 +41,7 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
 
   pkg_li.auto().await?;
 
-  i18::run(&dir, &conf.i18n, &ignore, &token).await?;
+  let changed = i18::run(&dir, &conf.i18n, &ignore, &token).await?;
 
   let build = Build::new(
     &dir,
@@ -50,6 +50,7 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
     &htm_conf,
     &pkg_li.dir,
     &pkg_li.rel_li("afterTran.js"),
+    changed,
   )
   .await?;
 

@@ -11,7 +11,7 @@ extern "C" fn init() {
 
 #[tokio::test]
 async fn test() -> Result<()> {
-  let pkg = npmi::PkgLi::new("/tmp/test", &["@typescript-eslint/typescript-estree"]);
+  let pkg = npmi::PkgLi::new("/tmp/test", &["@i18n.addon/toc"]);
   pkg.auto().await?;
   // npm.i(pkg).await?;
 

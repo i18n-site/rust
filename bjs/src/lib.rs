@@ -29,7 +29,7 @@ pub enum Error {
   Js(String, String),
 }
 
-fn read_file_to_vec(path: &Path) -> std::io::Result<Vec<u8>> {
+fn read_file_to_vec(path: impl AsRef<Path>) -> std::io::Result<Vec<u8>> {
   // 打开文件
   let mut file = File::open(path)?;
   // 创建一个空的 Vec<u8>
@@ -55,7 +55,7 @@ macro_rules! throw {
   }};
 }
 
-pub fn ctx(root: &str, read_root: impl Into<PathBuf>) -> Context {
+pub fn ctx(root: &str) -> Context {
   let loader = Rc::new(SimpleModuleLoader::new(root).unwrap());
   let mut binding = Context::builder()
     .module_loader(loader.clone())
@@ -64,8 +64,6 @@ pub fn ctx(root: &str, read_root: impl Into<PathBuf>) -> Context {
   let ctx = &mut binding;
 
   let console = Console::init(ctx);
-
-  let read_root = read_root.into();
 
   {
     ctx
@@ -147,7 +145,6 @@ pub fn ctx(root: &str, read_root: impl Into<PathBuf>) -> Context {
   }
 
   {
-    let read_root = read_root.clone();
     ctx
       .register_global_builtin_callable("rBin".into(), 1, unsafe {
         NativeFunction::from_closure(move |_, args, ctx| {
@@ -159,7 +156,7 @@ pub fn ctx(root: &str, read_root: impl Into<PathBuf>) -> Context {
 
           let fp = name.to_string(ctx)?.to_std_string_escaped();
 
-          match read_file_to_vec(&read_root.join(&fp)) {
+          match read_file_to_vec(&fp) {
             Ok(s) => Ok(vec_to_uint8array(ctx, s)?),
             Err(e) => {
               throw!("rBin('{fp}') : {e}")
@@ -180,7 +177,7 @@ pub fn ctx(root: &str, read_root: impl Into<PathBuf>) -> Context {
         }
 
         let fp = name.to_string(ctx)?.to_std_string_escaped();
-        match std::fs::read_to_string(read_root.join(&fp)) {
+        match std::fs::read_to_string(&fp) {
           Ok(s) => Ok(JsValue::String(JsString::from(s))),
           Err(e) => {
             throw!("rStr('{fp}') : {e}")

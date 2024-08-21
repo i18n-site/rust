@@ -1,8 +1,10 @@
 #![feature(coroutines, coroutine_trait)]
 #![feature(let_chains)]
 #![feature(const_trait_impl)]
+
 use std::path::{Path, PathBuf};
 
+use gxhash::HashSet;
 pub mod print_li;
 
 use globset::GlobSet;
@@ -93,11 +95,11 @@ pub async fn run(
   conf: &I18nConf,
   ignore: &GlobSet,
   token: &str,
-) -> Result<Vec<String>> {
+) -> Result<HashSet<String>> {
   match _run(workdir, conf, ignore, token).await {
-    Ok(li) => {
+    Ok(changed) => {
       println!("✅ i18n.site translate");
-      Ok(li)
+      Ok(changed)
     }
     Err(err) => {
       if let Some(e) = err.downcast_ref::<crate::Err>() {
@@ -119,11 +121,11 @@ pub async fn run(
               }
               eprintln!("\n---\n");
             }
-            return Ok(vec![]);
+            return Ok(Default::default());
           }
         }
         eprintln!("\n❌ {}", e);
-        return Ok(vec![]);
+        return Ok(Default::default());
       }
       Err(err)
     }
@@ -135,7 +137,7 @@ pub async fn _run(
   conf: &I18nConf,
   ignore: &GlobSet,
   token: &str,
-) -> Result<Vec<String>> {
+) -> Result<HashSet<String>> {
   let scan = Scan::new(workdir, conf, ignore);
   let i18n_gen = workdir.join(DOT_I18N);
   let cache = i18n_gen.join(CACHE);
@@ -150,7 +152,7 @@ pub async fn _run(
   let to_tran = i18_hash.changed(lm.is_change(rel_li)?)?;
 
   if to_tran.is_empty() {
-    return Ok(vec![]);
+    return Ok(Default::default());
   }
 
   let (lrs_li, mut path_li, update_cache_file_li) = prepare_li(to_tran, &scan);
@@ -202,6 +204,7 @@ pub async fn _run(
       (traning.asset as f64) / ASSET_BASE
     );
   }
-  path_li.extend(save.writed);
-  Ok(path_li)
+  Ok(HashSet::from_iter(
+    path_li.into_iter().chain(save.writed.into_iter()),
+  ))
 }

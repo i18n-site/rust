@@ -8,6 +8,7 @@ use bjs::{
   boa_engine::{object::builtins::JsArray, string::JsString},
   JsMap,
 };
+use gxhash::HashSet;
 use indexmap::IndexMap;
 use lang::{Lang, LANG_CODE};
 use tracing::error;
@@ -29,37 +30,47 @@ pub fn bjs_after(
   conf_name: &str,
   js_dir: &Path,
   after_tran: &[PathBuf],
+  changed: HashSet<String>,
 ) -> Result<BjsAfter> {
   if after_tran.is_empty() {
     return Ok(Default::default());
   }
 
-  // lang_li
-  // .iter()
-  // .map(|i| lang::LANG_CODE[*i as usize])
-  // .collect::<Vec<_>>();
+  let ctx = &mut bjs::ctx(js_dir.to_str().unwrap());
 
-  let ctx = &mut bjs::ctx(js_dir.to_str().unwrap(), root);
   let lang_li = {
     let li = JsArray::new(ctx);
     for lang in lang_li {
-      li.push(JsString::from(LANG_CODE[*lang as usize]), ctx)
-        .unwrap();
+      xerr::log!(li.push(JsString::from(LANG_CODE[*lang as usize]), ctx));
+    }
+    li
+  };
+
+  let changed = {
+    let li = JsArray::new(ctx);
+    for i in changed {
+      xerr::log!(li.push(JsString::from(i), ctx));
     }
     li
   };
 
   let mut map = JsMap::new(ctx);
-  for (k, v) in [
-    (
-      "out",
-      root.join(OUT).join(conf_name).to_str().unwrap_or_default(),
-    ),
-    ("root", root.to_str().unwrap_or_default()),
-  ] {
-    map.set_str(k, v);
+
+  {
+    for (k, v) in [("lang_li", lang_li), ("changed", changed)] {
+      map.set(k, v);
+    }
+
+    for (k, v) in [
+      (
+        "out",
+        root.join(OUT).join(conf_name).to_str().unwrap_or_default(),
+      ),
+      ("root", root.to_str().unwrap_or_default()),
+    ] {
+      map.set_str(k, v);
+    }
   }
-  map.set("lang_li", lang_li);
 
   let arg = &[map.value()];
   let mut lang_path_bin = Lpb::new();

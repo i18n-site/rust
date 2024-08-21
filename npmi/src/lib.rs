@@ -6,10 +6,11 @@ use std::{
 };
 
 use aok::{Null, Result, OK};
+use dashmap::DashMap;
 use futures::stream::{FuturesUnordered, StreamExt};
 use serde::Deserialize;
 use sver::Ver;
-use tracing::{error, info};
+use tracing::error;
 
 pub const PACKAGE_JSON: &str = "package.json";
 
@@ -109,7 +110,7 @@ impl Npm {
     Self { dir: dir.into() }
   }
 
-  pub async fn i(&self, pkg: &Pkg) -> Null {
+  pub async fn i(&self, pkg: &Pkg, exist: &DashMap<String, Ver>) -> Null {
     let out = self.dir.join(&pkg.name);
 
     if let Some(pkg_json) = PkgVer::load(&out).await? {
@@ -124,29 +125,32 @@ impl Npm {
     }
 
     let ver = pkg.ver().await?;
-    info!("install {}@{}", pkg.name, ver);
-    tgz(&pkg.name, &ver, out).await?;
+    println!("install {}@{}", pkg.name, ver);
+    tgz(&pkg.name, &ver, out, exist).await?;
 
     OK
   }
 
-  pub async fn u(&self, pkg: &Pkg) -> Null {
+  pub async fn u(&self, pkg: &Pkg, exist: &DashMap<String, Ver>) -> Null {
     let ver = pkg.ver().await?;
     let out = self.dir.join(&pkg.name);
 
-    if let Some(pkg_json) = PkgVer::load(&out).await?
-      && pkg_json.version == ver
-    {
-      return OK;
-    }
-    info!("upgrade {}@{}", pkg.name, ver);
-    tgz(&pkg.name, &ver, out).await?;
+    let action = if let Some(pkg_json) = PkgVer::load(&out).await? {
+      if pkg_json.version == ver {
+        return OK;
+      }
+      "upgrade"
+    } else {
+      "install"
+    };
+    println!("{action} {}@{}", pkg.name, ver);
+    tgz(&pkg.name, &ver, out, exist).await?;
 
     OK
   }
 }
 
-pub async fn install_dep(out: &Path, name: &str) -> Null {
+pub async fn install_dep(out: &Path, name: &str, exist: &DashMap<String, Ver>) -> Null {
   let root = out.display().to_string();
   let strip = name.len() + 1;
   let root_len = root.len();
@@ -154,6 +158,7 @@ pub async fn install_dep(out: &Path, name: &str) -> Null {
     if let Some::<PkgDep>(pkg) = load(out).await? {
       let root: PathBuf = root[..root_len - strip].into();
       if let Some(dep) = pkg.dependencies.as_ref() {
+        let mut ing = FuturesUnordered::new();
         for (pkg, ver) in dep {
           let mut pos = 0;
           for (p, i) in ver.char_indices() {
@@ -162,7 +167,10 @@ pub async fn install_dep(out: &Path, name: &str) -> Null {
               break;
             }
           }
-          _tgz(pkg, &ver[pos..], root.join(pkg)).await?;
+          ing.push(_tgz(pkg, &ver[pos..], root.join(pkg), exist));
+        }
+        while let Some(r) = ing.next().await {
+          xerr::log!(r)
         }
       }
     }
@@ -170,28 +178,49 @@ pub async fn install_dep(out: &Path, name: &str) -> Null {
   OK
 }
 
-pub async fn _tgz(name: impl AsRef<str>, semver: impl AsRef<str>, out: impl AsRef<Path>) -> Null {
+pub async fn _tgz(
+  name: impl AsRef<str>,
+  semver: impl AsRef<str>,
+  out: impl AsRef<Path>,
+  exist: &DashMap<String, Ver>,
+) -> Null {
   let semver = semver.as_ref();
   let name = name.as_ref();
   let out = out.as_ref();
   let ver: Ver = semver.into();
+
+  {
+    if let Some(exist_ver) = exist.get(name) {
+      if ver <= *exist_ver {
+        return OK;
+      }
+    }
+    exist.insert(name.into(), ver.clone());
+  }
+
   if let Some(pkg_json) = PkgVer::load(out).await? {
     let pkg_ver: Ver = pkg_json.version.into();
     if ver <= pkg_ver {
       return OK;
     }
   }
-  info!("install {name}@{semver}");
+
+  println!("install {name}@{semver}");
   npmv::tgz(name, semver, out).await?;
-  Box::pin(install_dep(out, name)).await?;
+  Box::pin(install_dep(out, name, exist)).await?;
   Ok(())
 }
 
-pub async fn tgz(name: impl AsRef<str>, ver: impl AsRef<str>, out: impl AsRef<Path>) -> Null {
+pub async fn tgz(
+  name: impl AsRef<str>,
+  ver: impl AsRef<str>,
+  out: impl AsRef<Path>,
+  exist: &DashMap<String, Ver>,
+) -> Null {
   let name = name.as_ref();
   let out = out.as_ref();
   npmv::tgz(name, ver, out).await?;
-  install_dep(out, name).await?;
+  install_dep(out, name, exist).await?;
   OK
 }
 
@@ -229,9 +258,10 @@ macro_rules! func {
     let dir = $dir.into();
     for pkg in $pkg_li {
       let dir = dir.clone();
+      let exist: DashMap<String, Ver> = DashMap::new();
       ing.push(async move {
         let npm = Npm::new(dir);
-        if let Err(err) = npm.$func(pkg).await {
+        if let Err(err) = npm.$func(pkg, &exist).await {
           error!("{pkg} {err}");
         }
       });

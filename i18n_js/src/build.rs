@@ -42,6 +42,7 @@ impl Build {
     htm_conf_name: impl Into<String>,
     js_dir: &Path,
     after_tran: &[PathBuf],
+    changed: HashSet<String>,
   ) -> Result<Self> {
     let htm_conf_name = htm_conf_name.into();
     let root = root.into();
@@ -69,6 +70,7 @@ impl Build {
       &htm_conf_name,
       &js_dir,
       &after_tran,
+      changed,
     )?;
 
     let nav = nav.json()?;
