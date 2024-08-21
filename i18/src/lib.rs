@@ -5,7 +5,6 @@ use std::path::{Path, PathBuf};
 
 pub mod print_li;
 
-use aok::{Null, OK};
 use globset::GlobSet;
 use i18_conf::I18nConf;
 use lang::LANG_CODE;
@@ -94,19 +93,11 @@ pub async fn run(
   conf: &I18nConf,
   ignore: &GlobSet,
   token: &str,
-) -> Result<bool> {
+) -> Result<Vec<String>> {
   match _run(workdir, conf, ignore, token).await {
-    Ok(_) => {
+    Ok(li) => {
       println!("✅ i18n.site translate");
-      // if r.err_count == 0 {
-      //   println!("✅ i18n.site translate");
-      // } else {
-      //   println!(
-      //     "\ni18n.site translate total {} error {}",
-      //     r.total_len, r.err_count
-      //   );
-      // }
-      Ok(true)
+      Ok(li)
     }
     Err(err) => {
       if let Some(e) = err.downcast_ref::<crate::Err>() {
@@ -128,11 +119,11 @@ pub async fn run(
               }
               eprintln!("\n---\n");
             }
-            return Ok(false);
+            return Ok(vec![]);
           }
         }
         eprintln!("\n❌ {}", e);
-        return Ok(false);
+        return Ok(vec![]);
       }
       Err(err)
     }
@@ -144,7 +135,7 @@ pub async fn _run(
   conf: &I18nConf,
   ignore: &GlobSet,
   token: &str,
-) -> Null {
+) -> Result<Vec<String>> {
   let scan = Scan::new(workdir, conf, ignore);
   let i18n_gen = workdir.join(DOT_I18N);
   let cache = i18n_gen.join(CACHE);
@@ -159,7 +150,7 @@ pub async fn _run(
   let to_tran = i18_hash.changed(lm.is_change(rel_li)?)?;
 
   if to_tran.is_empty() {
-    return OK;
+    return Ok(vec![]);
   }
 
   let (lrs_li, mut path_li, update_cache_file_li) = prepare_li(to_tran, &scan);
@@ -168,7 +159,6 @@ pub async fn _run(
   path_li.sort_by(|a, b| a.cmp(b));
 
   let body = crate::tzst::tzst(workdir, &path_li, lrs_li, &scan.rel_ft)?;
-  dbg!(&path_li);
   let id = ub64::b64e(xhash::xhash(&body));
 
   let r = tran(token, &id, body).await?;
@@ -204,15 +194,14 @@ pub async fn _run(
       save.save(&traning.traned)?;
     }
     if !traning.end {
-      wait_tran(&id, save).await?;
-      return OK;
+      wait_tran(&id, &mut save).await?;
     }
-  }
-  if traning.end {
+  } else if traning.end {
     println!(
       "COST $0\nREMAIN ASSET ${}",
       (traning.asset as f64) / ASSET_BASE
     );
   }
-  OK
+  path_li.extend(save.writed);
+  Ok(path_li)
 }

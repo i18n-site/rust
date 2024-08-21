@@ -18,6 +18,7 @@ pub struct Save<'a> {
   pub waiting: HashMap<String, Waiting>,
   pub rel_ft: Vec<(String, FromTo)>,
   pub pbar: pbar::ProgressBar,
+  pub writed: Vec<String>,
 }
 
 #[derive(Default, Debug)]
@@ -91,6 +92,7 @@ impl<'a> Save<'a> {
       i18_hash,
       waiting,
       pbar,
+      writed: vec![],
     }
   }
 
@@ -110,6 +112,7 @@ impl<'a> Save<'a> {
         let path = format!("{}/{}", LANG_CODE[*lang as usize], rel);
         self.pbar.set_message(path.clone());
         ifs::wtxt(self.root.join(&path), txt)?;
+        self.writed.push(path.clone());
         update_mtime_fp.push(path.clone());
         if let Some(w) = self.waiting.get_mut(rel) {
           self.pbar.inc(w.len as _);
@@ -156,7 +159,7 @@ impl<'a> Save<'a> {
     Ok(self.has_waiting())
   }
 
-  pub fn end(self) {
+  pub fn end(&mut self) {
     self.pbar.finish_and_clear();
     if self.has_waiting() {
       println!("❌ MISS TRANSLATE");
