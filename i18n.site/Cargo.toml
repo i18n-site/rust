@@ -35,7 +35,7 @@ version = "0.1.29"
 path = "../i18n_js"
 
 [dependencies.i18_conf]
-version = "0.1.9"
+version = "0.1.10"
 path = "../i18_conf"
 
 [dependencies.npm]
