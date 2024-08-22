@@ -85,7 +85,7 @@ async fn upload(
                         if let Some(p) = path.to_str() {
                           let p = unix_path(p);
                           let rel = format!("{lang}/{p}");
-                          if (!changed.contains(&rel) && exist.contains(&p))
+                          if (!changed.contains(&rel) && exist.entry(p).or_default().contains(&p))
                             || ignore.is_match(format!("/{rel}"))
                           {
                             return None;

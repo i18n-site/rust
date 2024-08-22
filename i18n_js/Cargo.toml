@@ -58,7 +58,7 @@ version = "0.1.32"
 path = "../lang"
 
 [dependencies.bjs]
-version = "0.1.6"
+version = "0.1.7"
 path = "../bjs"
 
 [dependencies.ifs]
