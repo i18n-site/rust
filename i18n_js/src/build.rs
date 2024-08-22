@@ -42,7 +42,7 @@ impl Build {
     htm_conf_name: impl Into<String>,
     js_dir: &Path,
     after_tran: &[PathBuf],
-    changed: HashSet<String>,
+    changed: &HashSet<String>,
   ) -> Result<Self> {
     let htm_conf_name = htm_conf_name.into();
     let root = root.into();
@@ -70,7 +70,7 @@ impl Build {
       &htm_conf_name,
       &js_dir,
       &after_tran,
-      changed,
+      &changed,
     )?;
 
     let nav = nav.json()?;
@@ -144,24 +144,6 @@ impl Build {
     // };
 
     let outhtm = outdir.join("htm");
-    if outhtm.exists() {
-      for i in fs::read_dir(&outhtm).unwrap() {
-        if let Ok(i) = xerr::ok!(i) {
-          let path = i.path();
-          let rel = path.strip_prefix(&outhtm).unwrap().to_str().unwrap();
-          if rel.starts_with(".") {
-            continue;
-          }
-
-          if i.file_type().unwrap().is_dir() {
-            xerr::log!(fs::remove_dir_all(path));
-          } else {
-            xerr::log!(fs::remove_file(path));
-          }
-        }
-      }
-      // xerr::log!(std::fs::remove_dir_all(&outhtm));
-    }
     let public_dir = root.join(PUBLIC);
     let mut exist = HashSet::new();
     ifs::rsync(

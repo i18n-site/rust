@@ -17,6 +17,29 @@ clap = "4.5.16"
 tracing = "0.1.40"
 static_init = "1.0.3"
 sonic-rs = "0.3.11"
+gxhash = "3.4.1"
+globset = "0.4.14"
+walkdir = "2.5.0"
+futures = "0.3.30"
+markdown = "1.0.0-alpha.20"
+
+[dependencies.lang]
+version = "0.1.32"
+path = "../lang"
+
+[dependencies.dot_hide]
+version = "0.1.6"
+path = "../dot_hide"
+features = [ "walkdir" ]
+
+[dependencies.xerr]
+version = "0.1.15"
+path = "../xerr"
+
+[dependencies.ifs]
+version = "0.1.43"
+path = "../ifs"
+features = [ "fs" ]
 
 [dependencies.npmi]
 version = "0.1.18"
@@ -31,7 +54,7 @@ version = "0.1.4"
 path = "../yconf"
 
 [dependencies.i18n_js]
-version = "0.1.29"
+version = "0.1.30"
 path = "../i18n_js"
 
 [dependencies.i18_conf]

@@ -30,7 +30,7 @@ pub fn bjs_after(
   conf_name: &str,
   js_dir: &Path,
   after_tran: &[PathBuf],
-  changed: HashSet<String>,
+  changed: &HashSet<String>,
 ) -> Result<BjsAfter> {
   if after_tran.is_empty() {
     return Ok(Default::default());
@@ -49,7 +49,7 @@ pub fn bjs_after(
   let changed = {
     let li = JsArray::new(ctx);
     for i in changed {
-      xerr::log!(li.push(JsString::from(i), ctx));
+      xerr::log!(li.push(JsString::from(i.to_owned()), ctx));
     }
     li
   };

@@ -1,3 +1,4 @@
+#![feature(str_split_remainder)]
 #![feature(iter_array_chunks)]
 #![feature(let_chains)]
 
@@ -13,4 +14,4 @@ macro_rules! r#mod {
   }
 }
 
-r#mod!(cli, run, package_json_ver);
+r#mod!(cli, run, package_json_ver, seo);

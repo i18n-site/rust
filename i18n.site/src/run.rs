@@ -12,6 +12,7 @@ pub const DOT_YML: &str = ".yml";
 pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
   let npm: bool = m.get_one("npm").cloned().unwrap_or(false);
   let save: bool = m.get_one("save").cloned().unwrap_or(false);
+
   let mut htm_conf: String = m
     .get_one("htm_conf")
     .cloned()
@@ -50,7 +51,7 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
     &htm_conf,
     &pkg_li.dir,
     &pkg_li.rel_li("afterTran.js"),
-    changed,
+    &changed,
   )
   .await?;
 
@@ -73,6 +74,19 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
     }
   } else if save {
     vfs.save()?;
+  }
+  if let Some(seo) = build.conf.seo
+    && let Some(conf) = seo.get(&htm_conf)
+  {
+    crate::seo(
+      &dir,
+      &htm_conf,
+      &conf,
+      build.lang.into_iter().map(|(i, _)| i).collect(),
+      &ignore,
+      &changed,
+    )
+    .await?;
   }
   println!("✅ i18n.site build");
   OK
