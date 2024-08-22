@@ -29,7 +29,7 @@ version = "0.1.8"
 path = "../vb"
 
 [dependencies.ytree]
-version = "0.1.11"
+version = "0.1.12"
 path = "../ytree"
 
 [dependencies.serde]

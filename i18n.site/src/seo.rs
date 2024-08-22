@@ -158,8 +158,10 @@ async fn upload(
 
   for (lang_bin, mut li) in lang_file {
     li.sort();
-
-    to_write.push((burl::e(lang_bin)));
+    to_write.push((burl::e(lang_bin), ytree::Li::from_iter(li)));
+  }
+  if let Ok(yml) = xerr::ok!(serde_yaml::to_string(&to_write)) {
+    tracing::info!("{yml}");
   }
 }
 

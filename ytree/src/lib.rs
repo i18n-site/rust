@@ -9,10 +9,18 @@ pub enum Node {
   File(String),
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Li(pub Vec<Node>);
 
 impl Li {
+  pub fn from_iter<S: AsRef<str>>(iter: impl IntoIterator<Item = S>) -> Self {
+    let mut me: Self = Default::default();
+    for i in iter {
+      me.push(i);
+    }
+    me
+  }
+
   pub fn contains(&self, path: impl AsRef<str>) -> bool {
     let parts: Vec<&str> = path.as_ref().split('/').collect();
     self.contains_recursive(&parts)
