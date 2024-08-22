@@ -1,4 +1,5 @@
 use std::{
+  collections::BTreeMap,
   fs::File,
   io::{BufRead, BufReader},
   path::{Path, PathBuf},
@@ -7,7 +8,7 @@ use std::{
 use aok::{Null, Result, OK};
 use futures::{stream, stream::StreamExt};
 use globset::GlobSet;
-use gxhash::{HashMap, HashSet, HashSetExt};
+use gxhash::{HashMap, HashMapExt, HashSet, HashSetExt};
 use i18::DOT_I18N;
 use ifs::unix_path;
 use lang::{Lang, LANG_CODE};
@@ -61,7 +62,7 @@ async fn upload(
   root: &Path,
   lang_li: &[Lang],
   changed: &HashSet<String>,
-  exist: &HashSet<String>,
+  exist: &HashMap<String, HashSet<Lang>>,
   ignore: &GlobSet,
 ) {
   let mut uploaded = HashSet::new();
@@ -69,8 +70,8 @@ async fn upload(
     lang_li
       .iter()
       .flat_map(|&lang| {
-        let lang = LANG_CODE[lang as usize];
-        let dir = root.join(lang);
+        let lang_en = LANG_CODE[lang as usize];
+        let dir = root.join(lang_en);
         WalkDir::new(&dir)
           .into_iter()
           .filter_entry(dot_hide::not)
@@ -84,11 +85,16 @@ async fn upload(
                       if let Ok(path) = path.strip_prefix(&dir) {
                         if let Some(p) = path.to_str() {
                           let p = unix_path(p);
-                          let rel = format!("{lang}/{p}");
-                          if (!changed.contains(&rel) && exist.entry(p).or_default().contains(&p))
-                            || ignore.is_match(format!("/{rel}"))
-                          {
+                          let rel = format!("{lang_en}/{p}");
+                          if ignore.is_match(format!("/{rel}")) {
                             return None;
+                          }
+                          if !changed.contains(&rel) {
+                            if let Some(exist) = exist.get(&rel) {
+                              if exist.contains(&lang) {
+                                return None;
+                              }
+                            }
                           }
                           return Some(rel);
                         }
@@ -117,35 +123,39 @@ async fn upload(
       let mut i = $i.split('/');
       if let Some(lang) = i.next() {
         if let Some(rel) = i.remainder() {
-          rel_lang
-            .entry(rel.to_owned())
-            .or_insert_with(Vec::new)
-            .push(lang.to_owned());
+          if let Ok::<Lang, _>(lang) = lang.try_into() {
+            rel_lang
+              .entry(rel.to_owned())
+              .or_insert_with(Vec::new)
+              .push(lang);
+          }
         }
       }
     };
-  }
-
-  for i in exist - &uploaded {
-    let fp = root.join(&i);
-    if fp.exists() {
-      add!(i);
-    }
   }
 
   for i in uploaded {
     add!(i);
   }
 
-  let mut rel_lang = rel_lang
-    .into_iter()
-    .map(|(k, mut li)| {
-      li.sort();
-      (k, li)
-    })
-    .collect::<Vec<_>>();
-  rel_lang.sort();
-  dbg!(&rel_lang);
+  for (rel, lang_li) in exist {
+    let e = rel_lang.entry(rel.to_owned()).or_insert_with(Vec::new);
+    for lang in lang_li {
+      if !e.contains(&lang) {
+        e.push(*lang);
+      }
+    }
+  }
+
+  let mut lang_file = std::collections::HashMap::new();
+  for (rel, mut li) in rel_lang {
+    li.sort();
+    let bin: Vec<u8> = vb::diffe(li.into_iter().map(|i| i as u64).collect::<Vec<_>>());
+    lang_file.entry(bin).or_insert_with(Vec::new).push(rel);
+  }
+  lang_file.iter_mut().for_each(|i| i.1.sort());
+  dbg!(&lang_file);
+  // let lang_file = serde_json::to_string(&lang_file).unwrap();
 }
 
 pub async fn seo(
@@ -171,12 +181,11 @@ pub async fn seo(
           continue;
         }
         Ok(m) => {
-          let exist = root.join(DOT_I18N).join("seo").join(host).join(action);
-          let exist: HashSet<String> = if exist.exists() {
-            let reader = BufReader::new(File::open(exist)?);
-            reader.lines().map_while(Result::ok).collect()
-          } else {
-            Default::default()
+          let seo_exist = root.join(DOT_I18N).join("seo").join(host).join(action);
+          let mut exist = HashMap::default();
+          if seo_exist.exists() {
+            let reader = BufReader::new(File::open(seo_exist)?);
+            for i in reader.lines().map_while(Result::ok) {}
           };
           upload(&m, root, &lang_li, changed, &exist, ignore).await;
         }

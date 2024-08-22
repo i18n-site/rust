@@ -22,6 +22,8 @@ globset = "0.4.14"
 walkdir = "2.5.0"
 futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
+vb = { version = "0.1.8", path = "../vb" }
+ytree = { version = "0.1.8", path = "../ytree" }
 
 [dependencies.lang]
 version = "0.1.32"
