@@ -153,9 +153,14 @@ async fn upload(
     let bin: Vec<u8> = vb::diffe(li.into_iter().map(|i| i as u64).collect::<Vec<_>>());
     lang_file.entry(bin).or_insert_with(Vec::new).push(rel);
   }
-  lang_file.iter_mut().for_each(|i| i.1.sort());
-  dbg!(&lang_file);
-  // let lang_file = serde_json::to_string(&lang_file).unwrap();
+
+  let mut to_write = Vec::with_capacity(lang_file.len());
+
+  for (lang_bin, mut li) in lang_file {
+    li.sort();
+
+    to_write.push((burl::e(lang_bin)));
+  }
 }
 
 pub async fn seo(

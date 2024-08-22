@@ -21,8 +21,7 @@ fn test() -> Result<()> {
   let mut root = Li(Vec::new());
 
   for path in paths {
-    let parts: Vec<&str> = path.split('/').collect();
-    root.insert(parts);
+    root.push(path);
   }
 
   let yaml = serde_yaml::to_string(&root).unwrap();
