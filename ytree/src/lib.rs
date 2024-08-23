@@ -1,3 +1,6 @@
+#[cfg(feature = "lang")]
+pub mod lang;
+
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
@@ -12,6 +15,10 @@ pub enum Node {
 pub struct Li(pub Vec<Node>);
 
 impl Li {
+  pub fn iter(&self) -> LiIter {
+    LiIter::new(self, String::new())
+  }
+
   pub fn from_iter<S: AsRef<str>>(iter: impl IntoIterator<Item = S>) -> Self {
     let mut me: Self = Default::default();
     for i in iter {
@@ -67,16 +74,12 @@ impl Li {
       self.0.push(Node::File(path[0].to_string()));
     } else if len > 1 {
       let key = path[0].to_owned();
-      let rest_path = path[1..].to_vec();
+      let rest_path = &path[1..];
 
       if let Some(Node::Sub(sub)) = self.0.first_mut() {
         sub
           .entry(key.clone())
-          .or_insert_with(|| {
-            let mut new_li = Li(Vec::new());
-            new_li._push(&rest_path);
-            new_li
-          })
+          .or_insert_with(|| Li(Vec::new()))
           ._push(&rest_path);
       } else {
         let mut new_sub = IndexMap::new();
@@ -86,5 +89,63 @@ impl Li {
         self.0.insert(0, Node::Sub(new_sub));
       }
     }
+  }
+}
+
+pub struct LiIter<'a> {
+  parent: String,
+  nodes: std::slice::Iter<'a, Node>,
+  sub: Option<Box<LiIter<'a>>>,
+  sub_map_iter: Option<indexmap::map::Iter<'a, String, Li>>,
+}
+
+impl<'a> LiIter<'a> {
+  fn new(li: &'a Li, parent: String) -> Self {
+    Self {
+      parent,
+      nodes: li.0.iter(),
+      sub: None,
+      sub_map_iter: None,
+    }
+  }
+}
+
+impl<'a> Iterator for LiIter<'a> {
+  type Item = String;
+
+  fn next(&mut self) -> Option<Self::Item> {
+    // Continue with the current sub-iterator if it exists
+    if let Some(iter) = &mut self.sub {
+      if let Some(path) = iter.next() {
+        return Some(path);
+      } else {
+        self.sub = None; // Finished current sub-iterator
+      }
+    }
+
+    // Check if there is an ongoing sub_map_iter
+    if let Some(iter) = &mut self.sub_map_iter {
+      if let Some((path, li)) = iter.next() {
+        let new_parent = format!("{}{}/", self.parent, path);
+        self.sub = Some(Box::new(LiIter::new(li, new_parent)));
+        return self.next();
+      } else {
+        self.sub_map_iter = None; // Finished iterating the current IndexMap
+      }
+    }
+
+    // Process the next node in the current level
+    while let Some(node) = self.nodes.next() {
+      match node {
+        Node::Sub(sub) => {
+          self.sub_map_iter = Some(sub.iter());
+          return self.next();
+        }
+        Node::File(file) => {
+          return Some(format!("{}{}", self.parent, file));
+        }
+      }
+    }
+    None
   }
 }
