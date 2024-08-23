@@ -22,23 +22,11 @@ globset = "0.4.14"
 walkdir = "2.5.0"
 futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
-serde_yaml = "0.9.34"
-
-[dependencies.vb]
-version = "0.1.8"
-path = "../vb"
 
 [dependencies.ytree]
 version = "0.1.16"
 path = "../ytree"
-
-[dependencies.serde]
-version = "1.0.208"
-features = [ "derive" ]
-
-[dependencies.burl]
-version = "0.1.4"
-path = "../burl"
+features = [ "lang" ]
 
 [dependencies.lang]
 version = "0.1.32"
@@ -71,7 +59,7 @@ version = "0.1.4"
 path = "../yconf"
 
 [dependencies.i18n_js]
-version = "0.1.30"
+version = "0.1.31"
 path = "../i18n_js"
 
 [dependencies.i18_conf]

@@ -1,5 +1,4 @@
 use std::{
-  collections::BTreeMap,
   fs::File,
   io::{BufRead, BufReader},
   path::{Path, PathBuf},
@@ -8,53 +7,111 @@ use std::{
 use aok::{Null, Result, OK};
 use futures::{stream, stream::StreamExt};
 use globset::GlobSet;
-use gxhash::{HashMap, HashMapExt, HashSet, HashSetExt};
+use gxhash::{HashMap, HashSet};
 use i18::DOT_I18N;
 use ifs::unix_path;
 use lang::{Lang, LANG_CODE};
 use walkdir::WalkDir;
-
-// file hash
+use ytree::lang::RelLangSet;
 
 pub trait Seo {
-  fn init(root: &Path, name: &str, host: &str) -> Result<Self>
+  fn init(root: &Path, name: &str, host: String) -> Result<Self>
   where
     Self: Sized;
 
-  async fn put(&self, rel: &str) -> Null;
+  async fn put(&self, rel: &str) -> Result<bool>;
+
+  async fn end(&self, rel_lang_set: &RelLangSet) -> Null;
+}
+
+pub fn md_url<'a>(rel: &'a str) -> &'a str {
+  if let Some(rel) = rel.strip_suffix(".md") {
+    if rel.ends_with("/README") {
+      &rel[..rel.len() - 7]
+    } else {
+      rel
+    }
+  } else {
+    rel
+  }
 }
 
 pub struct Fs {
   pub out: PathBuf,
   pub root: PathBuf,
+  pub host: String,
 }
 
 impl Seo for Fs {
-  fn init(root: &Path, name: &str, _host: &str) -> Result<Self> {
+  async fn end(&self, rel_lang_set: &RelLangSet) -> Null {
+    dbg!(&self.root, &self.host, &self.out);
+    for (rel, lang_set) in rel_lang_set.0.iter() {
+      let rel = md_url(rel);
+      let url = format!("https://{}/{}", self.host, rel);
+      dbg!(url);
+      for lang in lang_set {
+        let lang = LANG_CODE[lang as usize];
+        let url = format!("https://{}/{lang}/{rel}.htm", self.host);
+        dbg!(url);
+      }
+    }
+    // for i in rel_lang_set {
+    //   dbg!(i);
+    // }
+    OK
+  }
+
+  fn init(root: &Path, name: &str, host: String) -> Result<Self> {
     let out = root.join("out").join(name).join("htm");
     Ok(Self {
+      host,
       out: out.into(),
       root: root.into(),
     })
   }
 
-  async fn put(&self, rel: &str) -> Null {
-    let htm = md2htm(&self.root.join(rel))?;
-    ifs::wbin(
-      &self.out.join(format!("{}htm", &rel[..rel.len() - 2])),
-      htm.as_bytes(),
-    )?;
-    OK
+  async fn put(&self, rel: &str) -> Result<bool> {
+    if let Some(htm) = md2htm(&self.root.join(rel))? {
+      let url = md_url(rel);
+      let to = format!("{}.htm", url);
+      ifs::wbin(&self.out.join(to), htm.as_bytes())?;
+      return Ok(true);
+    }
+    Ok(false)
   }
 }
 
-pub fn md2htm(fp: &Path) -> Result<String> {
+pub fn md2htm(fp: &Path) -> Result<Option<String>> {
   let md = std::fs::read_to_string(fp)?;
-  let htm = markdown::to_html(&md).replace(">\n<", "><");
-  let htm = htm.trim_end();
-  return Ok(format!(
-    r#"<!doctypehtml><head><meta charset=UTF-8><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script></head><body>{htm}</body>"#
-  ));
+  {
+    use std::io::Cursor;
+    let c = Cursor::new(&md);
+    let mut iter = c.lines();
+    let mut n = 0;
+    'out: loop {
+      while let Some(Ok(i)) = iter.next() {
+        if !i.trim().is_empty() {
+          n += 1;
+          if n > 1 {
+            break 'out;
+          }
+        }
+      }
+      return Ok(None);
+    }
+  }
+
+  let mut opt = markdown::Options::gfm();
+  opt.compile.allow_dangerous_html = true;
+  opt.compile.allow_dangerous_protocol = true;
+  if let Ok(htm) = xerr::ok!(markdown::to_html_with_options(&md, &opt)) {
+    let htm = htm.replace(">\n<", "><");
+    let htm = htm.trim_end();
+    return Ok(Some(format!(
+      r#"<!doctypehtml><head><meta charset=UTF-8><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script></head><body>{htm}</body>"#
+    )));
+  };
+  Ok(None)
 }
 
 async fn upload(
@@ -62,107 +119,76 @@ async fn upload(
   root: &Path,
   lang_li: &[Lang],
   changed: &HashSet<String>,
-  exist: &HashMap<String, HashSet<Lang>>,
+  mut exist: RelLangSet,
   ignore: &GlobSet,
-) {
-  let mut uploaded = HashSet::new();
-  let mut iter = stream::iter(
-    lang_li
-      .iter()
-      .flat_map(|&lang| {
-        let lang_en = LANG_CODE[lang as usize];
-        let dir = root.join(lang_en);
-        WalkDir::new(&dir)
-          .into_iter()
-          .filter_entry(dot_hide::not)
-          .filter_map(move |entry| {
-            entry.ok().and_then(|entry| {
-              let path = entry.path();
-              if let Some(ext) = path.extension() {
-                if ext == "md" {
-                  if let Ok(meta) = entry.metadata() {
-                    if meta.file_type().is_file() {
-                      if let Ok(path) = path.strip_prefix(&dir) {
-                        if let Some(p) = path.to_str() {
-                          let p = unix_path(p);
-                          let rel = format!("{lang_en}/{p}");
-                          if ignore.is_match(format!("/{rel}")) {
-                            return None;
-                          }
-                          if !changed.contains(&rel) {
-                            if let Some(exist) = exist.get(&rel) {
-                              if exist.contains(&lang) {
+) -> Result<String> {
+  let (mut to_insert, mut to_remove) = {
+    let exist = &exist;
+    let mut iter = stream::iter(
+      lang_li
+        .iter()
+        .flat_map(|&lang| {
+          let lang_en = LANG_CODE[lang as usize];
+          let dir = root.join(lang_en);
+          WalkDir::new(&dir)
+            .into_iter()
+            .filter_entry(dot_hide::not)
+            .filter_map(move |entry| {
+              entry.ok().and_then(|entry| {
+                let path = entry.path();
+                if let Some(ext) = path.extension() {
+                  if ext == "md" {
+                    if let Ok(meta) = entry.metadata() {
+                      if meta.file_type().is_file() {
+                        if let Ok(path) = path.strip_prefix(&dir) {
+                          if let Some(rel) = path.to_str() {
+                            let rel = unix_path(rel);
+                            let fp = format!("{lang_en}/{rel}");
+                            if ignore.is_match(format!("/{fp}")) {
+                              return None;
+                            }
+                            if !changed.contains(&fp) {
+                              if exist.contains(lang, &rel) {
                                 return None;
                               }
                             }
+                            return Some((fp, lang, rel));
                           }
-                          return Some(rel);
                         }
                       }
                     }
                   }
                 }
-              }
-              None
+                None
+              })
             })
-          })
-      })
-      .map(|path| async move { (upload.put(&path).await, path) }),
-  )
-  .buffer_unordered(6);
-  while let Some((r, path)) = iter.next().await {
-    if let Ok(_) = xerr::ok!(r) {
-      uploaded.insert(path);
-    }
-  }
-
-  let mut rel_lang = HashMap::default();
-
-  macro_rules! add {
-    ($i:expr) => {
-      let mut i = $i.split('/');
-      if let Some(lang) = i.next() {
-        if let Some(rel) = i.remainder() {
-          if let Ok::<Lang, _>(lang) = lang.try_into() {
-            rel_lang
-              .entry(rel.to_owned())
-              .or_insert_with(Vec::new)
-              .push(lang);
-          }
+        })
+        .map(|(fp, lang, rel)| async move { (upload.put(&fp).await, lang, rel) }),
+    )
+    .buffer_unordered(6);
+    let mut to_insert = vec![];
+    let mut to_remove = vec![];
+    while let Some((r, lang, rel)) = iter.next().await {
+      if let Ok(is_put) = xerr::ok!(r) {
+        if is_put {
+          to_insert.push((lang, rel));
+          continue;
         }
       }
-    };
-  }
-
-  for i in uploaded {
-    add!(i);
-  }
-
-  for (rel, lang_li) in exist {
-    let e = rel_lang.entry(rel.to_owned()).or_insert_with(Vec::new);
-    for lang in lang_li {
-      if !e.contains(&lang) {
-        e.push(*lang);
-      }
+      to_remove.push((lang, rel));
     }
+    (to_insert, to_remove)
+  };
+
+  while let Some((lang, rel)) = to_insert.pop() {
+    exist.insert(lang, rel);
+  }
+  while let Some((lang, rel)) = to_remove.pop() {
+    exist.remove(lang, rel);
   }
 
-  let mut lang_file = std::collections::HashMap::new();
-  for (rel, mut li) in rel_lang {
-    li.sort();
-    let bin: Vec<u8> = vb::diffe(li.into_iter().map(|i| i as u64).collect::<Vec<_>>());
-    lang_file.entry(bin).or_insert_with(Vec::new).push(rel);
-  }
-
-  let mut to_write = Vec::with_capacity(lang_file.len());
-
-  for (lang_bin, mut li) in lang_file {
-    li.sort();
-    to_write.push((burl::e(lang_bin), ytree::Li::from_iter(li)));
-  }
-  if let Ok(yml) = xerr::ok!(serde_yaml::to_string(&to_write)) {
-    tracing::info!("{yml}");
-  }
+  upload.end(&exist).await?;
+  Ok(exist.dumps())
 }
 
 pub async fn seo(
@@ -175,11 +201,14 @@ pub async fn seo(
 ) -> Null {
   for (host, action) in conf {
     for action in action.split_whitespace() {
-      let m = if action == "fs" {
-        Fs::init(root, name, host)
-      } else {
-        eprintln!("seo {name} {host} {action} not support");
-        continue;
+      let m = {
+        let host = host.clone();
+        if action == "fs" {
+          Fs::init(root, name, host)
+        } else {
+          eprintln!("seo {name} {host} {action} not support");
+          continue;
+        }
       };
 
       match m {
@@ -188,13 +217,26 @@ pub async fn seo(
           continue;
         }
         Ok(m) => {
-          let seo_exist = root.join(DOT_I18N).join("seo").join(host).join(action);
-          let mut exist = HashMap::default();
-          if seo_exist.exists() {
-            let reader = BufReader::new(File::open(seo_exist)?);
-            for i in reader.lines().map_while(Result::ok) {}
+          let seo_fp = root.join(DOT_I18N).join("seo").join(host).join(action);
+          let exist = if seo_fp.exists() {
+            let reader = BufReader::new(File::open(&seo_fp)?);
+            ytree::lang::loads(reader.lines().filter_map(|i| i.ok()))
+          } else {
+            Default::default()
           };
-          upload(&m, root, &lang_li, changed, &exist, ignore).await;
+          if let Ok(yml) = xerr::ok!(
+            upload(
+              &m,
+              root,
+              &lang_li,
+              changed,
+              exist.rel_lang_set(root)?,
+              ignore,
+            )
+            .await
+          ) {
+            ifs::wbin(seo_fp, yml)?;
+          }
         }
       }
     }
