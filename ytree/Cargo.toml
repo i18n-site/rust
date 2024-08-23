@@ -1,6 +1,6 @@
 [package]
 name = "ytree"
-version = "0.1.12"
+version = "0.1.15"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -15,6 +15,7 @@ all-features = true
 
 [dependencies]
 aok = "0.1.15"
+indexmap = { version = "2.4.0", features = ["serde"] }
 serde = { version = "1.0.208", features = ["derive"] }
 serde_yaml = "0.9.34"
 

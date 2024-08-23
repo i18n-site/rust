@@ -1,11 +1,10 @@
-use std::collections::HashMap;
-
+use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum Node {
-  Sub(HashMap<String, Li>),
+  Sub(IndexMap<String, Li>),
   File(String),
 }
 
@@ -27,32 +26,31 @@ impl Li {
   }
 
   fn contains_recursive(&self, parts: &[&str]) -> bool {
-    if parts.is_empty() {
-      return false;
-    }
-
-    let mut iter = self.0.iter();
-
-    if let Some(n) = iter.next() {
-      match n {
-        Node::File(file) => {
-          if parts.len() == 1 {
-            return file == parts[0];
+    let len = parts.len();
+    if len >= 1 {
+      let mut iter = self.0.iter();
+      if let Some(n) = iter.next() {
+        match n {
+          Node::File(file) => {
+            if len == 1 {
+              return file == parts[0];
+            }
           }
-        }
-        Node::Sub(sub) => {
-          if let Some(sub_li) = sub.get(parts[0]) {
-            return sub_li.contains_recursive(&parts[1..]);
+          Node::Sub(sub) => {
+            if len > 1 {
+              if let Some(sub_li) = sub.get(parts[0]) {
+                return sub_li.contains_recursive(&parts[1..]);
+              }
+            }
           }
         }
       }
-    }
-
-    if parts.len() == 1 {
-      return iter.any(|node| match node {
-        Node::File(file) => file == parts[0],
-        _ => false,
-      });
+      if len == 1 {
+        return iter.any(|node| match node {
+          Node::File(file) => file == parts[0],
+          _ => false,
+        });
+      }
     }
 
     false
@@ -81,7 +79,7 @@ impl Li {
           })
           ._push(&rest_path);
       } else {
-        let mut new_sub = HashMap::new();
+        let mut new_sub = IndexMap::new();
         let mut new_li = Li(Vec::new());
         new_li._push(&rest_path);
         new_sub.insert(key.clone(), new_li);
