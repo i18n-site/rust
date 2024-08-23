@@ -17,12 +17,12 @@ extern "C" fn init() {
 #[test]
 fn test() -> Result<()> {
   let paths = [
-    "README.md",
-    "blog/README.md",
-    "blog/news/README.md",
-    "blog/news/begin.md",
-    "x/news/1.md",
-    "x/2/3.md",
+    "README.md#a",
+    "blog/README.md#2",
+    "blog/news/README.md#c",
+    "blog/news/begin.md#d",
+    "x/news/1.md#x",
+    "x/2/3.md#y",
   ];
 
   let mut root = Li(Vec::new());
@@ -39,7 +39,7 @@ fn test() -> Result<()> {
   }
 
   let yml = serde_yaml::to_string(&root).unwrap();
-  info!("{}", yml);
+  // info!("{}", yml);
 
   let mut bitmap = roaring::RoaringBitmap::new();
   for i in [Lang::Ja, Lang::En, Lang::Zh, Lang::ZhTw] {
@@ -53,10 +53,11 @@ fn test() -> Result<()> {
 
   let yml = ytree::lang::loads(cursor.lines().filter_map(|i| i.ok()));
 
-  info!("---");
-  for i in yml.rel_lang_set("/")?.0 {
+  let t = yml.rel_lang_set("/Users/z/i18n/md")?;
+  for i in &t.rel_lang_set {
     info!("{} {:?}", i.0, i.1);
   }
+  info!("{}", t.dumps());
   OK
 }
 ```

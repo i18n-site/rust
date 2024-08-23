@@ -5,7 +5,7 @@ use roaring::RoaringBitmap;
 
 #[derive(Debug, Default)]
 pub struct LangLi {
-  pub lang: RoaringBitmap,
+  pub lang: Vec<u64>,
   pub li: crate::Li,
 }
 
@@ -18,18 +18,31 @@ impl LangTree {
     let mut r = HashMap::new();
     for i in self.0 {
       for rel in i.li.iter() {
-        let mut lang_set = RoaringBitmap::new();
-        for lang in &i.lang {
-          if std::fs::exists(root.join(LANG_CODE[lang as usize]).join(&rel))? {
-            lang_set.push(lang);
+        let mut rel = rel.rsplit("#");
+
+        if let Some(ts) = rel.next() {
+          if let Ok(ts) = burl::d(ts)
+            && let Some(rel) = rel.remainder()
+          {
+            let ts = intbin::bin_u64(ts);
+            let mut lang_set = RoaringBitmap::new();
+            for lang in &i.lang {
+              let lang = *lang;
+              if std::fs::exists(root.join(LANG_CODE[lang as usize]).join(rel))? {
+                lang_set.push(lang as u32);
+              }
+            }
+            if !lang_set.is_empty() {
+              r.insert(rel.to_owned(), LangSet { ts, lang_set });
+            }
           }
-        }
-        if !lang_set.is_empty() {
-          r.insert(rel.to_owned(), lang_set);
         }
       }
     }
-    Ok(RelLangSet(r))
+    Ok(RelLangSet {
+      rel_lang_set: r,
+      now: sts::sec(),
+    })
   }
 }
 
@@ -47,11 +60,7 @@ pub fn loads(iter: impl IntoIterator<Item = String>) -> LangTree {
       buf = String::new();
       if let Ok(l) = xerr::ok!(burl::d(&i[1..])) {
         if let Ok(l) = xerr::ok!(vb::diffd(&l)) {
-          let mut t = RoaringBitmap::new();
-          for i in l {
-            t.insert(i as u32);
-          }
-          lang = Some(t);
+          lang = Some(l);
           continue;
         }
       }
@@ -86,7 +95,16 @@ pub fn dumps(iter: impl IntoIterator<Item = (Vec<u8>, crate::Li)>) -> String {
 }
 
 #[derive(Debug, Default, Clone)]
-pub struct RelLangSet(pub HashMap<String, RoaringBitmap>);
+pub struct LangSet {
+  pub ts: u64,
+  pub lang_set: RoaringBitmap,
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct RelLangSet {
+  pub rel_lang_set: HashMap<String, LangSet>,
+  pub now: u64,
+}
 
 pub fn lang_li_e(lang_li: &RoaringBitmap) -> Vec<u8> {
   vb::diffe(lang_li.iter().map(|i| i as u64).collect::<Vec<_>>())
@@ -95,8 +113,8 @@ pub fn lang_li_e(lang_li: &RoaringBitmap) -> Vec<u8> {
 impl RelLangSet {
   pub fn contains(&self, lang: Lang, rel: impl AsRef<str>) -> bool {
     let rel = rel.as_ref();
-    if let Some(lang_set) = self.0.get(rel) {
-      lang_set.contains(lang as u32)
+    if let Some(t) = self.rel_lang_set.get(rel) {
+      t.lang_set.contains(lang as u32)
     } else {
       false
     }
@@ -104,23 +122,29 @@ impl RelLangSet {
 
   pub fn insert(&mut self, lang: Lang, rel: impl AsRef<str>) -> bool {
     let rel = rel.as_ref();
-    if let Some(lang_set) = self.0.get_mut(rel) {
-      lang_set.insert(lang as u32);
+    if let Some(t) = self.rel_lang_set.get_mut(rel) {
+      t.lang_set.insert(lang as u32);
+      t.ts = self.now;
       return true;
     } else {
-      self
-        .0
-        .insert(rel.to_owned(), RoaringBitmap::from_iter([lang as u32]));
+      self.rel_lang_set.insert(
+        rel.to_owned(),
+        LangSet {
+          ts: self.now,
+          lang_set: RoaringBitmap::from_iter([lang as u32]),
+        },
+      );
     }
     false
   }
 
   pub fn remove(&mut self, lang: Lang, rel: impl AsRef<str>) -> bool {
     let rel = rel.as_ref();
-    if let Some(lang_set) = self.0.get_mut(rel) {
+    if let Some(r) = self.rel_lang_set.get_mut(rel) {
+      let lang_set = &mut r.lang_set;
       if lang_set.remove(lang as u32) {
         if lang_set.is_empty() {
-          self.0.remove(rel);
+          self.rel_lang_set.remove(rel);
         }
         return true;
       }
@@ -130,8 +154,9 @@ impl RelLangSet {
 
   pub fn dumps(self) -> String {
     let mut lang_rel = HashMap::new();
-    for (rel, lang) in &self.0 {
-      let lang = lang_li_e(lang);
+    for (rel, t) in &self.rel_lang_set {
+      let lang = lang_li_e(&t.lang_set);
+      let rel = format!("{}#{}", rel, burl::e(intbin::u64_bin(t.ts)));
       lang_rel.entry(lang).or_insert_with(Vec::new).push(rel);
     }
 

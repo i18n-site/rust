@@ -1,6 +1,6 @@
 [package]
 name = "ytree"
-version = "0.1.17"
+version = "0.1.18"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -11,12 +11,22 @@ description = "ytree"
 all-features = true
 
 [features]
-default = [ ]
-lang = [ "dep:lang", "dep:vb", "dep:burl", "dep:xerr", "dep:roaring" ]
+default = []
+lang = [
+  "dep:lang",
+  "dep:vb",
+  "dep:burl",
+  "dep:xerr",
+  "dep:roaring",
+  "dep:intbin",
+  "dep:sts",
+]
 
 [dependencies]
+intbin = { version = "0.1.2", optional = true }
 aok = "0.1.15"
 serde_yaml = "0.9.34"
+sts = { version = "0.1.23", path = "../sts", optional = true }
 
 [dependencies.burl]
 version = "0.1.4"
@@ -25,7 +35,7 @@ optional = true
 
 [dependencies.indexmap]
 version = "2.4.0"
-features = [ "serde" ]
+features = ["serde"]
 
 [dependencies.lang]
 version = "0.1.32"
@@ -34,12 +44,12 @@ optional = true
 
 [dependencies.roaring]
 version = "0.10.6"
-features = [ "simd" ]
+features = ["simd"]
 optional = true
 
 [dependencies.serde]
 version = "1.0.208"
-features = [ "derive" ]
+features = ["derive"]
 
 [dependencies.vb]
 version = "0.1.8"
@@ -63,4 +73,4 @@ version = "0.1.32"
 
 [dev-dependencies.tokio]
 version = "1.39.3"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

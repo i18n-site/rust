@@ -24,7 +24,7 @@ futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
 
 [dependencies.ytree]
-version = "0.1.17"
+version = "0.1.18"
 path = "../ytree"
 features = [ "lang" ]
 
