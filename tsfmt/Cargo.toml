@@ -1,6 +1,6 @@
 [package]
 name = "tsfmt"
-version = "0.1.9"
+version = "0.1.10"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"

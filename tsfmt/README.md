@@ -2,7 +2,7 @@
 
 ```rust
 use chrono::NaiveDate;
-use tsfmt::tsfmt;
+use tsfmt::utc;
 
 fn is_valid_date(date_str: &str, ts: u64) -> bool {
   match NaiveDate::parse_from_str(date_str, "%Y-%m-%d") {
@@ -22,11 +22,11 @@ fn main() {
   while n < 86400 * 373 * 100 {
     n += 3600;
     let ts = now + n;
-    let s = tsfmt(ts);
+    let s = utc(ts);
     let date = s.split("T").next().unwrap();
     assert!(is_valid_date(date, ts));
   }
-  println!("\n{}\n", tsfmt(now));
+  println!("\n{}\n", utc(now));
 }
 ```
 

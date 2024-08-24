@@ -11,27 +11,38 @@ description = "ytree"
 all-features = true
 
 [features]
-default = []
+default = [ ]
 sitemap = [
-  "dep:lang",
-  "dep:vb",
-  "dep:burl",
-  "dep:xerr",
-  "dep:roaring",
-  "dep:intbin",
-  "dep:sts",
-  "dep:const-str",
-  "dep:chrono",
+"dep:lang",
+"dep:vb",
+"dep:burl",
+"dep:xerr",
+"dep:roaring",
+"dep:intbin",
+"dep:sts",
+"dep:const-str"
 ]
 
 [dependencies]
-intbin = { version = "0.1.2", optional = true }
 aok = "0.1.15"
 serde_yaml = "0.9.34"
-sts = { version = "0.1.23", path = "../sts", optional = true }
-chrono = { version = "0.4.38", optional = true }
-const-str = { version = "0.5.7", optional = true }
-tsfmt = { version = "0.1.9", path = "../tsfmt" }
+
+[dependencies.intbin]
+version = "0.1.2"
+optional = true
+
+[dependencies.sts]
+version = "0.1.23"
+path = "../sts"
+optional = true
+
+[dependencies.const-str]
+version = "0.5.7"
+optional = true
+
+[dependencies.tsfmt]
+version = "0.1.10"
+path = "../tsfmt"
 
 [dependencies.burl]
 version = "0.1.4"
@@ -40,7 +51,7 @@ optional = true
 
 [dependencies.indexmap]
 version = "2.4.0"
-features = ["serde"]
+features = [ "serde" ]
 
 [dependencies.lang]
 version = "0.1.32"
@@ -49,12 +60,12 @@ optional = true
 
 [dependencies.roaring]
 version = "0.10.6"
-features = ["simd"]
+features = [ "simd" ]
 optional = true
 
 [dependencies.serde]
 version = "1.0.208"
-features = ["derive"]
+features = [ "derive" ]
 
 [dependencies.vb]
 version = "0.1.8"
@@ -78,4 +89,4 @@ version = "0.1.32"
 
 [dev-dependencies.tokio]
 version = "1.39.3"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
