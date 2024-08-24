@@ -102,7 +102,7 @@ pub fn ymdhms(mut sec: u64) -> (u64, u64, u64, u64, u64, u64) {
   (year, month, day, hours, minutes, seconds)
 }
 
-pub fn tsfmt(sec: u64) -> String {
+pub fn utc(sec: u64) -> String {
   let (year, month, day, hours, minutes, seconds) = ymdhms(sec);
   format!(
     "{}-{:02}-{:02}T{:02}:{:02}:{:02}",

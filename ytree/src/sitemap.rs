@@ -158,13 +158,6 @@ pub fn gen(xml: &str) -> Vec<u8> {
   xml.into_bytes()
 }
 
-pub fn utc(ts: i64) -> String {
-  if let chrono::LocalResult::Single(dt) = Utc.timestamp_opt(ts, 0) {
-    return dt.format("%Y-%m-%dT%H:%M:%S").to_string();
-  }
-  unreachable!()
-}
-
 impl Sitemap {
   pub fn gen<'a>(&'a self, host: &'a str) -> impl IntoIterator<Item = Vec<u8>> + 'a {
     let mut iter = self.rel_lang_set.iter();
@@ -174,7 +167,7 @@ impl Sitemap {
 
     std::iter::from_fn(move || {
       while let Some((rel, t)) = iter.next() {
-        let dt = utc(t.ts as i64);
+        let dt = tsfmt::utc(t.ts);
         let url = md_url(rel);
 
         let urlxml = format!(
