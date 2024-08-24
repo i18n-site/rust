@@ -1,3 +1,5 @@
+use std::iter::FromIterator;
+
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
@@ -11,15 +13,17 @@ pub enum Node {
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Li(pub Vec<Node>);
 
-impl Li {
-  pub fn from_iter<S: AsRef<str>>(iter: impl IntoIterator<Item = S>) -> Self {
+impl<S: AsRef<str>> FromIterator<S> for Li {
+  fn from_iter<T: IntoIterator<Item = S>>(iter: T) -> Self {
     let mut me: Self = Default::default();
     for i in iter {
       me.push(i);
     }
     me
   }
+}
 
+impl Li {
   pub fn contains(&self, path: impl AsRef<str>) -> bool {
     let parts: Vec<&str> = path.as_ref().split('/').collect();
     self.contains_recursive(&parts)
@@ -63,24 +67,29 @@ impl Li {
 
   fn _push(&mut self, path: &[&str]) {
     let len = path.len();
-    if len == 1 {
-      self.0.push(Node::File(path[0].to_string()));
-    } else if len > 1 {
-      let key = path[0].to_owned();
-      let rest_path = &path[1..];
 
-      if let Some(Node::Sub(sub)) = self.0.first_mut() {
-        sub
-          .entry(key.clone())
-          .or_insert_with(|| Li(Vec::new()))
-          ._push(rest_path);
-      } else {
-        let mut new_sub = IndexMap::new();
-        let mut new_li = Li(Vec::new());
-        new_li._push(rest_path);
-        new_sub.insert(key.clone(), new_li);
-        self.0.insert(0, Node::Sub(new_sub));
+    match len.cmp(&1) {
+      std::cmp::Ordering::Greater => {
+        let key = path[0].to_owned();
+        let rest_path = &path[1..];
+
+        if let Some(Node::Sub(sub)) = self.0.first_mut() {
+          sub
+            .entry(key.clone())
+            .or_insert_with(|| Li(Vec::new()))
+            ._push(rest_path);
+        } else {
+          let mut new_sub = IndexMap::new();
+          let mut new_li = Li(Vec::new());
+          new_li._push(rest_path);
+          new_sub.insert(key.clone(), new_li);
+          self.0.insert(0, Node::Sub(new_sub));
+        }
       }
+      std::cmp::Ordering::Equal => {
+        self.0.push(Node::File(path[0].to_string()));
+      }
+      _ => {}
     }
   }
 }
@@ -108,10 +117,7 @@ impl Li {
       }
     } else {
       // 查找第一个Node::Sub并解构出其中的IndexMap
-      if let Some(Node::Sub(sub)) = self.0.iter_mut().find(|node| match node {
-        Node::Sub(_) => true,
-        _ => false,
-      }) {
+      if let Some(Node::Sub(sub)) = self.0.iter_mut().find(|node| matches!(node, Node::Sub(_))) {
         if let Some(sub_li) = sub.get_mut(part) {
           if sub_li.remove_recursive(&parts[1..]) {
             if sub_li.0.is_empty() {

@@ -49,7 +49,7 @@ impl<'a> Iterator for LiIter<'a> {
     }
 
     // Process the next node in the current level
-    while let Some(node) = self.nodes.next() {
+    if let Some(node) = self.nodes.next() {
       match node {
         Node::Sub(sub) => {
           self.sub_map_iter = Some(sub.iter());

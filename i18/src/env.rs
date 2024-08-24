@@ -1,4 +1,3 @@
-
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Default)]

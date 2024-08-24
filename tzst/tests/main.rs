@@ -4,13 +4,9 @@
 // use static_init::constructor;
 // use tracing::info;
 
-#[constructor(0)]
-extern "C" fn init() {
-  loginit::init()
-}
-
 #[test]
-fn main() -> io::Result<()> {
+fn main() -> std::io::Result<()> {
+  loginit::init();
   // let root_dir = env!("CARGO_MANIFEST_DIR");
   // let root_dir: PathBuf = root_dir.into();
   // let relative_paths = vec!["Cargo.toml", "src/lib.rs"];

@@ -51,14 +51,14 @@ pub fn loads(iter: impl IntoIterator<Item = String>) -> LangTree {
   let mut buf = String::new();
   let mut lang = None;
   for i in iter {
-    if i.starts_with("@") {
+    if let Some(i) = i.strip_prefix("@") {
       if let Some(lang) = lang {
         if let Ok(li) = xerr::ok!(serde_yaml::from_str::<crate::Li>(&buf)) {
           r.push(LangLi { lang, li });
         }
       }
       buf = String::new();
-      if let Ok(l) = xerr::ok!(burl::d(&i[1..])) {
+      if let Ok(l) = xerr::ok!(burl::d(i)) {
         if let Ok(l) = xerr::ok!(vb::diffd(&l)) {
           lang = Some(l);
           continue;

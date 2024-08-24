@@ -54,6 +54,8 @@ pub fn md2htm(fp: &Path) -> Result<Option<String>> {
     let c = Cursor::new(&md);
     let mut iter = c.lines();
     let mut n = 0;
+
+    #[allow(clippy::never_loop)]
     'out: loop {
       while let Some(Ok(i)) = iter.next() {
         if !i.trim().is_empty() {
@@ -78,15 +80,15 @@ pub fn md2htm(fp: &Path) -> Result<Option<String>> {
   Ok(None)
 }
 
+pub type LangRelHtm = Vec<(Lang, String, String)>;
+
 async fn upload(
-  upload: &impl Seo,
-  host: &str,
   root: &Path,
   lang_li: &[Lang],
   changed: &HashSet<String>,
-  mut exist: Sitemap,
+  exist: &mut Sitemap,
   ignore: &GlobSet,
-) -> Result<Option<String>> {
+) -> Result<Option<LangRelHtm>> {
   let (to_insert, mut to_remove) = {
     let exist = &exist;
     let mut to_insert = vec![];
@@ -141,6 +143,16 @@ async fn upload(
     exist.insert(*lang, rel);
   }
 
+  Ok(Some(to_insert))
+}
+
+pub async fn put(
+  host: &str,
+  upload: impl Seo,
+  to_insert: LangRelHtm,
+  exist: Sitemap,
+) -> Result<String> {
+  let upload = &upload;
   {
     let mut iter = stream::iter(
       to_insert.into_iter().filter_map(|(lang, rel, htm)|{
@@ -222,7 +234,7 @@ async fn upload(
   </sitemapindex>
   */
 
-  Ok(Some(exist.dumps()))
+  Ok(exist.dumps())
 }
 
 pub async fn gen<Upload: Seo>(
@@ -234,26 +246,18 @@ pub async fn gen<Upload: Seo>(
   ignore: &GlobSet,
   changed: &HashSet<String>,
 ) -> Null {
-  let m = Upload::init(root, name, host)?;
   let seo_fp = root.join(DOT_I18N).join("seo").join(host).join(action);
   let exist = if seo_fp.exists() {
     let reader = BufReader::new(File::open(&seo_fp)?);
-    ytree::sitemap::loads(reader.lines().filter_map(|i| i.ok()))
+    ytree::sitemap::loads(reader.lines().map_while(Result::ok))
   } else {
     Default::default()
   };
-  if let Ok(Some(yml)) = xerr::ok!(
-    upload(
-      &m,
-      host,
-      root,
-      lang_li,
-      changed,
-      exist.rel_lang_set(root)?,
-      ignore,
-    )
-    .await
-  ) {
+  let mut exist = exist.rel_lang_set(root)?;
+  if let Ok(Some(to_insert)) = xerr::ok!(upload(root, lang_li, changed, &mut exist, ignore,).await)
+  {
+    let m = Upload::init(root, name, host)?;
+    let yml = put(host, m, to_insert, exist).await?;
     ifs::wbin(seo_fp, yml)?;
   }
   OK

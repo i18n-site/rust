@@ -315,10 +315,7 @@ impl PkgLi {
     let dir = dir.into();
     Self {
       dir,
-      li: name_ver_li
-        .iter()
-        .map(Pkg::new)
-        .collect(),
+      li: name_ver_li.iter().map(Pkg::new).collect(),
     }
   }
 }

@@ -51,7 +51,7 @@ fn test() -> Result<()> {
   info!("{yml}");
   let cursor = Cursor::new(yml.as_bytes());
 
-  let yml = ytree::sitemap::loads(cursor.lines().filter_map(|i| i.ok()));
+  let yml = ytree::sitemap::loads(cursor.lines().map_while(Result::ok));
 
   let t = yml.rel_lang_set("/Users/z/i18n/md")?;
   for i in &t.rel_lang_set {
