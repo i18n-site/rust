@@ -1,5 +1,6 @@
 use std::{collections::HashMap, path::Path};
 
+use chrono::{TimeZone, Utc};
 use lang::{Lang, LANG_CODE};
 use roaring::RoaringBitmap;
 
@@ -13,7 +14,7 @@ pub struct LangLi {
 pub struct LangTree(pub Vec<LangLi>);
 
 impl LangTree {
-  pub fn rel_lang_set(self, root: impl AsRef<Path>) -> std::io::Result<RelLangSet> {
+  pub fn rel_lang_set(self, root: impl AsRef<Path>) -> std::io::Result<Sitemap> {
     let root = root.as_ref();
     let mut r = HashMap::new();
     for i in self.0 {
@@ -39,7 +40,7 @@ impl LangTree {
         }
       }
     }
-    Ok(RelLangSet {
+    Ok(Sitemap {
       rel_lang_set: r,
       now: sts::sec(),
     })
@@ -101,7 +102,7 @@ pub struct LangSet {
 }
 
 #[derive(Debug, Default, Clone)]
-pub struct RelLangSet {
+pub struct Sitemap {
   pub rel_lang_set: HashMap<String, LangSet>,
   pub now: u64,
 }
@@ -110,14 +111,110 @@ pub fn lang_li_e(lang_li: &RoaringBitmap) -> Vec<u8> {
   vb::diffe(lang_li.iter().map(|i| i as u64).collect::<Vec<_>>())
 }
 
-impl RelLangSet {
-  pub fn contains(&self, lang: Lang, rel: impl AsRef<str>) -> bool {
-    let rel = rel.as_ref();
-    if let Some(t) = self.rel_lang_set.get(rel) {
-      t.lang_set.contains(lang as u32)
-    } else {
-      false
-    }
+/*
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<url>
+<loc>https://www.example.com/page1</loc>
+<lastmod>2023-04-30T12:34:56</lastmod>
+<xhtml:link rel="alternate" hreflang="en" href="https://www.example.com/page1" />
+<xhtml:link rel="alternate" hreflang="fr" href="https://www.example.com/fr/page1" />
+<xhtml:link rel="alternate" hreflang="es" href="https://www.example.com/es/page1" />
+</url>
+</urlset>
+
+*/
+
+pub fn rel_url<'a>(rel: &'a str) -> &'a str {
+  if rel.ends_with("/README") {
+    &rel[..rel.len() - 7]
+  } else if rel == "README" {
+    ""
+  } else {
+    rel
+  }
+}
+
+pub fn md_url<'a>(rel: &'a str) -> &'a str {
+  if let Some(rel) = rel.strip_suffix(".md") {
+    rel_url(rel)
+  } else {
+    rel
+  }
+}
+
+pub const XML_HEAD: &str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+pub const XML_URLSET_BEGIN: &str = const_str::concat!(
+  XML_HEAD,
+  r#"<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">"#
+);
+pub const XML_URLSET_END: &str = "</urlset>";
+pub const XML_URLSET_LEN: usize = XML_URLSET_BEGIN.len() + XML_URLSET_END.len();
+pub const MAX_SIZE: usize = 10 * (2 << 19) - (2 << 16);
+pub const MAX_URL: u64 = 49000;
+
+pub fn gen(xml: &str) -> Vec<u8> {
+  let xml = format!("{XML_URLSET_BEGIN}{xml}{XML_URLSET_END}");
+  xml.into_bytes()
+}
+
+pub fn utc(ts: i64) -> String {
+  if let chrono::LocalResult::Single(dt) = Utc.timestamp_opt(ts, 0) {
+    return dt.format("%Y-%m-%dT%H:%M:%S").to_string();
+  }
+  unreachable!()
+}
+
+impl Sitemap {
+  pub fn gen<'a>(&'a self, host: &'a str) -> impl IntoIterator<Item = Vec<u8>> + 'a {
+    let mut iter = self.rel_lang_set.iter();
+    let mut n = 0;
+    let mut xml = String::new();
+    let mut len = XML_URLSET_LEN;
+
+    std::iter::from_fn(move || {
+      while let Some((rel, t)) = iter.next() {
+        let dt = utc(t.ts as i64);
+        let url = md_url(rel);
+
+        let urlxml = format!(
+            "<url><loc>{}</loc><lastmod>{dt}</lastmod>{}</url>",
+            format!("https://{}/{}", host, url),
+            t.lang_set
+            .iter()
+            .map(|lang| {
+              let lang = LANG_CODE[lang as usize];
+              format!(
+                r#"<xhtml:link rel="alternate" hreflang="{lang}" href="https://{host}/{lang}/{url}.htm"/>"#
+              )
+            })
+            .collect::<Vec<_>>()
+            .join("")
+          );
+
+        let t_n = t.lang_set.len() + 1;
+        let next_n = n + t_n;
+        let next_len = len + urlxml.len();
+        if next_len > MAX_SIZE || next_n > MAX_URL {
+          let result = gen(&xml);
+          xml = urlxml;
+          len = xml.len() + XML_URLSET_LEN;
+          n = t_n;
+          return Some(result);
+        }
+        n = next_n;
+        len = next_len;
+        xml += &urlxml;
+      }
+
+      if xml.is_empty() {
+        None
+      } else {
+        let result = gen(&xml);
+        xml.clear(); // for end iter
+        Some(result)
+      }
+    })
   }
 
   pub fn insert(&mut self, lang: Lang, rel: impl AsRef<str>) -> bool {
@@ -171,5 +268,14 @@ impl RelLangSet {
     lang_rel.sort_by(|a, b| a.0.cmp(&b.0));
 
     dumps(lang_rel.into_iter())
+  }
+
+  pub fn contains(&self, lang: Lang, rel: impl AsRef<str>) -> bool {
+    let rel = rel.as_ref();
+    if let Some(t) = self.rel_lang_set.get(rel) {
+      t.lang_set.contains(lang as u32)
+    } else {
+      false
+    }
   }
 }

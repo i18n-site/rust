@@ -22,11 +22,12 @@ globset = "0.4.14"
 walkdir = "2.5.0"
 futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
+flate2 = "1.0.32"
 
 [dependencies.ytree]
 version = "0.1.18"
 path = "../ytree"
-features = [ "lang" ]
+features = ["sitemap"]
 
 [dependencies.lang]
 version = "0.1.32"
@@ -35,7 +36,7 @@ path = "../lang"
 [dependencies.dot_hide]
 version = "0.1.6"
 path = "../dot_hide"
-features = [ "walkdir" ]
+features = ["walkdir"]
 
 [dependencies.xerr]
 version = "0.1.15"
@@ -44,7 +45,7 @@ path = "../xerr"
 [dependencies.ifs]
 version = "0.1.43"
 path = "../ifs"
-features = [ "fs" ]
+features = ["fs"]
 
 [dependencies.npmi]
 version = "0.1.18"
@@ -80,7 +81,7 @@ path = "../i18n_bgu"
 
 [dependencies.tokio]
 version = "1.39.3"
-features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
 
 [dependencies.i18]
 version = "0.1.265"

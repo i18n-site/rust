@@ -12,7 +12,7 @@ all-features = true
 
 [features]
 default = []
-lang = [
+sitemap = [
   "dep:lang",
   "dep:vb",
   "dep:burl",
@@ -20,6 +20,8 @@ lang = [
   "dep:roaring",
   "dep:intbin",
   "dep:sts",
+  "dep:const-str",
+  "dep:chrono",
 ]
 
 [dependencies]
@@ -27,6 +29,8 @@ intbin = { version = "0.1.2", optional = true }
 aok = "0.1.15"
 serde_yaml = "0.9.34"
 sts = { version = "0.1.23", path = "../sts", optional = true }
+chrono = { version = "0.4.38", optional = true }
+const-str = { version = "0.5.7", optional = true }
 
 [dependencies.burl]
 version = "0.1.4"

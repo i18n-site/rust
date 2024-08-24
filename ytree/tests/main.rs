@@ -4,7 +4,7 @@ use aok::{Result, OK};
 use lang::Lang;
 use static_init::constructor;
 use tracing::info;
-use ytree::{lang::lang_li_e, Li};
+use ytree::{sitemap::lang_li_e, Li};
 
 #[constructor(0)]
 extern "C" fn init() {
@@ -43,12 +43,12 @@ fn test() -> Result<()> {
     bitmap.insert(i as u32);
   }
 
-  let yml = ytree::lang::dumps([(lang_li_e(&bitmap), root)]);
+  let yml = ytree::sitemap::dumps([(lang_li_e(&bitmap), root)]);
 
   info!("{yml}");
   let cursor = Cursor::new(yml.as_bytes());
 
-  let yml = ytree::lang::loads(cursor.lines().filter_map(|i| i.ok()));
+  let yml = ytree::sitemap::loads(cursor.lines().filter_map(|i| i.ok()));
 
   let t = yml.rel_lang_set("/Users/z/i18n/md")?;
   for i in &t.rel_lang_set {
