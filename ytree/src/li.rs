@@ -73,11 +73,11 @@ impl Li {
         sub
           .entry(key.clone())
           .or_insert_with(|| Li(Vec::new()))
-          ._push(&rest_path);
+          ._push(rest_path);
       } else {
         let mut new_sub = IndexMap::new();
         let mut new_li = Li(Vec::new());
-        new_li._push(&rest_path);
+        new_li._push(rest_path);
         new_sub.insert(key.clone(), new_li);
         self.0.insert(0, Node::Sub(new_sub));
       }

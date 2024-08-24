@@ -1,3 +1,4 @@
+mod s3;
 use std::{
   fs::File,
   io::{self, BufRead, BufReader, Write},
@@ -12,6 +13,7 @@ use gxhash::{HashMap, HashSet};
 use i18::DOT_I18N;
 use ifs::unix_path;
 use lang::{Lang, LANG_CODE};
+use s3::S3;
 use walkdir::WalkDir;
 use ytree::sitemap::{md_url, Sitemap};
 
@@ -22,7 +24,7 @@ fn gz(data: impl AsRef<[u8]>) -> Result<Vec<u8>, io::Error> {
 }
 
 pub trait Seo {
-  fn init(root: &Path, name: &str, host: String) -> Result<Self>
+  fn init(root: &Path, name: &str, host: &str) -> Result<Self>
   where
     Self: Sized;
 
@@ -34,13 +36,13 @@ pub struct Fs {
 }
 
 impl Seo for Fs {
-  fn init(root: &Path, name: &str, _host: String) -> Result<Self> {
+  fn init(root: &Path, name: &str, _host: &str) -> Result<Self> {
     let out = root.join("out").join(name).join("htm");
-    Ok(Self { out: out.into() })
+    Ok(Self { out })
   }
 
   async fn put(&self, rel: impl AsRef<str>, bin: impl AsRef<[u8]>) -> Null {
-    ifs::wbin(&self.out.join(rel.as_ref()), bin.as_ref())?;
+    ifs::wbin(self.out.join(rel.as_ref()), bin.as_ref())?;
     OK
   }
 }
@@ -107,10 +109,8 @@ async fn upload(
                       if ignore.is_match(format!("/{fp}")) {
                         continue;
                       }
-                      if !changed.contains(&fp) {
-                        if exist.contains(lang, &rel) {
-                          continue;
-                        }
+                      if !changed.contains(&fp) && exist.contains(lang, &rel) {
+                        continue;
                       }
                       if let Some(htm) = md2htm(&root.join(fp))? {
                         to_insert.push((lang, rel, htm));
@@ -144,11 +144,7 @@ async fn upload(
   {
     let mut iter = stream::iter(
       to_insert.into_iter().filter_map(|(lang, rel, htm)|{
-          if let Some(t) = exist.rel_lang_set.get(&rel) {
-            Some((t, lang, rel, htm))
-          } else {
-            None
-          }
+          exist.rel_lang_set.get(&rel).map(|t| (t, lang, rel, htm))
       }).map(|(t, lang, rel, htm)| {
           let url = md_url(&rel).to_owned();
           let (url, url_htm) = if url.is_empty() {
@@ -229,57 +225,68 @@ async fn upload(
   Ok(Some(exist.dumps()))
 }
 
-pub async fn seo(
+pub async fn gen<Upload: Seo>(
+  host: &str,
+  action: &str,
   root: &Path,
   name: &str,
+  lang_li: &[Lang],
+  ignore: &GlobSet,
+  changed: &HashSet<String>,
+) -> Null {
+  let m = Upload::init(root, name, host)?;
+  let seo_fp = root.join(DOT_I18N).join("seo").join(host).join(action);
+  let exist = if seo_fp.exists() {
+    let reader = BufReader::new(File::open(&seo_fp)?);
+    ytree::sitemap::loads(reader.lines().filter_map(|i| i.ok()))
+  } else {
+    Default::default()
+  };
+  if let Ok(Some(yml)) = xerr::ok!(
+    upload(
+      &m,
+      host,
+      root,
+      lang_li,
+      changed,
+      exist.rel_lang_set(root)?,
+      ignore,
+    )
+    .await
+  ) {
+    ifs::wbin(seo_fp, yml)?;
+  }
+  OK
+}
+
+pub async fn seo(
   conf: &HashMap<String, String>,
+  root: &Path,
+  name: &str,
   lang_li: Vec<Lang>,
   ignore: &GlobSet,
   changed: &HashSet<String>,
 ) -> Null {
   for (host, action) in conf {
+    macro_rules! gen {
+      ($seo:ty) => {
+        gen::<$seo>(host, action, root, name, &lang_li, ignore, changed).await
+      };
+    }
+
     for action in action.split_whitespace() {
-      let m = {
-        let host = host.clone();
-        if action == "fs" {
-          Fs::init(root, name, host)
-        } else {
-          eprintln!("seo {name} {host} {action} not support");
+      let r = match action {
+        "fs" => gen!(Fs),
+        "s3" => gen!(S3),
+        _ => {
+          eprintln!("unknown action {action}");
           continue;
         }
       };
-
-      match m {
-        Err(e) => {
-          eprintln!("seo {name} {host} {action} {e}");
-          continue;
-        }
-        Ok(m) => {
-          let seo_fp = root.join(DOT_I18N).join("seo").join(host).join(action);
-          let exist = if seo_fp.exists() {
-            let reader = BufReader::new(File::open(&seo_fp)?);
-            ytree::sitemap::loads(reader.lines().filter_map(|i| i.ok()))
-          } else {
-            Default::default()
-          };
-          if let Ok(Some(yml)) = xerr::ok!(
-            upload(
-              &m,
-              host,
-              root,
-              &lang_li,
-              changed,
-              exist.rel_lang_set(root)?,
-              ignore,
-            )
-            .await
-          ) {
-            ifs::wbin(seo_fp, yml)?;
-          }
-        }
+      if let Err(e) = r {
+        eprintln!("seo {name} {host} {action} {e}");
       }
     }
   }
-
   OK
 }

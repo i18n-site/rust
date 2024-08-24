@@ -78,24 +78,22 @@ pub fn ctx(root: &str) -> Context {
             Ok(r) => {
               let dir_li = JsArray::new(ctx);
               let file_li = JsArray::new(ctx);
-              for i in r {
-                if let Ok(i) = i {
-                  if let Ok(file_type) = i.file_type() {
-                    let li = if file_type.is_dir() {
-                      &dir_li
-                    } else {
-                      &file_li
-                    };
-                    let name = i.file_name().to_os_string().to_string_lossy().to_string();
-                    let name = JsString::from(name);
-                    li.push(name, ctx)?;
-                  }
+              for i in r.flatten() {
+                if let Ok(file_type) = i.file_type() {
+                  let li = if file_type.is_dir() {
+                    &dir_li
+                  } else {
+                    &file_li
+                  };
+                  let name = i.file_name().to_os_string().to_string_lossy().to_string();
+                  let name = JsString::from(name);
+                  li.push(name, ctx)?;
                 }
               }
               let li = JsArray::new(ctx);
               li.push(dir_li, ctx)?;
               li.push(file_li, ctx)?;
-              return Ok(li.into());
+              Ok(li.into())
             }
             Err(e) => {
               throw!("rDir: {e}")

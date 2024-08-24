@@ -124,9 +124,9 @@ pub fn lang_li_e(lang_li: &RoaringBitmap) -> Vec<u8> {
 
 */
 
-pub fn rel_url<'a>(rel: &'a str) -> &'a str {
-  if rel.ends_with("/README") {
-    &rel[..rel.len() - 7]
+pub fn rel_url(rel: &str) -> &str {
+  if let Some(rel) = rel.strip_suffix("/README") {
+    rel
   } else if rel == "README" {
     ""
   } else {
@@ -134,7 +134,7 @@ pub fn rel_url<'a>(rel: &'a str) -> &'a str {
   }
 }
 
-pub fn md_url<'a>(rel: &'a str) -> &'a str {
+pub fn md_url(rel: &str) -> &str {
   if let Some(rel) = rel.strip_suffix(".md") {
     rel_url(rel)
   } else {
@@ -165,13 +165,12 @@ impl Sitemap {
     let mut len = XML_URLSET_LEN;
 
     std::iter::from_fn(move || {
-      while let Some((rel, t)) = iter.next() {
+      for (rel, t) in iter.by_ref() {
         let dt = tsfmt::utc(t.ts);
         let url = md_url(rel);
 
         let urlxml = format!(
-            "<url><loc>{}</loc><lastmod>{dt}</lastmod>{}</url>",
-            format!("https://{}/{}", host, url),
+            "<url><loc>https://{host}/{url}</loc><lastmod>{dt}</lastmod>{}</url>",
             t.lang_set
             .iter()
             .map(|lang| {
@@ -259,7 +258,7 @@ impl Sitemap {
 
     lang_rel.sort_by(|a, b| a.0.cmp(&b.0));
 
-    dumps(lang_rel.into_iter())
+    dumps(lang_rel)
   }
 
   pub fn contains(&self, lang: Lang, rel: impl AsRef<str>) -> bool {

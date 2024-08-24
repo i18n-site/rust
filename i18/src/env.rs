@@ -1,33 +1,27 @@
-use std::collections::HashMap;
 
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct S3 {
-  pub endpoint: String,
-  pub region: Option<String>,
-  pub ak: String,
-  pub sk: String,
-}
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Conf {
   pub token: Option<String>,
-  pub s3: Option<HashMap<String, Vec<S3>>>,
 }
 
 #[static_init::dynamic]
-pub static CONF: Conf = {
+pub static I18N_SITE_YML: Vec<u8> = {
   let yml = ifs::confdir().join("i18n.site.yml");
-  if let Ok(r) = xerr::ok!(ifs::r(yml)) {
-    if !r.is_empty() {
-      if let Ok::<Conf, _>(c) = serde_yaml::from_slice(&r) {
-        return c;
-      }
-    }
-  }
-  Default::default()
+  ifs::r(yml).unwrap_or_default()
 };
+
+pub fn load<T: DeserializeOwned + Default>() -> serde_yaml::Result<T> {
+  let yml = &*I18N_SITE_YML;
+  if yml.is_empty() {
+    return Ok(Default::default());
+  }
+  serde_yaml::from_slice(&I18N_SITE_YML)
+}
+
+#[static_init::dynamic]
+pub static CONF: Conf = load().unwrap_or_default();
 
 pub fn token() -> Option<String> {
   if let Ok(token) = std::env::var("I18N_SITE_TOKEN") {

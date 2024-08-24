@@ -317,7 +317,7 @@ impl PkgLi {
       dir,
       li: name_ver_li
         .iter()
-        .map(|name_ver| Pkg::new(name_ver))
+        .map(Pkg::new)
         .collect(),
     }
   }

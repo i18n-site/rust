@@ -65,9 +65,9 @@ impl Build {
       &root,
       &from_to.root_all_lang_li(),
       &htm_conf_name,
-      &js_dir,
-      &after_tran,
-      &changed,
+      js_dir,
+      after_tran,
+      changed,
     )?;
 
     let nav = nav.json()?;

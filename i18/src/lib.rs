@@ -158,7 +158,7 @@ pub async fn _run(
   let (lrs_li, mut path_li, update_cache_file_li) = prepare_li(to_tran, &scan);
 
   // 保证顺序一样
-  path_li.sort_by(|a, b| a.cmp(b));
+  path_li.sort();
 
   let body = crate::tzst::tzst(workdir, &path_li, lrs_li, &scan.rel_ft)?;
   let id = ub64::b64e(xhash::xhash(&body));

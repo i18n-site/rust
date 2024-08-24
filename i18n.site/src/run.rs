@@ -36,7 +36,7 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
   }
 
   let pkg_li = npmi::PkgLi::new(
-    &dir_i18n.join("hook"),
+    dir_i18n.join("hook"),
     &conf.addon.take().unwrap_or_default(),
   );
 
@@ -79,9 +79,9 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
     && let Some(conf) = seo.get(&htm_conf)
   {
     crate::seo(
+      conf,
       &dir,
       &htm_conf,
-      &conf,
       build.lang.into_iter().map(|(i, _)| i).collect(),
       &ignore,
       &changed,

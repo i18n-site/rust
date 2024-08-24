@@ -23,6 +23,7 @@ walkdir = "2.5.0"
 futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
 flate2 = "1.0.32"
+serde = { version = "1.0.209", features = ["derive"] }
 
 [dependencies.tsfmt]
 version = "0.1.10"
