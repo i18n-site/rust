@@ -14,7 +14,7 @@ static_init = "1.0.3"
 thiserror = "1.0.63"
 
 [dependencies.pbar]
-version = "0.1.5"
+version = "0.1.6"
 path = "../pbar"
 
 [dependencies.ifs]

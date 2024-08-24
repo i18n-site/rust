@@ -24,6 +24,14 @@ futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
 flate2 = "1.0.32"
 
+[dependencies.aws-sdk-s3]
+version = "1.46.0"
+features = [ "behavior-version-latest" ]
+
+[dependencies.pbar]
+version = "0.1.6"
+path = "../pbar"
+
 [dependencies.serde]
 version = "1.0.209"
 features = [ "derive" ]

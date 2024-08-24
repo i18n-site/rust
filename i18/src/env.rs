@@ -6,10 +6,10 @@ pub struct Conf {
 }
 
 #[static_init::dynamic]
-pub static I18N_SITE_YML: Vec<u8> = {
-  let yml = ifs::confdir().join("i18n.site.yml");
-  ifs::r(yml).unwrap_or_default()
-};
+pub static I18N_SITE_YML_PATH: std::path::PathBuf = ifs::confdir().join("i18n.site.yml");
+
+#[static_init::dynamic]
+pub static I18N_SITE_YML: Vec<u8> = ifs::r(&*I18N_SITE_YML_PATH).unwrap_or_default();
 
 pub fn load<T: DeserializeOwned + Default>() -> serde_yaml::Result<T> {
   let yml = &*I18N_SITE_YML;

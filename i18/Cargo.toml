@@ -35,7 +35,7 @@ version = "0.1.8"
 path = "../vb"
 
 [dependencies.pbar]
-version = "0.1.5"
+version = "0.1.6"
 path = "../pbar"
 
 [dependencies.xhash]

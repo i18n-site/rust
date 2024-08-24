@@ -17,7 +17,7 @@ pub struct Save<'a> {
   /// rel -> Waiting
   pub waiting: HashMap<String, Waiting>,
   pub rel_ft: Vec<(String, FromTo)>,
-  pub pbar: pbar::ProgressBar,
+  pub pbar: pbar::Pbar,
   pub writed: Vec<String>,
 }
 

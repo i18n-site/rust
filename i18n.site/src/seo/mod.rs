@@ -17,12 +17,6 @@ use s3::S3;
 use walkdir::WalkDir;
 use ytree::sitemap::{md_url, Sitemap};
 
-fn gz(data: impl AsRef<[u8]>) -> Result<Vec<u8>, io::Error> {
-  let mut encoder = GzEncoder::new(Vec::new(), Compression::best());
-  encoder.write_all(data.as_ref())?;
-  encoder.finish()
-}
-
 pub trait Seo {
   fn init(root: &Path, name: &str, host: &str) -> Result<Self>
   where
@@ -45,6 +39,12 @@ impl Seo for Fs {
     ifs::wbin(self.out.join(rel.as_ref()), bin.as_ref())?;
     OK
   }
+}
+
+fn gz(data: impl AsRef<[u8]>) -> Result<Vec<u8>, io::Error> {
+  let mut encoder = GzEncoder::new(Vec::new(), Compression::best());
+  encoder.write_all(data.as_ref())?;
+  encoder.finish()
 }
 
 pub fn md2htm(fp: &Path) -> Result<Option<String>> {
@@ -82,7 +82,7 @@ pub fn md2htm(fp: &Path) -> Result<Option<String>> {
 
 pub type LangRelHtm = Vec<(Lang, String, String)>;
 
-async fn upload(
+async fn scan(
   root: &Path,
   lang_li: &[Lang],
   changed: &HashSet<String>,
@@ -154,6 +154,7 @@ pub async fn put(
 ) -> Result<String> {
   let upload = &upload;
   {
+    let to_insert_len = to_insert.len();
     let mut iter = stream::iter(
       to_insert.into_iter().filter_map(|(lang, rel, htm)|{
           exist.rel_lang_set.get(&rel).map(|t| (t, lang, rel, htm))
@@ -182,12 +183,24 @@ pub async fn put(
               .collect::<Vec<_>>()
               .join("")
           );
-          upload.put(format!("{}{}", LANG_CODE[lang as usize], url_htm), htm)
+          let url = format!("{}{}", LANG_CODE[lang as usize], url_htm);
+          async move {
+            (
+              upload.put(&url, htm).await,
+              url
+            )
+          }
       })
     ).buffer_unordered(6);
-    while let Some(r) = iter.next().await {
-      xerr::log!(r);
+
+    let mut bar = pbar::pbar(to_insert_len as u64);
+
+    while let Some((r, url)) = iter.next().await {
+      bar.inc(1);
+      bar.set_message(format!("SEO ⬆ {url}"));
+      r?;
     }
+    bar.finish_and_clear();
   }
 
   let li = {
@@ -254,8 +267,7 @@ pub async fn gen<Upload: Seo>(
     Default::default()
   };
   let mut exist = exist.rel_lang_set(root)?;
-  if let Ok(Some(to_insert)) = xerr::ok!(upload(root, lang_li, changed, &mut exist, ignore,).await)
-  {
+  if let Ok(Some(to_insert)) = xerr::ok!(scan(root, lang_li, changed, &mut exist, ignore,).await) {
     let m = Upload::init(root, name, host)?;
     let yml = put(host, m, to_insert, exist).await?;
     ifs::wbin(seo_fp, yml)?;
@@ -288,7 +300,7 @@ pub async fn seo(
         }
       };
       if let Err(e) = r {
-        eprintln!("seo {name} {host} {action} {e}");
+        eprintln!("❌ seo {name} {host} {action} error : {e}");
       }
     }
   }

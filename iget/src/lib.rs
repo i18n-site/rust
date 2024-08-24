@@ -2,7 +2,7 @@ use std::{fmt::Display, io::Write, sync::Arc, time::Duration};
 
 use aok::{Result, OK};
 use futures_util::StreamExt;
-use pbar::ProgressBar;
+use pbar::Pbar;
 use reqwest::{header::RANGE, Client, ClientBuilder, StatusCode};
 use thiserror::Error;
 use tokio::{sync::RwLock, task::JoinHandle, time::timeout};
@@ -50,7 +50,7 @@ macro_rules! req {
 #[derive(Debug)]
 pub enum UrlOrProgressBar {
   Url(String),
-  ProgressBar(ProgressBar),
+  ProgressBar(Pbar),
 }
 
 #[derive(Debug)]
@@ -99,7 +99,7 @@ impl Down {
       {
         let mut bar = i.bar.write().await;
         if let UrlOrProgressBar::Url(url) = &bar.pb {
-          let pb = pbar::pbar(bar.total);
+          let mut pb = pbar::pbar(bar.total);
           pb.set_message(url.to_string());
           bar.pb = UrlOrProgressBar::ProgressBar(pb);
         }
