@@ -201,12 +201,13 @@ async fn upload(
     li
   };
 
+  let tsutc = tsfmt::utc(exist.now);
   let xml = format!(
     r#"<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</sitemapindex>"#,
     li.into_iter()
       .map(|fp| format!(
-        "<sitemap><loc>https://{host}/{fp}</loc><lastmod>2023-01-23</lastmod></sitemap>"
+        "<sitemap><loc>https://{host}/{fp}</loc><lastmod>{tsutc}</lastmod></sitemap>"
       ))
       .collect::<Vec<_>>()
       .join("")

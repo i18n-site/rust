@@ -35,7 +35,7 @@ fn test() -> Result<()> {
     info!("{i}");
   }
 
-  let yml = serde_yaml::to_string(&root).unwrap();
+  // let yml = serde_yaml::to_string(&root).unwrap();
   // info!("{}", yml);
 
   let mut bitmap = roaring::RoaringBitmap::new();
