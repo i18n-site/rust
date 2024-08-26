@@ -191,7 +191,7 @@ pub async fn put(
             )
           }
       })
-    ).buffer_unordered(6);
+    ).buffer_unordered(8);
 
     let mut bar = pbar::pbar(to_insert_len as u64);
 
@@ -206,12 +206,12 @@ pub async fn put(
   let li = {
     let mut iter = stream::iter(exist.gen(host).into_iter().enumerate().map(
       |(pos, xml)| async move {
-        let fp = format!("sitemap{}.gz", pos);
+        let fp = format!("{}.xml.gz", pos);
         upload.put(&fp, gz(xml)?).await?;
         Ok::<String, aok::Error>(fp)
       },
     ))
-    .buffer_unordered(6);
+    .buffer_unordered(8);
 
     let mut li = vec![];
     while let Some(r) = iter.next().await {

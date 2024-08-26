@@ -68,7 +68,7 @@ impl Seo for S3 {
             .s3
             .put_object()
             .bucket(&client.bucket)
-            .key(format!("/{rel}"))
+            .key(rel)
             .body(bin.into());
           if let Some(mime_type) = mime_type {
             put_request = put_request.content_type(mime_type);
@@ -93,16 +93,19 @@ impl Seo for S3 {
       for conf in confs {
         let config = Config::builder()
           .credentials_provider(Credentials::new(&conf.ak, &conf.sk, None, None, ""))
-          .endpoint_url(conf.endpoint);
-
-        let s3 = S3Client::from_conf(
-          if let Some(region) = conf.region {
-            config.region(Region::new(region))
+          .endpoint_url(if conf.endpoint.contains("://") {
+            conf.endpoint.into()
           } else {
-            config
-          }
-          .build(),
-        );
+            format!("https://{}", conf.endpoint)
+          })
+          .region(if let Some(region) = conf.region {
+            Region::new(region)
+          } else {
+            // 必须要设置一个
+            Region::new("0")
+          });
+
+        let s3 = S3Client::from_conf(config.build());
 
         li.push(Client {
           s3,

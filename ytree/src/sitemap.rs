@@ -128,7 +128,7 @@ pub fn rel_url(rel: &str) -> &str {
   if let Some(rel) = rel.strip_suffix("/README") {
     rel
   } else if rel == "README" {
-    ""
+    "/"
   } else {
     rel
   }
