@@ -1,4 +1,7 @@
-use std::{collections::HashMap, path::Path};
+use std::{
+  collections::{HashMap, HashSet},
+  path::Path,
+};
 
 use lang::{Lang, LANG_CODE};
 use roaring::RoaringBitmap;
@@ -238,6 +241,18 @@ impl Sitemap {
       }
     }
     false
+  }
+
+  pub fn set(&self) -> HashSet<(Lang, String)> {
+    let mut r = HashSet::new();
+    for (rel, lang_li) in &self.rel_lang_set {
+      for lang in &lang_li.lang_set {
+        if let Ok(lang) = (lang as u16).try_into() {
+          r.insert((lang, rel.clone()));
+        }
+      }
+    }
+    r
   }
 
   pub fn dumps(self) -> String {

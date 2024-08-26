@@ -82,6 +82,8 @@ pub fn md2htm(fp: &Path) -> Result<Option<String>> {
 
 pub type LangRelHtm = Vec<(Lang, String, String)>;
 
+pub const TOC: &str = "TOC";
+
 async fn scan(
   root: &Path,
   lang_li: &[Lang],
@@ -89,36 +91,53 @@ async fn scan(
   exist: &mut Sitemap,
   ignore: &GlobSet,
 ) -> Result<Option<LangRelHtm>> {
-  let (to_insert, mut to_remove) = {
+  let (to_insert, to_remove) = {
     let exist = &exist;
     let mut to_insert = vec![];
-    let mut to_remove = vec![];
+    let mut toc_dir = vec![];
+
+    let mut to_remove = (*exist).clone();
+
     for lang in lang_li {
       let lang = *lang;
       let lang_en = LANG_CODE[lang as usize];
       let dir = root.join(lang_en);
+      dbg!("TODO exist remove");
       for entry in WalkDir::new(&dir).into_iter().filter_entry(dot_hide::not) {
         if let Ok(entry) = xerr::ok!(entry) {
-          let path = entry.path();
-          if let Some(ext) = path.extension() {
-            if ext == "md" {
-              if let Ok(meta) = entry.metadata() {
-                if meta.file_type().is_file() {
-                  if let Ok(path) = path.strip_prefix(&dir) {
-                    if let Some(rel) = path.to_str() {
-                      let rel = unix_path(rel);
-                      let fp = format!("{lang_en}/{rel}");
-                      if ignore.is_match(format!("/{fp}")) {
-                        continue;
-                      }
-                      if !changed.contains(&fp) && exist.contains(lang, &rel) {
-                        continue;
-                      }
-                      if let Some(htm) = md2htm(&root.join(fp))? {
-                        to_insert.push((lang, rel, htm));
-                      } else if exist.contains(lang, &rel) {
-                        to_remove.push((lang, rel));
-                      }
+          let full_path = entry.path();
+          if let Ok(path) = full_path.strip_prefix(&dir)
+            && let Some(rel) = path.to_str()
+          {
+            let rel = unix_path(rel);
+            if let Ok(meta) = entry.metadata() {
+              let file_type = meta.file_type();
+              if file_type.is_dir() {
+                let toc = full_path.join(TOC);
+                if toc.exists() {
+                  toc_dir.push(rel.to_owned());
+                  dbg!("TODO TOC");
+                  // for i in toc {
+                  //   to_remove.remove(lang, rel)
+                  // }
+                }
+              } else if file_type.is_file() {
+                for i in &toc_dir {
+                  if rel.starts_with(i) && rel[i.len()..].chars().next() == Some('/') {
+                    continue;
+                  }
+                }
+                if let Some(ext) = path.extension() {
+                  if ext == "md" {
+                    let fp = format!("{lang_en}/{rel}");
+                    if ignore.is_match(format!("/{fp}")) {
+                      continue;
+                    }
+                    if to_remove.remove(lang, &rel) && !changed.contains(&fp) {
+                      continue;
+                    }
+                    if let Some(htm) = md2htm(&root.join(fp))? {
+                      to_insert.push((lang, rel, htm));
                     }
                   }
                 }
@@ -128,14 +147,14 @@ async fn scan(
         }
       }
     }
-    (to_insert, to_remove)
+    (to_insert, to_remove.set())
   };
 
   if to_remove.is_empty() && to_insert.is_empty() {
     return Ok(None);
   }
 
-  while let Some((lang, rel)) = to_remove.pop() {
+  for (lang, rel) in to_remove {
     exist.remove(lang, rel);
   }
 

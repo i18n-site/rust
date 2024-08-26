@@ -59,16 +59,9 @@ impl Build {
 
     let from_to = FromTo::from_iter(conf.i18n.fromTo.iter());
 
-    let lang_li = from_to.all_lang_li();
+    let lang_li = from_to.root_all_lang_li();
 
-    let bjs_after = bjs_after(
-      &root,
-      &from_to.root_all_lang_li(),
-      &htm_conf_name,
-      js_dir,
-      after_tran,
-      changed,
-    )?;
+    let bjs_after = bjs_after(&root, &lang_li, &htm_conf_name, js_dir, after_tran, changed)?;
 
     let nav = nav.json()?;
     let mut lang = Vec::with_capacity(lang_li.len());

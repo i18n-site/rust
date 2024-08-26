@@ -57,6 +57,9 @@ fn test() -> Result<()> {
   for i in &t.rel_lang_set {
     info!("{} {:?}", i.0, i.1);
   }
+  for i in t.set() {
+    println!("{i}");
+  }
   info!("{}", t.dumps());
   OK
 }
