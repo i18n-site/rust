@@ -102,42 +102,64 @@ async fn scan(
       let lang = *lang;
       let lang_en = LANG_CODE[lang as usize];
       let dir = root.join(lang_en);
-      dbg!("TODO exist remove");
       for entry in WalkDir::new(&dir).into_iter().filter_entry(dot_hide::not) {
         if let Ok(entry) = xerr::ok!(entry) {
           let full_path = entry.path();
           if let Ok(path) = full_path.strip_prefix(&dir)
-            && let Some(rel) = path.to_str()
+            && let Some(path_rel) = path.to_str()
           {
-            let rel = unix_path(rel);
+            let path_rel = unix_path(path_rel);
             if let Ok(meta) = entry.metadata() {
               let file_type = meta.file_type();
               if file_type.is_dir() {
                 let toc = full_path.join(TOC);
                 if toc.exists() {
-                  toc_dir.push(rel.to_owned());
-                  dbg!("TODO TOC");
-                  // for i in toc {
-                  //   to_remove.remove(lang, rel)
-                  // }
+                  toc_dir.push(path_rel.to_owned());
+
+                  let mut iter = rtoc::r(toc)?.into_iter().peekable();
+                  while let Some(name) = iter.next() {
+                    let rel = format!("{path_rel}/{name}");
+                    for lang in lang_li {
+                      let lang = *lang;
+                      let lang_en = LANG_CODE[lang as usize];
+                      let lang_rel = format!("{lang_en}/{rel}");
+                      let fp = root.join(&lang_rel);
+                      if fp.exists() {
+                        if to_remove.remove(lang, &rel) && !changed.contains(&lang_rel) {
+                          continue;
+                        }
+                        if let Some(htm) = md2htm(&root.join(fp))? {
+                          to_insert.push((lang, rel.clone(), htm));
+                        } else if name == "README.md" {
+                          if let Some(next) = iter.peek() {
+                            let url = format!("{lang_en}/{path_rel}/{next}");
+                            let url = ytree::sitemap::md_url(&url);
+                            let htm =
+                              format!(r#"<meta http-equiv=refresh content="0;url=/{url}">"#);
+                            to_insert.push((lang, rel.clone(), htm));
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               } else if file_type.is_file() {
                 for i in &toc_dir {
-                  if rel.starts_with(i) && rel[i.len()..].chars().next() == Some('/') {
+                  if path_rel.starts_with(i) && path_rel[i.len()..].chars().next() == Some('/') {
                     continue;
                   }
                 }
                 if let Some(ext) = path.extension() {
                   if ext == "md" {
-                    let fp = format!("{lang_en}/{rel}");
+                    let fp = format!("{lang_en}/{path_rel}");
                     if ignore.is_match(format!("/{fp}")) {
                       continue;
                     }
-                    if to_remove.remove(lang, &rel) && !changed.contains(&fp) {
+                    if to_remove.remove(lang, &path_rel) && !changed.contains(&fp) {
                       continue;
                     }
                     if let Some(htm) = md2htm(&root.join(fp))? {
-                      to_insert.push((lang, rel, htm));
+                      to_insert.push((lang, path_rel, htm));
                     }
                   }
                 }
@@ -185,15 +207,24 @@ pub async fn put(
               ".htm".into()
             )
           }else{
+            let url = format!("/{url}");
+            let url_htm = format!("{url}.htm");
             (
-              format!("/{url}"),
-              format!("/{url}.htm")
+              url,
+              url_htm
             )
           };
 
-          let htm = format!(
-            r#"<!doctypehtml><head><meta charset=UTF-8><link rel="alternate" href="https://{host}{url}" hreflang=x-default><link rel=canonical href="https://{host}{url}">{}<script src=//registry.npmmirror.com/18x/latest/files/seo.js></script></head><body>{htm}</body>"#,
-            t.lang_set
+/*
+https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
+省略可选标签(html head body)。 HTML5 规范定义了哪些标签可以省略。
+*/
+          let htm = if htm.starts_with("<meta http-equiv=refresh") { 
+            htm
+          }else{
+            format!(
+              r#"<!doctypehtml><meta charset=UTF-8><link rel="alternate" href="https://{host}{url}" hreflang=x-default><link rel=canonical href="https://{host}{url}">{}<script src=//registry.npmmirror.com/18x/latest/files/seo.js></script>{htm}"#,
+              t.lang_set
               .iter()
               .map(|lang| {
                 let lang = LANG_CODE[lang as usize];
@@ -201,7 +232,9 @@ pub async fn put(
               })
               .collect::<Vec<_>>()
               .join("")
-          );
+            )
+          };
+
           let url = format!("{}{}", LANG_CODE[lang as usize], url_htm);
           async move {
             (
@@ -302,14 +335,13 @@ pub async fn seo(
   ignore: &GlobSet,
   changed: &HashSet<String>,
 ) -> Null {
-  for (host, action) in conf {
-    macro_rules! gen {
-      ($seo:ty) => {
-        gen::<$seo>(host, action, root, name, &lang_li, ignore, changed).await
-      };
-    }
-
-    for action in action.split_whitespace() {
+  for (host, action_li) in conf {
+    for action in action_li.split_whitespace() {
+      macro_rules! gen {
+        ($seo:ty) => {
+          gen::<$seo>(host, action, root, name, &lang_li, ignore, changed).await
+        };
+      }
       let r = match action {
         "fs" => gen!(Fs),
         "s3" => gen!(S3),

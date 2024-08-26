@@ -3,7 +3,7 @@ aok = "0.1.15"
 gxhash = "3.4.1"
 
 [dependencies.serde]
-version = "1.0.208"
+version = "1.0.209"
 features = [ "derive" ]
 
 [dependencies.globset]

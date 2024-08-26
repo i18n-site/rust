@@ -22,7 +22,11 @@ globset = "0.4.14"
 walkdir = "2.5.0"
 futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
-flate2 = "1.0.32"
+flate2 = "1.0.33"
+
+[dependencies.rtoc]
+version = "0.1.9"
+path = "../rtoc"
 
 [dependencies.aws-sdk-s3]
 version = "1.46.0"
@@ -43,7 +47,7 @@ path = "../tsfmt"
 [dependencies.ytree]
 version = "0.1.22"
 path = "../ytree"
-features = [ "sitemap" ]
+features = ["sitemap"]
 
 [dependencies.lang]
 version = "0.1.32"

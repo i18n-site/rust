@@ -2,7 +2,7 @@
 aok = "0.1.15"
 futures = "0.3.30"
 reqwest = "0.12.7"
-serde = "1.0.208"
+serde = "1.0.209"
 sonic-rs = "0.3.11"
 tracing = "0.1.40"
 
