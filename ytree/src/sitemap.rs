@@ -173,7 +173,7 @@ impl Sitemap {
         let url = md_url(rel);
 
         let urlxml = format!(
-            "<url><loc>https://{host}/{url}</loc><lastmod>{dt}</lastmod>{}</url>",
+            "<url><loc>https://{host}/{url}</loc><lastmod>{dt}+00:00</lastmod>{}</url>",
             t.lang_set
             .iter()
             .map(|lang| {

@@ -45,9 +45,9 @@ version = "0.1.10"
 path = "../tsfmt"
 
 [dependencies.ytree]
-version = "0.1.22"
+version = "0.1.23"
 path = "../ytree"
-features = ["sitemap"]
+features = [ "sitemap" ]
 
 [dependencies.lang]
 version = "0.1.32"

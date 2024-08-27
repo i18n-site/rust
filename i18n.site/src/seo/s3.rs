@@ -73,11 +73,15 @@ impl Seo for S3 {
           if let Some(mime_type) = mime_type {
             put_request = put_request.content_type(mime_type);
           }
-          put_request.send().await
+          (client, put_request.send().await)
         });
       }
-      while let Some(r) = futures.next().await {
-        r?;
+      while let Some((client, r)) = futures.next().await {
+        if let Err(e) = r {
+          let conf = client.s3.config();
+          eprintln!("{:?}", conf);
+          return Err(e.into());
+        }
       }
     }
     OK
@@ -93,8 +97,9 @@ impl Seo for S3 {
       for conf in confs {
         let config = Config::builder()
           .credentials_provider(Credentials::new(&conf.ak, &conf.sk, None, None, ""))
+          .retry_config(aws_sdk_s3::config::retry::RetryConfig::adaptive().with_max_attempts(16))
           .endpoint_url(if conf.endpoint.contains("://") {
-            conf.endpoint.into()
+            conf.endpoint
           } else {
             format!("https://{}", conf.endpoint)
           })

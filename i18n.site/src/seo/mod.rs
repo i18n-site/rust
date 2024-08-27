@@ -102,7 +102,7 @@ async fn scan(
       let lang = *lang;
       let lang_en = LANG_CODE[lang as usize];
       let dir = root.join(lang_en);
-      for entry in WalkDir::new(&dir).into_iter().filter_entry(dot_hide::not) {
+      'out: for entry in WalkDir::new(&dir).into_iter().filter_entry(dot_hide::not) {
         if let Ok(entry) = xerr::ok!(entry) {
           let full_path = entry.path();
           if let Ok(path) = full_path.strip_prefix(&dir)
@@ -125,7 +125,8 @@ async fn scan(
                       let lang_rel = format!("{lang_en}/{rel}");
                       let fp = root.join(&lang_rel);
                       if fp.exists() {
-                        if to_remove.remove(lang, &rel) && !changed.contains(&lang_rel) {
+                        let is_exist = to_remove.remove(lang, &rel);
+                        if is_exist && !changed.contains(&lang_rel) {
                           continue;
                         }
                         if let Some(htm) = md2htm(&root.join(fp))? {
@@ -146,7 +147,7 @@ async fn scan(
               } else if file_type.is_file() {
                 for i in &toc_dir {
                   if path_rel.starts_with(i) && path_rel[i.len()..].chars().next() == Some('/') {
-                    continue;
+                    continue 'out;
                   }
                 }
                 if let Some(ext) = path.extension() {
@@ -207,7 +208,11 @@ pub async fn put(
               ".htm".into()
             )
           }else{
-            let url = format!("/{url}");
+            let url = if url.starts_with("/") {
+              url.into()
+            }else{
+              format!("/{url}")
+            };
             let url_htm = format!("{url}.htm");
             (
               url,
@@ -219,7 +224,7 @@ pub async fn put(
 https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
 省略可选标签(html head body)。 HTML5 规范定义了哪些标签可以省略。
 */
-          let htm = if htm.starts_with("<meta http-equiv=refresh") { 
+          let htm = if htm.starts_with("<meta http-equiv=refresh") {
             htm
           }else{
             format!(
@@ -280,7 +285,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</sitemapindex>"#,
     li.into_iter()
       .map(|fp| format!(
-        "<sitemap><loc>https://{host}/{fp}</loc><lastmod>{tsutc}</lastmod></sitemap>"
+        "<sitemap><loc>https://{host}/{fp}</loc><lastmod>{tsutc}+00:00</lastmod></sitemap>"
       ))
       .collect::<Vec<_>>()
       .join("")
