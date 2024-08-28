@@ -69,6 +69,11 @@ pub fn md2htm(fp: &Path) -> Result<Option<String>> {
     }
   }
 
+  for i in md.lines() {
+    let i = title_trim(i);
+    if i.is_empty() {}
+  }
+
   let mut opt = markdown::Options::gfm();
   opt.compile.allow_dangerous_html = true;
   opt.compile.allow_dangerous_protocol = true;
@@ -263,7 +268,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
   let li = {
     let mut iter = stream::iter(exist.gen(host).into_iter().enumerate().map(
       |(pos, xml)| async move {
-        let fp = format!("{}.xml.gz", pos);
+        let fp = format!("sitemap/{}.xml.gz", pos);
         upload.put(&fp, gz(xml)?).await?;
         Ok::<String, aok::Error>(fp)
       },
