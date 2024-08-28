@@ -1,4 +1,5 @@
 mod s3;
+
 use std::{
   fs::File,
   io::{self, BufRead, BufReader, Write},
@@ -13,6 +14,7 @@ use gxhash::{HashMap, HashSet};
 use i18::DOT_I18N;
 use ifs::unix_path;
 use lang::{Lang, LANG_CODE};
+use md_title::md_title;
 use s3::S3;
 use walkdir::WalkDir;
 use ytree::sitemap::{md_url, Sitemap};
@@ -69,20 +71,24 @@ pub fn md2htm(fp: &Path) -> Result<Option<String>> {
     }
   }
 
-  for i in md.lines() {
-    let i = title_trim(i);
-    if i.is_empty() {}
-  }
+  let title = md_title(&md);
+  let mut htm = if title.is_empty() {
+    "".into()
+  } else {
+    let title = htmlize::escape_text(title);
+    format!(r#"<title>{title}</title>"#)
+  };
 
   let mut opt = markdown::Options::gfm();
   opt.compile.allow_dangerous_html = true;
   opt.compile.allow_dangerous_protocol = true;
-  if let Ok(htm) = xerr::ok!(markdown::to_html_with_options(&md, &opt)) {
-    let htm = htm.replace(">\n<", "><");
-    let htm = htm.trim_end();
-    return Ok(Some(htm.into()));
+  if let Ok(h) = xerr::ok!(markdown::to_html_with_options(&md, &opt)) {
+    let h = h.replace(">\n<", "><");
+    htm += h.trim_end();
+  } else {
+    htm += &format!("<pre>{md}</pre>");
   };
-  Ok(None)
+  Ok(Some(htm))
 }
 
 pub type LangRelHtm = Vec<(Lang, String, String)>;
@@ -233,7 +239,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
             htm
           }else{
             format!(
-              r#"<!doctypehtml><meta charset=UTF-8><link rel="alternate" href="https://{host}{url}" hreflang=x-default><link rel=canonical href="https://{host}{url}">{}<script src=//registry.npmmirror.com/18x/latest/files/seo.js></script>{htm}"#,
+              r#"<!doctypehtml><meta charset=UTF-8><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel="alternate" href="https://{host}{url}" hreflang=x-default><link rel=canonical href="https://{host}{url}">{}{htm}"#,
               t.lang_set
               .iter()
               .map(|lang| {
