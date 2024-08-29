@@ -97,7 +97,6 @@ impl Build {
         .collect::<Vec<_>>()
         .join(",")
     );
-    println!("{}", pug);
     let pug = to_string(&pug)?;
     // 不这样_H会被压缩为空字典
     let const_js = format!(

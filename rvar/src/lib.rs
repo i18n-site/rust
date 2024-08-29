@@ -32,7 +32,7 @@ pub fn extract(input: &str) -> RangeStr<'_> {
       if let Some(end) = find_subsequence(&bytes[start_pos..], b"}") {
         let end_pos = start_pos + end;
         range_li.push(start_pos - 2..end_pos + 1);
-        str_li.push(input[start_pos..=end_pos].trim());
+        str_li.push(input[start_pos..end_pos].trim());
         i = end_pos + 1;
       } else {
         // No closing brace found, stop further processing
