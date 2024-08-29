@@ -1,4 +1,5 @@
 use aok::Result;
+use gxhash::HashMap;
 use ifs::rtxt;
 use lang::{Lang, LANG_CODE, LANG_NAME};
 use sonic_rs::to_string;
@@ -10,7 +11,19 @@ use crate::{Build, HtmConf};
 
 const TO_REPLACE: &str = "_TO_REPLACE=0";
 
-pub fn lang_js(vfs: &mut VerFs, lang_li: &[(Lang, Vec<u8>)]) -> Result<(String, VerMap)> {
+pub fn vec_str_bin<T: AsRef<[u8]>>(li: impl IntoIterator<Item = T>) -> Vec<u8> {
+  let mut r = vec![];
+  for i in li {
+    r.extend(i.as_ref());
+    r.push(0);
+  }
+  if !r.is_empty() {
+    r.pop();
+  }
+  r
+}
+
+pub fn lang_js(vfs: &mut VerFs, lang_li: &HashMap<Lang, Vec<String>>) -> Result<(String, VerMap)> {
   let len = lang_li.len();
   let mut lang_code_name_li = Vec::with_capacity(len);
 
@@ -21,7 +34,7 @@ pub fn lang_js(vfs: &mut VerFs, lang_li: &[(Lang, Vec<u8>)]) -> Result<(String, 
     let code = LANG_CODE[p];
     let name = LANG_NAME[p];
     lang_code_name_li.push(format!("{name}>{code}"));
-    let ver = vfs.wbin(format!("{code}.js"), bin)?;
+    let ver = vfs.wbin(format!("{code}.js"), vec_str_bin(bin))?;
     ver_count.push(ver);
   }
 
@@ -32,10 +45,9 @@ pub fn lang_js(vfs: &mut VerFs, lang_li: &[(Lang, Vec<u8>)]) -> Result<(String, 
 impl Build {
   pub async fn js(&self, vfs: &mut VerFs, conf_name: &str, conf: &HtmConf) -> Result<Box<str>> {
     let nav = &self.nav;
-    let pug = &self.pug;
     let htm = &self.htm;
 
-    let (lang_code_name_li, lang_ver_map) = lang_js(vfs, &self.lang[..])?;
+    let (lang_code_name_li, lang_ver_map) = lang_js(vfs, &self.lang)?;
 
     let mut js_li = vec![];
     let mut importmap = conf.importmap.clone();
@@ -76,7 +88,17 @@ impl Build {
 
     let const_js = to_string(&const_js)?;
     let pos = const_js.find(TO_REPLACE).unwrap();
-    let pug = to_string(pug)?;
+    let pug = format!(
+      "{{{}}}",
+      self
+        .pug
+        .iter()
+        .map(|(name, i)| i.to_fn(name))
+        .collect::<Vec<_>>()
+        .join(",")
+    );
+    println!("{}", pug);
+    let pug = to_string(&pug)?;
     // 不这样_H会被压缩为空字典
     let const_js = format!(
       "{}_I=\"+_I+\",_H={}{}",

@@ -1,5 +1,3 @@
-mod s3;
-
 use std::{
   fs::File,
   io::{self, BufRead, BufReader, Write},
@@ -12,12 +10,15 @@ use futures::{stream, stream::StreamExt};
 use globset::GlobSet;
 use gxhash::{HashMap, HashSet};
 use i18::DOT_I18N;
-use ifs::unix_path;
 use lang::{Lang, LANG_CODE};
-use md_title::md_title;
-use s3::S3;
-use walkdir::WalkDir;
 use ytree::sitemap::{md_url, Sitemap};
+
+mod scan;
+use scan::scan;
+mod md_htm;
+pub use md_htm::MdHtm;
+mod s3;
+use s3::S3;
 
 pub trait Seo {
   fn init(root: &Path, name: &str, host: &str) -> Result<Self>
@@ -49,161 +50,14 @@ fn gz(data: impl AsRef<[u8]>) -> Result<Vec<u8>, io::Error> {
   encoder.finish()
 }
 
-pub fn md2htm(fp: &Path) -> Result<Option<String>> {
-  let md = std::fs::read_to_string(fp)?;
-  {
-    use std::io::Cursor;
-    let c = Cursor::new(&md);
-    let mut iter = c.lines();
-    let mut n = 0;
-
-    #[allow(clippy::never_loop)]
-    'out: loop {
-      while let Some(Ok(i)) = iter.next() {
-        if !i.trim().is_empty() {
-          n += 1;
-          if n > 1 {
-            break 'out;
-          }
-        }
-      }
-      return Ok(None);
-    }
-  }
-
-  let title = md_title(&md);
-  let mut htm = if title.is_empty() {
-    "".into()
-  } else {
-    let title = htmlize::escape_text(title);
-    format!(r#"<title>{title}</title>"#)
-  };
-
-  let mut opt = markdown::Options::gfm();
-  opt.compile.allow_dangerous_html = true;
-  opt.compile.allow_dangerous_protocol = true;
-  if let Ok(h) = xerr::ok!(markdown::to_html_with_options(&md, &opt)) {
-    let h = h.replace(">\n<", "><");
-    htm += h.trim_end();
-  } else {
-    htm += &format!("<pre>{md}</pre>");
-  };
-  Ok(Some(htm))
-}
-
 pub type LangRelHtm = Vec<(Lang, String, String)>;
-
-pub const TOC: &str = "TOC";
-
-async fn scan(
-  root: &Path,
-  lang_li: &[Lang],
-  changed: &HashSet<String>,
-  exist: &mut Sitemap,
-  ignore: &GlobSet,
-) -> Result<Option<LangRelHtm>> {
-  let (to_insert, to_remove) = {
-    let exist = &exist;
-    let mut to_insert = vec![];
-    let mut toc_dir = vec![];
-
-    let mut to_remove = (*exist).clone();
-
-    for lang in lang_li {
-      let lang = *lang;
-      let lang_en = LANG_CODE[lang as usize];
-      let dir = root.join(lang_en);
-      'out: for entry in WalkDir::new(&dir).into_iter().filter_entry(dot_hide::not) {
-        if let Ok(entry) = xerr::ok!(entry) {
-          let full_path = entry.path();
-          if let Ok(path) = full_path.strip_prefix(&dir)
-            && let Some(path_rel) = path.to_str()
-          {
-            let path_rel = unix_path(path_rel);
-            if let Ok(meta) = entry.metadata() {
-              let file_type = meta.file_type();
-              if file_type.is_dir() {
-                let toc = full_path.join(TOC);
-                if toc.exists() {
-                  toc_dir.push(path_rel.to_owned());
-
-                  let mut iter = rtoc::r(toc)?.into_iter().peekable();
-                  while let Some(name) = iter.next() {
-                    let rel = format!("{path_rel}/{name}");
-                    for lang in lang_li {
-                      let lang = *lang;
-                      let lang_en = LANG_CODE[lang as usize];
-                      let lang_rel = format!("{lang_en}/{rel}");
-                      let fp = root.join(&lang_rel);
-                      if fp.exists() {
-                        let is_exist = to_remove.remove(lang, &rel);
-                        if is_exist && !changed.contains(&lang_rel) {
-                          continue;
-                        }
-                        if let Some(htm) = md2htm(&root.join(fp))? {
-                          to_insert.push((lang, rel.clone(), htm));
-                        } else if name == "README.md" {
-                          if let Some(next) = iter.peek() {
-                            let url = format!("{lang_en}/{path_rel}/{next}");
-                            let url = ytree::sitemap::md_url(&url);
-                            let htm =
-                              format!(r#"<meta http-equiv=refresh content="0;url=/{url}">"#);
-                            to_insert.push((lang, rel.clone(), htm));
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              } else if file_type.is_file() {
-                for i in &toc_dir {
-                  if path_rel.starts_with(i) && path_rel[i.len()..].chars().next() == Some('/') {
-                    continue 'out;
-                  }
-                }
-                if let Some(ext) = path.extension() {
-                  if ext == "md" {
-                    let fp = format!("{lang_en}/{path_rel}");
-                    if ignore.is_match(format!("/{fp}")) {
-                      continue;
-                    }
-                    if to_remove.remove(lang, &path_rel) && !changed.contains(&fp) {
-                      continue;
-                    }
-                    if let Some(htm) = md2htm(&root.join(fp))? {
-                      to_insert.push((lang, path_rel, htm));
-                    }
-                  }
-                }
-              }
-            }
-          };
-        }
-      }
-    }
-    (to_insert, to_remove.set())
-  };
-
-  if to_remove.is_empty() && to_insert.is_empty() {
-    return Ok(None);
-  }
-
-  for (lang, rel) in to_remove {
-    exist.remove(lang, rel);
-  }
-
-  for (lang, rel, _) in &to_insert {
-    exist.insert(*lang, rel);
-  }
-
-  Ok(Some(to_insert))
-}
 
 pub async fn put(
   host: &str,
   upload: impl Seo,
   to_insert: LangRelHtm,
   exist: Sitemap,
+  foot: &HashMap<Lang, String>,
 ) -> Result<String> {
   let upload = &upload;
   {
@@ -220,7 +74,7 @@ pub async fn put(
             )
           }else{
             let url = if url.starts_with("/") {
-              url.into()
+              url
             }else{
               format!("/{url}")
             };
@@ -235,21 +89,18 @@ pub async fn put(
 https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
 省略可选标签(html head body)。 HTML5 规范定义了哪些标签可以省略。
 */
-          let htm = if htm.starts_with("<meta http-equiv=refresh") {
-            htm
-          }else{
-            format!(
-              r#"<!doctypehtml><meta charset=UTF-8><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel="alternate" href="https://{host}{url}" hreflang=x-default><link rel=canonical href="https://{host}{url}">{}{htm}"#,
-              t.lang_set
-              .iter()
-              .map(|lang| {
-                let lang = LANG_CODE[lang as usize];
-                format!(r#"<link rel=alternate hreflang={lang} href="https://{host}/{lang}{url_htm}">"#)
-              })
-              .collect::<Vec<_>>()
-              .join("")
-            )
-          };
+          let htm = format!(
+            r#"<!doctypehtml><meta charset=UTF-8><link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default><link rel=canonical href="https://{host}{url}">{}{htm}{}"#,
+            t.lang_set
+            .iter()
+            .map(|lang| {
+              let lang = LANG_CODE[lang as usize];
+              format!(r#"<link rel=alternate hreflang={lang} href="https://{host}/{lang}{url_htm}">"#)
+            })
+            .collect::<Vec<_>>()
+            .join(""),
+            foot.get(&lang).unwrap_or(&"".into()),
+          );
 
           let url = format!("{}{}", LANG_CODE[lang as usize], url_htm);
           async move {
@@ -320,14 +171,15 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
 
 pub async fn gen<Upload: Seo>(
   host: &str,
-  action: &str,
+  kind: &str,
   root: &Path,
   name: &str,
   lang_li: &[Lang],
   ignore: &GlobSet,
   changed: &HashSet<String>,
+  foot: &HashMap<Lang, String>,
 ) -> Null {
-  let seo_fp = root.join(DOT_I18N).join("seo").join(host).join(action);
+  let seo_fp = root.join(DOT_I18N).join("seo").join(host).join(kind);
   let exist = if seo_fp.exists() {
     let reader = BufReader::new(File::open(&seo_fp)?);
     ytree::sitemap::loads(reader.lines().map_while(Result::ok))
@@ -335,9 +187,11 @@ pub async fn gen<Upload: Seo>(
     Default::default()
   };
   let mut exist = exist.rel_lang_set(root)?;
-  if let Ok(Some(to_insert)) = xerr::ok!(scan(root, lang_li, changed, &mut exist, ignore,).await) {
+  if let Ok(Some(to_insert)) =
+    xerr::ok!(scan(host, root, lang_li, changed, &mut exist, ignore).await)
+  {
     let m = Upload::init(root, name, host)?;
-    let yml = put(host, m, to_insert, exist).await?;
+    let yml = put(host, m, to_insert, exist, foot).await?;
     ifs::wbin(seo_fp, yml)?;
   }
   OK
@@ -350,24 +204,25 @@ pub async fn seo(
   lang_li: Vec<Lang>,
   ignore: &GlobSet,
   changed: &HashSet<String>,
+  foot: &HashMap<Lang, String>,
 ) -> Null {
-  for (host, action_li) in conf {
-    for action in action_li.split_whitespace() {
+  for (host, kind_li) in conf {
+    for kind in kind_li.split_whitespace() {
       macro_rules! gen {
         ($seo:ty) => {
-          gen::<$seo>(host, action, root, name, &lang_li, ignore, changed).await
+          gen::<$seo>(host, kind, root, name, &lang_li, ignore, changed, foot).await
         };
       }
-      let r = match action {
+      let r = match kind {
         "fs" => gen!(Fs),
         "s3" => gen!(S3),
         _ => {
-          eprintln!("unknown action {action}");
+          eprintln!("unknown kind {kind}");
           continue;
         }
       };
       if let Err(e) = r {
-        eprintln!("❌ seo {name} {host} {action} error : {e}");
+        eprintln!("❌ seo {name} {host} {kind} error : {e}");
       }
     }
   }

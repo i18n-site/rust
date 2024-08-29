@@ -5,12 +5,15 @@ impl I18nLi {
   pub fn replace(&mut self, txt: impl AsRef<str>) -> (String, usize) {
     let extract = rvar::extract(txt.as_ref());
     (
-      rvar::replace(&txt, &extract.range, |key| {
-        if let Some(key) = key.strip_prefix("I18N.") {
-          format!("I[{}]", self.pos(key))
-        } else {
-          key.into()
-        }
+      extract.replace(&txt, |key| {
+        format!(
+          "${{{}}}",
+          if let Some(key) = key.strip_prefix("I18N.") {
+            format!("I[{}]", self.pos(key))
+          } else {
+            key.into()
+          }
+        )
       }),
       extract.range.len(),
     )

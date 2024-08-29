@@ -46,7 +46,7 @@ version = "0.1.10"
 path = "../i18_conf"
 
 [dependencies.rvar]
-version = "0.1.3"
+version = "0.1.4"
 path = "../rvar"
 
 [dependencies.ft]

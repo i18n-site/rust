@@ -6,9 +6,39 @@ use aws_sdk_s3::{
   Client as S3Client, Config,
 };
 use futures::{stream::FuturesUnordered, StreamExt};
-use gxhash::HashMap;
 use i18::env::I18N_SITE_YML_PATH;
-use serde::{Deserialize, Serialize};
+
+pub mod yml {
+  use gxhash::HashMap;
+  use serde::{Deserialize, Serialize};
+
+  #[derive(Debug, Serialize, Deserialize)]
+  pub struct Seo {
+    pub baidu: Option<String>,
+    pub indexnow: Option<String>,
+    pub google: Option<String>,
+  }
+
+  #[derive(Debug, Serialize, Deserialize)]
+  pub struct Conf {
+    pub endpoint: String,
+    pub region: Option<String>,
+    pub ak: String,
+    pub sk: String,
+    pub bucket: String,
+  }
+
+  #[derive(Debug, Serialize, Deserialize)]
+  pub struct Site {
+    pub s3: Option<Vec<Conf>>,
+    pub seo: Seo,
+  }
+
+  #[derive(Debug, Serialize, Deserialize, Default)]
+  pub struct I18nConf {
+    pub site: Option<HashMap<String, Site>>,
+  }
+}
 
 use super::Seo;
 
@@ -23,20 +53,6 @@ fn mime_type(rel: &str) -> Option<&'static str> {
     Some("xml") => Some(MIME_TYPE_XML),
     _ => None,
   }
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Conf {
-  pub endpoint: String,
-  pub region: Option<String>,
-  pub ak: String,
-  pub sk: String,
-  pub bucket: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, Default)]
-pub struct I18nConf {
-  pub s3: Option<HashMap<String, Vec<Conf>>>,
 }
 
 #[derive(Debug)]
@@ -88,11 +104,12 @@ impl Seo for S3 {
   }
 
   fn init(_root: &Path, name: &str, host: &str) -> Result<Self> {
-    let conf: I18nConf = i18::env::load()?;
+    let conf: yml::I18nConf = i18::env::load()?;
     let mut li = Vec::new();
 
-    if let Some(mut s3) = conf.s3
-      && let Some(confs) = s3.remove(host)
+    if let Some(mut site) = conf.site
+      && let Some(site) = site.remove(host)
+      && let Some(confs) = site.s3
     {
       for conf in confs {
         let config = Config::builder()
