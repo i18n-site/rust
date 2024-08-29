@@ -50,21 +50,21 @@ fn gz(data: impl AsRef<[u8]>) -> Result<Vec<u8>, io::Error> {
   encoder.finish()
 }
 
-pub type LangRelHtm = Vec<(Lang, String, String)>;
+pub type LangRelTitleHtm = Vec<(Lang, String, String, String)>;
 
 pub async fn put(
   host: &str,
   upload: impl Seo,
-  to_insert: LangRelHtm,
+  to_insert: LangRelTitleHtm,
   exist: Sitemap,
-  foot: &HashMap<Lang, String>,
 ) -> Result<String> {
   let upload = &upload;
   {
     let to_insert_len = to_insert.len();
     let mut iter = stream::iter(
-      to_insert.into_iter().filter_map(|(lang, rel, htm)|{
-          exist.rel_lang_set.get(&rel).map(|t| (t, lang, rel, htm))
+      to_insert.into_iter().filter_map(|(lang, rel, title, htm)|{
+        let htm = format!("{title}{htm}");
+        exist.rel_lang_set.get(&rel).map(|t| (t, lang, rel, htm))
       }).map(|(t, lang, rel, htm)| {
           let url = md_url(&rel).to_owned();
           let (url, url_htm) = if url.is_empty() {
@@ -89,8 +89,9 @@ pub async fn put(
 https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
 省略可选标签(html head body)。 HTML5 规范定义了哪些标签可以省略。
 */
+
           let htm = format!(
-            r#"<!doctypehtml><meta charset=UTF-8><link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default><link rel=canonical href="https://{host}{url}">{}{htm}{}"#,
+            r#"<!doctypehtml><meta charset=UTF-8><link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default><link rel=canonical href="https://{host}{url}">{}{htm}"#,
             t.lang_set
             .iter()
             .map(|lang| {
@@ -99,7 +100,6 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
             })
             .collect::<Vec<_>>()
             .join(""),
-            foot.get(&lang).unwrap_or(&"".into()),
           );
 
           let url = format!("{}{}", LANG_CODE[lang as usize], url_htm);
@@ -188,10 +188,10 @@ pub async fn gen<Upload: Seo>(
   };
   let mut exist = exist.rel_lang_set(root)?;
   if let Ok(Some(to_insert)) =
-    xerr::ok!(scan(host, root, lang_li, changed, &mut exist, ignore).await)
+    xerr::ok!(scan(host, root, lang_li, changed, &mut exist, ignore, foot).await)
   {
     let m = Upload::init(root, name, host)?;
-    let yml = put(host, m, to_insert, exist, foot).await?;
+    let yml = put(host, m, to_insert, exist).await?;
     ifs::wbin(seo_fp, yml)?;
   }
   OK

@@ -59,30 +59,32 @@ impl MdHtm {
     self._title.as_ref().unwrap()
   }
 
+  pub fn htm_title(&mut self) -> String {
+    let title = self.title();
+    if title.is_empty() {
+      "".into()
+    } else {
+      format!(r#"<title>{title}</title>"#)
+    }
+  }
+
   pub fn htm(&mut self) -> Option<String> {
     if self.only_title {
       None
     } else {
-      let title = self.title();
-      let mut htm = if title.is_empty() {
-        "".into()
-      } else {
-        format!(r#"<title>{title}</title>"#)
-      };
-
       let mut opt = markdown::Options::gfm();
       let compile = &mut opt.compile;
       compile.allow_dangerous_html = true;
       compile.allow_dangerous_protocol = true;
       compile.gfm_tagfilter = false;
       let md = &self.md;
-      htm += &if let Ok(h) = xerr::ok!(markdown::to_html_with_options(md, &opt)) {
+      let htm = if let Ok(h) = xerr::ok!(markdown::to_html_with_options(md, &opt)) {
         let h = h.replace(">\n<", "><");
-        wrap(h.trim_end())
+        h.trim_end().to_owned()
       } else {
-        wrap(&format!("<pre>{md}</pre>"))
+        format!("<pre>{md}</pre>")
       };
-      Some(htm)
+      Some(wrap(&htm))
     }
   }
 }

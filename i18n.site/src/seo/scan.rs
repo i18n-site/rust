@@ -9,10 +9,12 @@ use md_title::md_title;
 use walkdir::WalkDir;
 use ytree::sitemap::Sitemap;
 
-use super::{LangRelHtm, MdHtm};
+use super::{LangRelTitleHtm, MdHtm};
 
 pub const TOC: &str = "TOC";
 pub const README_MD: &str = "README.md";
+
+pub static EMPTY: String = String::new();
 
 pub async fn scan(
   host: &str,
@@ -21,7 +23,8 @@ pub async fn scan(
   changed: &HashSet<String>,
   exist: &mut Sitemap,
   ignore: &GlobSet,
-) -> Result<Option<LangRelHtm>> {
+  lang_foot: &HashMap<Lang, String>,
+) -> Result<Option<LangRelTitleHtm>> {
   let (to_insert, to_remove) = {
     let mut regen_readme = false;
     let exist = &exist;
@@ -33,6 +36,7 @@ pub async fn scan(
     for lang in lang_li {
       let lang = *lang;
       let lang_en = LANG_CODE[lang as usize];
+      let foot = lang_foot.get(&lang).unwrap_or(&EMPTY);
       let dir = root.join(lang_en);
       'out: for entry in WalkDir::new(&dir).into_iter().filter_entry(dot_hide::not) {
         if let Ok(entry) = xerr::ok!(entry) {
@@ -75,7 +79,7 @@ pub async fn scan(
                         name_title.insert(name, md_htm.title().to_owned());
                         if let Some(htm) = md_htm.htm() {
                           toc_change = true;
-                          insert.push((lang, rel.clone(), htm));
+                          insert.push((lang, rel.clone(), md_htm.htm_title(), htm));
                         }
                       }
                     }
@@ -107,30 +111,33 @@ pub async fn scan(
                       let readme_rel = format!("{path_rel}/{README_MD}");
                       let fp = root.join(lang_en).join(&readme_rel);
 
-                      let htm = if fp.exists() {
+                      let foot = lang_foot.get(&lang).unwrap_or(&EMPTY);
+                      let (htm_title, htm) = if fp.exists() {
                         let mut t = MdHtm::load(fp)?;
                         let h = t.htm();
                         let title = t.title();
+
                         for i in insert.iter_mut() {
-                          i.2 = format!(
-                            r#"<main>{}<nav><a href="/">{host}</a><a href="/{lang_en}/{path_rel}">{title}</a></nav></main>"#,
-                            i.2
+                          i.3 = format!(
+                            r#"<main>{}<nav><a href="/">{host}</a><a href="/{lang_en}/{path_rel}">{title}</a></nav>{foot}</main>"#,
+                            i.3
                           );
                         }
-                        if let Some(h) = h {
+
+                        let htm = if let Some(h) = h {
                           let nav = format!(
                             r#"<nav><h1><a href="/{lang_en}/{path_rel}">{title}</a></h1>{nav}</nav>"#
                           );
-                          h + nav.as_str()
+                          format!("<main>{h}{foot}</main>{nav}",)
                         } else {
-                          format!(r#"<nav><h1>{title}</h1>{nav}</nav>"#)
-                        }
+                          format!("<main><nav><h1>{title}</h1>{nav}</nav>{foot}</main>")
+                        };
+                        (t.htm_title(), htm)
                       } else {
-                        format!(r#"<nav>{nav}</nav>"#)
+                        ("".into(), format!(r#"<main><nav>{nav}</nav>{foot}</main>"#))
                       };
-
                       to_insert.extend(insert);
-                      to_insert.push((lang, readme_rel, htm));
+                      to_insert.push((lang, readme_rel, htm_title, htm));
                     }
                   }
                 }
@@ -153,8 +160,10 @@ pub async fn scan(
                       regen_readme = true;
                       continue;
                     }
-                    if let Some(htm) = MdHtm::load(root.join(fp))?.htm() {
-                      to_insert.push((lang, path_rel, htm));
+                    let mut md_htm = MdHtm::load(root.join(fp))?;
+                    if let Some(htm) = md_htm.htm() {
+                      let htm = format!("<main>{htm}{foot}</main>",);
+                      to_insert.push((lang, path_rel, md_htm.htm_title(), htm));
                     }
                   }
                 }
@@ -170,12 +179,8 @@ pub async fn scan(
         let lang_en = LANG_CODE[lang as usize];
         let fp = root.join(lang_en).join(README_MD);
         if fp.exists() {
-          let mut t = MdHtm::load(root.join(fp))?;
-          let htm = if let Some(htm) = t.htm() {
-            htm
-          } else {
-            format!("<title>{}</title>", t.title())
-          };
+          let mut md_htm = MdHtm::load(root.join(fp))?;
+          let htm = md_htm.htm().unwrap_or_default();
           let nav: Vec<String> = toc_dir
             .iter()
             .filter_map(|rel| {
@@ -190,9 +195,12 @@ pub async fn scan(
             })
             .collect::<Vec<_>>();
 
+          let foot = lang_foot.get(&lang).unwrap_or(&EMPTY);
+          let htm = format!("<main>{htm}{foot}</main>");
           to_insert.push((
             lang,
             README_MD.into(),
+            md_htm.htm_title(),
             if nav.is_empty() {
               htm
             } else {
@@ -213,7 +221,7 @@ pub async fn scan(
     exist.remove(lang, rel);
   }
 
-  for (lang, rel, _) in &to_insert {
+  for (lang, rel, ..) in &to_insert {
     exist.insert(*lang, rel);
   }
 
