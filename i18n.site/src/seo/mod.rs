@@ -1,3 +1,13 @@
+mod atom;
+pub use atom::Atom;
+mod scan;
+use scan::scan;
+mod md_htm;
+pub use md_htm::MdHtm;
+mod rss;
+use rss::Rss;
+mod s3;
+
 use std::{
   fs::File,
   io::{self, BufRead, BufReader, Write},
@@ -11,16 +21,8 @@ use globset::GlobSet;
 use gxhash::{HashMap, HashSet};
 use i18::DOT_I18N;
 use lang::{Lang, LANG_CODE};
-use ytree::sitemap::{md_url, Sitemap};
-
-mod scan;
-use scan::scan;
-mod md_htm;
-pub use md_htm::MdHtm;
-mod rss;
-use rss::Rss;
-mod s3;
 use s3::S3;
+use ytree::sitemap::{md_url, Sitemap};
 
 pub trait Seo {
   fn init(root: &Path, name: &str, host: &str) -> Result<Self>
@@ -64,8 +66,21 @@ pub async fn put(
   let upload = &upload;
   let exist = &rss.exist;
   {
-    let to_insert_len = to_insert.len();
-    let mut iter = stream::iter(
+    let to_insert_len = to_insert.len() + rss.li.len();
+    let mut bar = pbar::pbar(to_insert_len as u64);
+    macro_rules! wait {
+      ($gen:expr) => {{
+        let mut iter = stream::iter($gen).buffer_unordered(64);
+        while let Some((r, url)) = iter.next().await {
+          bar.inc(1);
+          bar.set_message(format!("SEO ⬆ {url}"));
+          r?;
+        }
+        drop(iter);
+      }};
+    }
+
+    wait!(
       to_insert.into_iter().filter_map(|(lang, rel, title, htm)|{
         let htm = format!("{title}{htm}");
         exist.rel_lang_set.get(&rel).map(|t| (t, lang, rel, htm))
@@ -114,15 +129,13 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
             )
           }
       })
-    ).buffer_unordered(32);
+    );
 
-    let mut bar = pbar::pbar(to_insert_len as u64);
+    wait!(rss
+      .gen(host)
+      .into_iter()
+      .map(|(url, htm)| async move { (upload.put(&url, htm).await, url) }));
 
-    while let Some((r, url)) = iter.next().await {
-      bar.inc(1);
-      bar.set_message(format!("SEO ⬆ {url}"));
-      r?;
-    }
     bar.finish_and_clear();
   }
 
@@ -158,7 +171,6 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
   );
 
   upload.put("sitemap.xml", xml).await?;
-  // rss(&exist);
   Ok(exist.dumps())
 }
 
@@ -180,8 +192,9 @@ pub async fn gen<Upload: Seo>(
   } else {
     Default::default()
   };
-  let mut exist = exist.rel_lang_set(root)?;
-  let mut rss = Rss::new(exist);
+
+  let mut rss = Rss::new(exist.rel_lang_set(root)?);
+
   if let Ok(Some(to_insert)) =
     xerr::ok!(scan(host, root, lang_li, changed, ignore, foot, &mut rss).await)
   {

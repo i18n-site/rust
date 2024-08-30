@@ -27,7 +27,7 @@ pub fn remove_h(input: &str) -> Option<&str> {
 
 pub const EMPTY: String = String::new();
 
-pub fn md_title(md: &str) -> String {
+pub fn md_title_txt(md: &str) -> String {
   for i in md.lines() {
     let t = title_trim(i);
     if !t.is_empty() {
@@ -41,4 +41,8 @@ pub fn md_title(md: &str) -> String {
     }
   }
   EMPTY
+}
+
+pub fn md_title(md: &str) -> String {
+  htmlize::escape_text(md_title_txt(md)).into()
 }

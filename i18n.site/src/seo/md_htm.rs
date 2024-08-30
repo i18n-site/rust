@@ -48,13 +48,7 @@ impl MdHtm {
 
   pub fn title(&mut self) -> &str {
     if self._title.is_none() {
-      let title = md_title(&self.md);
-
-      self._title = Some(if title.is_empty() {
-        title
-      } else {
-        htmlize::escape_text(title).into()
-      });
+      self._title = md_title(&self.md);
     }
     self._title.as_ref().unwrap()
   }
