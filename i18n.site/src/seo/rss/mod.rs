@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use gxhash::{HashMap, HashMapExt};
 use lang::{Lang, LANG_CODE};
-use ytree::sitemap::Sitemap;
+use ytree::sitemap::{LangSet, Sitemap};
 
 mod topk;
 pub use topk::topk;
@@ -12,14 +12,16 @@ pub use xml::Xml;
 pub struct Rss {
   pub host: String,
   pub root: PathBuf,
-  pub exist: Sitemap,
+  pub rel_lang_set: HashMap<String, LangSet>,
   pub li: HashMap<Lang, Vec<(String, String, String)>>,
 }
 
-fn convert_rel_lang_set(sitemap: &Sitemap) -> HashMap<u32, HashMap<String, u64>> {
+fn convert_rel_lang_set(
+  rel_lang_set: HashMap<String, LangSet>,
+) -> HashMap<u32, HashMap<String, u64>> {
   let mut result: HashMap<u32, HashMap<String, u64>> = HashMap::new();
 
-  for (key, lang_set) in &sitemap.rel_lang_set {
+  for (key, lang_set) in rel_lang_set {
     for value in lang_set.lang_set.iter() {
       result
         .entry(value)

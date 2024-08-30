@@ -21,9 +21,11 @@ pub struct Sitemap {
   pub now: u64,
 }
 
+pub struct LangRelTs(pub HashMap<Lang, HashMap<String, u64>>);
+
 impl LangTree {
-  pub fn rel_lang_set(self) -> HashMap<String, LangSet> {
-    let mut r = HashMap::new();
+  pub fn lang_rel_ts(self) -> LangRelTs {
+    let mut r: HashMap<Lang, HashMap<String, u64>> = HashMap::new();
     for i in self.0 {
       for rel in i.li.iter() {
         let mut rel = rel.rsplit("#");
@@ -33,17 +35,17 @@ impl LangTree {
             && let Some(rel) = rel.remainder()
           {
             let ts = intbin::bin_u64(ts);
-            let mut lang_set = RoaringBitmap::new();
             for lang in &i.lang {
               let lang = *lang;
-              lang_set.push(lang as u32);
+              if let Ok(lang) = (lang as u16).try_into() {
+                r.entry(lang).or_default().insert(rel.into(), ts);
+              }
             }
-            r.insert(rel.to_owned(), LangSet { ts, lang_set });
           }
         }
       }
     }
-    r
+    LangRelTs(r)
   }
 
   pub fn sitemap(self, root: impl AsRef<Path>) -> std::io::Result<Sitemap> {

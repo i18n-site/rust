@@ -180,7 +180,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
   Ok(exist.dumps())
 }
 
-fn load_lang_tree(seo_fp: &Path) -> Result<LangTree> {
+pub fn load_lang_tree(seo_fp: &Path) -> Result<LangTree> {
   Ok(if seo_fp.exists() {
     let reader = BufReader::new(File::open(&seo_fp)?);
     ytree::sitemap::loads(reader.lines().map_while(Result::ok))
@@ -200,23 +200,31 @@ pub async fn gen<Upload: Seo>(
   foot: &HashMap<Lang, String>,
   css: &str,
 ) -> Null {
-  let seo_fp = root
-    .join(DOT_I18N)
-    .join("seo")
-    .join(host)
-    .join(kind)
-    .join("sitemap");
+  let seo_dir = root.join(DOT_I18N).join("seo").join(host).join(kind);
 
-  let exist = load_lang_tree(&seo_fp)?;
+  let sitemap_fp = seo_dir.join("sitemap");
+  let rss_fp = seo_dir.join("rss");
 
-  let mut rss = Rss::new(root, host, exist.sitemap(root)?);
+  let mut sitemap = load_lang_tree(&sitemap_fp)?.sitemap(root)?;
 
-  if let Ok(Some(to_insert)) =
-    xerr::ok!(scan(host, root, lang_li, changed, ignore, foot, &mut rss).await)
-  {
+  let mut rss = Rss::new(root, host, load_lang_tree(&rss_fp)?.rel_lang_set());
+
+  if let Ok(Some(to_insert)) = xerr::ok!(
+    scan(
+      host,
+      root,
+      lang_li,
+      changed,
+      ignore,
+      foot,
+      &mut sitemap,
+      &mut rss
+    )
+    .await
+  ) {
     let m = Upload::init(root, name, host)?;
     let yml = put(&m, to_insert, css, rss).await?;
-    ifs::wbin(seo_fp, yml)?;
+    ifs::wbin(sitemap_fp, yml)?;
   }
   OK
 }
