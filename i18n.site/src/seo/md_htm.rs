@@ -5,7 +5,8 @@ use std::{
 
 use md_title::md_title;
 
-pub fn wrap(htm: &str) -> String {
+pub fn article(htm: impl AsRef<str>) -> String {
+  let htm = htm.as_ref();
   if !htm.is_empty() {
     return format!("<article>{htm}</article>");
   }
@@ -48,18 +49,9 @@ impl MdHtm {
 
   pub fn title(&mut self) -> &str {
     if self._title.is_none() {
-      self._title = md_title(&self.md);
+      self._title = Some(md_title(&self.md));
     }
     self._title.as_ref().unwrap()
-  }
-
-  pub fn htm_title(&mut self) -> String {
-    let title = self.title();
-    if title.is_empty() {
-      "".into()
-    } else {
-      format!(r#"<title>{title}</title>"#)
-    }
   }
 
   pub fn htm(&mut self) -> Option<String> {
@@ -78,7 +70,7 @@ impl MdHtm {
       } else {
         format!("<pre>{md}</pre>")
       };
-      Some(wrap(&htm))
+      Some(htm)
     }
   }
 }

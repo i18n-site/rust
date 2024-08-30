@@ -45,12 +45,14 @@ use super::Seo;
 pub const MIME_TYPE_GZIP: &str = "application/gzip";
 pub const MIME_TYPE_HTML: &str = "text/html";
 pub const MIME_TYPE_XML: &str = "text/xml";
+pub const MIME_TYPE_RSS: &str = "application/rss+xml";
 
 fn mime_type(rel: &str) -> Option<&'static str> {
   match rel.rsplit('.').next() {
     Some("gz") => Some(MIME_TYPE_GZIP),
     Some("htm") | Some("html") => Some(MIME_TYPE_HTML),
     Some("xml") => Some(MIME_TYPE_XML),
+    Some("rss") => Some(MIME_TYPE_RSS),
     _ => None,
   }
 }

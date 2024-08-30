@@ -15,8 +15,38 @@ pub struct LangLi {
 #[derive(Debug, Default)]
 pub struct LangTree(pub Vec<LangLi>);
 
+#[derive(Debug, Default, Clone)]
+pub struct Sitemap {
+  pub rel_lang_set: HashMap<String, LangSet>,
+  pub now: u64,
+}
+
 impl LangTree {
-  pub fn rel_lang_set(self, root: impl AsRef<Path>) -> std::io::Result<Sitemap> {
+  pub fn rel_lang_set(self) -> HashMap<String, LangSet> {
+    let mut r = HashMap::new();
+    for i in self.0 {
+      for rel in i.li.iter() {
+        let mut rel = rel.rsplit("#");
+
+        if let Some(ts) = rel.next() {
+          if let Ok(ts) = burl::d(ts)
+            && let Some(rel) = rel.remainder()
+          {
+            let ts = intbin::bin_u64(ts);
+            let mut lang_set = RoaringBitmap::new();
+            for lang in &i.lang {
+              let lang = *lang;
+              lang_set.push(lang as u32);
+            }
+            r.insert(rel.to_owned(), LangSet { ts, lang_set });
+          }
+        }
+      }
+    }
+    r
+  }
+
+  pub fn sitemap(self, root: impl AsRef<Path>) -> std::io::Result<Sitemap> {
     let root = root.as_ref();
     let mut r = HashMap::new();
     for i in self.0 {
@@ -101,12 +131,6 @@ pub fn dumps(iter: impl IntoIterator<Item = (Vec<u8>, crate::Li)>) -> String {
 pub struct LangSet {
   pub ts: u64,
   pub lang_set: RoaringBitmap,
-}
-
-#[derive(Debug, Default, Clone)]
-pub struct Sitemap {
-  pub rel_lang_set: HashMap<String, LangSet>,
-  pub now: u64,
 }
 
 pub fn lang_li_e(lang_li: &RoaringBitmap) -> Vec<u8> {

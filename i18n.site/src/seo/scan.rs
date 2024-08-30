@@ -8,10 +8,9 @@ use lang::{Lang, LANG_CODE};
 use md_title::md_title;
 use walkdir::WalkDir;
 
-use super::{LangRelTitleHtm, MdHtm, Rss};
+use super::{md_htm::article, LangRelTitleHtm, MdHtm, Rss, README_MD};
 
 pub const TOC: &str = "TOC";
-pub const README_MD: &str = "README.md";
 
 pub static EMPTY: String = String::new();
 
@@ -77,9 +76,9 @@ pub async fn scan(
                         name_title.insert(name, md_htm.title().to_owned());
                         if let Some(htm) = md_htm.htm() {
                           toc_change = true;
-                          let title = md_htm.htm_title();
-                          rss.push(lang, &rel, &title, &htm);
-                          insert.push((lang, rel.clone(), title, htm));
+                          let title = md_htm.title();
+                          rss.push(lang, &rel, title, &htm);
+                          insert.push((lang, rel.clone(), title.to_owned(), article(htm)));
                         }
                       }
                     }
@@ -99,11 +98,13 @@ pub async fn scan(
                           if fp.exists() {
                             let mut md_htm = MdHtm::load(fp)?;
                             let title = md_htm.title().to_owned();
-                            if md_htm.htm().is_some() {
-                              nav += &format!(r#"<a href="/{lang_rel}">{title}</a>"#);
-                            } else {
-                              nav += &format!(r#"<p>{title}</p>"#);
+                            if md_htm.only_title {
+                              if !title.is_empty() {
+                                nav += &format!(r#"<p>{title}</p>"#);
+                              }
+                              continue;
                             }
+                            nav += &format!(r#"<a href="/{lang_rel}">{title}</a>"#);
                           }
                         };
                       }
@@ -112,9 +113,10 @@ pub async fn scan(
                       let fp = root.join(lang_en).join(&readme_rel);
 
                       let foot = lang_foot.get(&lang).unwrap_or(&EMPTY);
-                      let (htm_title, htm) = if fp.exists() {
+                      let (title, htm) = if fp.exists() {
                         let mut t = MdHtm::load(fp)?;
                         let h = t.htm();
+
                         let title = t.title();
 
                         for i in insert.iter_mut() {
@@ -125,6 +127,8 @@ pub async fn scan(
                         }
 
                         let htm = if let Some(h) = h {
+                          rss.push(lang, &readme_rel, title, &h);
+                          let h = article(h);
                           let nav = format!(
                             r#"<nav><h1><a href="/{lang_en}/{path_rel}">{title}</a></h1>{nav}</nav>"#
                           );
@@ -132,12 +136,12 @@ pub async fn scan(
                         } else {
                           format!("<main><nav><h1>{title}</h1>{nav}</nav>{foot}</main>")
                         };
-                        (t.htm_title(), htm)
+                        (t.title().to_owned(), htm)
                       } else {
                         ("".into(), format!(r#"<main><nav>{nav}</nav>{foot}</main>"#))
                       };
                       to_insert.extend(insert);
-                      to_insert.push((lang, readme_rel, htm_title, htm));
+                      to_insert.push((lang, readme_rel, title, htm));
                     }
                   }
                 }
@@ -165,9 +169,11 @@ pub async fn scan(
                     }
                     let mut md_htm = MdHtm::load(root.join(fp))?;
                     if let Some(htm) = md_htm.htm() {
-                      let htm = format!("<main>{htm}{foot}</main>",);
+                      let title = md_htm.title();
+                      rss.push(lang, &path_rel, title, &htm);
+                      let htm = format!("<main>{}{foot}</main>", article(htm));
                       to_remove.remove(lang, &path_rel);
-                      to_insert.push((lang, path_rel, md_htm.htm_title(), htm));
+                      to_insert.push((lang, path_rel, title.into(), htm));
                     }
                   }
                 }
@@ -188,7 +194,7 @@ pub async fn scan(
           let title = md_htm.title();
           let htm = if let Some(htm) = htm {
             rss.push(lang, README_MD, title, &htm);
-            htm
+            article(htm)
           } else {
             "".into()
           };

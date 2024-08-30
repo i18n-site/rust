@@ -1,5 +1,3 @@
-mod atom;
-pub use atom::Atom;
 mod scan;
 use scan::scan;
 mod md_htm;
@@ -7,6 +5,10 @@ pub use md_htm::MdHtm;
 mod rss;
 use rss::Rss;
 mod s3;
+
+use ytree::sitemap::LangTree;
+
+pub const README_MD: &str = "README.md";
 
 use std::{
   fs::File,
@@ -22,7 +24,7 @@ use gxhash::{HashMap, HashSet};
 use i18::DOT_I18N;
 use lang::{Lang, LANG_CODE};
 use s3::S3;
-use ytree::sitemap::{md_url, Sitemap};
+use ytree::sitemap::md_url;
 
 pub trait Seo {
   fn init(root: &Path, name: &str, host: &str) -> Result<Self>
@@ -57,13 +59,13 @@ fn gz(data: impl AsRef<[u8]>) -> Result<Vec<u8>, io::Error> {
 pub type LangRelTitleHtm = Vec<(Lang, String, String, String)>;
 
 pub async fn put(
-  host: &str,
   upload: &impl Seo,
   to_insert: LangRelTitleHtm,
   css: &str,
   rss: Rss,
 ) -> Result<String> {
   let upload = &upload;
+  let host = &rss.host;
   let exist = &rss.exist;
   {
     let to_insert_len = to_insert.len() + rss.li.len();
@@ -82,7 +84,11 @@ pub async fn put(
 
     wait!(
       to_insert.into_iter().filter_map(|(lang, rel, title, htm)|{
-        let htm = format!("{title}{htm}");
+        let htm = if title.is_empty() {
+          htm
+        }else{
+         format!("<title>{title}</title>{htm}")
+        };
         exist.rel_lang_set.get(&rel).map(|t| (t, lang, rel, htm))
       }).map(|(t, lang, rel, htm)| {
           let url = md_url(&rel).to_owned();
@@ -132,7 +138,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
     );
 
     wait!(rss
-      .gen(host)
+      .gen()
       .into_iter()
       .map(|(url, htm)| async move { (upload.put(&url, htm).await, url) }));
 
@@ -174,6 +180,15 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
   Ok(exist.dumps())
 }
 
+fn load_lang_tree(seo_fp: &Path) -> Result<LangTree> {
+  Ok(if seo_fp.exists() {
+    let reader = BufReader::new(File::open(&seo_fp)?);
+    ytree::sitemap::loads(reader.lines().map_while(Result::ok))
+  } else {
+    Default::default()
+  })
+}
+
 pub async fn gen<Upload: Seo>(
   host: &str,
   kind: &str,
@@ -185,21 +200,22 @@ pub async fn gen<Upload: Seo>(
   foot: &HashMap<Lang, String>,
   css: &str,
 ) -> Null {
-  let seo_fp = root.join(DOT_I18N).join("seo").join(host).join(kind);
-  let exist = if seo_fp.exists() {
-    let reader = BufReader::new(File::open(&seo_fp)?);
-    ytree::sitemap::loads(reader.lines().map_while(Result::ok))
-  } else {
-    Default::default()
-  };
+  let seo_fp = root
+    .join(DOT_I18N)
+    .join("seo")
+    .join(host)
+    .join(kind)
+    .join("sitemap");
 
-  let mut rss = Rss::new(exist.rel_lang_set(root)?);
+  let exist = load_lang_tree(&seo_fp)?;
+
+  let mut rss = Rss::new(root, host, exist.sitemap(root)?);
 
   if let Ok(Some(to_insert)) =
     xerr::ok!(scan(host, root, lang_li, changed, ignore, foot, &mut rss).await)
   {
     let m = Upload::init(root, name, host)?;
-    let yml = put(host, &m, to_insert, css, rss).await?;
+    let yml = put(&m, to_insert, css, rss).await?;
     ifs::wbin(seo_fp, yml)?;
   }
   OK
