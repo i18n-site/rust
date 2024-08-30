@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use gxhash::{HashMap, HashMapExt};
 use lang::{Lang, LANG_CODE};
-use ytree::sitemap::{LangSet, Sitemap};
+use ytree::sitemap::{LangRelTs, LangSet, Sitemap};
 
 mod topk;
 pub use topk::topk;
@@ -12,31 +12,14 @@ pub use xml::Xml;
 pub struct Rss {
   pub host: String,
   pub root: PathBuf,
-  pub rel_lang_set: HashMap<String, LangSet>,
+  pub lang_rel_ts: LangRelTs,
   pub li: HashMap<Lang, Vec<(String, String, String)>>,
 }
 
-fn convert_rel_lang_set(
-  rel_lang_set: HashMap<String, LangSet>,
-) -> HashMap<u32, HashMap<String, u64>> {
-  let mut result: HashMap<u32, HashMap<String, u64>> = HashMap::new();
-
-  for (key, lang_set) in rel_lang_set {
-    for value in lang_set.lang_set.iter() {
-      result
-        .entry(value)
-        .or_default()
-        .insert(key.clone(), lang_set.ts);
-    }
-  }
-
-  result
-}
-
 impl Rss {
-  pub fn new(root: impl Into<PathBuf>, host: impl Into<String>, exist: Sitemap) -> Self {
+  pub fn new(root: impl Into<PathBuf>, host: impl Into<String>, lang_rel_ts: LangRelTs) -> Self {
     Self {
-      exist,
+      lang_rel_ts,
       host: host.into(),
       root: root.into(),
       li: Default::default(),
@@ -44,7 +27,7 @@ impl Rss {
   }
 
   pub fn gen(&self) -> impl IntoIterator<Item = (String, String)> + use<'_> {
-    let mut lang_rel_ts = convert_rel_lang_set(&self.exist);
+    let mut lang_rel_ts = convert_rel_lang_set(&self.lang_rel_ts);
     self.li.iter().filter_map(move |(lang, rel_title_htm)| {
       let lang = *lang;
       if let Some(mut rel_ts) = lang_rel_ts.remove(&(lang as u32)) {
@@ -90,7 +73,7 @@ impl Rss {
   ) {
     let rel = rel.into();
 
-    if !self.exist.contains(lang, &rel) {
+    if !self.lang_rel_ts.contains(lang, &rel) {
       let title = title.into();
       let htm = htm.into();
       self.li.entry(lang).or_default().push((rel, title, htm));

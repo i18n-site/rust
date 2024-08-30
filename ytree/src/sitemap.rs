@@ -23,6 +23,17 @@ pub struct Sitemap {
 
 pub struct LangRelTs(pub HashMap<Lang, HashMap<String, u64>>);
 
+impl LangRelTs {
+  pub fn contains(&self, lang: Lang, rel: impl AsRef<str>) -> bool {
+    let rel = rel.as_ref();
+    if let Some(t) = self.0.get(&lang) {
+      t.contains_key(rel)
+    } else {
+      false
+    }
+  }
+}
+
 impl LangTree {
   pub fn lang_rel_ts(self) -> LangRelTs {
     let mut r: HashMap<Lang, HashMap<String, u64>> = HashMap::new();

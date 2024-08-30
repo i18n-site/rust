@@ -7,6 +7,7 @@ use ifs::unix_path;
 use lang::{Lang, LANG_CODE};
 use md_title::md_title;
 use walkdir::WalkDir;
+use ytree::sitemap::Sitemap;
 
 use super::{md_htm::article, LangRelTitleHtm, MdHtm, Rss, README_MD};
 
@@ -21,6 +22,7 @@ pub async fn scan(
   changed: &HashSet<String>,
   ignore: &GlobSet,
   lang_foot: &HashMap<Lang, String>,
+  sitemap: &mut Sitemap,
   rss: &mut Rss,
 ) -> Result<Option<LangRelTitleHtm>> {
   let (to_insert, to_remove) = {

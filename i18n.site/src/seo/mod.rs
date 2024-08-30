@@ -207,7 +207,7 @@ pub async fn gen<Upload: Seo>(
 
   let mut sitemap = load_lang_tree(&sitemap_fp)?.sitemap(root)?;
 
-  let mut rss = Rss::new(root, host, load_lang_tree(&rss_fp)?.rel_lang_set());
+  let mut rss = Rss::new(root, host, load_lang_tree(&rss_fp)?.lang_rel_ts());
 
   if let Ok(Some(to_insert)) = xerr::ok!(
     scan(
