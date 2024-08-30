@@ -7,9 +7,8 @@ use ifs::unix_path;
 use lang::{Lang, LANG_CODE};
 use md_title::md_title;
 use walkdir::WalkDir;
-use ytree::sitemap::Sitemap;
 
-use super::{LangRelTitleHtm, MdHtm};
+use super::{LangRelTitleHtm, MdHtm, Rss};
 
 pub const TOC: &str = "TOC";
 pub const README_MD: &str = "README.md";
@@ -21,15 +20,14 @@ pub async fn scan(
   root: &Path,
   lang_li: &[Lang],
   changed: &HashSet<String>,
-  exist: &mut Sitemap,
   ignore: &GlobSet,
   lang_foot: &HashMap<Lang, String>,
+  rss: &mut Rss,
 ) -> Result<Option<LangRelTitleHtm>> {
   let (to_insert, to_remove) = {
     let mut regen_readme = false;
-    let exist = &exist;
     let mut to_insert = vec![];
-    let mut to_remove = (*exist).clone();
+    let mut to_remove = rss.exist.clone();
     let mut toc_dir = vec![];
 
     for lang in lang_li {
@@ -79,7 +77,9 @@ pub async fn scan(
                         name_title.insert(name, md_htm.title().to_owned());
                         if let Some(htm) = md_htm.htm() {
                           toc_change = true;
-                          insert.push((lang, rel.clone(), md_htm.htm_title(), htm));
+                          let title = md_htm.htm_title();
+                          rss.push(lang, &rel, &title, &htm);
+                          insert.push((lang, rel.clone(), title, htm));
                         }
                       }
                     }
@@ -184,7 +184,14 @@ pub async fn scan(
         let fp = root.join(lang_en).join(README_MD);
         if fp.exists() {
           let mut md_htm = MdHtm::load(root.join(fp))?;
-          let htm = md_htm.htm().unwrap_or_default();
+          let htm = md_htm.htm();
+          let title = md_htm.title();
+          let htm = if let Some(htm) = htm {
+            rss.push(lang, README_MD, title, &htm);
+            htm
+          } else {
+            "".into()
+          };
           let nav: Vec<String> = toc_dir
             .iter()
             .filter_map(|rel| {
@@ -204,7 +211,7 @@ pub async fn scan(
           to_insert.push((
             lang,
             README_MD.into(),
-            md_htm.htm_title(),
+            title.into(),
             if nav.is_empty() {
               htm
             } else {
@@ -222,11 +229,11 @@ pub async fn scan(
   }
 
   for (lang, rel) in to_remove {
-    exist.remove(lang, rel);
+    rss.exist.remove(lang, rel);
   }
 
   for (lang, rel, ..) in &to_insert {
-    exist.insert(*lang, rel);
+    rss.exist.insert(*lang, rel);
   }
 
   Ok(Some(to_insert))

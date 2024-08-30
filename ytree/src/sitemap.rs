@@ -255,7 +255,7 @@ impl Sitemap {
     r
   }
 
-  pub fn dumps(self) -> String {
+  pub fn dumps(&self) -> String {
     let mut lang_rel = HashMap::new();
     for (rel, t) in &self.rel_lang_set {
       let lang = lang_li_e(&t.lang_set);

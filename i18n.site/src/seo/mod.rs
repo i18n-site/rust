@@ -18,7 +18,7 @@ use scan::scan;
 mod md_htm;
 pub use md_htm::MdHtm;
 mod rss;
-use rss::rss;
+use rss::Rss;
 mod s3;
 use s3::S3;
 
@@ -56,12 +56,13 @@ pub type LangRelTitleHtm = Vec<(Lang, String, String, String)>;
 
 pub async fn put(
   host: &str,
-  upload: impl Seo,
+  upload: &impl Seo,
   to_insert: LangRelTitleHtm,
-  exist: Sitemap,
   css: &str,
+  rss: Rss,
 ) -> Result<String> {
   let upload = &upload;
+  let exist = &rss.exist;
   {
     let to_insert_len = to_insert.len();
     let mut iter = stream::iter(
@@ -157,18 +158,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
   );
 
   upload.put("sitemap.xml", xml).await?;
-  /*
-  <?xml version="1.0" encoding="UTF-8"?>
-  <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
-  <loc>https://example.com/sitemaps/sitemap_part_aa.gz</loc>
-  </sitemap>
-  <sitemap>
-  <loc>https://example.com/sitemaps/sitemap_part_ab.gz</loc>
-  </sitemap>
-  </sitemapindex>
-  */
-
+  // rss(&exist);
   Ok(exist.dumps())
 }
 
@@ -191,11 +181,12 @@ pub async fn gen<Upload: Seo>(
     Default::default()
   };
   let mut exist = exist.rel_lang_set(root)?;
+  let mut rss = Rss::new(exist);
   if let Ok(Some(to_insert)) =
-    xerr::ok!(scan(host, root, lang_li, changed, &mut exist, ignore, foot).await)
+    xerr::ok!(scan(host, root, lang_li, changed, ignore, foot, &mut rss).await)
   {
     let m = Upload::init(root, name, host)?;
-    let yml = put(host, m, to_insert, exist, css).await?;
+    let yml = put(host, &m, to_insert, css, rss).await?;
     ifs::wbin(seo_fp, yml)?;
   }
   OK
