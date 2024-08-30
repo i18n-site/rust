@@ -17,6 +17,8 @@ mod scan;
 use scan::scan;
 mod md_htm;
 pub use md_htm::MdHtm;
+mod rss;
+use rss::rss;
 mod s3;
 use s3::S3;
 
@@ -57,6 +59,7 @@ pub async fn put(
   upload: impl Seo,
   to_insert: LangRelTitleHtm,
   exist: Sitemap,
+  css: &str,
 ) -> Result<String> {
   let upload = &upload;
   {
@@ -91,7 +94,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
 */
 
           let htm = format!(
-            r#"<!doctypehtml><meta charset=UTF-8><link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default><link rel=canonical href="https://{host}{url}">{}{htm}"#,
+            r#"<!doctypehtml><meta charset=UTF-8><link rel=stylesheet href=//registry.npmmirror.com/{css}/latest/files/_.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default><link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css>{}{htm}"#,
             t.lang_set
             .iter()
             .map(|lang| {
@@ -110,7 +113,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
             )
           }
       })
-    ).buffer_unordered(8);
+    ).buffer_unordered(32);
 
     let mut bar = pbar::pbar(to_insert_len as u64);
 
@@ -130,7 +133,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
         Ok::<String, aok::Error>(fp)
       },
     ))
-    .buffer_unordered(8);
+    .buffer_unordered(32);
 
     let mut li = vec![];
     while let Some(r) = iter.next().await {
@@ -178,6 +181,7 @@ pub async fn gen<Upload: Seo>(
   ignore: &GlobSet,
   changed: &HashSet<String>,
   foot: &HashMap<Lang, String>,
+  css: &str,
 ) -> Null {
   let seo_fp = root.join(DOT_I18N).join("seo").join(host).join(kind);
   let exist = if seo_fp.exists() {
@@ -191,7 +195,7 @@ pub async fn gen<Upload: Seo>(
     xerr::ok!(scan(host, root, lang_li, changed, &mut exist, ignore, foot).await)
   {
     let m = Upload::init(root, name, host)?;
-    let yml = put(host, m, to_insert, exist).await?;
+    let yml = put(host, m, to_insert, exist, css).await?;
     ifs::wbin(seo_fp, yml)?;
   }
   OK
@@ -201,16 +205,17 @@ pub async fn seo(
   conf: &HashMap<String, String>,
   root: &Path,
   name: &str,
-  lang_li: Vec<Lang>,
+  lang_li: &[Lang],
   ignore: &GlobSet,
   changed: &HashSet<String>,
   foot: &HashMap<Lang, String>,
+  css: &str,
 ) -> Null {
   for (host, kind_li) in conf {
     for kind in kind_li.split_whitespace() {
       macro_rules! gen {
         ($seo:ty) => {
-          gen::<$seo>(host, kind, root, name, &lang_li, ignore, changed, foot).await
+          gen::<$seo>(host, kind, root, name, &lang_li, ignore, changed, foot, css).await
         };
       }
       let r = match kind {

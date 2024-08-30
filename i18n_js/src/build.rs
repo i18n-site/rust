@@ -28,16 +28,17 @@ pub struct Build {
   pub htm_conf: HtmConf,
   pub htm_conf_name: String,
   pub bjs_after: BjsAfter,
-  pub lang: HashMap<Lang, Vec<String>>,
+  pub i18n_li: HashMap<Lang, Vec<String>>,
+  pub lang_li: Vec<Lang>,
 }
 
 impl Build {
   pub fn foot(&self) -> HashMap<Lang, String> {
-    let mut r = HashMap::with_capacity(self.lang.len());
+    let mut r = HashMap::with_capacity(self.lang_li.len());
     if let Some(foot) = self.pug.get("foot") {
       if foot.has_i18n {
         let extract = rvar::extract(&foot.htm);
-        for (lang, li) in &self.lang {
+        for (lang, li) in &self.i18n_li {
           let foot = extract.replace(&foot.htm, |key| {
             if let Some(key) = key.strip_prefix("I[") {
               if let Some(key) = key.strip_suffix(']') {
@@ -54,7 +55,7 @@ impl Build {
           r.insert(*lang, format!("<footer>{foot}</footer>"));
         }
       } else {
-        for lang in self.lang.keys() {
+        for lang in &self.lang_li {
           r.insert(*lang, foot.htm.clone());
         }
       }
@@ -79,9 +80,9 @@ impl Build {
     let css = css::css(&htm, &scan.css_li)?;
     // let conf: Conf = yconf::load(&i18n.join("conf.yml"))?;
     let nav = NavLi::new(&conf.nav);
-    let mut i18n_li = nav.i18n_li();
+    let mut nav_i18n_li = nav.i18n_li();
 
-    let pug = pug::pug(&htm, &scan.pug_li, &mut i18n_li)?;
+    let pug = pug::pug(&htm, &scan.pug_li, &mut nav_i18n_li)?;
 
     let from_to = FromTo::from_iter(conf.i18n.fromTo.iter());
 
@@ -90,19 +91,19 @@ impl Build {
     let bjs_after = bjs_after(&root, &lang_li, &htm_conf_name, js_dir, after_tran, changed)?;
 
     let nav = nav.json()?;
-    let mut lang = HashMap::with_capacity(lang_li.len());
+    let mut i18n_li = HashMap::with_capacity(lang_li.len());
 
     for i in &lang_li {
       let i = *i;
       let dir = root.join(LANG_CODE[i as usize]);
       let mut m: HashMap<String, String> = serde_yaml::from_slice(&ifs::r(dir.join("i18n.yml"))?)?;
       let mut li = Vec::new();
-      if !i18n_li.0.is_empty() {
-        for i in &i18n_li.0 {
+      if !nav_i18n_li.0.is_empty() {
+        for i in &nav_i18n_li.0 {
           li.push(m.remove(i).unwrap_or_default());
         }
       }
-      lang.insert(i, li);
+      i18n_li.insert(i, li);
     }
 
     let mnt = Mnt::load(
@@ -111,14 +112,15 @@ impl Build {
       ignore,
       // &nav.0,
       // &from_to,
-      lang_li,
+      &lang_li,
     )?;
 
     // _LANG = en name url
     let i = Self {
       htm_conf: yconf::load(&htm.join(format!("{}.yml", htm_conf_name)))?,
       htm_conf_name,
-      lang,
+      i18n_li,
+      lang_li,
       bjs_after,
       conf,
       css,

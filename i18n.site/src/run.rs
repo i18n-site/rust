@@ -82,10 +82,11 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
       conf,
       &dir,
       &htm_conf,
-      build.lang.iter().map(|(i, _)| *i).collect(),
+      &build.lang_li,
       &ignore,
       &changed,
       &build.foot(),
+      &build.htm_conf.x,
     )
     .await?;
   }

@@ -1,8 +1,8 @@
-use std::path::Path;
+use std::{path::Path, time::Duration};
 
 use aok::{Null, Result, OK};
 use aws_sdk_s3::{
-  config::{Credentials, Region},
+  config::{timeout::TimeoutConfig, Credentials, Region},
   Client as S3Client, Config,
 };
 use futures::{stream::FuturesUnordered, StreamExt};
@@ -124,8 +124,14 @@ impl Seo for S3 {
             Region::new(region)
           } else {
             // 必须要设置一个
-            Region::new("0")
-          });
+            Region::new("x")
+          })
+          .timeout_config(
+            TimeoutConfig::builder()
+              .connect_timeout(Duration::from_secs(10))
+              .read_timeout(Duration::from_secs(100))
+              .build(),
+          );
 
         let s3 = S3Client::from_conf(config.build());
 

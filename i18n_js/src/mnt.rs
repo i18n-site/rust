@@ -42,12 +42,12 @@ impl Mnt {
     ignore: &GlobSet,
     // nav: &[Nav],
     // from_to: &ft::FromTo,
-    lang_li: Vec<Lang>,
+    lang_li: &[Lang],
   ) -> Result<Self> {
     let mut prefix_ver = HashMap::<String, _>::new();
 
     let mut lang_rel_li = Vec::with_capacity(lang_li.len());
-    for lang in lang_li.iter() {
+    for lang in lang_li {
       let code = LANG_CODE[*lang as usize];
       let dir = root.join(code);
       let mut rel_li = Vec::new();

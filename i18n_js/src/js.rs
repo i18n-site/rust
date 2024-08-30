@@ -47,7 +47,7 @@ impl Build {
     let nav = &self.nav;
     let htm = &self.htm;
 
-    let (lang_code_name_li, lang_ver_map) = lang_js(vfs, &self.lang)?;
+    let (lang_code_name_li, lang_ver_map) = lang_js(vfs, &self.i18n_li)?;
 
     let mut js_li = vec![];
     let mut importmap = conf.importmap.clone();

@@ -29,9 +29,8 @@ pub async fn scan(
     let mut regen_readme = false;
     let exist = &exist;
     let mut to_insert = vec![];
-    let mut toc_dir = vec![];
-
     let mut to_remove = (*exist).clone();
+    let mut toc_dir = vec![];
 
     for lang in lang_li {
       let lang = *lang;
@@ -53,7 +52,8 @@ pub async fn scan(
                 if toc.exists() {
                   toc_dir.push(path_rel.to_owned());
 
-                  let toc_li = rtoc::r(toc)?.into_iter().collect::<Vec<_>>();
+                  let toc_li = rtoc::r(&toc)?.into_iter().collect::<Vec<_>>();
+
                   for lang in lang_li {
                     let lang = *lang;
                     let lang_en = LANG_CODE[lang as usize];
@@ -149,6 +149,9 @@ pub async fn scan(
                 }
                 if let Some(ext) = path.extension() {
                   if ext == "md" {
+                    // if path_rel.starts_with("i18") {
+                    //   println!("{lang:?} {path_rel} {toc_dir:?}");
+                    // }
                     let fp = format!("{lang_en}/{path_rel}");
                     if ignore.is_match(format!("/{fp}")) {
                       continue;
@@ -163,6 +166,7 @@ pub async fn scan(
                     let mut md_htm = MdHtm::load(root.join(fp))?;
                     if let Some(htm) = md_htm.htm() {
                       let htm = format!("<main>{htm}{foot}</main>",);
+                      to_remove.remove(lang, &path_rel);
                       to_insert.push((lang, path_rel, md_htm.htm_title(), htm));
                     }
                   }
