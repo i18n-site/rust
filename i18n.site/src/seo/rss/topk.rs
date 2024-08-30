@@ -1,11 +1,16 @@
-use std::{cmp::Reverse, collections::BinaryHeap};
+use std::{
+  cmp::Reverse,
+  collections::{BinaryHeap, HashMap},
+};
 
-use gxhash::HashMap;
-
-pub fn topk(n: usize, map: HashMap<String, u64>) -> impl Iterator<Item = (String, u64)> {
+pub fn topk(
+  n: usize,
+  map: &HashMap<String, u64>,
+) -> impl Iterator<Item = (&'_ String, u64)> {
   let mut heap = BinaryHeap::with_capacity(n);
 
   for (key, value) in map {
+    let value = *value;
     if heap.len() < n {
       heap.push((Reverse(value), key));
     } else if let Some(&(Reverse(top_value), _)) = heap.peek() {
@@ -16,8 +21,5 @@ pub fn topk(n: usize, map: HashMap<String, u64>) -> impl Iterator<Item = (String
     }
   }
 
-  heap
-    .into_iter()
-    .map(|(Reverse(ts), rel)| (rel, ts))
-    .rev()
+  heap.into_iter().map(|(Reverse(ts), rel)| (rel, ts)).rev()
 }

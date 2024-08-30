@@ -6,7 +6,7 @@ mod rss;
 use rss::Rss;
 mod s3;
 
-use ytree::sitemap::LangTree;
+use ytree::sitemap::{LangTree, Sitemap};
 
 pub const README_MD: &str = "README.md";
 
@@ -62,11 +62,11 @@ pub async fn put(
   upload: &impl Seo,
   to_insert: LangRelTitleHtm,
   css: &str,
-  rss: Rss,
-) -> Result<String> {
+  sitemap: &mut Sitemap,
+  rss: &mut Rss,
+) -> Null {
   let upload = &upload;
   let host = &rss.host;
-  let exist = &rss.exist;
   {
     let to_insert_len = to_insert.len() + rss.li.len();
     let mut bar = pbar::pbar(to_insert_len as u64);
@@ -89,7 +89,7 @@ pub async fn put(
         }else{
          format!("<title>{title}</title>{htm}")
         };
-        exist.rel_lang_set.get(&rel).map(|t| (t, lang, rel, htm))
+        sitemap.rel_lang_set.get(&rel).map(|t| (t, lang, rel, htm))
       }).map(|(t, lang, rel, htm)| {
           let url = md_url(&rel).to_owned();
           let (url, url_htm) = if url.is_empty() {
@@ -146,7 +146,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
   }
 
   let li = {
-    let mut iter = stream::iter(exist.gen(host).into_iter().enumerate().map(
+    let mut iter = stream::iter(sitemap.gen(host).into_iter().enumerate().map(
       |(pos, xml)| async move {
         let fp = format!("sitemap/{}.xml.gz", pos);
         upload.put(&fp, gz(xml)?).await?;
@@ -164,7 +164,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
     li
   };
 
-  let tsutc = tsfmt::utc(exist.now);
+  let tsutc = tsfmt::utc(sitemap.now);
   let xml = format!(
     r#"<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{}</sitemapindex>"#,
@@ -177,12 +177,12 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
   );
 
   upload.put("sitemap.xml", xml).await?;
-  Ok(exist.dumps())
+  OK
 }
 
 pub fn load_lang_tree(seo_fp: &Path) -> Result<LangTree> {
   Ok(if seo_fp.exists() {
-    let reader = BufReader::new(File::open(&seo_fp)?);
+    let reader = BufReader::new(File::open(seo_fp)?);
     ytree::sitemap::loads(reader.lines().map_while(Result::ok))
   } else {
     Default::default()
@@ -223,8 +223,9 @@ pub async fn gen<Upload: Seo>(
     .await
   ) {
     let m = Upload::init(root, name, host)?;
-    let yml = put(&m, to_insert, css, rss).await?;
-    ifs::wbin(sitemap_fp, yml)?;
+    put(&m, to_insert, css, &mut sitemap, &mut rss).await?;
+    ifs::wbin(sitemap_fp, sitemap.dumps())?;
+    ifs::wbin(rss_fp, rss.dumps())?;
   }
   OK
 }

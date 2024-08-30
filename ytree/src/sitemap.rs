@@ -21,75 +21,10 @@ pub struct Sitemap {
   pub now: u64,
 }
 
-pub struct LangRelTs(pub HashMap<Lang, HashMap<String, u64>>);
-
-impl LangRelTs {
-  pub fn contains(&self, lang: Lang, rel: impl AsRef<str>) -> bool {
-    let rel = rel.as_ref();
-    if let Some(t) = self.0.get(&lang) {
-      t.contains_key(rel)
-    } else {
-      false
-    }
-  }
-}
-
-impl LangTree {
-  pub fn lang_rel_ts(self) -> LangRelTs {
-    let mut r: HashMap<Lang, HashMap<String, u64>> = HashMap::new();
-    for i in self.0 {
-      for rel in i.li.iter() {
-        let mut rel = rel.rsplit("#");
-
-        if let Some(ts) = rel.next() {
-          if let Ok(ts) = burl::d(ts)
-            && let Some(rel) = rel.remainder()
-          {
-            let ts = intbin::bin_u64(ts);
-            for lang in &i.lang {
-              let lang = *lang;
-              if let Ok(lang) = (lang as u16).try_into() {
-                r.entry(lang).or_default().insert(rel.into(), ts);
-              }
-            }
-          }
-        }
-      }
-    }
-    LangRelTs(r)
-  }
-
-  pub fn sitemap(self, root: impl AsRef<Path>) -> std::io::Result<Sitemap> {
-    let root = root.as_ref();
-    let mut r = HashMap::new();
-    for i in self.0 {
-      for rel in i.li.iter() {
-        let mut rel = rel.rsplit("#");
-
-        if let Some(ts) = rel.next() {
-          if let Ok(ts) = burl::d(ts)
-            && let Some(rel) = rel.remainder()
-          {
-            let ts = intbin::bin_u64(ts);
-            let mut lang_set = RoaringBitmap::new();
-            for lang in &i.lang {
-              let lang = *lang;
-              if std::fs::exists(root.join(LANG_CODE[lang as usize]).join(rel))? {
-                lang_set.push(lang as u32);
-              }
-            }
-            if !lang_set.is_empty() {
-              r.insert(rel.to_owned(), LangSet { ts, lang_set });
-            }
-          }
-        }
-      }
-    }
-    Ok(Sitemap {
-      rel_lang_set: r,
-      now: sts::sec(),
-    })
-  }
+#[derive(Debug, Default, Clone)]
+pub struct LangRelTs {
+  pub lang_rel: HashMap<Lang, HashSet<String>>,
+  pub rel_ts: HashMap<String, u64>,
 }
 
 pub fn loads(iter: impl IntoIterator<Item = String>) -> LangTree {
@@ -127,9 +62,14 @@ pub fn loads(iter: impl IntoIterator<Item = String>) -> LangTree {
   LangTree(r)
 }
 
-pub fn dumps(iter: impl IntoIterator<Item = (Vec<u8>, crate::Li)>) -> String {
+pub fn dumps(mut lang_rel: HashMap<Vec<u8>, Vec<String>>) -> String {
+  let mut lang_rel = lang_rel
+    .into_iter()
+    .map(|(lang, rel_li)| (lang, crate::Li::from_iter(rel_li)))
+    .collect::<Vec<_>>();
+  lang_rel.sort_by(|a, b| a.0.cmp(&b.0));
   let mut r = String::new();
-  for (lang, li) in iter {
+  for (lang, li) in lang_rel {
     if let Ok(yml) = xerr::ok!(serde_yaml::to_string(&li)) {
       r += "@";
       r += &burl::e(lang);
@@ -140,14 +80,110 @@ pub fn dumps(iter: impl IntoIterator<Item = (Vec<u8>, crate::Li)>) -> String {
   r
 }
 
+pub fn lang_li_e(lang_li: &RoaringBitmap) -> Vec<u8> {
+  vb::diffe(lang_li.iter().map(|i| i as u64).collect::<Vec<_>>())
+}
+
+impl LangRelTs {
+  pub fn contains(&self, lang: Lang, rel: impl AsRef<str>) -> bool {
+    let rel = rel.as_ref();
+    if let Some(t) = self.lang_rel.get(&lang) {
+      t.contains(rel)
+    } else {
+      false
+    }
+  }
+
+  pub fn dumps(&self) -> String {
+    let mut rel_lang_set: HashMap<String, RoaringBitmap> = HashMap::new();
+
+    for (lang, rel_set) in &self.lang_rel {
+      for rel in rel_set {
+        rel_lang_set
+          .entry(rel.into())
+          .or_default()
+          .insert(*lang as u32);
+      }
+    }
+
+    let mut lang_rel = HashMap::new();
+    for (rel, lang_set) in rel_lang_set {
+      let lang = lang_li_e(&lang_set);
+      lang_rel.entry(lang).or_insert_with(Vec::new).push(format!(
+        "{}#{}",
+        rel,
+        burl::e(intbin::u64_bin(self.rel_ts[rel.as_str()]))
+      ));
+    }
+
+    dumps(lang_rel)
+  }
+}
+
+impl LangTree {
+  pub fn lang_rel_ts(self) -> LangRelTs {
+    let mut lang_rel: HashMap<Lang, HashSet<String>> = HashMap::new();
+    let mut rel_ts = HashMap::with_capacity(self.0.len());
+    for i in self.0 {
+      for rel in i.li.iter() {
+        let mut rel = rel.rsplit("#");
+
+        if let Some(ts) = rel.next() {
+          if let Ok(ts) = burl::d(ts)
+            && let Some(rel) = rel.remainder()
+          {
+            let ts = intbin::bin_u64(ts);
+            rel_ts.insert(rel.into(), ts);
+            for lang in &i.lang {
+              let lang = *lang;
+              if let Ok(lang) = (lang as u16).try_into() {
+                lang_rel.entry(lang).or_default().insert(rel.into());
+              }
+            }
+          }
+        }
+      }
+    }
+    LangRelTs { lang_rel, rel_ts }
+  }
+
+  pub fn sitemap(self, root: impl AsRef<Path>) -> std::io::Result<Sitemap> {
+    let root = root.as_ref();
+    let mut r = HashMap::new();
+    for i in self.0 {
+      for rel in i.li.iter() {
+        let mut rel = rel.rsplit("#");
+
+        if let Some(ts) = rel.next() {
+          if let Ok(ts) = burl::d(ts)
+            && let Some(rel) = rel.remainder()
+          {
+            let ts = intbin::bin_u64(ts);
+            let mut lang_set = RoaringBitmap::new();
+            for lang in &i.lang {
+              let lang = *lang;
+              if std::fs::exists(root.join(LANG_CODE[lang as usize]).join(rel))? {
+                lang_set.push(lang as u32);
+              }
+            }
+            if !lang_set.is_empty() {
+              r.insert(rel.to_owned(), LangSet { ts, lang_set });
+            }
+          }
+        }
+      }
+    }
+    Ok(Sitemap {
+      rel_lang_set: r,
+      now: sts::sec(),
+    })
+  }
+}
+
 #[derive(Debug, Default, Clone)]
 pub struct LangSet {
   pub ts: u64,
   pub lang_set: RoaringBitmap,
-}
-
-pub fn lang_li_e(lang_li: &RoaringBitmap) -> Vec<u8> {
-  vb::diffe(lang_li.iter().map(|i| i as u64).collect::<Vec<_>>())
 }
 
 /*
@@ -299,16 +335,6 @@ impl Sitemap {
       let rel = format!("{}#{}", rel, burl::e(intbin::u64_bin(t.ts)));
       lang_rel.entry(lang).or_insert_with(Vec::new).push(rel);
     }
-
-    let mut lang_rel = lang_rel
-      .into_iter()
-      .map(|(lang, mut rel_li)| {
-        rel_li.sort();
-        (lang, crate::Li::from_iter(rel_li))
-      })
-      .collect::<Vec<_>>();
-
-    lang_rel.sort_by(|a, b| a.0.cmp(&b.0));
 
     dumps(lang_rel)
   }

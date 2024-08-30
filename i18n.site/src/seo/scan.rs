@@ -28,7 +28,7 @@ pub async fn scan(
   let (to_insert, to_remove) = {
     let mut regen_readme = false;
     let mut to_insert = vec![];
-    let mut to_remove = rss.exist.clone();
+    let mut to_remove = sitemap.clone();
     let mut toc_dir = vec![];
 
     for lang in lang_li {
@@ -237,11 +237,11 @@ pub async fn scan(
   }
 
   for (lang, rel) in to_remove {
-    rss.exist.remove(lang, rel);
+    sitemap.remove(lang, rel);
   }
 
   for (lang, rel, ..) in &to_insert {
-    rss.exist.insert(*lang, rel);
+    sitemap.insert(*lang, rel);
   }
 
   Ok(Some(to_insert))

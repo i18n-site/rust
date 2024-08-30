@@ -1,7 +1,10 @@
 # ytree
 
 ```rust
-use std::io::{BufRead, Cursor};
+use std::{
+  collections::HashMap,
+  io::{BufRead, Cursor},
+};
 
 use aok::{Result, OK};
 use lang::Lang;
@@ -16,27 +19,14 @@ extern "C" fn init() {
 
 #[test]
 fn test() -> Result<()> {
-  let paths = [
-    "README.md#a",
-    "blog/README.md#2",
-    "blog/news/README.md#c",
-    "blog/news/begin.md#d",
-    "x/news/1.md#x",
-    "x/2/3.md#y",
+  let paths = vec![
+    "README.md#a".to_string(),
+    "blog/README.md#2".to_string(),
+    "blog/news/README.md#c".to_string(),
+    "blog/news/begin.md#d".to_string(),
+    "x/news/1.md#x".to_string(),
+    "x/2/3.md#y".to_string(),
   ];
-
-  let mut root = Li(Vec::new());
-
-  for path in paths {
-    root.push(path);
-  }
-
-  // root.remove(paths[1]);
-  // root.remove(paths[0]);
-
-  for i in root.iter() {
-    info!("{i}");
-  }
 
   // let yml = serde_yaml::to_string(&root).unwrap();
   // info!("{}", yml);
@@ -46,7 +36,9 @@ fn test() -> Result<()> {
     bitmap.insert(i as u32);
   }
 
-  let yml = ytree::sitemap::dumps([(lang_li_e(&bitmap), root)]);
+  let yml = ytree::sitemap::dumps(HashMap::from_iter(
+    [(lang_li_e(&bitmap), paths)].into_iter(),
+  ));
 
   info!("{yml}");
   let cursor = Cursor::new(yml.as_bytes());

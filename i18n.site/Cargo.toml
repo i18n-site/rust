@@ -24,6 +24,10 @@ futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
 flate2 = "1.0.33"
 
+[dependencies.sts]
+version = "0.1.23"
+path = "../sts"
+
 [dependencies.md_title]
 version = "0.1.10"
 path = "../md_title"
@@ -49,7 +53,7 @@ version = "0.1.10"
 path = "../tsfmt"
 
 [dependencies.ytree]
-version = "0.1.27"
+version = "0.1.28"
 path = "../ytree"
 features = [ "sitemap" ]
 

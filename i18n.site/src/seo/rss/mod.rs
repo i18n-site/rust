@@ -1,8 +1,8 @@
 use std::path::PathBuf;
 
-use gxhash::{HashMap, HashMapExt};
+use gxhash::HashMap;
 use lang::{Lang, LANG_CODE};
-use ytree::sitemap::{LangRelTs, LangSet, Sitemap};
+use ytree::sitemap::LangRelTs;
 
 mod topk;
 pub use topk::topk;
@@ -16,6 +16,8 @@ pub struct Rss {
   pub li: HashMap<Lang, Vec<(String, String, String)>>,
 }
 
+pub const LIMIT: usize = 10;
+
 impl Rss {
   pub fn new(root: impl Into<PathBuf>, host: impl Into<String>, lang_rel_ts: LangRelTs) -> Self {
     Self {
@@ -26,21 +28,31 @@ impl Rss {
     }
   }
 
+  pub fn dumps(mut self) -> String {
+    let now = sts::sec();
+    for (lang, li) in self.li {
+      let entry = self.lang_rel_ts.0.entry(lang).or_default();
+      for (rel, ..) in li {
+        entry.insert(rel, now);
+      }
+    }
+    self.lang_rel_ts.dumps()
+  }
+
   pub fn gen(&self) -> impl IntoIterator<Item = (String, String)> + use<'_> {
-    let mut lang_rel_ts = convert_rel_lang_set(&self.lang_rel_ts);
     self.li.iter().filter_map(move |(lang, rel_title_htm)| {
       let lang = *lang;
-      if let Some(mut rel_ts) = lang_rel_ts.remove(&(lang as u32)) {
+      if let Some(rel_ts) = self.lang_rel_ts.0.get(&lang) {
         let lang_en = LANG_CODE[lang as usize];
         let mut xml = Xml::new(&self.host, self.root.join(lang_en), lang_en);
-        let mut limit = 3;
+        let mut limit = LIMIT;
         for (rel, title, htm) in rel_title_htm {
           if limit == 0 {
             break;
           }
-          if let Some(ts) = rel_ts.remove(rel) {
+          if let Some(ts) = rel_ts.get(rel) {
             limit -= 1;
-            xml.add(ts, rel, title, htm);
+            xml.add(*ts, rel, title, htm);
           }
         }
         if limit > 0 {
@@ -48,13 +60,13 @@ impl Rss {
             dbg!(&rel_ts);
             let min = rel_ts.values().min().unwrap();
 
-            for (rel, ts) in &rel_ts {
+            for (rel, ts) in rel_ts {
               dbg!((rel, ts - min));
             }
           }
 
           for (rel, ts) in topk(limit, rel_ts) {
-            xml.add_rel(ts, &rel);
+            xml.add_rel(ts, rel);
           }
         }
         Some((format!("{lang_en}.rss"), xml.gen()))
@@ -74,9 +86,12 @@ impl Rss {
     let rel = rel.into();
 
     if !self.lang_rel_ts.contains(lang, &rel) {
-      let title = title.into();
-      let htm = htm.into();
-      self.li.entry(lang).or_default().push((rel, title, htm));
+      let entry = self.li.entry(lang).or_default();
+      if entry.len() <= LIMIT {
+        let title = title.into();
+        let htm = htm.into();
+        entry.push((rel, title, htm));
+      }
     }
   }
 }

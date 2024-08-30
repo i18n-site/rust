@@ -1,5 +1,3 @@
-use std::iter::FromIterator;
-
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
@@ -13,10 +11,11 @@ pub enum Node {
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Li(pub Vec<Node>);
 
-impl<S: AsRef<str>> FromIterator<S> for Li {
-  fn from_iter<T: IntoIterator<Item = S>>(iter: T) -> Self {
+impl Li {
+  pub fn from_iter(mut li: Vec<String>) -> Self {
+    li.sort();
     let mut me: Self = Default::default();
-    for i in iter {
+    for i in li {
       me.push(i);
     }
     me
