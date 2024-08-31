@@ -75,8 +75,8 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
   } else if save {
     vfs.save()?;
   }
-  if let Some(ref seo) = build.conf.seo
-    && let Some(conf) = seo.get(&htm_conf)
+  if let Some(ref out) = build.conf.out
+    && let Some(conf) = out.get(&htm_conf)
   {
     crate::seo(
       conf,
