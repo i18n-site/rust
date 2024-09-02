@@ -25,7 +25,7 @@ markdown = "1.0.0-alpha.20"
 flate2 = "1.0.33"
 
 [dependencies.ckv]
-version = "0.1.7"
+version = "0.1.8"
 path = "../ckv"
 
 [dependencies.sts]
