@@ -18,11 +18,11 @@ clap = "4.5.16"
 globset = "0.4.14"
 serde_yaml = "0.9.34"
 serde = "1.0.209"
-prost = "0.13.1"
+prost = "0.13.2"
 thiserror = "1.0.63"
 walkdir = "2.5.0"
 reqwest = "0.12.7"
-sonic-rs = "0.3.11"
+sonic-rs = "0.3.12"
 ub64 = "0.0.10"
 gxhash = "3.4.1"
 
@@ -96,7 +96,7 @@ version = "0.1.4"
 path = "../yconf"
 
 [dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dependencies.ifs]
@@ -111,7 +111,7 @@ path = "src/main.rs"
 
 [build-dependencies]
 aok = "0.1.15"
-prost-build = "0.13.1"
+prost-build = "0.13.2"
 
 [target."cfg(target_os=\"linux\")".dependencies.openssl]
 version = "0.10"

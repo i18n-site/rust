@@ -25,26 +25,27 @@ pub struct Nav {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Conf {
   pub i18n: i18_conf::I18nConf,
-  pub ignore: Option<Vec<String>>,
-  pub nav: Vec<Nav>,
   pub upload: Upload,
-  pub addon: Option<Vec<String>>,
-  pub out: Option<HashMap<String, HashMap<String, String>>>,
+  #[serde(default)]
+  pub nav: Vec<Nav>,
+  #[serde(default)]
+  pub ignore: Vec<String>,
+  #[serde(default)]
+  pub addon: Vec<String>,
+  // #[serde(default)]
+  // pub dist: HashMap<String, HashMap<String, Dist>>,
 }
-
-// #[allow(non_snake_case)]
-// #[derive(Clone, Debug, Serialize, Deserialize)]
-// pub struct Site {
-//   pub ver: Option<String>,
-// }
 
 #[allow(non_snake_case)]
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct HtmConf {
   pub api: Option<String>,
-  // pub site: Option<Site>,
-  // pub outdir: Option<String>,
+  pub host: String,
   pub importmap: HashMap<String, String>,
   pub v: String,
   pub x: String,
+  #[serde(default)]
+  pub seo: bool,
+  #[serde(default)]
+  pub out: Vec<String>,
 }

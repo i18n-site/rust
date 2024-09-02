@@ -26,7 +26,7 @@ version = "0.1.15"
 path = "../aok"
 
 [dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dependencies.idns]
@@ -36,5 +36,5 @@ version = "0.1.20"
 anyhow = "1.0.86"
 
 [dev-dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

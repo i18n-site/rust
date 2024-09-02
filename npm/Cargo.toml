@@ -4,7 +4,7 @@ defer-lite = "1.0.0"
 dirs = "5.0.1"
 flate2 = "1.0.33"
 serde = "1.0.209"
-sonic-rs = "0.3.11"
+sonic-rs = "0.3.12"
 static_init = "1.0.3"
 tar = "0.4.41"
 base64 = "0.22.1"
@@ -40,5 +40,5 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

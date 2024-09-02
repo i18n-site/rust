@@ -18,9 +18,9 @@ aok = "0.1.15"
 flate2 = "1.0.33"
 reqwest = { version = "0.12.7", features = ["stream"] }
 serde = "1.0.209"
-sonic-rs = "0.3.11"
+sonic-rs = "0.3.12"
 tar = "0.4.41"
-tokio = { version = "1.39.3", features = ["fs"] }
+tokio = { version = "1.40.0", features = ["fs"] }
 tracing = "0.1.40"
 
 [dev-dependencies]
@@ -30,5 +30,5 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

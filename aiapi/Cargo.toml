@@ -17,10 +17,10 @@ ignored = [ "static_init", "prost" ]
 aok = "0.1.15"
 dashmap = "6.0.1"
 ireq = "0.1.17"
-prost = "0.13.1"
+prost = "0.13.2"
 reqwest = "0.12.7"
 serde_yaml = "0.9.34"
-sonic-rs = "0.3.11"
+sonic-rs = "0.3.12"
 strum_macros = "0.26.4"
 thiserror = "1.0.63"
 tracing = "0.1.40"
@@ -30,7 +30,7 @@ version = "0.1.23"
 path = "../sts"
 
 [dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "rt-multi-thread", "macros", "sync" ]
 
 [dependencies.ifs]
@@ -58,9 +58,9 @@ path = "../genv"
 version = "0.1.15"
 
 [dev-dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]
 aok = "0.1.15"
-prost-build = "0.13.1"
+prost-build = "0.13.2"

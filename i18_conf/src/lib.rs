@@ -21,21 +21,19 @@ pub struct I18nConf {
   pub path: Option<HashMap<String, DirI18nConf>>,
 }
 
-pub fn build_ignore(ignore: &Option<Vec<String>>) -> GlobSet {
+pub fn build_ignore(ignore: &[String]) -> GlobSet {
   let mut builder = GlobSetBuilder::new();
-  if let Some(ignore) = ignore {
-    ignore.iter().for_each(|regex| {
-      let glob = if regex.starts_with("/") {
-        Glob::new(regex)
-      } else {
-        Glob::new(&(String::from("/**/") + regex))
-      };
+  ignore.iter().for_each(|regex| {
+    let glob = if regex.starts_with("/") {
+      Glob::new(regex)
+    } else {
+      Glob::new(&(String::from("/**/") + regex))
+    };
 
-      if let Ok(glob) = xerr::ok!(glob) {
-        builder.add(glob);
-      }
-    });
-  }
+    if let Ok(glob) = xerr::ok!(glob) {
+      builder.add(glob);
+    }
+  });
   builder.add(Glob::new(".*").unwrap());
   builder.build().unwrap()
 }

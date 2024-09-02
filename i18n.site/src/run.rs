@@ -9,7 +9,7 @@ use crate::package_json_ver;
 
 pub const DOT_YML: &str = ".yml";
 
-pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
+pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
   let npm: bool = m.get_one("npm").cloned().unwrap_or(false);
   let save: bool = m.get_one("save").cloned().unwrap_or(false);
 
@@ -35,10 +35,7 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
     }
   }
 
-  let pkg_li = npmi::PkgLi::new(
-    dir_i18n.join("hook"),
-    &conf.addon.take().unwrap_or_default(),
-  );
+  let pkg_li = npmi::PkgLi::new(dir_i18n.join("hook"), &conf.addon);
 
   pkg_li.auto().await?;
 
@@ -75,21 +72,30 @@ pub async fn run(dir: PathBuf, mut conf: Conf, m: &clap::ArgMatches) -> Null {
   } else if save {
     vfs.save()?;
   }
-  if let Some(ref out) = build.conf.out
-    && let Some(conf) = out.get(&htm_conf)
+
   {
-    crate::seo(
-      conf,
-      &dir,
-      &htm_conf,
-      &build.lang_li,
-      &ignore,
-      &changed,
-      &build.foot(),
-      &build.htm_conf.x,
-    )
-    .await?;
+    let conf = &build.htm_conf;
+    for out in &conf.out {
+      if conf.seo {
+        crate::seo(
+          &conf.host,
+          &out,
+          &dir,
+          &htm_conf,
+          &build.lang_li,
+          &ignore,
+          &changed,
+          &build.foot(),
+          &conf.x,
+        )
+        .await?;
+      }
+    }
   }
+  // if let Some(ref out) = build.conf.out
+  //   && let Some(conf) = out.get(&htm_conf)
+  // {
+  // }
   println!("✅ i18n.site build");
   OK
 }

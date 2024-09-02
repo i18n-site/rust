@@ -6,7 +6,7 @@ tracing = "0.1.40"
 ipug = "0.2.1"
 serde_yaml = "0.9.34"
 serde = "1.0.209"
-sonic-rs = "0.3.11"
+sonic-rs = "0.3.12"
 gxhash = "3.4.1"
 
 [dependencies.sortmap]
@@ -26,7 +26,7 @@ version = "0.4.14"
 features = [ "simd-accel" ]
 
 [dependencies.indexmap]
-version = "2.4.0"
+version = "2.5.0"
 features = [ "serde" ]
 
 [dependencies.verfs]
@@ -58,7 +58,7 @@ version = "0.1.32"
 path = "../lang"
 
 [dependencies.bjs]
-version = "0.1.8"
+version = "0.1.10"
 path = "../bjs"
 
 [dependencies.ifs]
@@ -96,5 +96,5 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

@@ -14,7 +14,7 @@ ignored = [ "prost" ]
 current_platform = "0.2.0"
 defer-lite = "1.0.0"
 ed25519-dalek = "2.1.1"
-prost = "0.13.1"
+prost = "0.13.2"
 rand = "0.8.5"
 static_init = "1.0.3"
 tar = "0.4.41"
@@ -59,18 +59,18 @@ version = "0.1.15"
 path = "../iget"
 
 [dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dev-dependencies]
 loginit = "0.1.13"
 
 [dev-dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]
-prost-build = "0.13.1"
+prost-build = "0.13.2"
 
 [build-dependencies.aok]
 version = "0.1.15"

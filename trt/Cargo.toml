@@ -19,5 +19,5 @@ version = "1.0.3"
 features = [ "lock_statistics", "parking_lot", "parking_lot_core" ]
 
 [dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "rt-multi-thread", "macros", "rt", "time", "sync" ]

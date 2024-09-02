@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/hi"
 description = "hi with mail & wxpusher"
 
 [dependencies]
-sonic-rs = "0.3.11"
+sonic-rs = "0.3.12"
 static_init = "1.0.3"
 
 [dependencies.aok]
@@ -21,7 +21,7 @@ version = "0.1.15"
 version = "0.1.17"
 
 [dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
 
 [dependencies.wxpush]

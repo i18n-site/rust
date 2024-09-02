@@ -27,7 +27,7 @@ features = [
 ]
 
 [dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dev-dependencies.aok]

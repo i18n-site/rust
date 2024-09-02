@@ -312,7 +312,7 @@ pub struct JsMap<'a> {
 }
 
 impl<'a> JsMap<'a> {
-  pub fn new(ctx: &'a mut Context) -> JsMap {
+  pub fn new(ctx: &'a mut Context) -> Self {
     let obj = JsObject::with_object_proto(ctx.intrinsics());
     JsMap { ctx, obj }
   }

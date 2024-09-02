@@ -191,7 +191,7 @@ pub fn load_lang_tree(seo_fp: &Path) -> Result<LangTree> {
 
 pub async fn gen<Upload: Seo>(
   host: &str,
-  kind: &str,
+  out: &str,
   root: &Path,
   name: &str,
   lang_li: &[Lang],
@@ -200,7 +200,7 @@ pub async fn gen<Upload: Seo>(
   foot: &HashMap<Lang, String>,
   css: &str,
 ) -> Null {
-  let seo_dir = root.join(DOT_I18N).join("seo").join(host).join(kind);
+  let seo_dir = root.join(DOT_I18N).join("seo").join(host).join(out);
 
   let sitemap_fp = seo_dir.join("sitemap");
   let rss_fp = seo_dir.join("rss");
@@ -231,7 +231,8 @@ pub async fn gen<Upload: Seo>(
 }
 
 pub async fn seo(
-  conf: &HashMap<String, String>,
+  host: &str,
+  out: &str,
   root: &Path,
   name: &str,
   lang_li: &[Lang],
@@ -240,25 +241,21 @@ pub async fn seo(
   foot: &HashMap<Lang, String>,
   css: &str,
 ) -> Null {
-  for (host, kind_li) in conf {
-    for kind in kind_li.split_whitespace() {
-      macro_rules! gen {
-        ($seo:ty) => {
-          gen::<$seo>(host, kind, root, name, &lang_li, ignore, changed, foot, css).await
-        };
-      }
-      let r = match kind {
-        "fs" => gen!(Fs),
-        "s3" => gen!(S3),
-        _ => {
-          eprintln!("unknown kind {kind}");
-          continue;
-        }
-      };
-      if let Err(e) = r {
-        eprintln!("❌ seo {name} {host} {kind} error : {e}");
-      }
+  macro_rules! gen {
+    ($seo:ty) => {
+      gen::<$seo>(host, out, root, name, &lang_li, ignore, changed, foot, css).await
+    };
+  }
+  let r = match out {
+    "fs" => gen!(Fs),
+    "s3" => gen!(S3),
+    _ => {
+      eprintln!("unknown out {out}");
+      return OK;
     }
+  };
+  if let Err(e) = r {
+    eprintln!("❌ seo {name} {host} {out} error : {e}");
   }
   OK
 }

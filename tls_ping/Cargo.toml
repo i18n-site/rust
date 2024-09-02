@@ -13,7 +13,7 @@ version = "0.1.4"
 path = "../tlsinit"
 
 [dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "time", "net" ]
 
 [package]
@@ -35,5 +35,5 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]

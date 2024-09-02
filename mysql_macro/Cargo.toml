@@ -23,7 +23,7 @@ version = "1.0.3"
 features = [ "lock_statistics", "parking_lot", "parking_lot_core" ]
 
 [dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "time", "rt-multi-thread", "macros", "rt" ]
 
 [dependencies.xstr]
@@ -34,7 +34,7 @@ path = "../xstr"
 tokio-test = "0.4.4"
 
 [dev-dependencies.tokio]
-version = "1.39.3"
+version = "1.40.0"
 features = [ "time", "rt-multi-thread", "macros", "rt" ]
 
 [dev-dependencies.aok]
