@@ -1,54 +1,31 @@
+use i18::env::I18N_SITE_YML_PATH;
+use i18n_js::HtmConf;
+use ytree::sitemap::{LangTree, Sitemap};
+
 mod scan;
 use scan::scan;
 mod md_htm;
 pub use md_htm::MdHtm;
 mod rss;
 use rss::Rss;
-mod s3;
-
-use ytree::sitemap::{LangTree, Sitemap};
 
 pub const README_MD: &str = "README.md";
 
 use std::{
   fs::File,
   io::{self, BufRead, BufReader, Write},
-  path::{Path, PathBuf},
+  path::Path,
 };
 
 use aok::{Null, Result, OK};
+use ckv::{Ckv, Fs, S3};
 use flate2::{write::GzEncoder, Compression};
 use futures::{stream, stream::StreamExt};
 use globset::GlobSet;
 use gxhash::{HashMap, HashSet};
 use i18::DOT_I18N;
 use lang::{Lang, LANG_CODE};
-use s3::S3;
 use ytree::sitemap::md_url;
-
-pub trait Seo {
-  fn init(root: &Path, name: &str, host: &str) -> Result<Self>
-  where
-    Self: Sized;
-
-  async fn put(&self, rel: impl AsRef<str>, bin: impl AsRef<[u8]>) -> Null;
-}
-
-pub struct Fs {
-  pub out: PathBuf,
-}
-
-impl Seo for Fs {
-  fn init(root: &Path, name: &str, _host: &str) -> Result<Self> {
-    let out = root.join("out").join(name).join("htm");
-    Ok(Self { out })
-  }
-
-  async fn put(&self, rel: impl AsRef<str>, bin: impl AsRef<[u8]>) -> Null {
-    ifs::wbin(self.out.join(rel.as_ref()), bin.as_ref())?;
-    OK
-  }
-}
 
 fn gz(data: impl AsRef<[u8]>) -> Result<Vec<u8>, io::Error> {
   let mut encoder = GzEncoder::new(Vec::new(), Compression::best());
@@ -59,7 +36,7 @@ fn gz(data: impl AsRef<[u8]>) -> Result<Vec<u8>, io::Error> {
 pub type LangRelTitleHtm = Vec<(Lang, String, String, String)>;
 
 pub async fn put(
-  upload: &impl Seo,
+  upload: &impl Ckv,
   to_insert: LangRelTitleHtm,
   css: &str,
   sitemap: &mut Sitemap,
@@ -189,11 +166,11 @@ pub fn load_lang_tree(seo_fp: &Path) -> Result<LangTree> {
   })
 }
 
-pub async fn gen<Upload: Seo>(
+pub async fn gen(
+  upload: impl Ckv,
   host: &str,
   out: &str,
   root: &Path,
-  name: &str,
   lang_li: &[Lang],
   ignore: &GlobSet,
   changed: &HashSet<String>,
@@ -209,6 +186,7 @@ pub async fn gen<Upload: Seo>(
 
   let mut rss = Rss::new(root, host, load_lang_tree(&rss_fp)?.lang_rel_ts());
 
+  // let m = U::init(root, name, host)?;
   if let Ok(Some(to_insert)) = xerr::ok!(
     scan(
       host,
@@ -222,8 +200,7 @@ pub async fn gen<Upload: Seo>(
     )
     .await
   ) {
-    let m = Upload::init(root, name, host)?;
-    put(&m, to_insert, css, &mut sitemap, &mut rss).await?;
+    put(&upload, to_insert, css, &mut sitemap, &mut rss).await?;
     ifs::wbin(sitemap_fp, sitemap.dumps())?;
     ifs::wbin(rss_fp, rss.dumps())?;
   }
@@ -231,31 +208,44 @@ pub async fn gen<Upload: Seo>(
 }
 
 pub async fn seo(
-  host: &str,
-  out: &str,
-  root: &Path,
   name: &str,
+  conf: &HtmConf,
+  root: &Path,
   lang_li: &[Lang],
   ignore: &GlobSet,
   changed: &HashSet<String>,
   foot: &HashMap<Lang, String>,
-  css: &str,
 ) -> Null {
-  macro_rules! gen {
-    ($seo:ty) => {
-      gen::<$seo>(host, out, root, name, &lang_li, ignore, changed, foot, css).await
-    };
+  if !conf.seo {
+    return OK;
   }
-  let r = match out {
-    "fs" => gen!(Fs),
-    "s3" => gen!(S3),
-    _ => {
-      eprintln!("unknown out {out}");
-      return OK;
+  let css = &conf.x;
+  let host = &conf.host;
+  for out in &conf.out {
+    let out = out.as_str();
+    macro_rules! gen {
+      ($upload:expr) => {
+        gen(
+          $upload, host, out, root, &lang_li, ignore, changed, foot, css,
+        )
+        .await
+      };
     }
-  };
-  if let Err(e) = r {
-    eprintln!("❌ seo {name} {host} {out} error : {e}");
+    let r = match out {
+      "fs" => {
+        gen!(Fs::new(root.join("out").join(name).join("htm")))
+      }
+      "s3" => {
+        gen!(S3::load(&I18N_SITE_YML_PATH, host)?)
+      }
+      _ => {
+        eprintln!("unknown out {out}");
+        continue;
+      }
+    };
+    if let Err(e) = r {
+      eprintln!("❌ seo {name} {host} {out} error : {e}");
+    }
   }
   OK
 }

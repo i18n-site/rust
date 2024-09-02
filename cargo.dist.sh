@@ -41,7 +41,7 @@ dist() {
 set -ex
 
 rm -rf Cargo.lock
-# ./clippy.sh
+./clippy.sh
 
 if ! [ -x "$(command -v cargo-v)" ]; then
   cargo install cargo-v

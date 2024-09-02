@@ -65,7 +65,7 @@ pub fn loads(iter: impl IntoIterator<Item = String>) -> LangTree {
 pub fn dumps(lang_rel: HashMap<Vec<u8>, Vec<String>>) -> String {
   let mut lang_rel = lang_rel
     .into_iter()
-    .map(|(lang, rel_li)| (lang, crate::Li::from_iter(rel_li)))
+    .map(|(lang, rel_li)| (lang, crate::Li::from_vec(rel_li)))
     .collect::<Vec<_>>();
   lang_rel.sort_by(|a, b| a.0.cmp(&b.0));
   let mut r = String::new();

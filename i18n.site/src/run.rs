@@ -73,29 +73,16 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
     vfs.save()?;
   }
 
-  {
-    let conf = &build.htm_conf;
-    for out in &conf.out {
-      if conf.seo {
-        crate::seo(
-          &conf.host,
-          &out,
-          &dir,
-          &htm_conf,
-          &build.lang_li,
-          &ignore,
-          &changed,
-          &build.foot(),
-          &conf.x,
-        )
-        .await?;
-      }
-    }
-  }
-  // if let Some(ref out) = build.conf.out
-  //   && let Some(conf) = out.get(&htm_conf)
-  // {
-  // }
+  crate::seo(
+    &htm_conf,
+    &build.htm_conf,
+    &dir,
+    &build.lang_li,
+    &ignore,
+    &changed,
+    &build.foot(),
+  )
+  .await?;
   println!("✅ i18n.site build");
   OK
 }

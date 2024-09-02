@@ -6,14 +6,13 @@ use aws_sdk_s3::{
   Client as S3Client, Config,
 };
 use futures::{stream::FuturesUnordered, StreamExt};
-use i18::env::I18N_SITE_YML_PATH;
 
 pub mod yml {
   use gxhash::HashMap;
   use serde::{Deserialize, Serialize};
 
   #[derive(Debug, Serialize, Deserialize)]
-  pub struct Seo {
+  pub struct Ckv {
     pub baidu: Option<String>,
     pub indexnow: Option<String>,
     pub google: Option<String>,
@@ -31,7 +30,7 @@ pub mod yml {
   #[derive(Debug, Serialize, Deserialize)]
   pub struct Site {
     pub s3: Option<Vec<Conf>>,
-    pub seo: Seo,
+    pub seo: Ckv,
   }
 
   #[derive(Debug, Serialize, Deserialize, Default)]
@@ -40,7 +39,7 @@ pub mod yml {
   }
 }
 
-use super::Seo;
+use super::Ckv;
 
 pub const MIME_TYPE_GZIP: &str = "application/gzip";
 pub const MIME_TYPE_HTML: &str = "text/html";
@@ -67,7 +66,7 @@ pub struct S3 {
   li: Vec<Client>,
 }
 
-impl Seo for S3 {
+impl Ckv for S3 {
   async fn put(&self, rel: impl AsRef<str>, bin: impl AsRef<[u8]>) -> Null {
     if self.li.is_empty() {
       return OK;
@@ -104,9 +103,11 @@ impl Seo for S3 {
     }
     OK
   }
+}
 
-  fn init(_root: &Path, name: &str, host: &str) -> Result<Self> {
-    let conf: yml::I18nConf = i18::env::load()?;
+impl S3 {
+  pub fn load(conf_fp: &Path, host: &str) -> Result<Self> {
+    let conf: yml::I18nConf = serde_yaml::from_slice(&ifs::r(conf_fp)?)?;
     let mut li = Vec::new();
 
     if let Some(mut site) = conf.site
@@ -143,7 +144,7 @@ impl Seo for S3 {
         });
       }
     } else {
-      eprintln!("❌ {} : s3 {name} not found", I18N_SITE_YML_PATH.display());
+      eprintln!("❌ {} : s3 {} not found", conf_fp.display(), host);
     }
 
     Ok(Self { li })

@@ -12,7 +12,7 @@ pub enum Node {
 pub struct Li(pub Vec<Node>);
 
 impl Li {
-  pub fn from_iter(mut li: Vec<String>) -> Self {
+  pub fn from_vec(mut li: Vec<String>) -> Self {
     li.sort();
     let mut me: Self = Default::default();
     for i in li {

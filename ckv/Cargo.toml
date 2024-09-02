@@ -1,0 +1,33 @@
+[package]
+name = "ckv"
+version = "0.1.7"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/ckv"
+description = "ckv"
+
+[features]
+default = []
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+aok = "0.1.15"
+aws-sdk-s3 = "1.47.0"
+futures = "0.3.30"
+gxhash = "3.4.1"
+ifs = { version = "0.1.43", path = "../ifs", features = ["fs"] }
+serde = { version = "1.0.209", features = ["derive"] }
+serde_yaml = "0.9.34"
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.40.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

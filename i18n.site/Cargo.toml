@@ -24,6 +24,10 @@ futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
 flate2 = "1.0.33"
 
+[dependencies.ckv]
+version = "0.1.7"
+path = "../ckv"
+
 [dependencies.sts]
 version = "0.1.23"
 path = "../sts"
@@ -36,17 +40,9 @@ path = "../md_title"
 version = "0.1.9"
 path = "../rtoc"
 
-[dependencies.aws-sdk-s3]
-version = "1.47.0"
-features = [ "behavior-version-latest" ]
-
 [dependencies.pbar]
 version = "0.1.6"
 path = "../pbar"
-
-[dependencies.serde]
-version = "1.0.209"
-features = [ "derive" ]
 
 [dependencies.tsfmt]
 version = "0.1.10"
@@ -92,7 +88,7 @@ version = "0.1.33"
 path = "../i18n_js"
 
 [dependencies.i18_conf]
-version = "0.1.10"
+version = "0.1.11"
 path = "../i18_conf"
 
 [dependencies.npm]
