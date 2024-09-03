@@ -166,11 +166,11 @@ impl I18Hash {
 
         let txt = refmt::fp(&fp)?;
         let bin = txt.as_bytes();
-        let hash = xhash::xhash(&bin);
+        let hash = xhash::xhash(bin);
         let to_li: Vec<u8> = to_li.into();
 
         let pre_hash = if let Some(pre) = pre_meta {
-          if to_li == pre.to_li && hash == pre.hash {
+          if to_li == pre.to_li && hash == pre.hash && len == pre.len {
             set_mtime(&fp, pre.ts)?;
             continue;
           }
@@ -191,7 +191,7 @@ impl I18Hash {
             hash,
             to_li,
             ts,
-            len: len as u64,
+            len,
           },
         });
       }
