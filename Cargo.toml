@@ -116,7 +116,7 @@ members = [
   "sitem",
   "tsfmt",
   "rtoc",
-  "md_title", "ckv",
+  "md_title", "ckv", "set_mtime",
 ]
 # "cget/test_cget",
 resolver = "2"

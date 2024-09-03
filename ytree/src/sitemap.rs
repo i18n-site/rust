@@ -32,6 +32,15 @@ pub fn loads(iter: impl IntoIterator<Item = String>) -> LangTree {
   let mut buf = String::new();
   let mut lang = None;
   for i in iter {
+    let i = i.trim_end();
+    if let Some(i) = i.chars().next() {
+      if "<>#".contains(i) {
+        continue;
+      }
+    } else {
+      continue;
+    }
+
     if let Some(i) = i.strip_prefix("@") {
       if let Some(lang) = lang {
         if let Ok(li) = xerr::ok!(serde_yaml::from_str::<crate::Li>(&buf)) {
@@ -47,7 +56,7 @@ pub fn loads(iter: impl IntoIterator<Item = String>) -> LangTree {
       }
       lang = None;
     } else {
-      buf += &i;
+      buf += i;
       buf.push('\n');
     }
   }
@@ -335,7 +344,6 @@ impl Sitemap {
       let rel = format!("{}#{}", rel, burl::e(intbin::u64_bin(t.ts)));
       lang_rel.entry(lang).or_insert_with(Vec::new).push(rel);
     }
-
     dumps(lang_rel)
   }
 

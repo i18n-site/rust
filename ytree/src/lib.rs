@@ -7,3 +7,6 @@ pub use li::{Li, Node};
 
 #[cfg(feature = "sitemap")]
 pub mod sitemap;
+
+#[cfg(feature = "change")]
+pub mod change;

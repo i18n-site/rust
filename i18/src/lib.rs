@@ -44,6 +44,7 @@ pub const ASSET_BASE: f64 = 100.0;
 pub const COST_BASE: f64 = 1000.0 * ASSET_BASE;
 pub const DOT_I18N: &str = ".i18n";
 pub const EMPTY: String = String::new();
+pub const DATA: &str = "data";
 pub const CONF_YML: &str = "conf.yml";
 
 pub mod env;

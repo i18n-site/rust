@@ -5,6 +5,10 @@ bytes = "1.7.1"
 filetime = "0.2.25"
 gxhash = "3.4.1"
 
+[dependencies.set_mtime]
+version = "0.1.8"
+path = "../set_mtime"
+
 [dependencies.bce]
 version = "0.1.4"
 path = "../bce"

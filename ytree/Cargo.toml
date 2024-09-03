@@ -11,21 +11,25 @@ description = "ytree"
 all-features = true
 
 [features]
-default = [ ]
+default = []
+change = ["dep:bincode", "dep:bce", "dep:walkdir"]
 sitemap = [
-"dep:lang",
-"dep:vb",
-"dep:burl",
-"dep:xerr",
-"dep:roaring",
-"dep:intbin",
-"dep:sts",
-"dep:const-str"
+  "dep:lang",
+  "dep:vb",
+  "dep:burl",
+  "dep:xerr",
+  "dep:roaring",
+  "dep:intbin",
+  "dep:sts",
+  "dep:const-str",
 ]
 
 [dependencies]
 aok = "0.1.15"
+bce = { version = "0.1.4", path = "../bce", optional = true }
+bincode = { version = "2.0.0-rc.3", optional = true }
 serde_yaml = "0.9.34"
+walkdir = { version = "2.5.0", optional = true }
 
 [dependencies.intbin]
 version = "0.1.2"
@@ -51,7 +55,7 @@ optional = true
 
 [dependencies.indexmap]
 version = "2.5.0"
-features = [ "serde" ]
+features = ["serde"]
 
 [dependencies.lang]
 version = "0.1.32"
@@ -60,12 +64,12 @@ optional = true
 
 [dependencies.roaring]
 version = "0.10.6"
-features = [ "simd" ]
+features = ["simd"]
 optional = true
 
 [dependencies.serde]
 version = "1.0.209"
-features = [ "derive" ]
+features = ["derive"]
 
 [dependencies.vb]
 version = "0.1.8"
@@ -89,4 +93,4 @@ version = "0.1.32"
 
 [dev-dependencies.tokio]
 version = "1.40.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

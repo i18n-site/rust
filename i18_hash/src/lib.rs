@@ -1,22 +1,16 @@
 #![feature(let_chains)]
 use std::{
-  fs, io,
+  fs,
   ops::{Deref, DerefMut},
   path::{Path, PathBuf},
 };
 
 use aok::Result;
 use bincode::{Decode, Encode};
-use filetime::{set_file_mtime, FileTime};
 use gxhash::{HashMap, HashMapExt};
 use lang::{Lang, LANG_CODE};
+use set_mtime::set_mtime;
 use tzst::zst;
-
-pub fn set_mtime(fp: &Path, ts: u64) -> io::Result<()> {
-  let mtime = FileTime::from_unix_time(ts as i64, 0);
-  set_file_mtime(fp, mtime)?;
-  Ok(())
-}
 
 #[derive(Default, Clone, Debug)]
 pub struct LangLi(pub Vec<Lang>);
@@ -104,7 +98,7 @@ impl I18Hash {
   pub fn new(root: impl Into<PathBuf>) -> Self {
     let root = root.into();
     Self {
-      dir_hash: root.join(".i18n").join("hash").join("i18n"),
+      dir_hash: root.join(".i18n").join("data").join("hash"),
       root,
       cache: HashMap::new(),
     }

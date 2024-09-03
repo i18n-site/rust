@@ -142,7 +142,12 @@ impl Build {
     let mut vfs = VerFs::load(
       root,
       outv,
-      root.join(".i18n").join(V).join(conf_name).join("v.hash"),
+      root
+        .join(".i18n")
+        .join("data")
+        .join(V)
+        .join(conf_name)
+        .join("v.hash"),
     )?;
 
     if vfs.verdir.exists() {

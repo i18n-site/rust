@@ -1,3 +1,4 @@
+use i18::DATA;
 use i18n_js::HtmConf;
 use ytree::sitemap::{LangTree, Sitemap};
 
@@ -176,7 +177,12 @@ pub async fn gen(
   foot: &HashMap<Lang, String>,
   css: &str,
 ) -> Null {
-  let seo_dir = root.join(DOT_I18N).join("seo").join(host).join(kind);
+  let seo_dir = root
+    .join(DOT_I18N)
+    .join(DATA)
+    .join("seo")
+    .join(host)
+    .join(kind);
 
   let sitemap_fp = seo_dir.join("sitemap");
   let rss_fp = seo_dir.join("rss");
