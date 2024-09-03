@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use aok::{Result, OK};
 use static_init::constructor;
 
@@ -10,13 +8,6 @@ extern "C" fn init() {
 
 #[test]
 fn test() -> Result<()> {
-  let root: PathBuf = "/Users/z/i18n/md".into();
-  let change = ytree::change::Change::load(root.join("public"));
-  // root
-  //   .join(".i18n")
-  //   .join("data")
-  //   .join("public")
-  //   .join("dev.yml"),
   // let paths = vec![
   //   "README.md#a".to_string(),
   //   "blog/README.md#2".to_string(),

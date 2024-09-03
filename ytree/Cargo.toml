@@ -1,6 +1,6 @@
 [package]
 name = "ytree"
-version = "0.1.30"
+version = "0.1.31"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -12,7 +12,6 @@ all-features = true
 
 [features]
 default = []
-change = ["dep:bincode", "dep:bce", "dep:walkdir"]
 sitemap = [
   "dep:lang",
   "dep:vb",
@@ -26,10 +25,8 @@ sitemap = [
 
 [dependencies]
 aok = "0.1.15"
-bce = { version = "0.1.4", path = "../bce", optional = true }
-bincode = { version = "2.0.0-rc.3", optional = true }
+gxhash = "3.4.1"
 serde_yaml = "0.9.34"
-walkdir = { version = "2.5.0", optional = true }
 
 [dependencies.intbin]
 version = "0.1.2"
