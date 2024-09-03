@@ -14,13 +14,16 @@ pub struct Rss {
   pub root: PathBuf,
   pub lang_rel_ts: LangRelTs,
   pub li: HashMap<Lang, Vec<(String, String, String)>>,
+  pub now: u64,
 }
 
 pub const LIMIT: usize = 10;
 
 impl Rss {
   pub fn new(root: impl Into<PathBuf>, host: impl Into<String>, lang_rel_ts: LangRelTs) -> Self {
+    let now = sts::sec();
     Self {
+      now,
       lang_rel_ts,
       host: host.into(),
       root: root.into(),
@@ -29,7 +32,7 @@ impl Rss {
   }
 
   pub fn dumps(mut self) -> String {
-    let now = sts::sec();
+    let now = self.now;
     for (lang, li) in self.li {
       let entry = self.lang_rel_ts.lang_rel.entry(lang).or_default();
       for (rel, ..) in li {
@@ -50,14 +53,15 @@ impl Rss {
         if limit == 0 {
           break;
         }
-        if let Some(ts) = self.lang_rel_ts.rel_ts.get(rel) {
-          limit -= 1;
-          xml.add(*ts, rel, title, htm);
-        }
+        limit -= 1;
+        xml.add(self.now, rel, title, htm);
       }
-      if limit > 0 {
-        for (rel, ts) in topk(limit, &self.lang_rel_ts.rel_ts) {
-          xml.add_rel(ts, rel);
+
+      if limit != LIMIT {
+        if limit > 0 {
+          for (rel, ts) in topk(limit, &self.lang_rel_ts.rel_ts) {
+            xml.add_rel(ts, rel);
+          }
         }
         Some((format!("{lang_en}.rss"), xml.gen()))
       } else {

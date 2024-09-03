@@ -68,8 +68,6 @@ pub use conf::Conf;
 pub const HR: &str = "──────";
 pub const NAME: &str = "i18";
 
-const CACHE: &str = "cache";
-
 pub fn token() -> String {
   if let Some(token) = env::token() {
     return token;
@@ -139,17 +137,11 @@ pub async fn _run(
   token: &str,
 ) -> Result<HashSet<String>> {
   let scan = Scan::new(workdir, conf, ignore);
-  let i18n_gen = workdir.join(DOT_I18N);
-  let cache = i18n_gen.join(CACHE);
-  let cache: std::path::PathBuf = (&*cache.as_os_str().to_string_lossy()).into();
-  // 写入 gitignore
-  init_dir::ignore(&cache)?;
 
   let rel_li = scan.lang_rel_li_for_tran();
-  let mut lm = len_mtime::LenMtime::load(cache, workdir)?;
   let mut i18_hash = i18_hash::I18Hash::new(workdir);
 
-  let to_tran = i18_hash.changed(lm.is_change(rel_li)?)?;
+  let to_tran = i18_hash.changed(rel_li)?;
 
   if to_tran.is_empty() {
     return Ok(Default::default());
@@ -169,7 +161,6 @@ pub async fn _run(
   // 会在save创建的时候, 更新译文修改的缓存时间和hash
   let mut save = Save::new(
     workdir,
-    lm,
     i18_hash,
     scan.rel_ft,
     update_cache_file_li,

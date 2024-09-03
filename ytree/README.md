@@ -10,7 +10,7 @@ use aok::{Result, OK};
 use lang::Lang;
 use static_init::constructor;
 use tracing::info;
-use ytree::{sitemap::lang_li_e, Li};
+use ytree::sitemap::lang_li_e;
 
 #[constructor(0)]
 extern "C" fn init() {
@@ -36,9 +36,7 @@ fn test() -> Result<()> {
     bitmap.insert(i as u32);
   }
 
-  let yml = ytree::sitemap::dumps(HashMap::from_iter(
-    [(lang_li_e(&bitmap), paths)].into_iter(),
-  ));
+  let yml = ytree::sitemap::dumps(HashMap::from_iter([(lang_li_e(&bitmap), paths)]));
 
   info!("{yml}");
   let cursor = Cursor::new(yml.as_bytes());

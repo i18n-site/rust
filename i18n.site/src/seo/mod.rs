@@ -1,4 +1,3 @@
-use i18::env::I18N_SITE_YML_PATH;
 use i18n_js::HtmConf;
 use ytree::sitemap::{LangTree, Sitemap};
 
@@ -18,7 +17,7 @@ use std::{
 };
 
 use aok::{Null, Result, OK};
-use ckv::{Ckv, Fs, S3};
+use ckv::Ckv;
 use flate2::{write::GzEncoder, Compression};
 use futures::{stream, stream::StreamExt};
 use globset::GlobSet;
@@ -167,9 +166,9 @@ pub fn load_lang_tree(seo_fp: &Path) -> Result<LangTree> {
 }
 
 pub async fn gen(
-  upload: impl Ckv,
+  upload: &impl Ckv,
   host: &str,
-  out: &str,
+  kind: &str,
   root: &Path,
   lang_li: &[Lang],
   ignore: &GlobSet,
@@ -177,7 +176,7 @@ pub async fn gen(
   foot: &HashMap<Lang, String>,
   css: &str,
 ) -> Null {
-  let seo_dir = root.join(DOT_I18N).join("seo").join(host).join(out);
+  let seo_dir = root.join(DOT_I18N).join("seo").join(host).join(kind);
 
   let sitemap_fp = seo_dir.join("sitemap");
   let rss_fp = seo_dir.join("rss");
@@ -200,7 +199,7 @@ pub async fn gen(
     )
     .await
   ) {
-    put(&upload, to_insert, css, &mut sitemap, &mut rss).await?;
+    put(upload, to_insert, css, &mut sitemap, &mut rss).await?;
     ifs::wbin(sitemap_fp, sitemap.dumps())?;
     ifs::wbin(rss_fp, rss.dumps())?;
   }
@@ -208,7 +207,8 @@ pub async fn gen(
 }
 
 pub async fn seo(
-  name: &str,
+  kind: &str,
+  upload: &impl Ckv,
   conf: &HtmConf,
   root: &Path,
   lang_li: &[Lang],
@@ -221,31 +221,8 @@ pub async fn seo(
   }
   let css = &conf.x;
   let host = &conf.host;
-  for out in &conf.out {
-    let out = out.as_str();
-    macro_rules! gen {
-      ($upload:expr) => {
-        gen(
-          $upload, host, out, root, &lang_li, ignore, changed, foot, css,
-        )
-        .await
-      };
-    }
-    let r = match out {
-      "fs" => {
-        gen!(Fs::new(root.join("out").join(name).join("htm")))
-      }
-      "s3" => {
-        gen!(S3::load(&I18N_SITE_YML_PATH, host)?)
-      }
-      _ => {
-        eprintln!("unknown out {out}");
-        continue;
-      }
-    };
-    if let Err(e) = r {
-      eprintln!("❌ seo {name} {host} {out} error : {e}");
-    }
-  }
-  OK
+  gen(
+    upload, host, kind, root, lang_li, ignore, changed, foot, css,
+  )
+  .await
 }

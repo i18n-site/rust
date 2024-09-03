@@ -1,7 +1,8 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use aok::{Null, OK};
-use i18::token;
+use gxhash::HashSet;
+use i18::{env::I18N_SITE_YML_PATH, token};
 use i18_conf::build_ignore;
 use i18n_js::{Build, Conf};
 
@@ -53,6 +54,7 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
   .await?;
 
   let vfs = build.build().await?;
+
   if npm {
     let package_json = dir
       .join(".i18n/htm")
@@ -73,16 +75,55 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
     vfs.save()?;
   }
 
-  crate::seo(
-    &htm_conf,
-    &build.htm_conf,
-    &dir,
-    &build.lang_li,
-    &ignore,
-    &changed,
-    &build.foot(),
-  )
-  .await?;
+  for kind in &build.htm_conf.out {
+    let kind = kind.as_str();
+    macro_rules! htm {
+      ($ckv:expr) => {
+        if let Err(err) = htm(&kind, $ckv, &build, &changed, &dir, &ignore).await {
+          eprintln!("❌ {kind} {err:?}");
+        }
+      };
+    }
+    match kind {
+      "fs" => {
+        htm!(ckv::Fs::new(dir.join("out").join(&htm_conf).join("htm")))
+      }
+      "s3" => {
+        htm!(ckv::S3::load(&I18N_SITE_YML_PATH, &build.htm_conf.host)?)
+      }
+      _ => {
+        eprintln!("unknown out {kind}");
+        continue;
+      }
+    };
+  }
+
   println!("✅ i18n.site build");
+  OK
+}
+
+pub async fn htm(
+  kind: &str,
+  upload: impl ckv::Ckv,
+  build: &Build,
+  changed: &HashSet<String>,
+  dir: &Path,
+  ignore: &globset::GlobSet,
+) -> Null {
+  let lang_li = &build.lang_li;
+  let foot = build.foot();
+  tokio::try_join!(
+    crate::seo(
+      kind,
+      &upload,
+      &build.htm_conf,
+      dir,
+      lang_li,
+      ignore,
+      changed,
+      &foot,
+    ),
+    build.htm(kind, &upload, lang_li)
+  )?;
   OK
 }

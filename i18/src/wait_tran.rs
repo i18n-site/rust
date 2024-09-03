@@ -2,7 +2,7 @@ use aok::{Result, OK};
 
 use crate::{fetch_tran, print_err, Save, ASSET_BASE, COST_BASE};
 
-pub async fn wait_tran<'a>(id: &str, save: &mut Save<'a>) -> Result<()> {
+pub async fn wait_tran(id: &str, save: &mut Save) -> Result<()> {
   loop {
     tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
     if let Ok(r) = xerr::ok!(fetch_tran(id).await) {

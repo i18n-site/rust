@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use aok::Result;
+use aok::{Null, Result, OK};
 use ft::FromTo;
 use globset::GlobSet;
 use gxhash::{HashMap, HashMapExt, HashSet, HashSetExt};
@@ -150,13 +150,24 @@ impl Build {
     }
 
     let conf = &self.htm_conf;
-    // let upload = upload(&conf)?;
-    // let outdir = if let Some(ref outdir) = conf.outdir {
-    // outdir
-    // } else {
-    //   PUBLIC
-    // };
 
+    let js_ver = self.js(&mut vfs, conf_name, conf).await?;
+    let prefix_index_ver = self.mnt.build(&mut vfs, &self.bjs_after.lang_path_bin)?;
+    if vfs.has_new() {
+      let v = format!("{js_ver}>{prefix_index_ver}");
+      for i in [vfs.verdir.join(".v"), vfs.out.join(".v")] {
+        ifs::wbin(i, &v)?;
+      }
+    }
+
+    Ok(vfs)
+  }
+
+  pub async fn htm(&self, kind: &str, upload: &impl ckv::Ckv, lang_li: &[Lang]) -> Null {
+    let root = &self.root;
+    let conf = &self.htm_conf;
+    let conf_name = &self.htm_conf_name;
+    let outdir = root.join(OUT).join(conf_name);
     let outhtm = outdir.join("htm");
     let public_dir = root.join(PUBLIC);
     let mut exist = HashSet::new();
@@ -189,16 +200,6 @@ impl Build {
     )?;
 
     worker(root, conf, &outhtm)?;
-
-    let js_ver = self.js(&mut vfs, conf_name, conf).await?;
-    let prefix_index_ver = self.mnt.build(&mut vfs, &self.bjs_after.lang_path_bin)?;
-    if vfs.has_new() {
-      let v = format!("{js_ver}>{prefix_index_ver}");
-      for i in [vfs.verdir.join(".v"), vfs.out.join(".v")] {
-        ifs::wbin(i, &v)?;
-      }
-    }
-
-    Ok(vfs)
+    OK
   }
 }

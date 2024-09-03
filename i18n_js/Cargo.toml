@@ -8,6 +8,7 @@ serde_yaml = "0.9.34"
 serde = "1.0.209"
 sonic-rs = "0.3.12"
 gxhash = "3.4.1"
+ckv = { version = "0.1.8", path = "../ckv" }
 
 [dependencies.sortmap]
 version = "0.1.3"

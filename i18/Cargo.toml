@@ -25,10 +25,11 @@ reqwest = "0.12.7"
 sonic-rs = "0.3.12"
 ub64 = "0.0.10"
 gxhash = "3.4.1"
+sts = { version = "0.1.23", path = "../sts" }
 
 [dependencies.roaring]
 version = "0.10.6"
-features = [ "simd" ]
+features = ["simd"]
 
 [dependencies.vb]
 version = "0.1.8"
@@ -49,15 +50,11 @@ path = "../i18_json"
 [dependencies.tzst]
 version = "0.1.20"
 path = "../tzst"
-features = [ "w" ]
+features = ["w"]
 
 [dependencies.i18_hash]
 version = "0.1.15"
 path = "../i18_hash"
-
-[dependencies.len_mtime]
-version = "0.1.12"
-path = "../len_mtime"
 
 [dependencies.i18_conf]
 version = "0.1.11"
@@ -83,10 +80,6 @@ path = "../lang"
 version = "0.1.22"
 path = "../ft"
 
-[dependencies.init_dir]
-version = "0.1.6"
-path = "../init_dir"
-
 [dependencies.xerr]
 version = "0.1.15"
 path = "../xerr"
@@ -97,13 +90,13 @@ path = "../yconf"
 
 [dependencies.tokio]
 version = "1.40.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
 
 [dependencies.ifs]
 version = "0.1.43"
 path = "../ifs"
 default-features = false
-features = [ "is_dir", "fs", "unix_path", "confdir" ]
+features = ["is_dir", "fs", "unix_path", "confdir"]
 
 [[bin]]
 name = "i18"
@@ -115,4 +108,4 @@ prost-build = "0.13.2"
 
 [target."cfg(target_os=\"linux\")".dependencies.openssl]
 version = "0.10"
-features = [ "vendored" ]
+features = ["vendored"]

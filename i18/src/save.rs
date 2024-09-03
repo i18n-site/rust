@@ -4,14 +4,12 @@ use ft::FromTo;
 use gxhash::{HashMap, HashSet};
 use i18_hash::{I18Hash, Meta};
 use lang::LANG_CODE;
-use len_mtime::LenMtime;
 use roaring::bitmap::RoaringBitmap;
 use xhash::xhash;
 
 use crate::api;
 
-pub struct Save<'a> {
-  pub len_mtime: LenMtime<'a>,
+pub struct Save {
   pub i18_hash: I18Hash,
   pub root: PathBuf,
   /// rel -> Waiting
@@ -25,13 +23,12 @@ pub struct Save<'a> {
 pub struct Waiting {
   pub lang_meta: HashMap<u16, Meta>,
   pub to_li: RoaringBitmap,
-  pub len: usize,
+  pub len: u64,
 }
 
-impl<'a> Save<'a> {
+impl Save {
   pub fn new(
     root: impl Into<PathBuf>,
-    mut len_mtime: LenMtime<'a>,
     mut i18_hash: I18Hash,
     rel_ft: Vec<(String, FromTo)>,
     to_update_path_hash: Vec<i18_hash::File>,
@@ -60,9 +57,9 @@ impl<'a> Save<'a> {
             }
             utime_path_li.push(fp);
           } else {
-            total += to_li.len() * file.len;
+            total += (to_li.len() as u64) * file.meta.len;
             if entry.len == 0 {
-              entry.len = file.len;
+              entry.len = file.meta.len;
             }
             for i in to_li {
               entry.to_li.insert(i as _);
@@ -77,7 +74,6 @@ impl<'a> Save<'a> {
     for (rel, li) in update_hash {
       xerr::log!(i18_hash.save(rel, li));
     }
-    xerr::log!(len_mtime.save(utime_path_li));
 
     let pbar = if total > 0 {
       pbar::pbar(total as _)
@@ -88,7 +84,6 @@ impl<'a> Save<'a> {
     Save {
       rel_ft,
       root: root.into(),
-      len_mtime,
       i18_hash,
       waiting,
       pbar,
@@ -107,6 +102,7 @@ impl<'a> Save<'a> {
     let mut utime_path_li = vec![];
     let mut update_mtime_fp = vec![];
     let mut update_hash = HashMap::default();
+    let ts = sts::sec();
     for (rel, api::TranedLi { li }) in traned {
       for api::Traned { lang, txt } in li {
         let path = format!("{}/{}", LANG_CODE[*lang as usize], rel);
@@ -125,6 +121,8 @@ impl<'a> Save<'a> {
                   lang as u16,
                   Meta {
                     hash: xhash(txt),
+                    ts,
+                    len: txt.as_bytes().len() as u64,
                     to_li: if let Some(to_li) = ft.to_li(lang as u16) {
                       vb::e(to_li.into_iter().map(|i| i as u64).collect::<Vec<_>>())
                     } else {
@@ -153,8 +151,6 @@ impl<'a> Save<'a> {
       for (rel, li) in update_hash {
         xerr::log!(self.i18_hash.save(rel, li));
       }
-      xerr::log!(self.len_mtime.save_fp(update_mtime_fp));
-      xerr::log!(self.len_mtime.save(utime_path_li));
     }
     Ok(self.has_waiting())
   }

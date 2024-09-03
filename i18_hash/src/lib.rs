@@ -1,15 +1,22 @@
 #![feature(let_chains)]
-
 use std::{
+  fs, io,
   ops::{Deref, DerefMut},
   path::{Path, PathBuf},
 };
 
 use aok::Result;
 use bincode::{Decode, Encode};
+use filetime::{set_file_mtime, FileTime};
 use gxhash::{HashMap, HashMapExt};
 use lang::{Lang, LANG_CODE};
 use tzst::zst;
+
+pub fn set_mtime(fp: &Path, ts: u64) -> io::Result<()> {
+  let mtime = FileTime::from_unix_time(ts as i64, 0);
+  set_file_mtime(fp, mtime)?;
+  Ok(())
+}
 
 #[derive(Default, Clone, Debug)]
 pub struct LangLi(pub Vec<Lang>);
@@ -38,6 +45,8 @@ impl Deref for LangLi {
 pub struct Meta {
   pub hash: Vec<u8>,
   pub to_li: Vec<u8>,
+  pub ts: u64,
+  pub len: u64,
 }
 
 #[derive(Decode, Encode, Default)]
@@ -73,7 +82,6 @@ pub struct File {
   pub rel: String,
   pub pre_hash: Vec<u8>,
   pub meta: Meta,
-  pub len: usize,
 }
 
 impl I18Hash {
@@ -96,7 +104,7 @@ impl I18Hash {
   pub fn new(root: impl Into<PathBuf>) -> Self {
     let root = root.into();
     Self {
-      dir_hash: root.join(".i18n").join("hash"),
+      dir_hash: root.join(".i18n").join("hash").join("i18n"),
       root,
       cache: HashMap::new(),
     }
@@ -112,14 +120,16 @@ impl I18Hash {
         if let Some(lang) = LANG_CODE.iter().position(|i| *i == lang) {
           let rel = &i[p + 1..];
           let fp = self.root.join(&i);
-          let txt = refmt::fp(&fp)?;
-          let bin = txt.as_bytes();
-          rel_lang.entry(rel.to_owned()).or_default().push((
-            lang,
-            xhash::xhash(bin),
-            bin.len(),
-            to_li,
-          ));
+          if let Ok(meta) = xerr::ok!(fs::metadata(&fp))
+            && let Ok(ts) = xerr::ok!(meta.modified())
+          {
+            let ts = ts.duration_since(std::time::UNIX_EPOCH).unwrap().as_secs();
+
+            rel_lang
+              .entry(rel.to_owned())
+              .or_default()
+              .push((lang, fp, to_li, ts, meta.len()));
+          }
         }
       }
     }
@@ -131,7 +141,7 @@ impl I18Hash {
 
     for (rel, lang_li) in rel_lang.into_iter() {
       let lang_meta_map = self.get_lang_meta(&rel);
-      for (lang, hash, len, to_li) in lang_li {
+      for (lang, fp, to_li, ts, len) in lang_li {
         // 空文件不翻译
         if len == 0 {
           let mut change = lang_meta_map.remove(&(lang as u16)).is_some();
@@ -146,10 +156,22 @@ impl I18Hash {
           continue;
         }
 
-        let to_li: Vec<u8> = to_li.into();
         let lang = lang as u16;
-        let pre_hash = if let Some(pre) = lang_meta_map.get(&lang) {
+        let pre_meta = lang_meta_map.get(&lang);
+        if let Some(pre_meta) = pre_meta {
+          if pre_meta.len == len && pre_meta.ts == ts {
+            continue;
+          }
+        }
+
+        let txt = refmt::fp(&fp)?;
+        let bin = txt.as_bytes();
+        let hash = xhash::xhash(&bin);
+        let to_li: Vec<u8> = to_li.into();
+
+        let pre_hash = if let Some(pre) = pre_meta {
           if to_li == pre.to_li && hash == pre.hash {
+            set_mtime(&fp, pre.ts)?;
             continue;
           }
           pre.hash.clone()
@@ -165,8 +187,12 @@ impl I18Hash {
           lang,
           rel: rel.clone(),
           pre_hash,
-          len,
-          meta: Meta { hash, to_li },
+          meta: Meta {
+            hash,
+            to_li,
+            ts,
+            len: len as u64,
+          },
         });
       }
     }
