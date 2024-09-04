@@ -50,6 +50,7 @@ pub struct Scan {
   pub rel_len_ts: HashMap<String, LenTs>,
 }
 
+#[derive(Debug)]
 pub struct State {
   pub changed: Vec<(String, Meta)>,
   pub no_change: Vec<(String, Meta)>,
@@ -87,7 +88,9 @@ impl Scan {
         if let Some(i) = line.chars().next() {
           if "<>#".contains(i) {
             continue;
-          } else if let Some(pos) = line.rfind('#') {
+          }
+
+          if let Some(pos) = line.rfind('#') {
             let bin = &line[pos + 1..];
             if let Ok(meta) = burl::d(bin) {
               if let Ok::<Meta, _>(meta) = bce::d(&meta) {
@@ -111,7 +114,7 @@ impl Scan {
                         },
                       ));
                     } else {
-                      changed.push((rel.into(), meta));
+                      changed.push((rel.into(), Meta { len_ts, hash }));
                     }
                   }
                 }
@@ -136,11 +139,28 @@ impl Scan {
     }
 
     Ok(State {
-      has_change: changed.is_empty() && no_change.len() == self.rel_len_ts.len(),
+      has_change: !changed.is_empty() || no_change.len() != self.rel_len_ts.len(),
       changed,
       db,
       no_change,
     })
+  }
+
+  pub fn add(&mut self, rel: impl AsRef<str>) -> Null {
+    let rel = rel.as_ref();
+    let fp = self.public.join(rel);
+    if let Ok(meta) = std::fs::metadata(fp)
+      && let Ok(ts) = meta.modified()
+    {
+      self.rel_len_ts.insert(
+        rel.into(),
+        LenTs {
+          ts: ts.duration_since(std::time::UNIX_EPOCH).unwrap().as_secs(),
+          len: meta.len(),
+        },
+      );
+    }
+    OK
   }
 
   pub fn new(public: impl Into<PathBuf>) -> std::io::Result<Self> {

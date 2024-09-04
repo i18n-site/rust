@@ -14,4 +14,10 @@ pub trait Ckv {
     rel: impl AsRef<str> + Send,
     bin: impl AsRef<[u8]> + Send,
   ) -> impl std::future::Future<Output = Null> + Send;
+
+  fn put_read(
+    &self,
+    rel: impl AsRef<str> + Send,
+    read: impl std::io::Read + Send,
+  ) -> impl std::future::Future<Output = Null> + Send;
 }

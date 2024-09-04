@@ -3,17 +3,18 @@ use std::path::{Path, PathBuf};
 use aok::{Null, Result, OK};
 use ft::FromTo;
 use globset::GlobSet;
-use gxhash::{HashMap, HashMapExt, HashSet, HashSetExt};
+use gxhash::{HashMap, HashMapExt, HashSet};
 use lang::{Lang, LANG_CODE};
 use verfs::VerFs;
-use walkdir::WalkDir;
 
 use crate::{
-  bjs_after, bjs_after::BjsAfter, css, mnt::Mnt, pug, worker, Conf, HtmConf, NavLi, Scan, DOT_I18N,
-  HTM, OUT, PUBLIC,
+  bjs_after, bjs_after::BjsAfter, css, mnt::Mnt, pug, worker::worker, Conf, HtmConf, NavLi, Scan,
+  DOT_I18N, HTM, OUT, PUBLIC,
 };
 
+const DATA: &str = "data";
 const V: &str = "v";
+const REL_I18N_CONF: &str = "../.i18n/conf.yml";
 
 #[derive(Debug)]
 pub struct Build {
@@ -115,9 +116,12 @@ impl Build {
       // &from_to,
       &lang_li,
     )?;
-    // _LANG = en name url
+
+    let mut scan = change::Scan::new(root.join(PUBLIC))?;
+    scan.add(REL_I18N_CONF)?;
+
     Ok(Self {
-      scan: change::Scan::new(root.join(PUBLIC))?,
+      scan,
       htm_conf: yconf::load(&htm.join(format!("{}.yml", htm_conf_name)))?,
       htm_conf_name,
       i18n_li,
@@ -144,7 +148,7 @@ impl Build {
       outv,
       root
         .join(DOT_I18N)
-        .join("data")
+        .join(DATA)
         .join(V)
         .join(conf_name)
         .join("v.hash"),
@@ -174,10 +178,22 @@ impl Build {
     let conf_name = &self.htm_conf_name;
     let outdir = root.join(OUT).join(conf_name);
     let outhtm = outdir.join("htm");
-    let public = root.join(PUBLIC);
-    let change = scan.change(root.join(DOT_I18N));
+    let public = &self.scan.public;
+    let change = self
+      .scan
+      .change(root.join(DOT_I18N).join(DATA).join(PUBLIC).join(conf_name))?;
+    if change.has_change {
+      for (rel, meta) in &change.changed {
+        dbg!(rel);
+        if rel == REL_I18N_CONF {
+          worker(root, conf, &outhtm)?;
+        } else {
+          // upload.put(rel, public.join(rel))?;
+        }
+      }
+      change.save()?;
+    }
 
-    // worker(root, conf, &outhtm)?;
     OK
   }
 }
