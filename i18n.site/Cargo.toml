@@ -37,7 +37,7 @@ version = "0.1.11"
 path = "../md_title"
 
 [dependencies.rtoc]
-version = "0.1.9"
+version = "0.1.10"
 path = "../rtoc"
 
 [dependencies.pbar]
