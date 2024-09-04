@@ -47,7 +47,7 @@ version = "0.1.29"
 path = "../xhash"
 
 [dependencies.i18_json]
-version = "0.1.9"
+version = "0.1.10"
 path = "../i18_json"
 
 [dependencies.tzst]
