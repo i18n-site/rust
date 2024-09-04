@@ -1,6 +1,6 @@
 [package]
 name = "change"
-version = "0.1.8"
+version = "0.1.11"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -20,6 +20,7 @@ bincode = "2.0.0-rc.3"
 burl = { version = "0.1.4", path = "../burl" }
 gxhash = "3.4.1"
 ifs = { version = "0.1.43", path = "../ifs", features = ["fs", "unix_path"] }
+set_mtime = { version = "0.1.8", path = "../set_mtime" }
 walkdir = "2.5.0"
 xerr = { version = "0.1.15", path = "../xerr" }
 xxhash-rust = { version = "0.8.12", features = ["xxh3"] }

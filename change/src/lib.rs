@@ -11,6 +11,7 @@ use std::{
 use aok::{Null, OK};
 use bincode::{Decode, Encode};
 use gxhash::HashMap;
+use set_mtime::set_mtime;
 pub use walkdir::WalkDir;
 use xxhash_rust::xxh3::Xxh3DefaultBuilder;
 
@@ -52,6 +53,7 @@ pub struct State {
   pub changed: Vec<(String, Meta)>,
   pub no_change: Vec<(String, Meta)>,
   pub db: PathBuf,
+  pub has_change: bool,
 }
 
 impl State {
@@ -79,32 +81,44 @@ impl Scan {
     let mut rel_len_ts = self.rel_len_ts.clone();
     if db.exists() {
       let file = std::io::BufReader::new(std::fs::File::open(&db)?);
-      for line in file.lines() {
-        if let Ok(line) = line {
-          let line = line.trim_end();
-          if let Some(i) = line.chars().next() {
-            if "<>#".contains(i) {
-              continue;
-            } else if let Some(pos) = line.rfind('#') {
-              let bin = &line[pos + 1..];
-              if let Ok(meta) = burl::d(bin) {
-                if let Ok::<Meta, _>(meta) = bce::d(&meta) {
-                  let rel = &line[..pos];
-                  if let Some(len_ts) = rel_len_ts.remove(rel) {
-                    if len_ts.len == meta.len_ts.len && len_ts.ts == meta.len_ts.ts {
-                      no_change.push((rel.into(), meta));
-                    } else if let Ok(hash) = xerr::ok!(hash(self.public.join(rel))) {
-                      if hash != meta.hash {
-                        changed.push((rel.into(), meta));
-                      }
+      for line in file.lines().flatten() {
+        let line = line.trim_end();
+        if let Some(i) = line.chars().next() {
+          if "<>#".contains(i) {
+            continue;
+          } else if let Some(pos) = line.rfind('#') {
+            let bin = &line[pos + 1..];
+            if let Ok(meta) = burl::d(bin) {
+              if let Ok::<Meta, _>(meta) = bce::d(&meta) {
+                let rel = &line[..pos];
+                if let Some(len_ts) = rel_len_ts.remove(rel) {
+                  if len_ts.len == meta.len_ts.len && len_ts.ts == meta.len_ts.ts {
+                    no_change.push((rel.into(), meta));
+                  } else {
+                    let fp = self.public.join(rel);
+                    let hash = hash(&fp)?;
+                    if hash == meta.hash {
+                      set_mtime(&fp, meta.len_ts.ts)?;
+                      no_change.push((
+                        rel.into(),
+                        Meta {
+                          len_ts: LenTs {
+                            len: len_ts.len,
+                            ts: meta.len_ts.ts,
+                          },
+                          hash,
+                        },
+                      ));
+                    } else {
+                      changed.push((rel.into(), meta));
                     }
                   }
                 }
               }
             }
-          } else {
-            continue;
           }
+        } else {
+          continue;
         }
       }
     }
@@ -121,6 +135,7 @@ impl Scan {
     }
 
     Ok(State {
+      has_change: changed.is_empty() && no_change.len() == self.rel_len_ts.len(),
       changed,
       db,
       no_change,
