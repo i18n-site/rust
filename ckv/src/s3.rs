@@ -47,7 +47,7 @@ pub mod mime {
   pub const HTML: &str = "text/html";
   pub const XML: &str = "text/xml";
   pub const CSS: &str = "text/css";
-  pub const JS: &str = "text/js";
+  pub const JS: &str = "application/javascript";
   pub const TXT: &str = "text/plain";
   pub const RSS: &str = "application/rss+xml";
   pub const ICO: &str = "image/x-icon";
