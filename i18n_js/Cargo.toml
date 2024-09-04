@@ -8,8 +8,15 @@ serde_yaml = "0.9.34"
 serde = "1.0.209"
 sonic-rs = "0.3.12"
 gxhash = "3.4.1"
-pbar = { version = "0.1.6", path = "../pbar" }
 futures = "0.3.30"
+
+[dependencies.pbar]
+version = "0.1.6"
+path = "../pbar"
+
+[dependencies.md_title]
+version = "0.1.11"
+path = "../md_title"
 
 [dependencies.ckv]
 version = "0.1.9"

@@ -1,6 +1,9 @@
+#![feature(str_split_remainder)]
 #![feature(let_chains)]
 #![feature(const_trait_impl)]
 
+mod index_html;
+use index_html::index_html;
 mod mnt;
 pub use mnt::Mnt;
 mod bjs_after;

@@ -18,11 +18,16 @@ impl Ckv for Fs {
 
   async fn put_path(&self, rel: impl AsRef<str> + Send, path: &str) -> Null {
     let out_fp = self.out.join(rel.as_ref());
-    let mut out = std::fs::File::create(out_fp)?;
-    let mut out = BufWriter::new(&mut out);
     let mut read = std::fs::File::open(path)?;
     let mut read = BufReader::new(&mut read);
 
+    if let Some(p) = out_fp.parent() {
+      if !p.exists() {
+        std::fs::create_dir_all(p)?;
+      }
+    }
+    let mut out = std::fs::File::create(&out_fp)?;
+    let mut out = BufWriter::new(&mut out);
     std::io::copy(&mut read, &mut out).unwrap();
     OK
   }

@@ -9,8 +9,8 @@ use lang::{Lang, LANG_CODE};
 use verfs::VerFs;
 
 use crate::{
-  bjs_after, bjs_after::BjsAfter, css, mnt::Mnt, pug, worker::worker, Conf, HtmConf, NavLi, Scan,
-  DOT_I18N, HTM, OUT, PUBLIC,
+  bjs_after, bjs_after::BjsAfter, css, index_html, mnt::Mnt, pug, worker::worker, Conf, HtmConf,
+  NavLi, Scan, DOT_I18N, HTM, OUT, PUBLIC,
 };
 
 const DATA: &str = "data";
@@ -195,7 +195,13 @@ impl Build {
           if rel == REL_I18N_CONF {
             worker(root, conf, upload).await?;
           } else if let Some(fp) = public.join(rel).as_os_str().to_str() {
-            upload.put_path(rel, fp).await?;
+            if rel == "index.html" {
+              upload
+                .put(rel, index_html(root, fp, lang_li)?.as_bytes())
+                .await?;
+            } else {
+              upload.put_path(rel, fp).await?;
+            }
           }
           Ok::<_, aok::Error>(rel)
         }))
