@@ -97,8 +97,10 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
           }else{
             "".into()
           };
+
+          let lang_en = LANG_CODE[lang as usize];
           let htm = format!(
-            r#"<!doctypehtml><meta charset=UTF-8><link rel=stylesheet href=//registry.npmmirror.com/{css}/latest/files/_.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default>{canonical}<link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css>{}{htm}"#,
+            r#"<!doctypehtml><meta charset=UTF-8><link rel="alternate" type="application/rss+xml" hreflang="{lang_en}" href="/{lang_en}.rss"><link rel=stylesheet href=//registry.npmmirror.com/{css}/latest/files/_.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default>{canonical}<link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css>{}{htm}"#,
             t.lang_set
             .iter()
             .map(|lang| {
@@ -109,7 +111,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
             .join(""),
           );
 
-          let url = format!("{}{}", LANG_CODE[lang as usize], url_htm);
+          let url = format!("{}{}", lang_en, url_htm);
           async move {
             (
               upload.put(&url, htm).await,
