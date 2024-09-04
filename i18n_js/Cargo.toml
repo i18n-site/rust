@@ -19,7 +19,7 @@ version = "0.1.11"
 path = "../md_title"
 
 [dependencies.ckv]
-version = "0.1.10"
+version = "0.1.11"
 path = "../ckv"
 
 [dependencies.change]

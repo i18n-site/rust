@@ -92,8 +92,13 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
 省略可选标签(html head body)。 HTML5 规范定义了哪些标签可以省略。
 */
 
+          let canonical = if lang == Lang::En {
+            format!(r#"<link rel=canonical href="https://{host}{url}">"#)
+          }else{
+            "".into()
+          };
           let htm = format!(
-            r#"<!doctypehtml><meta charset=UTF-8><link rel=stylesheet href=//registry.npmmirror.com/{css}/latest/files/_.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default><link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css>{}{htm}"#,
+            r#"<!doctypehtml><meta charset=UTF-8><link rel=stylesheet href=//registry.npmmirror.com/{css}/latest/files/_.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default>{canonical}<link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css>{}{htm}"#,
             t.lang_set
             .iter()
             .map(|lang| {
