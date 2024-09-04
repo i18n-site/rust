@@ -3,7 +3,7 @@ use std::path::Path;
 use lang::{Lang, LANG_CODE};
 use md_title::md_title_from_path;
 
-const BODY: &str = "<body>";
+const BODY: &str = "<body";
 
 pub fn index_html(root: &Path, fp: &str, lang_li: &[Lang]) -> std::io::Result<String> {
   let html = ifs::rtxt(fp)?;
@@ -19,7 +19,6 @@ pub fn index_html(root: &Path, fp: &str, lang_li: &[Lang]) -> std::io::Result<St
         let link = format!(
           r#"<link rel="alternate" type="application/rss+xml" title="{title}" hreflang="{en}" href="/{en}.rss">"#
         );
-        println!("{link}");
         html += &link;
       }
     }

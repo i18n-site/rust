@@ -1,6 +1,6 @@
 [package]
 name = "ckv"
-version = "0.1.9"
+version = "0.1.10"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -15,7 +15,7 @@ all-features = true
 
 [dependencies]
 aok = "0.1.15"
-aws-sdk-s3 = "1.47.0"
+aws-sdk-s3 = { version = "1.48.0", features = ["behavior-version-latest"] }
 futures = "0.3.30"
 gxhash = "3.4.1"
 ifs = { version = "0.1.43", path = "../ifs", features = ["fs"] }
