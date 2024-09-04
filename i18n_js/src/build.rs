@@ -2,6 +2,7 @@ use std::path::{Path, PathBuf};
 
 use aok::{Null, Result, OK};
 use ft::FromTo;
+use futures::{stream, stream::StreamExt};
 use globset::GlobSet;
 use gxhash::{HashMap, HashMapExt, HashSet};
 use lang::{Lang, LANG_CODE};
@@ -176,20 +177,37 @@ impl Build {
     let root = &self.root;
     let conf = &self.htm_conf;
     let conf_name = &self.htm_conf_name;
-    let outdir = root.join(OUT).join(conf_name);
-    let outhtm = outdir.join("htm");
     let public = &self.scan.public;
-    let change = self
-      .scan
-      .change(root.join(DOT_I18N).join(DATA).join(PUBLIC).join(conf_name))?;
+    let change = self.scan.change(
+      root
+        .join(DOT_I18N)
+        .join(DATA)
+        .join(PUBLIC)
+        .join(conf_name)
+        .join(kind),
+    )?;
     if change.has_change {
-      for (rel, meta) in &change.changed {
-        dbg!(rel);
-        if rel == REL_I18N_CONF {
-          worker(root, conf, &outhtm)?;
-        } else {
-          // upload.put(rel, public.join(rel))?;
+      let changed = &change.changed;
+      // 有可能只是删除了文件
+      if !changed.is_empty() {
+        let mut bar = pbar::pbar(changed.len() as u64);
+        let mut iter = stream::iter(changed.iter().map(|(rel, _)| async move {
+          if rel == REL_I18N_CONF {
+            worker(root, conf, upload).await?;
+          } else if let Some(fp) = public.join(rel).as_os_str().to_str() {
+            upload.put_path(rel, fp).await?;
+          }
+          Ok::<_, aok::Error>(rel)
+        }))
+        .buffer_unordered(64);
+
+        while let Some(rel) = iter.next().await {
+          let rel = rel?;
+          bar.inc(1);
+          bar.set_message(format!("⬆ {rel}"));
         }
+
+        bar.finish_and_clear();
       }
       change.save()?;
     }

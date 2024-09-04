@@ -1,3 +1,4 @@
+#![feature(async_closure)]
 #![feature(let_chains)]
 
 use aok::Null;
@@ -15,9 +16,9 @@ pub trait Ckv {
     bin: impl AsRef<[u8]> + Send,
   ) -> impl std::future::Future<Output = Null> + Send;
 
-  fn put_read(
+  fn put_path(
     &self,
     rel: impl AsRef<str> + Send,
-    read: impl std::io::Read + Send,
+    path: &str,
   ) -> impl std::future::Future<Output = Null> + Send;
 }

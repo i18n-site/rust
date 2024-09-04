@@ -83,7 +83,7 @@ impl Scan {
     let mut rel_len_ts = self.rel_len_ts.clone();
     if db.exists() {
       let file = std::io::BufReader::new(std::fs::File::open(&db)?);
-      for line in file.lines().flatten() {
+      for line in file.lines().map_while(Result::ok) {
         let line = line.trim_end();
         if let Some(i) = line.chars().next() {
           if "<>#".contains(i) {

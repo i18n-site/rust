@@ -3,6 +3,7 @@ use std::{path::Path, time::Duration};
 use aok::{Null, Result, OK};
 use aws_sdk_s3::{
   config::{timeout::TimeoutConfig, Credentials, Region},
+  primitives::ByteStream,
   Client as S3Client, Config,
 };
 use futures::{stream::FuturesUnordered, StreamExt};
@@ -66,42 +67,58 @@ pub struct S3 {
   li: Vec<Client>,
 }
 
-impl Ckv for S3 {
-  async fn put(&self, rel: impl AsRef<str>, bin: impl AsRef<[u8]>) -> Null {
-    if self.li.is_empty() {
+macro_rules! put {
+  ($self:expr,$rel:expr, $body:expr) => {{
+    let li = &$self.li;
+    if li.is_empty() {
       return OK;
     }
-    let rel = rel.as_ref();
-    let bin = bin.as_ref();
-
-    let mut futures = FuturesUnordered::new();
+    let rel = $rel.as_ref();
     let mime_type = mime_type(rel);
 
-    {
-      for client in &self.li {
-        let bin = bin.to_vec();
-        futures.push(async move {
+    let mut futures = FuturesUnordered::new();
+
+    for client in li {
+      let rel = rel.to_owned();
+      futures.push(async move {
+        let r = async {
           let mut put_request = client
             .s3
             .put_object()
             .bucket(&client.bucket)
-            .key(rel)
-            .body(bin.into());
+            .key(&rel)
+            .body($body);
           if let Some(mime_type) = mime_type {
             put_request = put_request.content_type(mime_type);
           }
-          (client, put_request.send().await)
-        });
-      }
-      while let Some((client, r)) = futures.next().await {
-        if let Err(e) = r {
-          let conf = client.s3.config();
-          eprintln!("{:?}", conf);
-          return Err(e.into());
+          put_request.send().await?;
+          Ok::<_, aok::Error>(())
         }
+        .await;
+        (client, r)
+      });
+    }
+
+    while let Some((client, r)) = futures.next().await {
+      if let Err(e) = r {
+        let conf = client.s3.config();
+        eprintln!("{:?}", conf);
+        return Err(e.into());
       }
     }
+
     OK
+  }};
+}
+
+impl Ckv for S3 {
+  async fn put_path(&self, rel: impl AsRef<str> + Send, path: &str) -> Null {
+    put!(self, rel, ByteStream::from_path(path).await?)
+  }
+
+  async fn put(&self, rel: impl AsRef<str>, bin: impl AsRef<[u8]>) -> Null {
+    let bin = bin.as_ref();
+    put!(self, rel, bin.to_vec().into())
   }
 }
 
