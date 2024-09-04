@@ -114,7 +114,7 @@ impl I18Hash {
         if let Some(lang) = LANG_CODE.iter().position(|i| *i == lang) {
           let rel = &i[p + 1..];
           let fp = self.root.join(&i);
-          if let Ok(meta) = xerr::ok!(fs::metadata(&fp))
+          if let Ok(meta) = fs::metadata(&fp)
             && let Ok(ts) = xerr::ok!(meta.modified())
           {
             let ts = ts.duration_since(std::time::UNIX_EPOCH).unwrap().as_secs();

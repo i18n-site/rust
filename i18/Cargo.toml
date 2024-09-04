@@ -56,7 +56,7 @@ path = "../tzst"
 features = [ "w" ]
 
 [dependencies.i18_hash]
-version = "0.1.16"
+version = "0.1.17"
 path = "../i18_hash"
 
 [dependencies.i18_conf]
