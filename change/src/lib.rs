@@ -44,6 +44,7 @@ pub struct Meta {
   pub hash: u128,
 }
 
+#[derive(Debug)]
 pub struct Scan {
   pub public: PathBuf,
   pub rel_len_ts: HashMap<String, LenTs>,

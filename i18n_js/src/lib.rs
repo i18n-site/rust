@@ -19,7 +19,6 @@ mod scan;
 use scan::Scan;
 mod js;
 mod worker;
-use worker::worker;
 
 pub const EMPTY: String = String::new();
 pub const GEN: &str = "gen";

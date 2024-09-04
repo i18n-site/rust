@@ -30,6 +30,7 @@ pub struct Build {
   pub bjs_after: BjsAfter,
   pub i18n_li: HashMap<Lang, Vec<String>>,
   pub lang_li: Vec<Lang>,
+  pub scan: change::Scan,
 }
 
 impl Build {
@@ -114,9 +115,9 @@ impl Build {
       // &from_to,
       &lang_li,
     )?;
-
     // _LANG = en name url
-    let i = Self {
+    Ok(Self {
+      scan: change::Scan::new(root.join(PUBLIC))?,
       htm_conf: yconf::load(&htm.join(format!("{}.yml", htm_conf_name)))?,
       htm_conf_name,
       i18n_li,
@@ -130,8 +131,7 @@ impl Build {
       pug,
       nav,
       mnt,
-    };
-    Ok(i)
+    })
   }
 
   pub async fn build(&self) -> Result<VerFs> {
@@ -143,7 +143,7 @@ impl Build {
       root,
       outv,
       root
-        .join(".i18n")
+        .join(DOT_I18N)
         .join("data")
         .join(V)
         .join(conf_name)
@@ -174,37 +174,10 @@ impl Build {
     let conf_name = &self.htm_conf_name;
     let outdir = root.join(OUT).join(conf_name);
     let outhtm = outdir.join("htm");
-    let public_dir = root.join(PUBLIC);
-    let mut exist = HashSet::new();
-    ifs::rsync(
-      &public_dir,
-      WalkDir::new(&public_dir).into_iter().filter_entry(|i| {
-        exist.insert(
-          i.path()
-            .strip_prefix(&public_dir)
-            .unwrap()
-            .to_str()
-            .unwrap()
-            .to_owned(),
-        );
-        true
-      }),
-      // .filter_entry(|i| {
-      //   let i = i
-      //     .path()
-      //     .strip_prefix(&public_dir)
-      //     .unwrap()
-      //     .to_str()
-      //     .unwrap();
-      //   // if i.starts_with('.') {
-      //   //   return false;
-      //   // }
-      //   // i != "S.js"
-      // }),
-      &outhtm,
-    )?;
+    let public = root.join(PUBLIC);
+    let change = scan.change(root.join(DOT_I18N));
 
-    worker(root, conf, &outhtm)?;
+    // worker(root, conf, &outhtm)?;
     OK
   }
 }
