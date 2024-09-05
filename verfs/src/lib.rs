@@ -120,6 +120,22 @@ impl VerFs {
     Ok(ver.clone())
   }
 
+  pub fn ver_incr(&mut self) {
+    loop {
+      let old_dir = self.out.join(&*self.ver);
+      self.ver = ver_incr(&self.ver).into();
+      let verdir = self.out.join(&*self.ver);
+      if verdir.exists() {
+        continue;
+      }
+      self.verdir = verdir;
+      if old_dir.exists() {
+        xerr::log!(std::fs::rename(&old_dir, &self.verdir));
+      }
+      break;
+    }
+  }
+
   pub fn cp(&mut self, from: impl Into<String>, to: impl Into<String>) -> Result<Box<str>> {
     let from = from.into();
     let to = to.into();

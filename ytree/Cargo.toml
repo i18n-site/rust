@@ -25,7 +25,6 @@ sitemap = [
 
 [dependencies]
 aok = "0.1.15"
-gxhash = "3.4.1"
 serde_yaml = "0.9.34"
 
 [dependencies.intbin]

@@ -22,7 +22,6 @@ gxhash = "3.4.1"
 ifs = { version = "0.1.43", path = "../ifs", features = ["fs", "unix_path"] }
 set_mtime = { version = "0.1.8", path = "../set_mtime" }
 walkdir = "2.5.0"
-xerr = { version = "0.1.15", path = "../xerr" }
 xxhash-rust = { version = "0.8.12", features = ["xxh3"] }
 
 [dev-dependencies]

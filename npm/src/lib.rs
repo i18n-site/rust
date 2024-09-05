@@ -4,11 +4,10 @@ use std::{
   fs::{remove_file, File},
   io::{BufRead, BufReader},
   path::Path,
+  time::Duration,
 };
-
 mod payload;
-use aok::{Null, Result, OK};
-use defer_lite::defer;
+use aok::Result;
 use flate2::{write::GzEncoder, Compression};
 use payload::payload;
 use reqwest::Client;
@@ -96,50 +95,78 @@ pub fn tgz(src: impl AsRef<Path>, package_json: &Path, out: impl AsRef<Path>) ->
 }
 
 pub fn client() -> reqwest::Result<Client> {
-  let mut client_builder = Client::builder();
+  let mut build = Client::builder();
+
+  build = build
+    .timeout(Duration::from_secs(100))
+    .connect_timeout(Duration::from_secs(10));
   if let Ok(proxy) = env::var("https_proxy") {
-    client_builder = client_builder.proxy(reqwest::Proxy::https(&proxy)?);
+    build = build.proxy(reqwest::Proxy::https(&proxy)?);
   } else if let Ok(proxy) = env::var("all_proxy") {
-    client_builder = client_builder.proxy(reqwest::Proxy::all(&proxy)?);
+    build = build.proxy(reqwest::Proxy::all(&proxy)?);
   }
-  let client = client_builder.build()?;
+  let client = build.build()?;
   Ok(client)
 }
 
-pub async fn publish(token: &str, src: impl AsRef<Path>, package_json: impl AsRef<Path>) -> Null {
+pub enum State {
+  Ok,
+  VerLow,
+}
+
+pub async fn publish(
+  token: &str,
+  src: impl AsRef<Path>,
+  package_json: impl AsRef<Path>,
+) -> Result<State> {
   let package_json = package_json.as_ref();
   let src = src.as_ref();
   let tmp_dir = temp_dir();
   let tfp = tmp_dir.join("0");
 
-  defer! {
-    xerr::log!(std::fs::remove_file(&tfp));
-  };
-
   tgz(src, package_json, &tfp)?;
   // let package_json = src.join("package.json");
   let payload = payload(package_json, &tfp)?;
+
+  std::fs::remove_file(&tfp)?;
+
   let name = &payload.name;
   let payload = to_string(&payload)?;
 
+  let client = client()?;
   let url = format!("https://{}/{}", &*NPM_REGISTRY, name.replace('/', "%2f"));
 
-  let response = client()?
-    .put(url)
-    .body(payload)
-    .header("Content-Type", "application/json")
-    .bearer_auth(token)
-    .send()
-    .await?;
+  let mut retry = 9;
 
-  if !response.status().is_success() {
-    return Err(
-      Error::Publish(Publish {
-        name: name.into(),
-        msg: response.text().await?,
-      })
-      .into(),
-    );
+  while retry > 0 {
+    retry -= 1;
+    if let Ok(response) = xerr::ok!(
+      client
+        .put(&url)
+        .body(payload.clone())
+        .header("Content-Type", "application/json")
+        .bearer_auth(token)
+        .send()
+        .await
+    ) {
+      let status = response.status();
+      if status.is_success() {
+        break;
+      } else if retry == 0 {
+        return Err(
+          Error::Publish(Publish {
+            name: name.into(),
+            msg: response.text().await.unwrap_or_default(),
+          })
+          .into(),
+        );
+      } else if let Ok(text) = xerr::ok!(response.text().await) {
+        eprintln!("{} {} → {} : {}", &*NPM_REGISTRY, status, name, text);
+        if status == reqwest::StatusCode::FORBIDDEN && text.contains(" published ") {
+          return Ok(State::VerLow);
+        }
+      }
+    }
   }
-  OK
+  Ok(State::Ok)
 }

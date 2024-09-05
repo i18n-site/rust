@@ -1,6 +1,5 @@
 [dependencies]
 aok = "0.1.15"
-defer-lite = "1.0.0"
 dirs = "5.0.1"
 flate2 = "1.0.33"
 serde = "1.0.209"
@@ -23,7 +22,7 @@ path = "../xerr"
 
 [package]
 name = "npm"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"

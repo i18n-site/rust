@@ -53,7 +53,7 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
   )
   .await?;
 
-  let vfs = build.build().await?;
+  let mut vfs = build.build().await?;
 
   let mut refresh_v = None;
   if npm {
@@ -61,12 +61,21 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
       .join(".i18n/htm")
       .join(format!("{htm_conf}.package.json"));
     if package_json.exists() {
-      let package_json = package_json_ver(&package_json, &vfs.ver)?;
-      let out = dir.join("out").join(&htm_conf).join("v").join(&*vfs.ver);
-      if vfs.has_new() {
-        npm::publish(&npm::token(), &out, package_json).await?;
-        vfs.save()?;
-        refresh_v = refresh_v::RefreshV::run(&token, &build.htm_conf.v, vfs.ver);
+      loop {
+        let package_json = package_json_ver(&package_json, &vfs.ver)?;
+        let out = dir.join("out").join(&htm_conf).join("v").join(&*vfs.ver);
+        if vfs.has_new() {
+          match npm::publish(&npm::token(), &out, package_json).await? {
+            npm::State::VerLow => {
+              vfs.ver_incr();
+              continue;
+            }
+            npm::State::Ok => {}
+          }
+          vfs.save()?;
+          refresh_v = refresh_v::RefreshV::run(&token, &build.htm_conf.v, vfs.ver);
+        }
+        break;
       }
     } else {
       tracing::error!("{:?} NOT EXIST", package_json);
