@@ -25,18 +25,18 @@ pub struct VerFs {
   pub out: PathBuf,
   pub verdir: PathBuf,
   pub log: PathBuf,
-  pub hash_ver: HashMap<Box<[u8]>, Box<str>>,
-  pub ver: Box<str>,
+  pub hash_ver: HashMap<Box<[u8]>, String>,
+  pub ver: String,
   pub new_hash: HashSet<Box<[u8]>>,
   // 被添加的文件
-  pub rel_ver: HashMap<String, Box<str>>,
+  pub rel_ver: HashMap<String, String>,
 }
 
 pub fn latest_ver(
   log: &PathBuf,
-  hash_ver: &mut HashMap<Box<[u8]>, Box<str>>,
-) -> Result<Box<str>, std::io::Error> {
-  let mut latest: Option<Box<str>> = None;
+  hash_ver: &mut HashMap<Box<[u8]>, String>,
+  latest: &mut Option<String>,
+) -> std::io::Result<()> {
   if log.exists() {
     let mut ver = None;
     let reader = BufReader::new(File::open(log)?);
@@ -48,16 +48,18 @@ pub fn latest_ver(
       if let Some(v) = line.strip_prefix("@") {
         ver = Some(Box::<str>::from(v));
         if latest.is_none() {
-          latest = Some(ver_incr(v).into());
+          *latest = Some(ver_incr(v));
         }
       } else if let Some(ref ver) = ver {
         if let Ok(bin) = burl::d(line) {
-          hash_ver.entry(bin.into()).or_insert_with(|| ver.clone());
+          hash_ver
+            .entry(bin.into())
+            .or_insert_with(|| (&**ver).into());
         }
       }
     }
   }
-  Ok(latest.unwrap_or_else(|| "0.1.0".into()))
+  Ok(())
 }
 
 impl VerFs {
@@ -65,7 +67,7 @@ impl VerFs {
     !self.new_hash.is_empty()
   }
 
-  pub fn sorted_rel_ver(&self) -> Vec<(String, Box<str>)> {
+  pub fn sorted_rel_ver(&self) -> Vec<(String, String)> {
     let mut li: Vec<_> = self
       .rel_ver
       .iter()
@@ -82,11 +84,11 @@ impl VerFs {
     Ok(())
   }
 
-  pub fn wstr(&mut self, rel: impl Into<String>, bin: impl AsRef<str>) -> Result<Box<str>> {
+  pub fn wstr(&mut self, rel: impl Into<String>, bin: impl AsRef<str>) -> Result<String> {
     self.wbin(rel, bin.as_ref().as_bytes())
   }
 
-  pub fn wbin(&mut self, rel: impl Into<String>, bin: impl AsRef<[u8]>) -> Result<Box<str>> {
+  pub fn wbin(&mut self, rel: impl Into<String>, bin: impl AsRef<[u8]>) -> Result<String> {
     let rel = rel.into();
     self.throw_if_exists(&rel)?;
     let bin = bin.as_ref();
@@ -120,23 +122,11 @@ impl VerFs {
     Ok(ver.clone())
   }
 
-  pub fn ver_incr(&mut self) {
-    loop {
-      let old_dir = self.out.join(&*self.ver);
-      self.ver = ver_incr(&self.ver).into();
-      let verdir = self.out.join(&*self.ver);
-      if verdir.exists() {
-        continue;
-      }
-      self.verdir = verdir;
-      if old_dir.exists() {
-        xerr::log!(std::fs::rename(&old_dir, &self.verdir));
-      }
-      break;
-    }
+  pub fn ver_next(&mut self) -> String {
+    ver_incr(&self.ver)
   }
 
-  pub fn cp(&mut self, from: impl Into<String>, to: impl Into<String>) -> Result<Box<str>> {
+  pub fn cp(&mut self, from: impl Into<String>, to: impl Into<String>) -> Result<String> {
     let from = from.into();
     let to = to.into();
     self.throw_if_exists(&to)?;
@@ -184,14 +174,16 @@ impl VerFs {
     root: impl Into<PathBuf>,
     out: impl Into<PathBuf>,
     log: impl Into<PathBuf>,
+    mut ver: Option<String>,
   ) -> std::io::Result<Self> {
     let root = root.into();
     let out = out.into();
     let log = log.into();
     let mut hash_ver = HashMap::new();
 
-    let ver = latest_ver(&log, &mut hash_ver)?;
+    latest_ver(&log, &mut hash_ver, &mut ver)?;
 
+    let ver = ver.unwrap_or_else(|| "0.1.0".into());
     let verdir = out.join(&*ver);
     Ok(Self {
       root,

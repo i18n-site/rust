@@ -5,6 +5,8 @@ use gxhash::HashSet;
 use i18::{env::I18N_SITE_YML_PATH, token};
 use i18_conf::build_ignore;
 use i18n_js::{Build, Conf};
+use sver::Ver;
+use ver_incr::ver_incr;
 
 use crate::package_json_ver;
 
@@ -53,21 +55,28 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
   )
   .await?;
 
-  let mut vfs = build.build().await?;
+  let mut vfs = build.build(None).await?;
 
   let mut refresh_v = None;
   if npm {
     let package_json = dir
       .join(".i18n/htm")
       .join(format!("{htm_conf}.package.json"));
+
     if package_json.exists() {
       loop {
-        let package_json = package_json_ver(&package_json, &vfs.ver)?;
+        let pkg = package_json_ver(&package_json, &vfs.ver)?;
         let out = dir.join("out").join(&htm_conf).join("v").join(&*vfs.ver);
         if vfs.has_new() {
-          match npm::publish(&npm::token(), &out, package_json).await? {
+          match npm::publish(&npm::token(), &out, pkg.fp).await? {
             npm::State::VerLow => {
-              vfs.ver_incr();
+              let ver = ver_incr(&npmv::latest(&pkg.name).await?);
+              let ver = if Ver::from(&ver) <= Ver::from(&vfs.ver) {
+                vfs.ver_next()
+              } else {
+                ver
+              };
+              vfs = build.build(Some(ver)).await?;
               continue;
             }
             npm::State::Ok => {}

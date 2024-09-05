@@ -92,7 +92,7 @@ impl Mnt {
     })
   }
 
-  pub fn build(&self, vfs: &mut VerFs, lang_path_bin: &crate::bjs_after::Lpb) -> Result<Box<str>> {
+  pub fn build(&self, vfs: &mut VerFs, lang_path_bin: &crate::bjs_after::Lpb) -> Result<String> {
     let mut prefix_li: Vec<String> = self.prefix_ver.iter().map(|i| i.0.clone()).collect();
     prefix_li.push("".into());
     let pl = PrefixLi::new(prefix_li);

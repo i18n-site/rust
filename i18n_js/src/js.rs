@@ -46,7 +46,7 @@ pub fn lang_js(vfs: &mut VerFs, lang_li: &HashMap<Lang, Vec<String>>) -> Result<
 }
 
 impl Build {
-  pub async fn js(&self, vfs: &mut VerFs, conf_name: &str, conf: &HtmConf) -> Result<Box<str>> {
+  pub async fn js(&self, vfs: &mut VerFs, conf_name: &str, conf: &HtmConf) -> Result<String> {
     let nav = &self.nav;
     let htm = &self.htm;
 

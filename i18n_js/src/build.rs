@@ -19,19 +19,19 @@ const REL_I18N_CONF: &str = "../.i18n/conf.yml";
 
 #[derive(Debug)]
 pub struct Build {
-  pub root: PathBuf,
-  pub htm: PathBuf,
-  pub i18n: PathBuf,
-  pub css: String,
+  pub bjs_after: BjsAfter,
   pub conf: Conf,
-  pub nav: String,
-  pub pug: HashMap<String, crate::pug::Htm>,
-  pub mnt: Mnt,
+  pub css: String,
+  pub htm: PathBuf,
   pub htm_conf: HtmConf,
   pub htm_conf_name: String,
-  pub bjs_after: BjsAfter,
+  pub i18n: PathBuf,
   pub i18n_li: HashMap<Lang, Vec<String>>,
   pub lang_li: Vec<Lang>,
+  pub mnt: Mnt,
+  pub nav: String,
+  pub pug: HashMap<String, crate::pug::Htm>,
+  pub root: PathBuf,
   pub scan: change::Scan,
 }
 
@@ -139,7 +139,7 @@ impl Build {
     })
   }
 
-  pub async fn build(&self) -> Result<VerFs> {
+  pub async fn build(&self, ver: Option<String>) -> Result<VerFs> {
     let root = &self.root;
     let conf_name = &self.htm_conf_name;
     let outdir = root.join(OUT).join(conf_name);
@@ -153,6 +153,7 @@ impl Build {
         .join(V)
         .join(conf_name)
         .join("v.hash"),
+      ver,
     )?;
 
     if vfs.verdir.exists() {

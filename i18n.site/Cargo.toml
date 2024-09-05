@@ -1,6 +1,6 @@
 [package]
 name = "i18n-site"
-version = "0.2.76"
+version = "0.2.77"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -23,6 +23,10 @@ walkdir = "2.5.0"
 futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
 flate2 = "1.0.33"
+npmv = { version = "0.1.18", path = "../npmv" }
+serde = "1.0.209"
+sver = { version = "0.1.9", path = "../sver" }
+ver_incr = { version = "0.1.6", path = "../ver_incr" }
 
 [dependencies.ckv]
 version = "0.1.12"
