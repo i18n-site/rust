@@ -1,7 +1,9 @@
 [dependencies]
 aok = "0.1.15"
+kanal = "0.1.0-pre8"
 tokio = "1.40.0"
 tracing = "0.1.40"
+xerr = { version = "0.1.15", path = "../xerr" }
 
 [dependencies.waiting]
 version = "0.1.5"
@@ -13,7 +15,7 @@ path = "../mreq"
 
 [package]
 name = "refresh_v"
-version = "0.1.8"
+version = "0.1.9"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"

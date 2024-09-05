@@ -55,6 +55,7 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
 
   let vfs = build.build().await?;
 
+  let mut refresh_v = None;
   if npm {
     let package_json = dir
       .join(".i18n/htm")
@@ -65,7 +66,7 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
       if vfs.has_new() {
         npm::publish(&npm::token(), &out, package_json).await?;
         vfs.save()?;
-        refresh_v::url(&token, &build.htm_conf.v, &vfs.ver).await?;
+        refresh_v = refresh_v::RefreshV::run(&token, &build.htm_conf.v, vfs.ver);
       }
     } else {
       tracing::error!("{:?} NOT EXIST", package_json);
@@ -97,6 +98,9 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
     };
   }
 
+  if let Some(refresh_v) = refresh_v {
+    refresh_v.wait();
+  }
   println!("✅ i18n.site build");
   OK
 }

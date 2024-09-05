@@ -76,7 +76,7 @@ version = "0.1.18"
 path = "../npmi"
 
 [dependencies.refresh_v]
-version = "0.1.8"
+version = "0.1.9"
 path = "../refresh_v"
 
 [dependencies.yconf]
