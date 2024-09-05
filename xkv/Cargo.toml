@@ -12,7 +12,7 @@ description = "use fred connection redis via env"
 anyhow = "1.0.86"
 aok = "0.1.15"
 async-lazy = { version = "0.1.0", features = ["parking_lot", "nightly"] }
-fred = { version = "9.1.2", features = [
+fred = { version = "9.2.1", features = [
   "replicas",
   "rustls",
   "sha-1",
