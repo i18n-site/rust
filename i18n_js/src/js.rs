@@ -29,7 +29,10 @@ pub fn lang_js(vfs: &mut VerFs, lang_li: &HashMap<Lang, Vec<String>>) -> Result<
 
   let mut ver_count = VerCount::default();
 
-  for (lang, bin) in lang_li.iter() {
+  let mut lang_li = lang_li.iter().collect::<Vec<_>>();
+  lang_li.sort();
+
+  for (lang, bin) in lang_li {
     let p = *lang as usize;
     let code = LANG_CODE[p];
     let name = LANG_NAME[p];
@@ -88,15 +91,15 @@ impl Build {
 
     let const_js = to_string(&const_js)?;
     let pos = const_js.find(TO_REPLACE).unwrap();
-    let pug = format!(
-      "{{{}}}",
-      self
-        .pug
-        .iter()
-        .map(|(name, i)| i.to_fn(name))
-        .collect::<Vec<_>>()
-        .join(",")
-    );
+    let mut pug = self
+      .pug
+      .iter()
+      .map(|(name, i)| i.to_fn(name))
+      .collect::<Vec<_>>();
+
+    pug.sort();
+
+    let pug = format!("{{{}}}", pug.join(","));
     let pug = to_string(&pug)?;
     // 不这样_H会被压缩为空字典
     let const_js = format!(
