@@ -23,10 +23,19 @@ walkdir = "2.5.0"
 futures = "0.3.30"
 markdown = "1.0.0-alpha.20"
 flate2 = "1.0.33"
-npmv = { version = "0.1.18", path = "../npmv" }
 serde = "1.0.209"
-sver = { version = "0.1.9", path = "../sver" }
-ver_incr = { version = "0.1.6", path = "../ver_incr" }
+
+[dependencies.npmv]
+version = "0.1.18"
+path = "../npmv"
+
+[dependencies.sver]
+version = "0.1.9"
+path = "../sver"
+
+[dependencies.ver_incr]
+version = "0.1.6"
+path = "../ver_incr"
 
 [dependencies.ckv]
 version = "0.1.12"
@@ -88,7 +97,7 @@ version = "0.1.4"
 path = "../yconf"
 
 [dependencies.i18n_js]
-version = "0.1.35"
+version = "0.1.36"
 path = "../i18n_js"
 
 [dependencies.i18_conf]
