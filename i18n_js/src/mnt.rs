@@ -156,17 +156,13 @@ impl Mnt {
       // println!("{json}");
       // i18.js
       let index_ver = vfs.wstr(format!("{prefix}.js"), json)?;
-      let mut li = vec![prefix.clone(), index_ver.clone().into()];
+      let mut li = vec![prefix.clone(), index_ver.clone()];
       if let Some(pv) = self.prefix_ver.get(&prefix).cloned() {
         if !pv.is_empty() {
           let vli = yml_dict_li::set(i18n_v.join(format!("{prefix}.yml")), &pv, index_ver)?;
           li.push(pv);
           if vli.len() > 1 {
-            li.push(
-              vfs
-                .wstr(format!("{prefix}.v.json"), to_string(&vli)?)?
-                .into(),
-            );
+            li.push(vfs.wstr(format!("{prefix}.v.json"), to_string(&vli)?)?);
           }
         }
       }

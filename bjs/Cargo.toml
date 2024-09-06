@@ -5,6 +5,9 @@ boa_runtime = "0.19.0"
 thiserror = "1.0.63"
 tracing = "0.1.40"
 
+# remove when fix https://github.com/boa-dev/boa/issues/3982
+intrusive-collections = { version = "=0.9.6" }
+
 [package]
 name = "bjs"
 version = "0.1.10"

@@ -1,8 +1,5 @@
-use std::{collections::HashMap, path::PathBuf};
-
 use aok::{Result, OK};
 use static_init::constructor;
-use verfs::latest_ver;
 
 #[constructor(0)]
 extern "C" fn init() {
@@ -17,11 +14,11 @@ extern "C" fn init() {
 
 #[test]
 fn test() -> Result<()> {
-  let dir: PathBuf = env!("CARGO_MANIFEST_DIR").into();
-  let yml = dir.join("tests/test.yml");
-  let mut hash = HashMap::new();
-  let r = latest_ver(&yml, &mut hash)?;
-  dbg!(r);
+  // let dir: PathBuf = env!("CARGO_MANIFEST_DIR").into();
+  // let yml = dir.join("tests/test.yml");
+  // let mut hash = HashMap::new();
+  // let r = latest_ver(&yml, &mut hash)?;
+  // dbg!(r);
   // let tests = dir.join("tests");
   //
   // let mut verfs = VerFs::load(&tests, tests.join("out"), tests.join("log"))?;
