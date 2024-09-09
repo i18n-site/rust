@@ -1,4 +1,7 @@
 [dependencies]
+# remove when fix https://github.com/boa-dev/boa/issues/3982
+intrusive-collections = { version = "=0.9.6" }
+
 aok = "0.1.15"
 walkdir = "2.5.0"
 lightningcss = "1.0.0-alpha.58"
@@ -40,11 +43,11 @@ path = "../ver_count"
 
 [dependencies.globset]
 version = "0.4.14"
-features = [ "simd-accel" ]
+features = ["simd-accel"]
 
 [dependencies.indexmap]
 version = "2.5.0"
-features = [ "serde" ]
+features = ["serde"]
 
 [dependencies.verfs]
 version = "0.2.11"
@@ -82,12 +85,12 @@ path = "../bjs"
 version = "0.1.43"
 path = "../ifs"
 default-features = false
-features = [ "fs", "unix_path", "rsync", "ln" ]
+features = ["fs", "unix_path", "rsync", "ln"]
 
 [dependencies.dot_hide]
 version = "0.1.6"
 path = "../dot_hide"
-features = [ "walkdir" ]
+features = ["walkdir"]
 
 [dependencies.xerr]
 version = "0.1.15"
@@ -114,4 +117,4 @@ tracing = "0.1.40"
 
 [dev-dependencies.tokio]
 version = "1.40.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
