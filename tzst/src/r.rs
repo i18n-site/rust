@@ -77,15 +77,6 @@ impl<'a> Iterator for Tzst<'a> {
   }
 }
 
-pub fn r(data: &[u8]) -> Result<impl IntoIterator<Item = File>> {
-  let cursor = Cursor::new(data);
-  let decoder = Decoder::new(cursor)?;
-  let archive = tar::Archive::new(decoder);
-  Ok(archive.entries()?.flat_map(|file| {
-    if let Some(file) = to_file(file) {
-      Some(file)
-    } else {
-      None
-    }
-  }))
+pub fn r(data: &[u8]) -> io::Result<Tzst<'_>> {
+  Tzst::load(data)
 }
