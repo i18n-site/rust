@@ -139,7 +139,7 @@ impl Build {
     })
   }
 
-  pub async fn build(&self, ver: Option<String>) -> Result<VerFs> {
+  pub async fn build(&self, ver: Option<String>, htm_index_js: &str) -> Result<VerFs> {
     let root = &self.root;
     let conf_name = &self.htm_conf_name;
     let outdir = root.join(OUT).join(conf_name);
@@ -162,7 +162,7 @@ impl Build {
 
     let conf = &self.htm_conf;
 
-    let js_ver = self.js(&mut vfs, conf_name, conf).await?;
+    let js_ver = self.js(&mut vfs, conf_name, conf, htm_index_js).await?;
     let prefix_index_ver = self.mnt.build(&mut vfs, &self.bjs_after.lang_path_bin)?;
     if vfs.has_new() {
       let v = format!("{js_ver}>{prefix_index_ver}");

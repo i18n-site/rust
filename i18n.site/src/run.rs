@@ -38,7 +38,8 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
     }
   }
 
-  let pkg_li = npmi::PkgLi::new(dir_i18n.join("hook"), &conf.addon);
+  let dir_hook = dir_i18n.join("hook");
+  let pkg_li = npmi::PkgLi::new(&dir_hook, &conf.addon);
 
   pkg_li.auto().await?;
 
@@ -55,7 +56,15 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
   )
   .await?;
 
-  let mut vfs = build.build(None).await?;
+  let htm_index_js: Vec<String> = pkg_li
+    .rel_li("htmIndex.js")
+    .into_iter()
+    .flat_map(|p| ifs::rtxt(dir_hook.join(p)))
+    .collect();
+
+  let htm_index_js = htm_index_js.join("\n");
+
+  let mut vfs = build.build(None, &htm_index_js).await?;
 
   let mut refresh_v = None;
   if npm {
@@ -76,7 +85,7 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
               } else {
                 ver
               };
-              vfs = build.build(Some(ver)).await?;
+              vfs = build.build(Some(ver), &htm_index_js).await?;
               continue;
             }
             npm::State::Ok => {}

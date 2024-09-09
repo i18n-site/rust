@@ -46,7 +46,13 @@ pub fn lang_js(vfs: &mut VerFs, lang_li: &HashMap<Lang, Vec<String>>) -> Result<
 }
 
 impl Build {
-  pub async fn js(&self, vfs: &mut VerFs, conf_name: &str, conf: &HtmConf) -> Result<String> {
+  pub async fn js(
+    &self,
+    vfs: &mut VerFs,
+    conf_name: &str,
+    conf: &HtmConf,
+    htm_index_js: &str,
+  ) -> Result<String> {
     let nav = &self.nav;
     let htm = &self.htm;
 
@@ -56,8 +62,9 @@ impl Build {
     let mut importmap = conf.importmap.clone();
     let site_i = importmap.remove("i/").unwrap();
     let site_i_json = to_string(&site_i)?;
-    let index_js =
-      rtxt(htm.join("index.js"))?.replace("__CONF__", &("'".to_owned() + conf_name + "'"));
+    let index_js = rtxt(htm.join("index.js"))? + htm_index_js;
+    let index_js = index_js.replace("__CONF__", &("'".to_owned() + conf_name + "'"));
+
     let index_js = minjs::minjs(index_js)?;
     // println!("{index_js}");
     let index_js = to_string(&index_js)?;
