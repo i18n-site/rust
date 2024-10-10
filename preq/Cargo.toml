@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/preq"
 description = "ipv6 proxyed reqwest"
 
 [dependencies]
-bytes = "1.7.1"
+bytes = "1.7.2"
 tracing = "0.1.40"
 
 [dependencies.genv]
@@ -20,7 +20,7 @@ version = "0.1.9"
 path = "../preq1"
 
 [dependencies.reqwest]
-version = "0.12.7"
+version = "0.12.8"
 features = [ "zstd" ]
 
 [dependencies.static_init]

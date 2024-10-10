@@ -1,6 +1,6 @@
 [dependencies]
 aok = "0.1.15"
-axum = "0.7.5"
+axum = "0.7.7"
 const-str = "0.5.7"
 
 [package]

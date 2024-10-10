@@ -1,7 +1,7 @@
 [dependencies]
 aok = "0.1.15"
 bincode = "2.0.0-rc.3"
-bytes = "1.7.1"
+bytes = "1.7.2"
 gxhash = "3.4.1"
 
 [dependencies.set_mtime]

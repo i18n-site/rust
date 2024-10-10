@@ -13,8 +13,6 @@ use indexmap::IndexMap;
 use lang::{Lang, LANG_CODE};
 use tracing::error;
 
-use crate::OUT;
-
 pub const FILE: &str = "file";
 
 pub type Lpb = HashMap<Lang, IndexMap<String, Box<[u8]>>>;
@@ -27,7 +25,6 @@ pub struct BjsAfter {
 pub fn bjs_after(
   root: &Path,
   lang_li: &[Lang],
-  conf_name: &str,
   js_dir: &Path,
   after_tran: &[PathBuf],
   changed: &HashSet<String>,
@@ -62,10 +59,10 @@ pub fn bjs_after(
     }
 
     for (k, v) in [
-      (
-        "out",
-        root.join(OUT).join(conf_name).to_str().unwrap_or_default(),
-      ),
+      // (
+      //   "out",
+      //   root.join(OUT).join(conf_name).to_str().unwrap_or_default(),
+      // ),
       ("root", root.to_str().unwrap_or_default()),
     ] {
       map.set_str(k, v);

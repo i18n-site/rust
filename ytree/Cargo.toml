@@ -50,7 +50,7 @@ path = "../burl"
 optional = true
 
 [dependencies.indexmap]
-version = "2.5.0"
+version = "2.6.0"
 features = ["serde"]
 
 [dependencies.lang]
@@ -64,7 +64,7 @@ features = ["simd"]
 optional = true
 
 [dependencies.serde]
-version = "1.0.209"
+version = "1.0.210"
 features = ["derive"]
 
 [dependencies.vb]

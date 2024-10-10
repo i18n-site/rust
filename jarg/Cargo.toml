@@ -8,5 +8,5 @@ homepage = "https://github.com/i18n-site/rust/tree/main/jarg"
 description = "json parser with re::bad_reqesut"
 
 [dependencies]
-axum = "0.7.5"
-sonic-rs = "0.3.12"
+axum = "0.7.7"
+sonic-rs = "0.3.13"

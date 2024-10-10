@@ -17,12 +17,12 @@ ignored = [ "static_init", "prost" ]
 aok = "0.1.15"
 dashmap = "6.1.0"
 ireq = "0.1.17"
-prost = "0.13.2"
-reqwest = "0.12.7"
+prost = "0.13.3"
+reqwest = "0.12.8"
 serde_yaml = "0.9.34"
-sonic-rs = "0.3.12"
+sonic-rs = "0.3.13"
 strum_macros = "0.26.4"
-thiserror = "1.0.63"
+thiserror = "1.0.64"
 tracing = "0.1.40"
 
 [dependencies.sts]
@@ -44,7 +44,7 @@ version = "0.1.5"
 path = "../pos_next"
 
 [dependencies.serde]
-version = "1.0.209"
+version = "1.0.210"
 features = [ "derive" ]
 
 [dev-dependencies]
@@ -63,4 +63,4 @@ features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]
 aok = "0.1.15"
-prost-build = "0.13.2"
+prost-build = "0.13.3"

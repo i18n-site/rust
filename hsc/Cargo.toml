@@ -37,7 +37,7 @@ version = "0.1.5"
 path = "../cget"
 
 [dependencies.clap]
-version = "4.5.17"
+version = "4.5.20"
 features = [ "cargo" ]
 
 [dependencies.genv]

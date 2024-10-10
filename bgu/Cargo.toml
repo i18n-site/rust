@@ -14,10 +14,10 @@ ignored = [ "prost" ]
 current_platform = "0.2.0"
 defer-lite = "1.0.0"
 ed25519-dalek = "2.1.1"
-prost = "0.13.2"
+prost = "0.13.3"
 rand = "0.8.5"
 static_init = "1.0.3"
-tar = "0.4.41"
+tar = "0.4.42"
 tracing = "0.1.40"
 
 [dependencies.sver]
@@ -70,7 +70,7 @@ version = "1.40.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]
-prost-build = "0.13.2"
+prost-build = "0.13.3"
 
 [build-dependencies.aok]
 version = "0.1.15"

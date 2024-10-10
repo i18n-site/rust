@@ -11,7 +11,7 @@ description = "cmdv"
 current_platform = "0.2.0"
 
 [dependencies.clap]
-version = "4.5.17"
+version = "4.5.20"
 features = [ "cargo" ]
 
 [dev-dependencies]

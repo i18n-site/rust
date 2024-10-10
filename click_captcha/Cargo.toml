@@ -15,4 +15,4 @@ version = "0.1.10"
 path = "../svg2webp"
 
 [dev-dependencies]
-anyhow = "1.0.86"
+anyhow = "1.0.89"

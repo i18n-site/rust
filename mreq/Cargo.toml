@@ -1,9 +1,9 @@
 [dependencies]
 aok = "0.1.15"
-bytes = "1.7.1"
-reqwest = "0.12.7"
+bytes = "1.7.2"
+reqwest = "0.12.8"
 static_init = "1.0.3"
-thiserror = "1.0.63"
+thiserror = "1.0.64"
 tracing = "0.1.40"
 
 [dependencies.genv]

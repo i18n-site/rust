@@ -15,11 +15,11 @@ all-features = true
 
 [dependencies]
 aok = "0.1.15"
-aws-sdk-s3 = { version = "1.48.0", features = ["behavior-version-latest"] }
-futures = "0.3.30"
+aws-sdk-s3 = { version = "1.54.0", features = ["behavior-version-latest"] }
+futures = "0.3.31"
 gxhash = "3.4.1"
 ifs = { version = "0.1.43", path = "../ifs", features = ["fs"] }
-serde = { version = "1.0.209", features = ["derive"] }
+serde = { version = "1.0.210", features = ["derive"] }
 serde_yaml = "0.9.34"
 
 [dev-dependencies]

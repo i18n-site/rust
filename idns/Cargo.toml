@@ -9,7 +9,7 @@ description = "idns"
 
 [dependencies]
 enum_dispatch = "0.3.13"
-futures = "0.3.30"
+futures = "0.3.31"
 hickory-proto = "0.24.1"
 static_init = "1.0.3"
 tracing = "0.1.40"

@@ -91,7 +91,7 @@ impl Build {
 
     let lang_li = from_to.root_all_lang_li();
 
-    let bjs_after = bjs_after(&root, &lang_li, &htm_conf_name, js_dir, after_tran, changed)?;
+    let bjs_after = bjs_after(&root, &lang_li, js_dir, after_tran, changed)?;
 
     let nav = nav.json()?;
     let mut i18n_li = HashMap::with_capacity(lang_li.len());

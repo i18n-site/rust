@@ -1,6 +1,6 @@
 [dependencies]
 aok = "0.1.15"
-reqwest = "0.12.7"
+reqwest = "0.12.8"
 
 [dependencies.xerr]
 version = "0.1.15"

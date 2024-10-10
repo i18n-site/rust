@@ -15,11 +15,11 @@ default = []
 
 [dependencies]
 aok = "0.1.15"
-flate2 = "1.0.33"
-reqwest = { version = "0.12.7", features = ["stream"] }
-serde = "1.0.209"
-sonic-rs = "0.3.12"
-tar = "0.4.41"
+flate2 = "1.0.34"
+reqwest = { version = "0.12.8", features = ["stream"] }
+serde = "1.0.210"
+sonic-rs = "0.3.13"
+tar = "0.4.42"
 tokio = { version = "1.40.0", features = ["fs"] }
 tracing = "0.1.40"
 

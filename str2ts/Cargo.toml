@@ -1,5 +1,5 @@
 [dependencies]
-thiserror = "1.0.63"
+thiserror = "1.0.64"
 
 [package]
 name = "str2ts"

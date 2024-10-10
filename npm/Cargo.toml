@@ -1,16 +1,16 @@
 [dependencies]
 aok = "0.1.15"
 dirs = "5.0.1"
-flate2 = "1.0.33"
-serde = "1.0.209"
-sonic-rs = "0.3.12"
+flate2 = "1.0.34"
+serde = "1.0.210"
+sonic-rs = "0.3.13"
 static_init = "1.0.3"
-tar = "0.4.41"
+tar = "0.4.42"
 base64 = "0.22.1"
 sha1 = "0.10.6"
 
 [dependencies.reqwest]
-version = "0.12.7"
+version = "0.12.8"
 
 [dependencies.genv]
 version = "0.1.15"

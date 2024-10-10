@@ -2,8 +2,8 @@
 aok = "0.1.15"
 blake3 = "1.5.4"
 intbin = "0.1.2"
-sonic-rs = "0.3.12"
-thiserror = "1.0.63"
+sonic-rs = "0.3.13"
+thiserror = "1.0.64"
 
 [dependencies.burl]
 version = "0.1.4"
@@ -20,7 +20,7 @@ default-features = false
 features = [ "fs", "cp" ]
 
 [dependencies.indexmap]
-version = "2.5.0"
+version = "2.6.0"
 features = [ "serde" ]
 
 [dependencies.li_pos]
@@ -28,7 +28,7 @@ version = "0.1.4"
 path = "../li_pos"
 
 [dependencies.serde]
-version = "1.0.209"
+version = "1.0.210"
 features = [ "derive" ]
 
 [dependencies.ver_incr]

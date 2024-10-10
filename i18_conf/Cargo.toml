@@ -3,11 +3,11 @@ aok = "0.1.15"
 gxhash = "3.4.1"
 
 [dependencies.serde]
-version = "1.0.209"
+version = "1.0.210"
 features = [ "derive" ]
 
 [dependencies.globset]
-version = "0.4.14"
+version = "0.4.15"
 features = [ "simd-accel" ]
 
 [dependencies.xerr]

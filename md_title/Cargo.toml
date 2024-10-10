@@ -15,7 +15,7 @@ all-features = true
 
 [dependencies]
 aok = "0.1.15"
-html2text = "0.12.5"
+html2text = "0.12.6"
 htmlize = "1.0.5"
 
 [dev-dependencies]

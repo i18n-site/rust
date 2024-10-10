@@ -11,22 +11,22 @@ description = "api for https://wxpusher.zjiecode.com"
 ignored = [ "static_init" ]
 
 [dependencies]
-anyhow = "1.0.86"
-serde_with = "3.9.0"
-sonic-rs = "0.3.12"
+anyhow = "1.0.89"
+serde_with = "3.11.0"
+sonic-rs = "0.3.13"
 static_init = "1.0.3"
-thiserror = "1.0.63"
+thiserror = "1.0.64"
 
 [dependencies.genv]
 version = "0.1.15"
 path = "../genv"
 
 [dependencies.reqwest]
-version = "0.12.7"
+version = "0.12.8"
 features = [ "json" ]
 
 [dependencies.serde]
-version = "1.0.209"
+version = "1.0.210"
 features = [ "derive" ]
 
 [dependencies.xstr]
@@ -34,7 +34,7 @@ version = "0.1.11"
 path = "../xstr"
 
 [dev-dependencies]
-anyhow = "1.0.86"
+anyhow = "1.0.89"
 
 [dev-dependencies.tokio]
 version = "1.40.0"

@@ -1,8 +1,8 @@
 [dependencies]
 aok = "0.1.15"
-serde = "1.0.209"
+serde = "1.0.210"
 serde_yaml = "0.9.34"
-thiserror = "1.0.63"
+thiserror = "1.0.64"
 
 [dependencies.ifs]
 version = "0.1.43"
