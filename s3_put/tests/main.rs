@@ -42,5 +42,8 @@ async fn test() -> Result<()> {
   while let Some(r) = iter.next().await {
     r?;
   }
+  while let Some(r) = iter.next().await {
+    r?;
+  }
   OK
 }

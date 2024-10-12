@@ -30,5 +30,10 @@ async fn test() -> Result<()> {
       info!("{:?}", i);
     }
   }
+  for txt in txt_li {
+    for i in Line::new(txt) {
+      info!("{:?}", i);
+    }
+  }
   OK
 }

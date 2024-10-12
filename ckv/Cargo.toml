@@ -15,7 +15,7 @@ all-features = true
 
 [dependencies]
 aok = "0.1.15"
-aws-sdk-s3 = { version = "1.54.0", features = ["behavior-version-latest"] }
+aws-sdk-s3 = { version = "1.56.0", features = ["behavior-version-latest"] }
 futures = "0.3.31"
 gxhash = "3.4.1"
 ifs = { version = "0.1.43", path = "../ifs", features = ["fs"] }

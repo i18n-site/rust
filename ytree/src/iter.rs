@@ -24,7 +24,7 @@ impl<'a> LiIter<'a> {
   }
 }
 
-impl<'a> Iterator for LiIter<'a> {
+impl Iterator for LiIter<'_> {
   type Item = String;
 
   fn next(&mut self) -> Option<Self::Item> {

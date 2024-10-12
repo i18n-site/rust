@@ -93,7 +93,7 @@ pub static LANG_NAME: [&str; 127] = [
   "Ásụ̀sụ́ Ìgbò",        // Igbo / 伊博语
   "Iloko",             // Ilocano / 伊洛卡诺语
   "Қазақ Тілі",        // Kazakh / 哈萨克语
-  "ខ្មែរ",              // Khmer / 高棉语
+  "ខ្មែរ",               // Khmer / 高棉语
   "Kinyarwanda",       // Kinyarwanda / 卢旺达语
   "سۆرانی",            // Kurdish(Sorani) / 库尔德语(索拉尼)
   "Кыргызча",          // Kyrgyz / 吉尔吉斯语

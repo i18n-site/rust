@@ -4,7 +4,7 @@ use crate::Rany;
 
 pub struct StrAny<'a>(pub &'a [u8]);
 
-impl<'a> StrAny<'a> {
+impl StrAny<'_> {
   pub fn dstr(&self, s: impl AsRef<str>) -> u64 {
     self.d(s.as_ref().as_bytes())
   }

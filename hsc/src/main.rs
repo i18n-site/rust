@@ -51,5 +51,74 @@ async fn main() -> Result<()> {
       cmd.print_help()?;
     }
   }
+  if let Some((m, mut cmd)) = cmdv!(
+    arg!(-k --key <key> "key file path").required(false),
+    arg!(-c --create "create key if not exist"),
+    arg!([fp] "file path")
+  ) {
+    if let Some::<&String>(fp) = m.get_one("fp") {
+      cget!(
+        m:
+          create: bool;
+      );
+      let key = if let Some(key) = m.get_one::<String>("key") {
+        hsc::key(key, *create).await?
+      } else {
+        let sk: String = B3S_SK();
+        let key = &BASE64_STANDARD.decode(sk)?[..];
+        SigningKey::from_bytes(&key.try_into()?)
+      };
+
+      hsc::hsc(fp, key).await?;
+    } else {
+      cmd.print_help()?;
+    }
+  }
+  if let Some((m, mut cmd)) = cmdv!(
+    arg!(-k --key <key> "key file path").required(false),
+    arg!(-c --create "create key if not exist"),
+    arg!([fp] "file path")
+  ) {
+    if let Some::<&String>(fp) = m.get_one("fp") {
+      cget!(
+        m:
+          create: bool;
+      );
+      let key = if let Some(key) = m.get_one::<String>("key") {
+        hsc::key(key, *create).await?
+      } else {
+        let sk: String = B3S_SK();
+        let key = &BASE64_STANDARD.decode(sk)?[..];
+        SigningKey::from_bytes(&key.try_into()?)
+      };
+
+      hsc::hsc(fp, key).await?;
+    } else {
+      cmd.print_help()?;
+    }
+  }
+  if let Some((m, mut cmd)) = cmdv!(
+    arg!(-k --key <key> "key file path").required(false),
+    arg!(-c --create "create key if not exist"),
+    arg!([fp] "file path")
+  ) {
+    if let Some::<&String>(fp) = m.get_one("fp") {
+      cget!(
+        m:
+          create: bool;
+      );
+      let key = if let Some(key) = m.get_one::<String>("key") {
+        hsc::key(key, *create).await?
+      } else {
+        let sk: String = B3S_SK();
+        let key = &BASE64_STANDARD.decode(sk)?[..];
+        SigningKey::from_bytes(&key.try_into()?)
+      };
+
+      hsc::hsc(fp, key).await?;
+    } else {
+      cmd.print_help()?;
+    }
+  }
   OK
 }

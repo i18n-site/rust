@@ -64,7 +64,7 @@ impl<'a> Tzst<'a> {
   }
 }
 
-impl<'a> Iterator for Tzst<'a> {
+impl Iterator for Tzst<'_> {
   type Item = File;
 
   fn next(&mut self) -> Option<Self::Item> {

@@ -32,7 +32,7 @@ impl<'a> Pli<'a> {
   }
 }
 
-impl<'a> Index<usize> for Pli<'a> {
+impl Index<usize> for Pli<'_> {
   type Output = String;
 
   fn index(&self, index: usize) -> &Self::Output {
@@ -40,7 +40,7 @@ impl<'a> Index<usize> for Pli<'a> {
   }
 }
 
-impl<'a> IndexMut<usize> for Pli<'a> {
+impl IndexMut<usize> for Pli<'_> {
   fn index_mut(&mut self, index: usize) -> &mut Self::Output {
     &mut self.txt_li[self.pos_li[index]]
   }
@@ -53,7 +53,7 @@ pub struct Pos<'a> {
   pos: usize,
 }
 
-impl<'a> Deref for Pos<'a> {
+impl Deref for Pos<'_> {
   type Target = String;
 
   fn deref(&self) -> &Self::Target {
@@ -61,19 +61,19 @@ impl<'a> Deref for Pos<'a> {
   }
 }
 
-impl<'a> DerefMut for Pos<'a> {
+impl DerefMut for Pos<'_> {
   fn deref_mut(&mut self) -> &mut Self::Target {
     &mut self.txt_li[self.pos]
   }
 }
 
-impl<'a> Pos<'a> {
+impl Pos<'_> {
   pub fn as_str(&self) -> &str {
     &self.txt_li[self.pos]
   }
 }
 
-impl<'a> AsRef<str> for Pos<'a> {
+impl AsRef<str> for Pos<'_> {
   fn as_ref(&self) -> &str {
     self.as_str()
   }

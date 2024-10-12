@@ -58,13 +58,8 @@ pub fn bjs_after(
       map.set(k, v);
     }
 
-    for (k, v) in [
-      // (
-      //   "out",
-      //   root.join(OUT).join(conf_name).to_str().unwrap_or_default(),
-      // ),
-      ("root", root.to_str().unwrap_or_default()),
-    ] {
+    {
+      let (k, v) = ("root", root.to_str().unwrap_or_default());
       map.set_str(k, v);
     }
   }

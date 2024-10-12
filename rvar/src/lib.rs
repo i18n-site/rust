@@ -4,7 +4,7 @@ pub struct RangeStr<'a> {
   pub range: Vec<std::ops::Range<usize>>,
 }
 
-impl<'a> RangeStr<'a> {
+impl RangeStr<'_> {
   pub fn replace<S: AsRef<str>>(&self, s: S, mut get: impl FnMut(&str) -> String) -> String {
     let s = s.as_ref();
     let mut result = String::new();

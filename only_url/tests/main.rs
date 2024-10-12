@@ -23,4 +23,7 @@ fn main() {
   test(" ![x](content)");
   test(" [](content)");
   test(" abc");
+  test("abc");
+  test("[x](xxx)");
+  test("https://www.seafile.com/download/")
 }
