@@ -1,7 +1,6 @@
 pub fn text_url(s: impl AsRef<str>) -> bool {
   let s = s.as_ref();
   let mut has_dot = false;
-  let mut has_slash = false;
   let mut has_left_paren = false;
   let mut has_right_paren = false;
 
@@ -11,14 +10,13 @@ pub fn text_url(s: impl AsRef<str>) -> bool {
     }
     match c {
       '.' => has_dot = true,
-      '/' => has_slash = true,
       '(' => has_left_paren = true,
       ')' => has_right_paren = true,
       _ => {}
     }
   }
 
-  has_dot && has_slash && !(has_left_paren && has_right_paren)
+  has_dot && !(has_left_paren && has_right_paren)
 }
 
 pub fn only_url(input: impl AsRef<str>) -> bool {
