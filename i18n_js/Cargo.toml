@@ -55,7 +55,7 @@ version = "2.6.0"
 features = [ "serde" ]
 
 [dependencies.verfs]
-version = "0.2.11"
+version = "0.2.12"
 path = "../verfs"
 
 [dependencies.minjs]
