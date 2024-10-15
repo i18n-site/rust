@@ -93,7 +93,7 @@ version = "0.1.9"
 path = "../refresh_v"
 
 [dependencies.yconf]
-version = "0.1.4"
+version = "0.1.5"
 path = "../yconf"
 
 [dependencies.i18n_js]

@@ -63,7 +63,7 @@ version = "0.1.7"
 path = "../minjs"
 
 [dependencies.yconf]
-version = "0.1.4"
+version = "0.1.5"
 path = "../yconf"
 
 [dependencies.i18_conf]
