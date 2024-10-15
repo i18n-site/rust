@@ -1,3 +1,6 @@
+#[cfg(feature = "cache")]
+pub mod cache;
+
 use std::{io, path::Path, time::Duration};
 
 use aok::{Null, Result, OK};

@@ -51,11 +51,11 @@ pub fn set(
       changed = true;
     }
     if changed {
-      ifs::wtxt(path, readed.join("\n"))?;
+      ifs::wstr(path, readed.join("\n"))?;
     }
   } else {
     result.push(kv);
-    ifs::wtxt(path, format!("{key}: {value}"))?;
+    ifs::wstr(path, format!("{key}: {value}"))?;
   }
   Ok(result)
 }

@@ -1,6 +1,6 @@
 use aok::Result;
 use gxhash::HashMap;
-use ifs::rtxt;
+use ifs::rstr;
 use lang::{Lang, LANG_CODE, LANG_NAME};
 use sonic_rs::to_string;
 use sortmap::sortmap;
@@ -62,7 +62,7 @@ impl Build {
     let mut importmap = conf.importmap.clone();
     let site_i = importmap.remove("i/").unwrap();
     let site_i_json = to_string(&site_i)?;
-    let index_js = rtxt(htm.join("index.js"))? + htm_index_js;
+    let index_js = rstr(htm.join("index.js"))? + htm_index_js;
     let index_js = index_js.replace("__CONF__", &("'".to_owned() + conf_name + "'"));
 
     let index_js = minjs::minjs(index_js)?;
@@ -90,7 +90,7 @@ impl Build {
     for name in ["const.js", &format!("const.{conf_name}.js")] {
       let fp = htm.join(name);
       if fp.exists() {
-        js_li.push(rtxt(&fp)?);
+        js_li.push(rstr(&fp)?);
       }
     }
 
@@ -125,6 +125,10 @@ impl Build {
 
     importmap.sort(); // 保证顺序稳定以防verfs变化
     let importmap = importmap.join("");
+
+    dbg!(&self.root);
+    // let conf_x_ver = npmv::latest(&conf.x).await?;
+    // dbg!(conf_x_ver);
 
     let boot = format!(
       r#"(conf_x)=>{{

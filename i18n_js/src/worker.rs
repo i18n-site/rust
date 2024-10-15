@@ -19,7 +19,7 @@ pub async fn worker(root: &Path, conf: &HtmConf, upload: &impl ckv::Ckv) -> Null
 
       let js = minjs::minjs(&js)?;
       upload.put(out, js).await?;
-      // ifs::wtxt(outdir.join(out), js)?;
+      // ifs::wstr(outdir.join(out), js)?;
     }
   }
   OK

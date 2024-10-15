@@ -32,4 +32,4 @@ version = "0.1.15"
 [dev-dependencies.ifs]
 path = "../ifs"
 features = [ "fs" ]
-version = "0.1.43"
+version = "0.1.44"

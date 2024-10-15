@@ -10,7 +10,7 @@ pub fn css(root: &Path, css_li: &[PathBuf]) -> Result<String> {
 
   for fp in css_li {
     let path = root.join(fp);
-    let css = ifs::rtxt(&path)?;
+    let css = ifs::rstr(&path)?;
     match StyleSheet::parse(&css, ParserOptions::default()) {
       Ok(stylesheet) => {
         match stylesheet.to_css(PrinterOptions {

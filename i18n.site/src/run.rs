@@ -59,7 +59,7 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
   let htm_index_js: Vec<String> = pkg_li
     .rel_li("htmIndex.js")
     .into_iter()
-    .flat_map(|p| ifs::rtxt(dir_hook.join(p)))
+    .flat_map(|p| ifs::rstr(dir_hook.join(p)))
     .collect();
 
   let htm_index_js = htm_index_js.join("\n");

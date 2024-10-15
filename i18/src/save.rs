@@ -107,7 +107,7 @@ impl Save {
       for api::Traned { lang, txt } in li {
         let path = format!("{}/{}", LANG_CODE[*lang as usize], rel);
         self.pbar.set_message(path.clone());
-        ifs::wtxt(self.root.join(&path), txt)?;
+        ifs::wstr(self.root.join(&path), txt)?;
         self.writed.push(path.clone());
         update_mtime_fp.push(path.clone());
         if let Some(w) = self.waiting.get_mut(rel) {

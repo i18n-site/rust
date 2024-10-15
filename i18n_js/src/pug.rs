@@ -14,7 +14,7 @@ pub struct Htm {
 pub fn pug(htm: &Path, li: &[PathBuf], i18n_li: &mut I18nLi) -> Result<HashMap<String, Htm>> {
   let mut r = HashMap::with_capacity(li.len());
   for name in li {
-    let pug = ifs::rtxt(htm.join(name))?;
+    let pug = ifs::rstr(htm.join(name))?;
     let htm = ipug::parse(pug)?.to_str()?;
     let (htm, replaced) = i18n_li.replace(&htm);
     let name = name.display().to_string();

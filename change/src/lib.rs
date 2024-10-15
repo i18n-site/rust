@@ -69,7 +69,7 @@ impl State {
     let db = li.join("\n");
     li.sort();
 
-    ifs::wtxt(&self.db, db)?;
+    ifs::wstr(&self.db, db)?;
 
     OK
   }

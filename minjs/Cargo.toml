@@ -7,10 +7,10 @@ swc_ecma_minifier = "0.209.1"
 tracing = "0.1.40"
 
 [dependencies.ifs]
-version = "0.1.43"
+version = "0.1.44"
 path = "../ifs"
 default-features = false
-features = ["fs"]
+features = [ "fs" ]
 
 [package]
 name = "minjs"

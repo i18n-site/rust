@@ -17,7 +17,7 @@ version = "2.1.1"
 features = [ "bloom" ]
 
 [dependencies.ifs]
-version = "0.1.43"
+version = "0.1.44"
 path = "../ifs"
 default-features = false
 features = [ "fs" ]

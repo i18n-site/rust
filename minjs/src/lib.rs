@@ -6,7 +6,7 @@ use swc_common::{SourceMap, GLOBALS};
 use swc_ecma_ast::EsVersion;
 
 pub fn file(fp: &Path) -> Result<String> {
-  match minjs(ifs::rtxt(fp)?) {
+  match minjs(ifs::rstr(fp)?) {
     Ok(js) => Ok(js),
     Err(e) => {
       tracing::error!("❌ {:?}", fp);

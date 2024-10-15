@@ -6,7 +6,7 @@ use md_title::md_title_from_path;
 const BODY: &str = "<body";
 
 pub fn index_html(root: &Path, fp: &str, lang_li: &[Lang]) -> std::io::Result<String> {
-  let html = ifs::rtxt(fp)?;
+  let html = ifs::rstr(fp)?;
   let mut li = html.split(BODY);
   if let Some(prefix) = li.next()
     && let Some(end) = li.remainder()

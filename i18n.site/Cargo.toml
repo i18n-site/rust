@@ -80,7 +80,7 @@ version = "0.1.15"
 path = "../xerr"
 
 [dependencies.ifs]
-version = "0.1.43"
+version = "0.1.44"
 path = "../ifs"
 features = [ "fs" ]
 

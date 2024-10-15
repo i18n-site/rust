@@ -207,11 +207,11 @@ impl VerFs {
       }
       let new_txt = li.join("\n");
       if self.log.exists() {
-        if let Ok(txt) = xerr::ok!(ifs::rtxt(&self.log)) {
-          ifs::wtxt(&self.log, format!("{new_txt}\n{txt}"))?;
+        if let Ok(txt) = xerr::ok!(ifs::rstr(&self.log)) {
+          ifs::wstr(&self.log, format!("{new_txt}\n{txt}"))?;
         }
       } else {
-        ifs::wtxt(&self.log, new_txt)?;
+        ifs::wstr(&self.log, new_txt)?;
       }
     }
     Ok(has_new)

@@ -13,7 +13,7 @@ pub fn ensure_file_dir(path: impl Into<PathBuf>) -> Result<(), std::io::Error> {
   Ok(())
 }
 
-pub fn wtxt(path: impl AsRef<Path>, txt: impl AsRef<str>) -> Result<(), std::io::Error> {
+pub fn wstr(path: impl AsRef<Path>, txt: impl AsRef<str>) -> Result<(), std::io::Error> {
   wbin(path, txt.as_ref().as_bytes())
 }
 
@@ -29,7 +29,7 @@ pub fn w(path: impl AsRef<Path>) -> Result<BufWriter<File>, std::io::Error> {
   Ok(BufWriter::new(File::create(path)?))
 }
 
-pub fn rtxt(path: impl AsRef<Path>) -> Result<String, std::io::Error> {
+pub fn rstr(path: impl AsRef<Path>) -> Result<String, std::io::Error> {
   Ok(String::from_utf8_lossy(&r(path)?).into())
 }
 
