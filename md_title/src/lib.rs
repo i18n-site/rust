@@ -34,11 +34,12 @@ pub fn line_title(line: &str) -> String {
   let t = title_trim(line);
   if !t.is_empty() {
     let t = Cursor::new(t);
-    let t = html2text::from_read(t, usize::MAX);
-    let t = t.trim();
-    let t = remove_h(t).unwrap_or(t);
-    if !t.is_empty() {
-      return t.into();
+    if let Ok(t) = xerr::ok!(html2text::from_read(t, usize::MAX)) {
+      let t = t.trim();
+      let t = remove_h(t).unwrap_or(t);
+      if !t.is_empty() {
+        return t.into();
+      }
     }
   }
   EMPTY

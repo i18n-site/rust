@@ -22,7 +22,7 @@ version = "0.1.6"
 path = "../pbar"
 
 [dependencies.md_title]
-version = "0.1.11"
+version = "0.1.12"
 path = "../md_title"
 
 [dependencies.ckv]

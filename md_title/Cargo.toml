@@ -1,6 +1,6 @@
 [package]
 name = "md_title"
-version = "0.1.11"
+version = "0.1.12"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -15,8 +15,9 @@ all-features = true
 
 [dependencies]
 aok = "0.1.15"
-html2text = "0.12.6"
+html2text = "0.13.0"
 htmlize = "1.0.5"
+xerr = { version = "0.1.15", path = "../xerr" }
 
 [dev-dependencies]
 aok = "0.1.15"
