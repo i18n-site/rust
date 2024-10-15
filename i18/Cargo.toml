@@ -43,7 +43,7 @@ version = "0.1.6"
 path = "../pbar"
 
 [dependencies.xhash]
-version = "0.1.29"
+version = "0.1.30"
 path = "../xhash"
 
 [dependencies.i18_json]
