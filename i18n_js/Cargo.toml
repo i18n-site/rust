@@ -31,7 +31,7 @@ version = "0.1.12"
 path = "../ckv"
 
 [dependencies.change]
-version = "0.1.13"
+version = "0.1.14"
 path = "../change"
 
 [dependencies.sortmap]
