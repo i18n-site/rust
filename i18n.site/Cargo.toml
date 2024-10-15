@@ -38,7 +38,7 @@ version = "0.1.6"
 path = "../ver_incr"
 
 [dependencies.ckv]
-version = "0.1.12"
+version = "0.1.13"
 path = "../ckv"
 
 [dependencies.sts]
