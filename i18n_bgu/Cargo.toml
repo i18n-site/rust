@@ -6,7 +6,7 @@ version = "0.1.15"
 path = "../aok"
 
 [dependencies.bgu]
-version = "0.1.29"
+version = "0.1.30"
 path = "../bgu"
 
 [package]

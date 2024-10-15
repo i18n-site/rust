@@ -126,9 +126,8 @@ impl Build {
     importmap.sort(); // 保证顺序稳定以防verfs变化
     let importmap = importmap.join("");
 
-    dbg!(&self.root);
-    // let conf_x_ver = npmv::latest(&conf.x).await?;
-    // dbg!(conf_x_ver);
+    let conf_x_ver = npmv::cache::latest(&conf.x, self.root.join(".i18n/data/importmap")).await?;
+    dbg!(conf_x_ver);
 
     let boot = format!(
       r#"(conf_x)=>{{
