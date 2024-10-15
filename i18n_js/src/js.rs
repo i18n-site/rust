@@ -126,9 +126,6 @@ impl Build {
     importmap.sort(); // 保证顺序稳定以防verfs变化
     let importmap = importmap.join("");
 
-    let conf_x_ver = npmv::cache::latest(&conf.x, self.root.join(".i18n/data/importmap")).await?;
-    dbg!(conf_x_ver);
-
     let boot = format!(
       r#"(conf_x)=>{{
 let _I='{site_i_json}',script='script',D=document,New=(tag, o)=>{{
@@ -143,8 +140,8 @@ let _I='{site_i_json}',script='script',D=document,New=(tag, o)=>{{
   if(type)attr.type=type;
   New(tag,attr)
 }};
-typeContent(script,'{{"imports":{{"x/":"'+conf_x+'","i/":'+_I+'{importmap}}}}}','importmap');
 typeContent('style',{css},'text/css');
+typeContent(script,'{{"imports":{{"x/":"'+conf_x+'","i/":'+_I+'{importmap}}}}}','importmap');
 typeContent(script,{const_js});
 return ()=>typeContent(script,{index_js},'module');
 }}"#

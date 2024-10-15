@@ -121,9 +121,11 @@ impl Build {
     let mut scan = change::Scan::new(root.join(PUBLIC))?;
     scan.add(REL_I18N_CONF)?;
 
+    let htm_conf = yconf::load(&htm.join(format!("{}.yml", htm_conf_name)))?;
+
     Ok(Self {
       scan,
-      htm_conf: yconf::load(&htm.join(format!("{}.yml", htm_conf_name)))?,
+      htm_conf,
       htm_conf_name,
       i18n_li,
       lang_li,
