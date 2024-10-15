@@ -26,7 +26,7 @@ flate2 = "1.0.34"
 serde = "1.0.210"
 
 [dependencies.npmv]
-version = "0.1.18"
+version = "0.1.19"
 path = "../npmv"
 
 [dependencies.sver]

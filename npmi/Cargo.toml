@@ -38,7 +38,7 @@ version = "0.1.15"
 path = "../xerr"
 
 [dependencies.npmv]
-version = "0.1.18"
+version = "0.1.19"
 path = "../npmv"
 
 [dev-dependencies]
