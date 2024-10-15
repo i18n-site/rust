@@ -56,7 +56,7 @@ async fn test() -> Result<()> {
 }
 ```
 
-## About This Project
+## About
 
 This project is an open-source component of [i18n.site ⋅ Internationalization Solution](https://i18n.site).
 
@@ -72,7 +72,7 @@ This project is an open-source component of [i18n.site ⋅ Internationalization 
 
   Optimized for a better reading experience
 
-## 关于本项目
+## 关于
 
 本项目为 [i18n.site ⋅ 国际化解决方案](https://i18n.site) 的开源组件。
 
