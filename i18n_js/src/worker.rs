@@ -4,7 +4,7 @@ use aok::{Null, OK};
 
 use crate::{conf::HtmConf, DOT_I18N, HTM};
 
-const AT: &str = "@";
+// const AT: &str = "@";
 
 pub async fn worker(root: &Path, conf: &HtmConf, upload: &impl ckv::Ckv) -> Null {
   let dir = root.join(DOT_I18N);
