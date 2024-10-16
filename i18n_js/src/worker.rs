@@ -22,7 +22,7 @@ pub async fn worker(root: &Path, conf: &HtmConf, upload: &impl ckv::Ckv) -> Null
     if fp.exists() {
       let mut js = minjs::file(&fp)?
         .replace("{conf.v}", &conf.v)
-        .replace("{conf.x}", &conf_x);
+        .replace("{conf.x}", &conf.x);
 
       if let Some(api) = &conf.api {
         js = js.replace("{conf.api}", api);
