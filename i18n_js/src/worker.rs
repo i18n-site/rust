@@ -9,15 +9,14 @@ const AT: &str = "@";
 pub async fn worker(root: &Path, conf: &HtmConf, upload: &impl ckv::Ckv) -> Null {
   let dir = root.join(DOT_I18N);
   let htm = dir.join(HTM);
-  dbg!(&conf.x);
-  dbg!(&conf.v);
-  let conf_x = if conf.x.contains(AT) || conf.x.starts_with("//") {
-    conf.x.clone()
-  } else {
-    let ver = npmv::cache::latest(&conf.x, dir.join("data/importmap")).await?;
-    format!("{}@{}", conf.x, ver)
-  };
-
+  // dbg!(&conf.x);
+  // dbg!(&conf.v);
+  // let conf_x = if conf.x.contains(AT) || conf.x.starts_with("//") {
+  //   conf.x.clone()
+  // } else {
+  //   let ver = npmv::cache::latest(&conf.x, dir.join("data/importmap")).await?;
+  //   format!("{}@{}", conf.x, ver)
+  // };
   for (file, out) in [("serviceWorker.js", "S.js"), ("sharedWorker.js", "W.js")] {
     let fp = htm.join(file);
     if fp.exists() {
