@@ -36,14 +36,26 @@ pub struct Conf {
   // pub dist: HashMap<String, HashMap<String, Dist>>,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
+pub struct Cdn {
+  pub v: Vec<String>,
+  pub jsd: Vec<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct Pkg {
+  pub i: String,
+  pub md: String,
+}
+
 #[allow(non_snake_case)]
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct HtmConf {
   pub api: Option<String>,
   pub host: String,
-  pub importmap: HashMap<String, String>,
-  pub v: String,
-  pub x: String,
+  pub pkg: Pkg,
+  #[serde(default)]
+  pub cdn: Cdn,
   #[serde(default)]
   pub seo: bool,
   #[serde(default)]

@@ -59,15 +59,14 @@ impl Build {
     let (lang_code_name_li, lang_ver_map) = lang_js(vfs, &self.i18n_li)?;
 
     let mut js_li = vec![];
-    let mut importmap = conf.importmap.clone();
-    let site_i = importmap.remove("i/").unwrap();
-    let site_i_json = to_string(&site_i)?;
+    // let mut importmap = conf.importmap.clone();
+    // let site_i = importmap.remove("i/").unwrap();
+    // let site_i_json = to_string(&site_i)?;
     let index_js = rstr(htm.join("index.js"))? + htm_index_js;
     let index_js = index_js.replace("__CONF__", &("'".to_owned() + conf_name + "'"));
 
     let index_js = minjs::minjs(index_js)?;
     // println!("{index_js}");
-    let index_js = to_string(&index_js)?;
 
     let lv = if lang_ver_map.li.len() == 1 {
       to_string(&lang_ver_map.li[0])?
@@ -96,7 +95,6 @@ impl Build {
 
     let const_js = minjs::minjs_no_mangle(js_li.join("\n"))?;
 
-    let const_js = to_string(&const_js)?;
     let pos = const_js.find(TO_REPLACE).unwrap();
     let mut pug = self
       .pug
@@ -108,48 +106,49 @@ impl Build {
 
     let pug = format!("{{{}}}", pug.join(","));
     let pug = to_string(&pug)?;
+    // _I=\"+_I+\",
     // 不这样_H会被压缩为空字典
     let const_js = format!(
-      "{}_I=\"+_I+\",_H={}{}",
+      "{}_H={}{}",
       &const_js[..pos],
       &pug[1..pug.len() - 1],
       &const_js[pos + TO_REPLACE.len()..]
     );
 
-    let css = to_string(&self.css)?;
+    // let mut importmap = importmap
+    //   .iter()
+    //   .map(|(k, v)| format!(r#","{k}":"{v}""#))
+    //   .collect::<Vec<_>>();
 
-    let mut importmap = importmap
-      .iter()
-      .map(|(k, v)| format!(r#","{k}":"{v}""#))
-      .collect::<Vec<_>>();
+    // importmap.sort(); // 保证顺序稳定以防verfs变化
+    // let importmap = importmap.join("");
 
-    importmap.sort(); // 保证顺序稳定以防verfs变化
-    let importmap = importmap.join("");
+    //     let boot = format!(
+    //       r#"(conf_x)=>{{
+    // let _I='{site_i_json}',script='script',D=document,New=(tag, o)=>{{
+    //   D.head.appendChild(
+    //     Object.assign(
+    //       D.createElement(tag),
+    //       o
+    //     )
+    //   )
+    // }},typeContent=(tag,textContent,type)=>{{
+    //   let attr = {{textContent}};
+    //   if(type)attr.type=type;
+    //   New(tag,attr)
+    // }};
+    // typeContent('style',{css},'text/css');
+    // typeContent(script,'{{"imports":{{"x/":"'+conf_x+'","i/":'+_I+'{importmap}}}}}','importmap');
+    // typeContent(script,{const_js});
+    // return ()=>typeContent(script,{index_js},'module');
+    // }}"#
+    //     );
+    // let mut boot_js = minjs::minjs_no_mangle(&boot)?;
+    // if boot_js.ends_with(';') {
+    //   boot_js.pop();
+    // }
 
-    let boot = format!(
-      r#"(conf_x)=>{{
-let _I='{site_i_json}',script='script',D=document,New=(tag, o)=>{{
-  D.head.appendChild(
-    Object.assign(
-      D.createElement(tag),
-      o
-    )
-  )
-}},typeContent=(tag,textContent,type)=>{{
-  let attr = {{textContent}};
-  if(type)attr.type=type;
-  New(tag,attr)
-}};
-typeContent('style',{css},'text/css');
-typeContent(script,'{{"imports":{{"x/":"'+conf_x+'","i/":'+_I+'{importmap}}}}}','importmap');
-typeContent(script,{const_js});
-return ()=>typeContent(script,{index_js},'module');
-}}"#
-    );
-    let mut boot_js = minjs::minjs_no_mangle(&boot)?;
-    if boot_js.ends_with(';') {
-      boot_js.pop();
-    }
-    vfs.wstr("B.js", boot_js)
+    let boot_json = to_string(&[&self.css, &const_js, &index_js])?;
+    vfs.wstr("B.js", boot_json)
   }
 }

@@ -38,7 +38,7 @@ pub type LangRelTitleHtm = Vec<(Lang, String, String, String)>;
 pub async fn put(
   upload: &impl Ckv,
   to_insert: LangRelTitleHtm,
-  css: &str,
+  // css: &str,
   sitemap: &mut Sitemap,
   rss: &mut Rss,
 ) -> Null {
@@ -100,7 +100,7 @@ https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags
 
           let lang_en = LANG_CODE[lang as usize];
           let htm = format!(
-            r#"<!doctypehtml><meta charset=UTF-8><link rel="alternate" type="application/rss+xml" hreflang="{lang_en}" href="/{lang_en}.rss"><link rel=stylesheet href=//registry.npmmirror.com/{css}/latest/files/_.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default>{canonical}<link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css>{}{htm}"#,
+            r#"<!doctypehtml><meta charset=UTF-8><link rel="alternate" type="application/rss+xml" hreflang="{lang_en}" href="/{lang_en}.rss"><link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/_.css><script src=//registry.npmmirror.com/18x/latest/files/seo.js></script><link rel=alternate href="https://{host}{url}" hreflang=x-default>{canonical}<link rel=stylesheet href=//registry.npmmirror.com/18x/latest/files/seo.css>{}{htm}"#,
             t.lang_set
             .iter()
             .map(|lang| {
@@ -182,7 +182,7 @@ pub async fn gen(
   ignore: &GlobSet,
   changed: &HashSet<String>,
   foot: &HashMap<Lang, String>,
-  css: &str,
+  // css: &str,
 ) -> Null {
   let seo_dir = root
     .join(DOT_I18N)
@@ -212,7 +212,7 @@ pub async fn gen(
     )
     .await
   ) {
-    put(upload, to_insert, css, &mut sitemap, &mut rss).await?;
+    put(upload, to_insert, &mut sitemap, &mut rss).await?;
     ifs::wbin(sitemap_fp, sitemap.dumps())?;
     ifs::wbin(rss_fp, rss.dumps())?;
   }
@@ -232,10 +232,10 @@ pub async fn seo(
   if !conf.seo {
     return OK;
   }
-  let css = &conf.x;
   let host = &conf.host;
   gen(
-    upload, host, kind, root, lang_li, ignore, changed, foot, css,
+    upload, host, kind, root, lang_li, ignore, changed, foot,
+    // css,
   )
   .await
 }
