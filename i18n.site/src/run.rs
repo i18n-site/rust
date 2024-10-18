@@ -91,7 +91,7 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
             npm::State::Ok => {}
           }
           vfs.save()?;
-          refresh_v = refresh_v::RefreshV::run(&token, &pkg.name, vfs.ver);
+          refresh_v = Some(refresh_v::RefreshV::run(&token, &pkg.name, vfs.ver));
         }
         break;
       }
