@@ -7,7 +7,6 @@ use sha1::{Digest, Sha1};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct PackageJson {
-  pub name: String,
   pub version: String,
   pub description: Option<String>,
   // Add other necessary fields here
@@ -45,7 +44,7 @@ pub struct Payload {
   pub _attachments: HashMap<String, Attachments>,
 }
 
-pub fn payload(package_json: &Path, tgz: &Path) -> Result<Payload> {
+pub fn payload(pkg_name: &str, package_json: &Path, tgz: &Path) -> Result<Payload> {
   let json = std::fs::read(package_json)?;
   let package_json: PackageJson = sonic_rs::from_slice(&json)?;
 
@@ -71,12 +70,12 @@ pub fn payload(package_json: &Path, tgz: &Path) -> Result<Payload> {
   let dist = Dist {
     tarball: format!(
       "https://registry.npmjs.org/{}/-/{}-{}.tgz",
-      package_json.name, package_json.name, package_json.version
+      pkg_name, pkg_name, package_json.version
     ),
     shasum,
   };
   let version_data = VersionData {
-    name: package_json.name.clone(),
+    name: pkg_name.into(),
     version: package_json.version.clone(),
     dist,
   };
@@ -84,7 +83,7 @@ pub fn payload(package_json: &Path, tgz: &Path) -> Result<Payload> {
 
   let mut attachments = HashMap::new();
   attachments.insert(
-    format!("{}-{}.tgz", package_json.name, package_json.version),
+    format!("{}-{}.tgz", pkg_name, package_json.version),
     Attachments {
       content_type: "application/octet-stream".to_string(),
       data: tar_data_base64,
@@ -93,9 +92,9 @@ pub fn payload(package_json: &Path, tgz: &Path) -> Result<Payload> {
   );
 
   let package_data = Payload {
-    _id: package_json.name.clone(),
+    _id: pkg_name.into(),
     access: "public".into(),
-    name: package_json.name.clone(),
+    name: pkg_name.into(),
     dist_tags,
     versions,
     _attachments: attachments,

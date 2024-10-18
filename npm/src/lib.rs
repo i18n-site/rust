@@ -1,18 +1,19 @@
+mod payload;
+
 use std::{
   env::{self, temp_dir},
-  fmt,
+  fmt, fs,
   fs::{remove_file, File},
   io::{BufRead, BufReader},
   path::Path,
   time::Duration,
 };
-mod payload;
+
 use aok::Result;
 use flate2::{write::GzEncoder, Compression};
 use payload::payload;
 use reqwest::Client;
-use sonic_rs::to_string;
-use tar::Builder;
+use sonic_rs::{to_string, Value};
 
 genv::def!(NPM_TOKEN:String|String::default());
 genv::s!(NPM_REGISTRY:String|"registry.npmjs.org".into());
@@ -64,7 +65,20 @@ pub fn token() -> String {
   token
 }
 
-pub fn tgz(src: impl AsRef<Path>, package_json: &Path, out: impl AsRef<Path>) -> Result<()> {
+pub fn pkg_with_name(fp: &Path, name: &str) -> Result<String> {
+  let mut json_data: Value = sonic_rs::from_str(&fs::read_to_string(fp)?)?;
+  json_data["name"] = name.into();
+  Ok(sonic_rs::to_string(&json_data)?)
+}
+
+pub fn tgz(
+  src: impl AsRef<Path>,
+  package_json: &Path,
+  pkg_name: &str,
+  out: impl AsRef<Path>,
+) -> Result<()> {
+  use tar::{Builder, Header};
+
   let out = out.as_ref();
   let src = src.as_ref();
   if out.exists() {
@@ -76,7 +90,16 @@ pub fn tgz(src: impl AsRef<Path>, package_json: &Path, out: impl AsRef<Path>) ->
   let mut tar = Builder::new(enc);
 
   let package = Path::new("package");
-  tar.append_file(package.join("package.json"), &mut File::open(package_json)?)?;
+
+  let package_json = pkg_with_name(package_json, pkg_name)?;
+  let mut header = Header::new_gnu();
+  header.set_size(package_json.len() as u64);
+  header.set_cksum();
+  tar.append_data(
+    &mut header,
+    package.join("package.json"),
+    package_json.as_bytes(),
+  )?;
 
   // Append the directory contents, but adjust the path
   for entry in std::fs::read_dir(src)? {
@@ -118,15 +141,16 @@ pub async fn publish(
   token: &str,
   src: impl AsRef<Path>,
   package_json: impl AsRef<Path>,
+  pkg_name: &str,
 ) -> Result<State> {
   let package_json = package_json.as_ref();
   let src = src.as_ref();
   let tmp_dir = temp_dir();
   let tfp = tmp_dir.join("0");
 
-  tgz(src, package_json, &tfp)?;
+  tgz(src, package_json, pkg_name, &tfp)?;
   // let package_json = src.join("package.json");
-  let payload = payload(package_json, &tfp)?;
+  let payload = payload(pkg_name, package_json, &tfp)?;
 
   std::fs::remove_file(&tfp)?;
 

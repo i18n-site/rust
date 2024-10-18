@@ -105,7 +105,7 @@ version = "0.1.11"
 path = "../i18_conf"
 
 [dependencies.npm]
-version = "0.1.6"
+version = "0.1.7"
 path = "../npm"
 
 [dependencies.cmdv]
