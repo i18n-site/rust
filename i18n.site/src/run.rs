@@ -73,11 +73,11 @@ pub async fn run(dir: PathBuf, conf: Conf, m: &clap::ArgMatches) -> Null {
       .join(format!("{htm_conf}.package.json"));
 
     if package_json.exists() {
+      let pkg_name = &build.htm_conf.pkg.md;
       loop {
-        let pkg = package_json_ver(&package_json, &vfs.ver)?;
+        let pkg = package_json_ver(pkg_name, &package_json, &vfs.ver)?;
         let out = dir.join("out").join(&htm_conf).join("v").join(&*vfs.ver);
         if vfs.has_new() {
-          let pkg_name = &build.htm_conf.pkg.md;
           match npm::publish(&npm::token(), &out, pkg.fp, pkg_name).await? {
             npm::State::VerLow => {
               let ver = ver_incr(&npmv::latest(pkg_name).await?);
