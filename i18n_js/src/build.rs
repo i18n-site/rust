@@ -167,7 +167,7 @@ impl Build {
     let js_ver = self.js(&mut vfs, conf_name, conf, htm_index_js).await?;
     let prefix_index_ver = self.mnt.build(&mut vfs, &self.bjs_after.lang_path_bin)?;
     if vfs.has_new() {
-      let v = format!("{js_ver}>{prefix_index_ver}");
+      let v = format!("{prefix_index_ver}>{js_ver}");
       for i in [vfs.verdir.join(".v"), vfs.out.join(".v")] {
         ifs::wbin(i, &v)?;
       }

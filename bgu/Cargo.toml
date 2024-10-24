@@ -59,14 +59,14 @@ version = "0.1.16"
 path = "../iget"
 
 [dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dev-dependencies]
 loginit = "0.1.13"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]

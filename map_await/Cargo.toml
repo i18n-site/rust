@@ -2,7 +2,7 @@
 aok = "0.1.15"
 async-stream = "0.3.6"
 kanal = "0.1.0-pre8"
-tokio = { version = "1.40.0", features = ["rt"] }
+tokio = { version = "1.41.0", features = ["rt"] }
 tokio-stream = "0.1.16"
 
 [package]
@@ -22,7 +22,7 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
 
 [package.metadata.docs.rs]

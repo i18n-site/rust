@@ -8,15 +8,15 @@ homepage = "https://github.com/i18n-site/rust/tree/main/re"
 description = "error like anyhow for axum"
 
 [dependencies]
-anyhow = "1.0.89"
+anyhow = "1.0.91"
 axum = "0.7.7"
-bytes = "1.7.2"
-sonic-rs = "0.3.13"
+bytes = "1.8.0"
+sonic-rs = "0.3.14"
 tracing = "0.1.40"
 
 [dependencies.prost]
 version = "0.13.3"
 
 [dependencies.serde]
-version = "1.0.210"
+version = "1.0.213"
 features = [ "derive" ]

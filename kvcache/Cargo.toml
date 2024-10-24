@@ -17,7 +17,7 @@ hset_cache = [ ]
 user_cache = [ ]
 
 [dependencies]
-fred = "9.2.1"
+fred = "9.3.0"
 
 [dependencies.rany]
 version = "0.1.12"

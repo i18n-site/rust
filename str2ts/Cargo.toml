@@ -1,5 +1,5 @@
 [dependencies]
-thiserror = "1.0.64"
+thiserror = "1.0.65"
 
 [package]
 name = "str2ts"
@@ -18,7 +18,7 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
 
 [package.metadata.docs.rs]

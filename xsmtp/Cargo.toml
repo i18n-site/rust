@@ -8,13 +8,13 @@ homepage = "https://github.com/i18n-site/rust/tree/main/xsmtp"
 description = "smtp send mail"
 
 [dependencies]
-anyhow = "1.0.89"
+anyhow = "1.0.91"
 genv = "0.1.15"
 mail-builder = "0.3.2"
 tracing = "0.1.40"
 trt = "0.1.29"
 static_init = "1.0.3"
-thiserror = "1.0.64"
+thiserror = "1.0.65"
 rand = "0.8.5"
 
 [dependencies.mail-send]
@@ -26,15 +26,15 @@ version = "0.1.15"
 path = "../aok"
 
 [dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dependencies.idns]
 version = "0.1.20"
 
 [dev-dependencies]
-anyhow = "1.0.89"
+anyhow = "1.0.91"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

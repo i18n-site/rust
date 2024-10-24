@@ -11,7 +11,7 @@ description = "mysql macro for mysql_async"
 genv = "0.1.15"
 gxhash = "3.4.1"
 rustc-hex = "2.1.0"
-thiserror = "1.0.64"
+thiserror = "1.0.65"
 trt = "0.1.29"
 
 [dependencies.mysql_async]
@@ -23,7 +23,7 @@ version = "1.0.3"
 features = [ "lock_statistics", "parking_lot", "parking_lot_core" ]
 
 [dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "time", "rt-multi-thread", "macros", "rt" ]
 
 [dependencies.xstr]
@@ -34,7 +34,7 @@ path = "../xstr"
 tokio-test = "0.4.4"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "time", "rt-multi-thread", "macros", "rt" ]
 
 [dev-dependencies.aok]

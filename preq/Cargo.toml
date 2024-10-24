@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/preq"
 description = "ipv6 proxyed reqwest"
 
 [dependencies]
-bytes = "1.7.2"
+bytes = "1.8.0"
 tracing = "0.1.40"
 
 [dependencies.genv]
@@ -38,5 +38,5 @@ path = "../loginit"
 version = "0.1.13"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

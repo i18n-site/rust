@@ -1,7 +1,7 @@
 [dependencies]
 aok = "0.1.15"
 kanal = "0.1.0-pre8"
-tokio = "1.40.0"
+tokio = "1.41.0"
 
 [dependencies.waiting]
 version = "0.1.5"
@@ -30,5 +30,5 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

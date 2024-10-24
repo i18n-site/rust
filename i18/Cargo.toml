@@ -17,12 +17,12 @@ aok = "0.1.15"
 clap = "4.5.20"
 globset = "0.4.15"
 serde_yaml = "0.9.34"
-serde = "1.0.210"
+serde = "1.0.213"
 prost = "0.13.3"
-thiserror = "1.0.64"
+thiserror = "1.0.65"
 walkdir = "2.5.0"
 reqwest = "0.12.8"
-sonic-rs = "0.3.13"
+sonic-rs = "0.3.14"
 ub64 = "0.0.10"
 gxhash = "3.4.1"
 
@@ -92,7 +92,7 @@ version = "0.1.5"
 path = "../yconf"
 
 [dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dependencies.ifs]

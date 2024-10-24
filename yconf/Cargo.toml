@@ -1,8 +1,8 @@
 [dependencies]
 aok = "0.1.15"
-serde = "1.0.210"
+serde = "1.0.213"
 serde_yaml = "0.9.34"
-thiserror = "1.0.64"
+thiserror = "1.0.65"
 
 [dependencies.ifs]
 version = "0.1.44"
@@ -29,5 +29,5 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

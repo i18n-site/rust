@@ -9,8 +9,8 @@ description = "s3_put"
 
 [dependencies]
 aok = "0.1.15"
-aws-sdk-s3 = "1.56.0"
-bytes = "1.7.2"
+aws-sdk-s3 = "1.57.0"
+bytes = "1.8.0"
 tracing = "0.1.40"
 
 [dependencies.aws-config]
@@ -22,7 +22,7 @@ version = "0.1.15"
 path = "../genv"
 
 [dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dev-dependencies]

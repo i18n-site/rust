@@ -20,7 +20,7 @@ gxhash = "3.4.1"
 serde_yaml = "0.9.34"
 
 [dependencies.aws-sdk-s3]
-version = "1.56.0"
+version = "1.57.0"
 features = [ "behavior-version-latest" ]
 
 [dependencies.ifs]
@@ -29,7 +29,7 @@ path = "../ifs"
 features = [ "fs" ]
 
 [dependencies.serde]
-version = "1.0.210"
+version = "1.0.213"
 features = [ "derive" ]
 
 [dev-dependencies]
@@ -39,5 +39,5 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

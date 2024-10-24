@@ -17,8 +17,8 @@ cache = [ "dep:sts", "dep:ifs" ]
 [dependencies]
 aok = "0.1.15"
 flate2 = "1.0.34"
-serde = "1.0.210"
-sonic-rs = "0.3.13"
+serde = "1.0.213"
+sonic-rs = "0.3.14"
 tar = "0.4.42"
 tracing = "0.1.40"
 
@@ -38,7 +38,7 @@ path = "../sts"
 optional = true
 
 [dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "fs" ]
 
 [dev-dependencies]
@@ -48,5 +48,5 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

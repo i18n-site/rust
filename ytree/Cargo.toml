@@ -64,7 +64,7 @@ features = ["simd"]
 optional = true
 
 [dependencies.serde]
-version = "1.0.210"
+version = "1.0.213"
 features = ["derive"]
 
 [dependencies.vb]
@@ -88,5 +88,5 @@ path = "../lang"
 version = "0.1.32"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

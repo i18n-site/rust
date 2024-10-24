@@ -1,7 +1,7 @@
 [dependencies]
 bincode = "2.0.0-rc.3"
 aok = "0.1.15"
-bytes = "1.7.2"
+bytes = "1.8.0"
 gxhash = "3.4.1"
 
 [dependencies.bce]
@@ -13,7 +13,7 @@ version = "0.2.12"
 path = "../trait_len"
 
 [dependencies.fjall]
-version = "2.1.1"
+version = "2.2.0"
 features = [ "bloom" ]
 
 [dependencies.ifs]
@@ -45,5 +45,5 @@ static_init = "1.0.3"
 tracing = "0.1.40"
 
 [dev-dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

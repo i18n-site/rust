@@ -8,10 +8,10 @@ homepage = "https://github.com/i18n-site/rust/tree/main/iget"
 description = "iget"
 
 [dependencies]
-bytes = "1.7.2"
+bytes = "1.8.0"
 futures-util = "0.3.31"
 static_init = "1.0.3"
-thiserror = "1.0.64"
+thiserror = "1.0.65"
 
 [dependencies.pbar]
 version = "0.1.6"
@@ -33,5 +33,5 @@ features = [ "rustls-tls", "rustls-tls-native-roots", "stream" ]
 default-features = false
 
 [dependencies.tokio]
-version = "1.40.0"
+version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync", "fs" ]
