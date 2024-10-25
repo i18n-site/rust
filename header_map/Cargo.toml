@@ -1,0 +1,29 @@
+[dependencies]
+aok = "0.1.15"
+reqwest = "0.12.8"
+
+[dependencies.xerr]
+version = "0.1.15"
+path = "../xerr"
+
+[package]
+name = "header_map"
+version = "0.1.4"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/header_map"
+description = "header_map"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package api;
+
+enum ErrCode {
+  InvalidPayload = 0; // invalid payload 无效的 payload
+  PayOff = 1;         // no binding payment method/Debt exceeds 没有绑定付费方式/欠费超过$100
+  TooOften = 2;       // call too often 调用太频繁
+}
+
+message Err
+{
+  ErrCode code = 1;
+  string msg = 2;
+}
+
+message PathErr
+{
+  string path = 1;
+  string msg = 2;
+}
+
+message ErrLi
+{
+  repeated PathErr li = 1;
+}
+
+enum TranErr {
+  Unknown = 0;
+  Parse = 1;
+  IgnoreFile = 2;
+  UpdateCacheLinesNotSame = 3;
+  Server = 4;
+  Tran = 5;
+}
+
+message Traned
+{
+  uint32 lang = 1;
+  string txt = 2;
+}
+
+message TranedLi
+{
+  repeated Traned li = 1;
+}
+
+message Bill
+{
+
+  uint64 cost = 3;
+  int64 asset = 4;
+}
+
+message Traning
+{
+  // TranErr
+  map<int32, ErrLi> err = 1;
+  // rel - Traned
+  map<string, TranedLi> traned = 2;
+  repeated string update_cache = 3;
+  int64 asset = 4;
+  bool end = 5;
+}
+
+message TranInitResult
+{
+  oneof state
+  {
+    Traning traning = 1;
+    Err err = 2;
+  }
+}
+
+message TranState
+{
+  // TranErr
+  map<int32, ErrLi> err = 1;
+  map<string, TranedLi> traned = 2;
+  optional Bill bill = 3;
+}
+
+message TranResult
+{
+  optional TranState state = 1;
+}
+
+message LangLi
+{
+  repeated uint32 li = 1;
+}
+
+message FromTo
+{
+  string prefix = 1;
+  map<uint32, LangLi> from_to = 2;
+}
+
+message LangRelSrcHash
+{
+  uint32 lang = 1;
+  string rel = 2;
+  bytes pre_hash = 3;
+}
+
+message Meta
+{
+  repeated LangRelSrcHash lrs_li = 1;
+  repeated FromTo from_to_li = 2;
+}

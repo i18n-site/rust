@@ -1,0 +1,62 @@
+[dependencies]
+aok = "0.1.15"
+blake3 = "1.5.4"
+intbin = "0.1.2"
+sonic-rs = "0.3.14"
+thiserror = "1.0.65"
+
+[dependencies.burl]
+version = "0.1.4"
+path = "../burl"
+
+[dependencies.cmp_len_str]
+version = "0.1.3"
+path = "../cmp_len_str"
+
+[dependencies.ifs]
+version = "0.1.44"
+path = "../ifs"
+default-features = false
+features = [ "fs", "cp" ]
+
+[dependencies.indexmap]
+version = "2.6.0"
+features = [ "serde" ]
+
+[dependencies.li_pos]
+version = "0.1.4"
+path = "../li_pos"
+
+[dependencies.serde]
+version = "1.0.213"
+features = [ "derive" ]
+
+[dependencies.ver_incr]
+version = "0.1.6"
+path = "../ver_incr"
+
+[dependencies.xerr]
+version = "0.1.15"
+path = "../xerr"
+
+[package]
+name = "verfs"
+version = "0.2.12"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/verfs"
+description = "verfs"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

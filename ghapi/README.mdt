@@ -1,0 +1,9 @@
+# ghapi
+
+```rust
+<+ ./tests/main.rs>
+```
+
+https://github.com/login/oauth/authorize?client_id=Ov23liuGAmK0plc9FgB3&scope=user:email,user:follow,public_repo
+
+<+ ../about.md >
