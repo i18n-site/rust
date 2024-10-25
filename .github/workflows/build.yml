@@ -46,11 +46,21 @@ jobs:
         # with:
         #   version: 0.11.0
 
-      - name: install rust
+      - name: init rust
+        shell: bash
+        run: |
+          bun -e "console.log('RUST_VER='+new Date(new Date()-864e5*28).toISOString().slice(0,8)+'26')" >> $GITHUB_ENV
+          mkdir -p ~/cache/rust/target ~/.cargo
+          echo -e "[build]\ntarget-dir = \"$HOME/cache/rust/target\"" >~/.cargo/config.toml
+
+      - name: rust-toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-            toolchain: nightly
+            # https://github.com/dalek-cryptography/curve25519-dalek/issues/618
+            toolchain: nightly-${{ env.RUST_VER }}
+            cache: false
             components: rust-src
+            # components: rustfmt, clippy
 
       - name: dist
         shell: bash

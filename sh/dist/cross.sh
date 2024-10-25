@@ -19,7 +19,6 @@ MINGW*)
   ;;
 Linux)
   build="zigbuild"
-  RUSTFLAGS="$RUSTFLAGS -Clink-args=-fuse-ld=lld"
   if ! command -v cargo-zigbuild &>/dev/null; then
     cargo install cargo-zigbuild
   fi
