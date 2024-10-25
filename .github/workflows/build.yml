@@ -50,15 +50,12 @@ jobs:
         shell: bash
         run: |
           echo "RUST_VER=$(uname | grep -q 'Darwin' && date -v-28d +"%Y-%m-26" || date -d "28 days ago" +"%Y-%m-26")" >> $GITHUB_ENV
-          mkdir -p ~/cache/rust/target ~/.cargo
-          echo -e "[build]\ntarget-dir = \"$HOME/cache/rust/target\"" >~/.cargo/config.toml
 
       - name: rust-toolchain
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
             # https://github.com/dalek-cryptography/curve25519-dalek/issues/618
             toolchain: nightly-${{ env.RUST_VER }}
-            cache: false
             components: rust-src
             # components: rustfmt, clippy
 
