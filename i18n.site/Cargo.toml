@@ -89,7 +89,7 @@ version = "0.1.18"
 path = "../npmi"
 
 [dependencies.refresh_v]
-version = "0.1.9"
+version = "0.1.10"
 path = "../refresh_v"
 
 [dependencies.yconf]
@@ -121,7 +121,7 @@ version = "1.41.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
 
 [dependencies.i18]
-version = "0.1.273"
+version = "0.1.275"
 path = "../i18"
 
 [dev-dependencies]
