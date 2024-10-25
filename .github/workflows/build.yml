@@ -93,6 +93,7 @@ jobs:
           # npm i
           # export PATH="$PATH:$(pwd)/.direnv/bin"
           cd sh/dist
+          export RUST_VER=${{ env.RUST_VER }}
           ./dist.ver.sh ${{inputs.name}}
           # ./os.sh
   #     # - name: verify
