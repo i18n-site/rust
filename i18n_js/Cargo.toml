@@ -43,11 +43,11 @@ path = "../ver_count"
 
 [dependencies.globset]
 version = "0.4.15"
-features = ["simd-accel"]
+features = [ "simd-accel" ]
 
 [dependencies.indexmap]
 version = "2.6.0"
-features = ["serde"]
+features = [ "serde" ]
 
 [dependencies.verfs]
 version = "0.2.12"
@@ -78,19 +78,19 @@ version = "0.1.32"
 path = "../lang"
 
 [dependencies.bjs]
-version = "0.1.10"
+version = "0.1.11"
 path = "../bjs"
 
 [dependencies.ifs]
 version = "0.1.44"
 path = "../ifs"
 default-features = false
-features = ["fs", "unix_path", "rsync", "ln"]
+features = [ "fs", "unix_path", "rsync", "ln" ]
 
 [dependencies.dot_hide]
 version = "0.1.6"
 path = "../dot_hide"
-features = ["walkdir"]
+features = [ "walkdir" ]
 
 [dependencies.xerr]
 version = "0.1.15"
@@ -117,4 +117,4 @@ tracing = "0.1.40"
 
 [dev-dependencies.tokio]
 version = "1.41.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

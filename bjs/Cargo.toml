@@ -5,12 +5,9 @@ boa_runtime = "0.19.1"
 thiserror = "1.0.65"
 tracing = "0.1.40"
 
-# remove when fix https://github.com/boa-dev/boa/issues/3982
-intrusive-collections = { version = "=0.9.6" }
-
 [package]
 name = "bjs"
-version = "0.1.10"
+version = "0.1.11"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"

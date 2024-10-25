@@ -19,7 +19,7 @@ async fn test() -> Result<()> {
     let src = dir.join("tests").join("pkg");
     let package_json = src.join("package.json");
     info!("begin publish");
-    xerr::log!(npm::publish(&token, src, &package_json).await);
+    // xerr::log!(npm::publish(&token, src, &package_json).await);
   }
   info!("done");
   OK

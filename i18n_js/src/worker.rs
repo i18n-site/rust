@@ -5,7 +5,7 @@ use aok::{Null, OK};
 use crate::{conf::HtmConf, DOT_I18N, HTM};
 pub const HOST_JSD: &str = "fastly.jsdelivr.net/npm>cdn.jsdmirror.cn/npm>unpkg.com>jsd.onmicrosoft.cn/npm>cdn.jsdelivr.net/npm>jsd.cdn.noisework.cn/npm>quantil.jsdelivr.net/npm";
 
-pub const HOST_V: &str = "v.i18n.site>v.ok0.pw>v.3ti.site";
+pub const HOST_V: &str = "v.ok0.pw>v.3ti.site>v.i18n.site";
 
 pub async fn worker(root: &Path, conf: &HtmConf, upload: &impl ckv::Ckv) -> Null {
   let dir = root.join(DOT_I18N);
