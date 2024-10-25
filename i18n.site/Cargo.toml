@@ -1,6 +1,6 @@
 [package]
 name = "i18n-site"
-version = "0.2.89"
+version = "0.2.90"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -97,7 +97,7 @@ version = "0.1.5"
 path = "../yconf"
 
 [dependencies.i18n_js]
-version = "0.1.39"
+version = "0.1.40"
 path = "../i18n_js"
 
 [dependencies.i18_conf]
