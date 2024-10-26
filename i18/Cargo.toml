@@ -60,7 +60,7 @@ version = "0.1.19"
 path = "../i18_hash"
 
 [dependencies.i18_conf]
-version = "0.1.11"
+version = "0.1.12"
 path = "../i18_conf"
 
 [dependencies.cmdv]
