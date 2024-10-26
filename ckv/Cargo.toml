@@ -20,7 +20,7 @@ gxhash = "3.4.1"
 serde_yaml = "0.9.34"
 
 [dependencies.aws-sdk-s3]
-version = "1.57.0"
+version = "1.58.0"
 features = [ "behavior-version-latest" ]
 
 [dependencies.ifs]
