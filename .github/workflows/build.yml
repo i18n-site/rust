@@ -37,15 +37,9 @@ jobs:
         with:
           repo-token: ${{ github.token }}
       - if: runner.os == 'linux'
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          ./sh/dist/gh.draft.sh ${{inputs.name}}
-      - if: runner.os == 'linux'
         uses: goto-bus-stop/setup-zig@v2
-        # with:
-        #   version: 0.11.0
+        with:
+          version: 0.13.0
 
       - name: init rust
         shell: bash
@@ -58,8 +52,14 @@ jobs:
             # https://github.com/dalek-cryptography/curve25519-dalek/issues/618
             toolchain: nightly-${{ env.RUST_VER }}
             components: rust-src
-            cache: false
+            # cache: false
             # components: rustfmt, clippy
+      - if: runner.os == 'linux'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ./sh/dist/gh.draft.sh ${{inputs.name}}
 
       - name: dist
         shell: bash
