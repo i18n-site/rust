@@ -19,6 +19,8 @@ pub struct DirI18nConf {
 pub struct I18nConf {
   pub fromTo: HashMap<String, String>,
   pub path: Option<HashMap<String, DirI18nConf>>,
+  #[serde(default)]
+  pub url: Vec<String>,
 }
 
 pub fn build_ignore(ignore: &[String]) -> GlobSet {

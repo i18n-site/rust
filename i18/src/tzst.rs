@@ -10,6 +10,7 @@ pub fn tzst(
   path_li: &[String],
   lrs_li: Vec<api::LangRelSrcHash>,
   rel_ft: &[RelFt],
+  url: &[String],
 ) -> Result<Vec<u8>> {
   let mut from_to_li = Vec::with_capacity(rel_ft.len() + 1);
   for (prefix, ft) in rel_ft {
@@ -36,7 +37,11 @@ pub fn tzst(
     });
   }
 
-  let meta = api::Meta { lrs_li, from_to_li };
+  let meta = api::Meta {
+    lrs_li,
+    from_to_li,
+    url: url.into(),
+  };
   let mut w = tzst::W::new();
   w.add_bin("_", meta.encode_to_vec())?;
   w.add_path_li(workdir, path_li)?;
