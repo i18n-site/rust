@@ -16,9 +16,7 @@ pub struct Md<'a> {
 
 pub fn md_parse<'a>(md: &'a str) -> Vec<Md<'a>> {
   let mut result = Vec::new();
-  let mut start = 0;
   let mut in_code = false;
-  let mut in_inline_code = false;
   let mut 代码开始位置 = 0;
 
   if md.is_empty() {
@@ -37,7 +35,6 @@ pub fn md_parse<'a>(md: &'a str) -> Vec<Md<'a>> {
   let mut prev_end = 0;
 
   while let Some((行开始位置, line)) = line_iter.next() {
-    dbg!(&line);
     // 在非代码块状态下处理换行符
     if !in_code && 行开始位置 > prev_end {
       result.push(Md {
@@ -46,24 +43,15 @@ pub fn md_parse<'a>(md: &'a str) -> Vec<Md<'a>> {
       });
     }
 
-    let line_end = 行开始位置 + line.len();
     let trimmed = line.trim();
+    let line_end = 行开始位置 + line.len();
 
     // 检查代码块开始/结束
     if trimmed == "```" {
       if !in_code {
-        if start < 行开始位置 {
-          let text = &md[start..行开始位置];
-          if !text.trim().is_empty() {
-            result.push(Md {
-              kind: Kind::Txt,
-              str: text,
-            });
-          }
-        }
         in_code = true;
         代码开始位置 = 行开始位置;
-        start = line_end;
+        prev_end = line_end;
       } else {
         let 代码块内容 = &md[代码开始位置..line_end];
         result.push(Md {
@@ -71,52 +59,54 @@ pub fn md_parse<'a>(md: &'a str) -> Vec<Md<'a>> {
           str: 代码块内容,
         });
         in_code = false;
-        start = line_end;
-        // 更新 prev_end，这样下一行的换行符就会被正确处理
         prev_end = line_end;
-        continue; // 跳过本次循环末尾的 prev_end 更新
+        continue;
       }
     } else if !in_code {
-      // 处理行内代码
-      let mut 字符迭代器 = line.char_indices().peekable();
-      let mut found_backtick = false;
+      // 处理行内代码和普通文本
+      let mut last_end = 0;
+      let mut chars = line.char_indices();
 
-      while let Some((字符位置, c)) = 字符迭代器.next() {
+      while let Some((i, c)) = chars.next() {
         if c == '`' {
-          let 绝对位置 = 行开始位置 + 字符位置;
+          // 检查是否有配对的反引号
+          let mut found_end = false;
+          let mut end_byte_pos = i;
+          let mut temp_chars = chars.clone();
 
-          if !in_inline_code {
-            if start < 绝对位置 {
-              let text = &md[start..绝对位置];
+          while let Some((j, c)) = temp_chars.next() {
+            if c == '`' {
+              found_end = true;
+              end_byte_pos = j;
+              chars = temp_chars;
+              break;
+            }
+          }
+
+          if found_end {
+            // 添加反引号前的文本
+            if last_end < i {
+              let text = &line[last_end..i];
               result.push(Md {
                 kind: Kind::Txt,
                 str: text,
               });
             }
-            in_inline_code = true;
-            found_backtick = true;
-            代码开始位置 = 绝对位置;
-            start = 绝对位置 + 1;
-          } else {
-            let 行内代码内容 = &md[代码开始位置..绝对位置 + 1];
+
+            // 添加行内代码
             result.push(Md {
               kind: Kind::InlineCode,
-              str: 行内代码内容,
+              str: &line[i..=end_byte_pos],
             });
-            in_inline_code = false;
-            found_backtick = false;
-            start = 绝对位置 + 1;
+
+            last_end = end_byte_pos + 1;
           }
         }
       }
 
-      if found_backtick && in_inline_code {
-        in_inline_code = false;
-        start = 代码开始位置;
-      }
-
-      if start < line_end {
-        let text = &md[start..line_end];
+      // 添加剩余的文本
+      if last_end < line.len() {
+        let text = &line[last_end..];
         if !text.is_empty() {
           result.push(Md {
             kind: Kind::Txt,
@@ -124,15 +114,14 @@ pub fn md_parse<'a>(md: &'a str) -> Vec<Md<'a>> {
           });
         }
       }
-      start = line_end;
-    }
 
-    prev_end = line_end;
+      prev_end = line_end;
+    }
   }
 
   // 处理最后剩余的文本
-  if start < md.len() {
-    let 剩余文本 = &md[start..];
+  if prev_end < md.len() {
+    let 剩余文本 = &md[prev_end..];
     if in_code {
       result.push(Md {
         kind: Kind::Code,

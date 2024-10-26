@@ -16,15 +16,10 @@ fn run_test(name: &str, input: &str) {
   let result = md_parse(input);
   dbg!(&result);
   let joined = join_md_results(&result);
-  let normalized_input = input.replace("\r\n", "\n");
 
-  let success = joined == normalized_input;
+  let success = joined == input;
   print_test_result(name, success);
-  assert_eq!(
-    joined, normalized_input,
-    "\n期望: {}\n实际: {}",
-    normalized_input, joined
-  );
+  assert_eq!(input, joined, "\n期望: {}\n实际: {}", input, joined);
 }
 
 #[test]
