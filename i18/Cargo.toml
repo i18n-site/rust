@@ -1,0 +1,114 @@
+[package]
+name = "i18"
+version = "0.1.282"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/i18"
+description = "i18"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+static_init = "1.0.3"
+loginit = "0.1.13"
+aok = "0.1.15"
+clap = "4.5.20"
+globset = "0.4.15"
+serde_yaml = "0.9.34"
+serde = "1.0.213"
+prost = "0.13.3"
+thiserror = "1.0.65"
+walkdir = "2.5.0"
+reqwest = "0.12.8"
+sonic-rs = "0.3.14"
+ub64 = "0.0.10"
+gxhash = "3.4.1"
+
+[dependencies.sts]
+version = "0.1.23"
+path = "../sts"
+
+[dependencies.roaring]
+version = "0.10.6"
+features = [ "simd" ]
+
+[dependencies.vb]
+version = "0.1.8"
+path = "../vb"
+
+[dependencies.pbar]
+version = "0.1.6"
+path = "../pbar"
+
+[dependencies.xhash]
+version = "0.1.30"
+path = "../xhash"
+
+[dependencies.i18_json]
+version = "0.1.10"
+path = "../i18_json"
+
+[dependencies.tzst]
+version = "0.1.20"
+path = "../tzst"
+features = [ "w" ]
+
+[dependencies.i18_hash]
+version = "0.1.19"
+path = "../i18_hash"
+
+[dependencies.i18_conf]
+version = "0.1.11"
+path = "../i18_conf"
+
+[dependencies.cmdv]
+version = "0.1.11"
+path = "../cmdv"
+
+[dependencies.i18n_bgu]
+version = "0.1.21"
+path = "../i18n_bgu"
+
+[dependencies.mreq]
+version = "0.1.16"
+path = "../mreq"
+
+[dependencies.lang]
+version = "0.1.32"
+path = "../lang"
+
+[dependencies.ft]
+version = "0.1.22"
+path = "../ft"
+
+[dependencies.xerr]
+version = "0.1.15"
+path = "../xerr"
+
+[dependencies.yconf]
+version = "0.1.5"
+path = "../yconf"
+
+[dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+
+[dependencies.ifs]
+version = "0.1.44"
+path = "../ifs"
+default-features = false
+features = [ "is_dir", "fs", "unix_path", "confdir" ]
+
+[[bin]]
+name = "i18"
+path = "src/main.rs"
+
+[build-dependencies]
+aok = "0.1.15"
+prost-build = "0.13.3"
+
+[target."cfg(target_os=\"linux\")".dependencies.openssl]
+version = "0.10"
+features = [ "vendored" ]

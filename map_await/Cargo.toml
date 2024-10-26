@@ -1,0 +1,29 @@
+[dependencies]
+aok = "0.1.15"
+async-stream = "0.3.6"
+kanal = "0.1.0-pre8"
+tokio = { version = "1.41.0", features = ["rt"] }
+tokio-stream = "0.1.16"
+
+[package]
+name = "map_await"
+version = "0.1.10"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/map_unordered"
+description = "map_unordered"
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+rand = "0.8.5"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.41.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[package.metadata.docs.rs]
+all-features = true

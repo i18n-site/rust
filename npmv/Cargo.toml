@@ -1,0 +1,52 @@
+[package]
+name = "npmv"
+version = "0.1.19"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/npmv"
+description = "npmv"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = [ ]
+cache = [ "dep:sts", "dep:ifs" ]
+
+[dependencies]
+aok = "0.1.15"
+flate2 = "1.0.34"
+serde = "1.0.213"
+sonic-rs = "0.3.14"
+tar = "0.4.42"
+tracing = "0.1.40"
+
+[dependencies.ifs]
+version = "0.1.44"
+path = "../ifs"
+features = [ "fs" ]
+optional = true
+
+[dependencies.reqwest]
+version = "0.12.8"
+features = [ "stream" ]
+
+[dependencies.sts]
+version = "0.1.23"
+path = "../sts"
+optional = true
+
+[dependencies.tokio]
+version = "1.41.0"
+features = [ "fs" ]
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
