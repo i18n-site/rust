@@ -6,6 +6,7 @@ pub enum Kind {
   Code,
   InlineCode,
   Br,
+  EmptyLine,
 }
 
 #[derive(Debug)]
@@ -35,8 +36,9 @@ pub fn md_parse<'a>(md: &'a str) -> Vec<Md<'a>> {
   let mut prev_end = 0;
 
   while let Some((行开始位置, line)) = line_iter.next() {
+    let not_in_code = !in_code;
     // 在非代码块状态下处理换行符
-    if !in_code && 行开始位置 > prev_end {
+    if not_in_code && 行开始位置 > prev_end {
       result.push(Md {
         kind: Kind::Br,
         str: &md[prev_end..行开始位置],
@@ -44,7 +46,18 @@ pub fn md_parse<'a>(md: &'a str) -> Vec<Md<'a>> {
     }
 
     let trimmed = line.trim();
+
     let line_end = 行开始位置 + line.len();
+
+    if trimmed.is_empty() {
+      result.push(Md {
+        kind: Kind::EmptyLine,
+        str: line,
+      });
+
+      prev_end = line_end;
+      continue;
+    }
 
     // 检查代码块开始/结束
     if trimmed == "```" {

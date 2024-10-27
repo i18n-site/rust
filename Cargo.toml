@@ -120,7 +120,7 @@ members = [
   "ckv",
   "set_mtime",
   "change",
-  "mdli", "pos_lines",
+  "mdli", "pos_lines", "varurl",
 ]
 # "cget/test_cget",
 resolver = "2"
