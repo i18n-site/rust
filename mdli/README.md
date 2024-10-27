@@ -1,7 +1,7 @@
 # mdli
 
 ```rust
-use mdli::{md_parse, Md};
+use mdli::md_parse;
 
 fn print_test_result(name: &str, success: bool) {
   if success {

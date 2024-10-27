@@ -3,15 +3,7 @@
 use daachorse::{
   errors::Result, CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind,
 };
-use mdli::{Kind, Md};
-
-pub struct MdLi<'a>(pub Vec<Md<'a>>);
-
-impl<'a> MdLi<'a> {
-  pub fn join(&self) -> String {
-    self.0.iter().map(|md| md.str).collect()
-  }
-}
+use mdli::{Kind, MdLi};
 
 pub struct VarUrl {
   pub ac: CharwiseDoubleArrayAhoCorasick<usize>,
@@ -48,83 +40,66 @@ impl VarUrl {
     None
   }
 
-  pub fn replace<'a>(&self, mdli: &mut MdLi<'a>, to_lang: &str) -> Result<()> {
+  pub fn replace(&self, mdli: &mut MdLi, to_lang: &str) -> Result<()> {
     let to_lang = format!("/{to_lang}/");
-    let mut new_vec = Vec::new();
 
-    for i in &mdli.0 {
-      if i.kind != Kind::Txt {
-        new_vec.push(Md {
-          kind: i.kind,
-          str: i.str,
-        });
+    // 就地修改每个 Md 元素
+    for i in 0..mdli.0.len() {
+      if mdli.0[i].kind != Kind::Txt {
         continue;
       }
-      let md = i.str;
-      let mut pre_pos = 0;
-      let md_len = md.len();
 
-      dbg!("处理文本:", md);
-      let mut current_vec = Vec::new();
+      let md = &mdli.0[i].str;
+      let mut pre_pos = 0;
+      let mut new_str = String::new();
+      let mut last_end = 0; // 记录上一次匹配的结束位置
 
       for m in self.ac.leftmost_find_iter(md) {
         let start = m.start();
         let end = m.end();
-        let val = &md[start..end];
 
-        dbg!("找到URL前缀:", val, "位置:", start, end);
+        // 如果当前开始位置小于上一次的结束位置，跳过这次匹配
+        if start < last_end {
+          continue;
+        }
+
+        let val = &md[start..end];
 
         let before = &md[..start];
         let after = &md[end..];
 
-        dbg!("前文:", before);
-        dbg!("后文:", after);
-
         if let Some((url_end, url_part)) = self.find_end(before, after) {
-          dbg!("URL部分:", url_part);
-
           let full_url = format!("{}{}", val, url_part);
-          dbg!("完整URL:", &full_url);
 
           if full_url.contains(&self.from_lang) {
             let new_url = full_url.replace(&self.from_lang, &to_lang);
-            dbg!("新URL:", &new_url);
 
-            if pre_pos < start {
-              current_vec.push(Md {
-                kind: Kind::Txt,
-                str: &md[pre_pos..start],
-              });
-            }
-            current_vec.push(Md {
-              kind: Kind::Txt,
-              str: &new_url,
-            });
+            // 添加前面的文本和新URL
+            new_str.push_str(&md[pre_pos..start]);
+            new_str.push_str(&new_url);
             pre_pos = end + url_end;
+            last_end = pre_pos; // 更新上一次的结束位置
             continue;
           }
         }
 
-        if pre_pos < end {
-          current_vec.push(Md {
-            kind: Kind::Txt,
-            str: &md[pre_pos..end],
-          });
-        }
+        // 添加未匹配的部分
+        new_str.push_str(&md[pre_pos..end]);
         pre_pos = end;
+        last_end = end; // 更新上一次的结束位置
       }
 
-      if pre_pos < md_len {
-        current_vec.push(Md {
-          kind: Kind::Txt,
-          str: &md[pre_pos..],
-        });
+      // 添加剩余的文本
+      if pre_pos < md.len() {
+        new_str.push_str(&md[pre_pos..]);
       }
 
-      new_vec.extend(current_vec);
+      // 只有当文本有变化时才替换
+      if new_str != *md {
+        mdli.0[i].str = new_str;
+      }
     }
 
-    mdli.0 = new_vec;
     Ok(())
   }
 }

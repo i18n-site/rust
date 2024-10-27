@@ -19,7 +19,7 @@ aok = "0.1.15"
 daachorse = "1.0.0"
 
 [dependencies.mdli]
-version = "0.1.10"
+version = "0.1.12"
 path = "../mdli"
 
 [dev-dependencies]

@@ -10,35 +10,40 @@ pub enum Kind {
 }
 
 #[derive(Debug)]
-pub struct Md<'a> {
+pub struct Md {
   pub kind: Kind,
-  pub str: &'a str,
+  pub str: String,
 }
 
 #[derive(Debug)]
-pub struct MdLi<'a>(pub Vec<Md<'a>>);
+pub struct MdLi(pub Vec<Md>);
 
-impl<'a> MdLi<'a> {
+impl MdLi {
   pub fn join(&self) -> String {
-    self.0.iter().map(|md| md.str).collect()
+    self.0.iter().map(|md| md.str.as_str()).collect()
+  }
+
+  pub fn push(&mut self, kind: Kind, str: impl Into<String>) {
+    self.0.push(Md {
+      kind,
+      str: str.into(),
+    });
   }
 }
 
-pub fn md_parse<'a>(md: &'a str) -> MdLi<'a> {
-  let mut result = Vec::new();
+pub fn md_parse(md: impl AsRef<str>) -> MdLi {
+  let md = md.as_ref();
+  let mut result = MdLi(vec![]);
   let mut in_code = false;
   let mut 代码开始位置 = 0;
 
   if md.is_empty() {
-    return MdLi(result);
+    return result;
   }
 
   if md.trim().is_empty() {
-    result.push(Md {
-      kind: Kind::Txt,
-      str: md,
-    });
-    return MdLi(result);
+    result.push(Kind::Txt, md);
+    return result;
   }
 
   let mut line_iter = PosLines::new(md);
@@ -48,10 +53,7 @@ pub fn md_parse<'a>(md: &'a str) -> MdLi<'a> {
     let not_in_code = !in_code;
     // 在非代码块状态下处理换行符
     if not_in_code && 行开始位置 > prev_end {
-      result.push(Md {
-        kind: Kind::Br,
-        str: &md[prev_end..行开始位置],
-      });
+      result.push(Kind::Br, &md[prev_end..行开始位置]);
     }
 
     let trimmed = line.trim();
@@ -59,27 +61,21 @@ pub fn md_parse<'a>(md: &'a str) -> MdLi<'a> {
     let line_end = 行开始位置 + line.len();
 
     if trimmed.is_empty() {
-      result.push(Md {
-        kind: Kind::EmptyLine,
-        str: line,
-      });
+      result.push(Kind::EmptyLine, line);
 
       prev_end = line_end;
       continue;
     }
 
     // 检查代码块开始/结束
-    if trimmed == "```" {
+    if trimmed.starts_with("```") {
       if !in_code {
         in_code = true;
         代码开始位置 = 行开始位置;
         prev_end = line_end;
       } else {
         let 代码块内容 = &md[代码开始位置..line_end];
-        result.push(Md {
-          kind: Kind::Code,
-          str: 代码块内容,
-        });
+        result.push(Kind::Code, 代码块内容);
         in_code = false;
         prev_end = line_end;
         continue;
@@ -109,17 +105,11 @@ pub fn md_parse<'a>(md: &'a str) -> MdLi<'a> {
             // 添加反引号前的文本
             if last_end < i {
               let text = &line[last_end..i];
-              result.push(Md {
-                kind: Kind::Txt,
-                str: text,
-              });
+              result.push(Kind::Txt, text);
             }
 
             // 添加行内代码
-            result.push(Md {
-              kind: Kind::InlineCode,
-              str: &line[i..=end_byte_pos],
-            });
+            result.push(Kind::InlineCode, &line[i..=end_byte_pos]);
 
             last_end = end_byte_pos + 1;
           }
@@ -130,10 +120,7 @@ pub fn md_parse<'a>(md: &'a str) -> MdLi<'a> {
       if last_end < line.len() {
         let text = &line[last_end..];
         if !text.is_empty() {
-          result.push(Md {
-            kind: Kind::Txt,
-            str: text,
-          });
+          result.push(Kind::Txt, text);
         }
       }
 
@@ -145,17 +132,11 @@ pub fn md_parse<'a>(md: &'a str) -> MdLi<'a> {
   if prev_end < md.len() {
     let 剩余文本 = &md[prev_end..];
     if in_code {
-      result.push(Md {
-        kind: Kind::Code,
-        str: &md[代码开始位置..],
-      });
+      result.push(Kind::Code, &md[代码开始位置..]);
     } else if !剩余文本.is_empty() {
-      result.push(Md {
-        kind: Kind::Txt,
-        str: 剩余文本,
-      });
+      result.push(Kind::Txt, 剩余文本);
     }
   }
 
-  MdLi(result)
+  result
 }
