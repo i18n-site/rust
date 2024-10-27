@@ -11,15 +11,9 @@ fn print_test_result(name: &str, success: bool) {
   }
 }
 
-fn join_md_results(results: &Vec<Md>) -> String {
-  results.iter().map(|md| md.str).collect::<String>()
-}
-
 fn run_test(name: &str, input: &str) {
   let result = md_parse(input);
-  dbg!(&result);
-  let joined = join_md_results(&result);
-
+  let joined = result.join();
   let success = joined == input;
   print_test_result(name, success);
   assert_eq!(input, joined, "\n期望: {}\n实际: {}", input, joined);

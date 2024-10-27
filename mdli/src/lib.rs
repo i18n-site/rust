@@ -15,13 +15,22 @@ pub struct Md<'a> {
   pub str: &'a str,
 }
 
-pub fn md_parse<'a>(md: &'a str) -> Vec<Md<'a>> {
+#[derive(Debug)]
+pub struct MdLi<'a>(pub Vec<Md<'a>>);
+
+impl<'a> MdLi<'a> {
+  pub fn join(&self) -> String {
+    self.0.iter().map(|md| md.str).collect()
+  }
+}
+
+pub fn md_parse<'a>(md: &'a str) -> MdLi<'a> {
   let mut result = Vec::new();
   let mut in_code = false;
   let mut 代码开始位置 = 0;
 
   if md.is_empty() {
-    return result;
+    return MdLi(result);
   }
 
   if md.trim().is_empty() {
@@ -29,7 +38,7 @@ pub fn md_parse<'a>(md: &'a str) -> Vec<Md<'a>> {
       kind: Kind::Txt,
       str: md,
     });
-    return result;
+    return MdLi(result);
   }
 
   let mut line_iter = PosLines::new(md);
@@ -148,5 +157,5 @@ pub fn md_parse<'a>(md: &'a str) -> Vec<Md<'a>> {
     }
   }
 
-  result
+  MdLi(result)
 }
