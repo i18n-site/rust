@@ -7,21 +7,17 @@ use mdli::{Kind, MdLi};
 
 pub struct VarUrl {
   pub ac: CharwiseDoubleArrayAhoCorasick<usize>,
-  pub from_lang: String,
 }
 
 impl VarUrl {
-  pub fn new<I, S: AsRef<str>>(patterns: I, from_lang: &str) -> Result<Self>
+  pub fn new<I, S: AsRef<str>>(prefix_li: I) -> Result<Self>
   where
     I: IntoIterator<Item = S>,
   {
     let ac = CharwiseDoubleArrayAhoCorasickBuilder::new()
       .match_kind(MatchKind::LeftmostLongest)
-      .build(patterns)?;
-    Ok(VarUrl {
-      ac,
-      from_lang: format!("/{from_lang}/"),
-    })
+      .build(prefix_li)?;
+    Ok(VarUrl { ac })
   }
 
   fn find_end<'a>(&self, before: &'a str, after: &'a str) -> Option<(usize, &'a str)> {
@@ -40,7 +36,8 @@ impl VarUrl {
     None
   }
 
-  pub fn replace(&self, mdli: &mut MdLi, to_lang: &str) -> Result<()> {
+  pub fn replace(&self, mdli: &mut MdLi, from_lang: &str, to_lang: &str) -> Result<()> {
+    let from_lang = format!("/{from_lang}/");
     let to_lang = format!("/{to_lang}/");
 
     // 就地修改每个 Md 元素
@@ -71,8 +68,8 @@ impl VarUrl {
         if let Some((url_end, url_part)) = self.find_end(before, after) {
           let full_url = format!("{}{}", val, url_part);
 
-          if full_url.contains(&self.from_lang) {
-            let new_url = full_url.replace(&self.from_lang, &to_lang);
+          if full_url.contains(&from_lang) {
+            let new_url = full_url.replace(&from_lang, &to_lang);
 
             // 添加前面的文本和新URL
             new_str.push_str(&md[pre_pos..start]);

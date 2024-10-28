@@ -5,7 +5,7 @@ use mdli::md_parse;
 use varurl::VarUrl;
 
 fn create_varurl() -> VarUrl {
-  VarUrl::new(["https://i18n.com/"], "zh").unwrap()
+  VarUrl::new(["https://i18n.com/"]).unwrap()
 }
 
 #[test]
@@ -15,7 +15,7 @@ fn test() {
 "#;
   let mut mdli = md_parse(input);
   let varurl = create_varurl();
-  varurl.replace(&mut mdli, "en").unwrap();
+  varurl.replace(&mut mdli, "zh", "en").unwrap();
   let result = mdli.join();
   assert_eq!(result, input.replace("/zh/", "/en/"));
 
@@ -26,15 +26,15 @@ fn test() {
 "#;
   let mut mdli = md_parse(input);
   let varurl = create_varurl();
-  varurl.replace(&mut mdli, "en").unwrap();
+  varurl.replace(&mut mdli, "zh", "en").unwrap();
   let result = mdli.join();
   assert_eq!(result, input);
 }
 
 fn test_replace(title: &str, prefixes: &[&str], input: &str, expected: &str) {
-  let varurl = VarUrl::new(prefixes, "zh").unwrap();
+  let varurl = VarUrl::new(prefixes).unwrap();
   let mut mdli = md_parse(input);
-  varurl.replace(&mut mdli, "en").unwrap();
+  varurl.replace(&mut mdli, "zh", "en").unwrap();
   let result = mdli.join();
 
   if result != expected {
