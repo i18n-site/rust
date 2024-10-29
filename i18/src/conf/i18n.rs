@@ -40,7 +40,6 @@ pub fn parse(prefix: &str, conf: &str) -> Option<api::Replace> {
       match <&str as TryInto<Lang>>::try_into(to) {
         Ok(lang) => {
           let to = lang as u32;
-          dbg!((li.len(), to, li[0]));
           if li.len() == 1 && li[0].is_empty() {
             default_lang = Some(to);
           } else {
