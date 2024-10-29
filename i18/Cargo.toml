@@ -25,6 +25,7 @@ reqwest = "0.12.8"
 sonic-rs = "0.3.14"
 ub64 = "0.0.10"
 gxhash = "3.4.1"
+tracing = "0.1.40"
 
 [dependencies.sts]
 version = "0.1.23"
@@ -60,7 +61,7 @@ version = "0.1.19"
 path = "../i18_hash"
 
 [dependencies.i18_conf]
-version = "0.1.12"
+version = "0.1.13"
 path = "../i18_conf"
 
 [dependencies.cmdv]

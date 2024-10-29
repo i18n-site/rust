@@ -1,3 +1,5 @@
+pub mod i18n;
+
 use i18_conf::I18nConf;
 use serde::{Deserialize, Serialize};
 

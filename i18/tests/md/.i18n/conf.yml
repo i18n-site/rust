@@ -1,6 +1,8 @@
 i18n:
   fromTo:
     zh: en
+  replace:
+    https://fcdoc.github.io/img/ : ko de uk>ru zh-TW>zh >en
   #   en: de
   #   de: fr
   #

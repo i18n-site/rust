@@ -2,22 +2,22 @@
 
 ## Principle
 
-`i18n.site` adopts a non-refreshing single-page architecture. In order to facilitate search indexing, a separate static page and `sitemap.xml` will be generated for crawlers to crawl.
+`i18n.site` employs a single-page architecture without refresh, and to facilitate search indexing, generates separate static pages and a `sitemap.xml` for crawlers to access.
 
-When the `User-Agent` of the access request is that of the search engine crawler, the request will be redirected to the static page via `302`.
+When the `User-Agent` of an access request is identified as a search engine crawler, the request will be redirected to a static page via a `302` redirect.
 
-On the static pages, use `link` to indicate the links to different language versions of this page, such as:
+On the static pages, use the `link` tag to specify the links to different language versions of the page, for example:
 
 ```
 <link rel=alternate hreflang=zh href="https://i18n.site/zh/.htm">
 <link rel=alternate hreflang=en href="https://i18n.site/en/.htm">
 ```
 
-## Configure the Object Storage for uploading static files
+## Configure Object Storage for Uploading Static Files
 
-Static files can be generated locally, but a more common approach is to upload them to the object storage.
+Static files can be generated locally, but it is more common to upload them to object storage.
 
-Taking the `.i18n/htm/ol.yml` configuration file in the demo project as an example
+Take the `.i18n/htm/ol.yml` configuration file in the demo project as an example
 
 ```yml
 host:
@@ -30,7 +30,7 @@ importmap:
   i/: //unpkg.com/@i18n.site/
 ```
 
-Please first modify the value of `host:` above to your domain name, such as `i18n.site`.
+Please first modify the value of `host:` to your domain name, such as `i18n.site`.
 
 Then, edit `~/.config/i18n.site.yml` and add the following configuration:
 
@@ -45,27 +45,27 @@ site:
         # region:
 ```
 
-In the configuration, please change `i18n.site` to the value of `host:` in `.i18n/htm/ol.yml`, multiple object stores can be configured under `s3`, and the `region` field is optional (many object stores do not need to set this field).
+In the configuration, replace `i18n.site` with the value of `host:` in `.i18n/htm/ol.yml`. Under `s3`, you can configure multiple object stores, and the `region` field is optional (many object stores do not require this field).
 
-Then run `i18n.site -n` to re-publish the project.
+Then run `i18n.site -n` to republish the project.
 
-If you have modified `~/.config/i18n.site.yml` and want to re-upload, please use the following command in the project root directory to clear the upload cache:
+If you have modified `~/.config/i18n.site.yml` and wish to re-upload, please use the following command in the project root directory to clear the upload cache:
 
 ```
 rm -rf .i18n/data/seo .i18n/data/public
 ```
 
-## cloudflare Configuration
+## Cloudflare Configuration
 
-The domain name is hosted to [cloudflare](//www.cloudflare.com).
+Domain hosted on [Cloudflare](//www.cloudflare.com).
 
 ### Conversion Rules
 
-Add the conversion rules as shown below:
+Add the conversion rules as shown in the diagram below:
 
 ![](//p.3ti.site/1725436822.avif)
 
-The rule code is as follows, please modify the code "i18n.site" to your domain name:
+The rule code is as follows; please replace "i18n.site" with your domain name:
 
 ```
 (http.host in {"i18n.site"}) and not (
@@ -78,7 +78,7 @@ ends_with(http.request.uri.path,".webmanifest")
 
 ### Caching Rules
 
-Add caching rules as follows:
+Add the following caching rules:
 
 ![](//p.3ti.site/1725437039.avif)
 
@@ -86,9 +86,9 @@ Add caching rules as follows:
 (substring(http.request.uri.path,-4) in {".htm" ".rss"}) or ends_with(http.request.uri.path,"/sitemap.xml") or ends_with(http.request.uri.path,".xml.gz")
 ```
 
-### Redirect Rules
+### Redirection Rules
 
-Set the redirection rules as follows, please modify the code "i18n.site" to your domain name
+Set the redirection rules as follows; please replace "i18n.site" with your domain name:
 
 ![](//p.3ti.site/1725437096.avif)
 
@@ -108,15 +108,15 @@ http.user_agent wildcard "*InspectionTool*"
 )
 ```
 
-`URL redirect` Select dynamic redirection, please modify `/en` in the redirection path `concat("/en",http.request.uri.path,".htm")` to the default language you want the search engines to index.
+Select `URL redirect` for dynamic redirection, and modify the redirection path `concat("/en", http.request.uri.path, ".htm")` by replacing `/en` with the default language you want search engines to index.
 
 ## Baidu Intelligent Cloud Configuration
 
-If you need to provide services to mainland China, you can use [Baidu Smart Cloud](//cloud.baidu.com).
+If you need to provide services to users in mainland China, you can use [Baidu Intelligent Cloud](//cloud.baidu.com).
 
-Data is uploaded to Baidu Object Storage and bound to Baidu Content Distribution Network.
+Upload data to Baidu Object Storage and bind it to Baidu's Content Delivery Network.
 
-Then create the script in [EdgeJS edge service](//console.bce.baidu.com/cdn/#/cdn/ejs/list) as follows
+Then, create a script in [EdgeJS Edge Service](//console.bce.baidu.com/cdn/#/cdn/ejs/list) as follows:
 
 ```js
 var uri=r.uri,p=uri.lastIndexOf('.');
@@ -147,48 +147,48 @@ r.rawHeadersOut.forEach((i)=>{
 })
 ```
 
-Click `Debug`, then click Publish to the entire network.
+Click `Debug`, then click "Publish to the Entire Network".
 
 ![](//p.3ti.site/1725437754.avif)
 
-## Advanced Usage: Distribute traffic based on regional resolution
+## Advanced Usage: Distributing Traffic Based on Geographical Resolution
 
-If you want to provide services in mainland China and also want `cloudflare`'s free international traffic, you can use `DNS` with regional resolution.
+If you wish to offer services in mainland China while also benefiting from `cloudflare`'s free international traffic, you can utilize `DNS` with regional resolution capabilities.
 
-For example, [Huawei Cloud DNS](https://www.huaweicloud.com) provides free regional analysis, with which mainland Chinese traffic can go through Baidu Smart Cloud, and international traffic can go through `cloudflare`.
+For instance, [Huawei Cloud DNS](https://www.huaweicloud.com) offers free regional resolution services. With it, mainland Chinese traffic can be routed through Baidu Smart Cloud, while international traffic can be directed to `cloudflare`.
 
-There are many pitfalls in the configuration of `cloudflare`. Here are a few points to note:
+There are numerous pitfalls in configuring `cloudflare`; here are some key points to consider:
 
-### The domain name is hosted in other `DNS`, how to use `cloudflare`
+### How to use `cloudflare` when the domain is hosted on another `DNS`?
 
-First bind an arbitrary domain name to `cloudflare`, and then use `SSL/TLS` → custom domain name to associate the main domain name with this domain name.
+First, bind any domain name to Cloudflare, then use `SSL/TLS` → `Custom Domain` to associate the main domain with this domain name.
 
 ![](https://p.3ti.site/1725438658.avif)
 
-### `cloudflare R2` cannot be accessed through a custom domain name
+### `Cloudflare R2` Cannot Be Accessed via a Custom Domain
 
-Because `cloudflare`'s own object storage `R2` cannot be accessed by a custom domain name, a third-party object storage needs to be used to place static files.
+Because `cloudflare`'s built-in object storage `R2` does not support custom domain access, a third-party object storage service must be used to host static files.
 
-Hereinafter, taking [backblaze.com](https://www.backblaze.com) as an example to demonstrate how to bind third-party objects to be stored to `cloudflare`.
+Taking [backblaze.com](https://www.backblaze.com) as an example, this section demonstrates how to bind a third-party object storage to `cloudflare`.
 
-Create a bucket at `backblaze.com`, upload any file, click to browse the file, and get the domain name of `Friendly URL`, which is `f003.backblazeb2.com` here.
+Create a bucket on `backblaze.com`, upload any file, click to browse the file, and obtain the domain name for the `Friendly URL`, which in this case is `f003.backblazeb2.com`.
 
 ![](//p.3ti.site/1725440783.avif)
 
-Change the domain name from `CNAME` to `f003.backblazeb2.com` at `cloudflare` and enable the proxy.
+At `cloudflare`, set the domain to `CNAME` as `f003.backblazeb2.com` and enable the proxy.
 
 ![](//p.3ti.site/1725440896.avif)
 
-Modify `cloudflare`'s `SSL` → encryption mode, set to `Full`
+Modify Cloudflare's `SSL` → `Encryption Mode` to `Full`
 
 ![](//p.3ti.site/1725438572.avif)
 
-Add the conversion rule as shown below, put it first (the first one has the lowest priority):
+Add the conversion rule as shown in the diagram below, placing it at the top (the top rule has the lowest priority)
 
 ![](//p.3ti.site/1725443232.avif)
 
-`Rewrite to` select dynamic and modify `your_bucketname` in `concat("/file/your_bucketname",http.request.uri.path)` to your bucket name.
+Select `Rewrite to` as dynamic and modify `your_bucketname` in `concat("/file/your_bucketname", http.request.uri.path)` to your bucket name.
 
-In addition, in the `cloudflare` conversion rule above, `index.html` is changed to `file/your_bucketname/index.html`, and other configurations remain the same.
+Moreover, in the `cloudflare` routing rules mentioned earlier, change `index.html` to `file/your_bucketname/index.html`, with all other settings remaining unchanged.
 
 ![](//p.3ti.site/1725441384.avif)

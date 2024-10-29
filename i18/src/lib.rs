@@ -153,7 +153,7 @@ pub async fn _run(
   // 保证顺序一样
   path_li.sort();
 
-  let body = crate::tzst::tzst(workdir, &path_li, lrs_li, &scan.rel_ft, &conf.url)?;
+  let body = crate::tzst::tzst(workdir, &path_li, lrs_li, &scan.rel_ft, &conf.replace)?;
   let id = ub64::b64e(xhash::xhash(&body));
 
   let r = tran(token, &id, body).await?;

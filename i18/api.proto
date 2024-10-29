@@ -103,9 +103,17 @@ message LangRelSrcHash
   bytes pre_hash = 3;
 }
 
+message Replace
+{
+  string prefix = 1;
+  optional uint32 default_lang = 2;
+  repeated uint32 lang_li = 3;
+  map<uint32, uint32> lang_map = 4;
+}
+
 message Meta
 {
   repeated LangRelSrcHash lrs_li = 1;
   repeated FromTo from_to_li = 2;
-  repeated string url = 3;
+  repeated Replace replace = 3;
 }
