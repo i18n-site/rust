@@ -13,7 +13,7 @@ thiserror = "1.0.65"
 tracing = "0.1.40"
 
 [dependencies.serde]
-version = "1.0.213"
+version = "1.0.214"
 features = [ "derive" ]
 
 [dependencies.clap]

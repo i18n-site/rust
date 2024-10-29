@@ -18,7 +18,7 @@ aok = "0.1.15"
 dashmap = "6.1.0"
 ireq = "0.1.17"
 prost = "0.13.3"
-reqwest = "0.12.8"
+reqwest = "0.12.9"
 serde_yaml = "0.9.34"
 sonic-rs = "0.3.14"
 strum_macros = "0.26.4"
@@ -44,7 +44,7 @@ version = "0.1.5"
 path = "../pos_next"
 
 [dependencies.serde]
-version = "1.0.213"
+version = "1.0.214"
 features = [ "derive" ]
 
 [dev-dependencies]
