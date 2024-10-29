@@ -18,5 +18,5 @@ tracing = "0.1.40"
 version = "0.13.3"
 
 [dependencies.serde]
-version = "1.0.213"
+version = "1.0.214"
 features = [ "derive" ]

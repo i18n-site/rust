@@ -17,7 +17,7 @@ cache = [ "dep:sts", "dep:ifs" ]
 [dependencies]
 aok = "0.1.15"
 flate2 = "1.0.34"
-serde = "1.0.213"
+serde = "1.0.214"
 sonic-rs = "0.3.14"
 tar = "0.4.42"
 tracing = "0.1.40"
@@ -29,7 +29,7 @@ features = [ "fs" ]
 optional = true
 
 [dependencies.reqwest]
-version = "0.12.8"
+version = "0.12.9"
 features = [ "stream" ]
 
 [dependencies.sts]

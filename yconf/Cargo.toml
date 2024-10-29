@@ -1,6 +1,6 @@
 [dependencies]
 aok = "0.1.15"
-serde = "1.0.213"
+serde = "1.0.214"
 serde_yaml = "0.9.34"
 thiserror = "1.0.65"
 
