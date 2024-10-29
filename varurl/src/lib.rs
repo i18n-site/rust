@@ -1,8 +1,6 @@
 #![feature(let_chains)]
 
-use daachorse::{
-  errors::Result, CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind,
-};
+use daachorse::{CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind};
 use mdli::{Kind, MdLi};
 
 pub struct VarUrl {
@@ -10,14 +8,20 @@ pub struct VarUrl {
 }
 
 impl VarUrl {
-  pub fn new<I, S: AsRef<str>>(prefix_li: I) -> Result<Self>
+  pub fn new<I, S: AsRef<str>>(prefix_li: I) -> Self
   where
     I: IntoIterator<Item = S>,
   {
-    let ac = CharwiseDoubleArrayAhoCorasickBuilder::new()
+    if let Ok(ac) = xerr::ok!(CharwiseDoubleArrayAhoCorasickBuilder::new()
       .match_kind(MatchKind::LeftmostLongest)
-      .build(prefix_li)?;
-    Ok(VarUrl { ac })
+      .build(prefix_li))
+    {
+      VarUrl { ac }
+    } else {
+      VarUrl {
+        ac: CharwiseDoubleArrayAhoCorasick::new::<_, &str>([]).unwrap(),
+      }
+    }
   }
 
   fn find_end<'a>(&self, before: &'a str, after: &'a str) -> Option<(usize, &'a str)> {
@@ -40,8 +44,8 @@ impl VarUrl {
   pub fn replace(
     &self,
     mdli: &mut MdLi,
-    from_to: impl Fn(usize) -> (&'static str, &'static str),
-  ) -> Result<()> {
+    from_to: impl Fn(usize) -> Option<(&'static str, &'static str)>,
+  ) {
     // let from_lang = format!("/{from_lang}/");
     // let to_lang = format!("/{to_lang}/");
 
@@ -57,39 +61,40 @@ impl VarUrl {
       let mut last_end = 0; // 记录上一次匹配的结束位置
 
       for m in self.ac.leftmost_find_iter(md) {
-        let (from_lang, to_lang) = from_to(m.value());
-        let start = m.start();
-        let end = m.end();
+        if let Some((from_lang, to_lang)) = from_to(m.value()) {
+          let start = m.start();
+          let end = m.end();
 
-        // 如果当前开始位置小于上一次的结束位置，跳过这次匹配
-        if start < last_end {
-          continue;
-        }
-
-        let val = &md[start..end];
-
-        let before = &md[..start];
-        let after = &md[end..];
-
-        if let Some((url_end, url_part)) = self.find_end(before, after) {
-          let full_url = format!("{}{}", val, url_part);
-
-          if full_url.contains(from_lang) {
-            let new_url = full_url.replace(from_lang, to_lang);
-
-            // 添加前面的文本和新URL
-            new_str.push_str(&md[pre_pos..start]);
-            new_str.push_str(&new_url);
-            pre_pos = end + url_end;
-            last_end = pre_pos; // 更新上一次的结束位置
+          // 如果当前开始位置小于上一次的结束位置，跳过这次匹配
+          if start < last_end {
             continue;
           }
-        }
 
-        // 添加未匹配的部分
-        new_str.push_str(&md[pre_pos..end]);
-        pre_pos = end;
-        last_end = end; // 更新上一次的结束位置
+          let val = &md[start..end];
+
+          let before = &md[..start];
+          let after = &md[end..];
+
+          if let Some((url_end, url_part)) = self.find_end(before, after) {
+            let full_url = format!("{}{}", val, url_part);
+
+            if full_url.contains(from_lang) {
+              let new_url = full_url.replace(from_lang, to_lang);
+
+              // 添加前面的文本和新URL
+              new_str.push_str(&md[pre_pos..start]);
+              new_str.push_str(&new_url);
+              pre_pos = end + url_end;
+              last_end = pre_pos; // 更新上一次的结束位置
+              continue;
+            }
+          }
+
+          // 添加未匹配的部分
+          new_str.push_str(&md[pre_pos..end]);
+          pre_pos = end;
+          last_end = end; // 更新上一次的结束位置
+        }
       }
 
       // 添加剩余的文本
@@ -102,7 +107,5 @@ impl VarUrl {
         mdli.0[i].str = new_str;
       }
     }
-
-    Ok(())
   }
 }

@@ -1,6 +1,6 @@
 [package]
 name = "varurl"
-version = "0.1.12"
+version = "0.1.14"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -17,6 +17,7 @@ default = [ ]
 anyhow = "1.0.91"
 aok = "0.1.15"
 daachorse = "1.0.0"
+xerr = { version = "0.1.15", path = "../xerr" }
 
 [dependencies.mdli]
 version = "0.1.13"
