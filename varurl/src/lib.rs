@@ -12,14 +12,16 @@ impl VarUrl {
   where
     I: IntoIterator<Item = S>,
   {
-    if let Ok(ac) = xerr::ok!(CharwiseDoubleArrayAhoCorasickBuilder::new()
+    match CharwiseDoubleArrayAhoCorasickBuilder::new()
       .match_kind(MatchKind::LeftmostLongest)
-      .build(prefix_li))
+      .build(prefix_li)
     {
-      VarUrl { ac }
-    } else {
-      VarUrl {
-        ac: CharwiseDoubleArrayAhoCorasick::new::<_, &str>([]).unwrap(),
+      Ok(ac) => VarUrl { ac },
+      Err(err) => {
+        tracing::error!("{}", err);
+        VarUrl {
+          ac: CharwiseDoubleArrayAhoCorasick::new::<_, &str>([]).unwrap(),
+        }
       }
     }
   }
