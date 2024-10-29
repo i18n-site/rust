@@ -1,7 +1,0 @@
-# md_replace
-
-```rust
-<+ ./tests/main.rs>
-```
-
-<+ ../about.md >
