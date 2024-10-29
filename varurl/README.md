@@ -5,7 +5,7 @@ use mdli::md_parse;
 use varurl::VarUrl;
 
 fn create_varurl() -> VarUrl {
-  VarUrl::new(["https://i18n.com/"]).unwrap()
+  VarUrl::new(["https://i18n.com/"])
 }
 
 const FROM_LANG: &str = "/zh/";
@@ -39,7 +39,7 @@ fn test() {
 }
 
 fn test_replace(title: &str, prefixes: &[&str], input: &str, expected: &str) {
-  let varurl = VarUrl::new(prefixes).unwrap();
+  let varurl = VarUrl::new(prefixes);
   let mut mdli = md_parse(input);
   varurl.replace(&mut mdli, from_to);
   let result = mdli.join();
