@@ -46,10 +46,10 @@ pub fn md_parse(md: impl AsRef<str>) -> MdLi {
     return result;
   }
 
-  let mut line_iter = PosLines::new(md);
+  let line_iter = PosLines::new(md);
   let mut prev_end = 0;
 
-  while let Some((行开始位置, line)) = line_iter.next() {
+  for (行开始位置, line) in line_iter {
     let not_in_code = !in_code;
     // 在非代码块状态下处理换行符
     if not_in_code && 行开始位置 > prev_end {

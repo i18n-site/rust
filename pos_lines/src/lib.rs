@@ -22,8 +22,9 @@ impl<'a> Iterator for PosLines<'a> {
     let mut chars = sub.char_indices();
     let start;
 
+    #[allow(clippy::never_loop)]
     'out: loop {
-      while let Some((i, c)) = chars.next() {
+      for (i, c) in chars.by_ref() {
         if c == '\n' || c == '\r' {
           continue;
         }
@@ -34,10 +35,10 @@ impl<'a> Iterator for PosLines<'a> {
       break;
     }
 
-    while let Some((i, c)) = chars.next() {
+    for (i, c) in chars {
       if c == '\n' || c == '\r' {
         let begin = self.pos + start;
-        self.pos = self.pos + i;
+        self.pos += i;
         return Some((begin, &self.txt[begin..self.pos]));
       }
     }
@@ -48,6 +49,6 @@ impl<'a> Iterator for PosLines<'a> {
       return Some((begin, &self.txt[begin..]));
     }
 
-    return None;
+    None
   }
 }
