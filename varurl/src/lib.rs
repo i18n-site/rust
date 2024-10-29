@@ -3,6 +3,7 @@
 use daachorse::{CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind};
 use mdli::{Kind, MdLi};
 
+#[derive(Clone)]
 pub struct VarUrl {
   pub ac: CharwiseDoubleArrayAhoCorasick<usize>,
 }

@@ -4,7 +4,7 @@ use aok::Result;
 use gxhash::HashMap;
 use prost::Message;
 
-use crate::{api, conf::i18n, RelFt};
+use crate::{api, conf::i18n, term, RelFt};
 
 pub fn tzst(
   workdir: &Path,
@@ -42,7 +42,8 @@ pub fn tzst(
   let meta = api::Meta {
     lrs_li,
     from_to_li,
-    replace: i18n::replace(replace),
+    replace_li: i18n::replace(replace),
+    term_li: term(workdir)?,
   };
 
   let mut w = tzst::W::new();

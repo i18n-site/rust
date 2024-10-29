@@ -111,9 +111,17 @@ message Replace
   map<uint32, uint32> lang_map = 4;
 }
 
+message Term
+{
+  uint32 from_lang = 1;
+  repeated uint32 to_lang_li = 2;
+  map<string, string> map = 3;
+}
+
 message Meta
 {
   repeated LangRelSrcHash lrs_li = 1;
   repeated FromTo from_to_li = 2;
-  repeated Replace replace = 3;
+  repeated Replace replace_li = 3;
+  repeated Term term_li = 4;
 }

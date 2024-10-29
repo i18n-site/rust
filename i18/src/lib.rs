@@ -21,6 +21,8 @@ mod print_err;
 mod print_tran_result;
 mod save;
 mod scan;
+mod term;
+use term::term;
 mod tran;
 mod tzst;
 mod wait_tran;
