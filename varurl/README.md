@@ -8,6 +8,9 @@ fn create_varurl() -> VarUrl {
   VarUrl::new(["https://i18n.com/"]).unwrap()
 }
 
+const FROM_LANG: &str = "/zh/";
+const TO_LANG: &str = "/en/";
+
 #[test]
 fn test() {
   let input = r#"# Main Title
@@ -15,9 +18,9 @@ fn test() {
 "#;
   let mut mdli = md_parse(input);
   let varurl = create_varurl();
-  varurl.replace(&mut mdli, "zh", "en").unwrap();
+  varurl.replace(&mut mdli, FROM_LANG, TO_LANG).unwrap();
   let result = mdli.join();
-  assert_eq!(result, input.replace("/zh/", "/en/"));
+  assert_eq!(result, input.replace(FROM_LANG, TO_LANG));
 
   let input = r#"
 ```markdown
@@ -26,7 +29,7 @@ fn test() {
 "#;
   let mut mdli = md_parse(input);
   let varurl = create_varurl();
-  varurl.replace(&mut mdli, "zh", "en").unwrap();
+  varurl.replace(&mut mdli, FROM_LANG, TO_LANG).unwrap();
   let result = mdli.join();
   assert_eq!(result, input);
 }
@@ -34,7 +37,7 @@ fn test() {
 fn test_replace(title: &str, prefixes: &[&str], input: &str, expected: &str) {
   let varurl = VarUrl::new(prefixes).unwrap();
   let mut mdli = md_parse(input);
-  varurl.replace(&mut mdli, "zh", "en").unwrap();
+  varurl.replace(&mut mdli, FROM_LANG, TO_LANG).unwrap();
   let result = mdli.join();
 
   if result != expected {

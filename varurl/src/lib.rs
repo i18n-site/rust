@@ -37,8 +37,8 @@ impl VarUrl {
   }
 
   pub fn replace(&self, mdli: &mut MdLi, from_lang: &str, to_lang: &str) -> Result<()> {
-    let from_lang = format!("/{from_lang}/");
-    let to_lang = format!("/{to_lang}/");
+    // let from_lang = format!("/{from_lang}/");
+    // let to_lang = format!("/{to_lang}/");
 
     // 就地修改每个 Md 元素
     for i in 0..mdli.0.len() {
