@@ -36,7 +36,12 @@ impl VarUrl {
     None
   }
 
-  pub fn replace(&self, mdli: &mut MdLi, from_lang: &str, to_lang: &str) -> Result<()> {
+  // from_lang: &str, to_lang: &str
+  pub fn replace(
+    &self,
+    mdli: &mut MdLi,
+    from_to: impl Fn(usize) -> (&'static str, &'static str),
+  ) -> Result<()> {
     // let from_lang = format!("/{from_lang}/");
     // let to_lang = format!("/{to_lang}/");
 
@@ -52,6 +57,7 @@ impl VarUrl {
       let mut last_end = 0; // 记录上一次匹配的结束位置
 
       for m in self.ac.leftmost_find_iter(md) {
+        let (from_lang, to_lang) = from_to(m.value());
         let start = m.start();
         let end = m.end();
 
