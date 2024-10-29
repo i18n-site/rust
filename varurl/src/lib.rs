@@ -68,8 +68,8 @@ impl VarUrl {
         if let Some((url_end, url_part)) = self.find_end(before, after) {
           let full_url = format!("{}{}", val, url_part);
 
-          if full_url.contains(&from_lang) {
-            let new_url = full_url.replace(&from_lang, &to_lang);
+          if full_url.contains(from_lang) {
+            let new_url = full_url.replace(from_lang, to_lang);
 
             // 添加前面的文本和新URL
             new_str.push_str(&md[pre_pos..start]);
