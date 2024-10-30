@@ -1,0 +1,32 @@
+[package]
+name = "lang"
+version = "0.1.32"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/lang"
+description = "lang"
+
+[dependencies]
+int-enum = "1.1.2"
+thiserror = "1.0.65"
+
+[dependencies.bincode]
+version = "2.0.0-rc.3"
+optional = true
+
+[dependencies.phf]
+version = "0.11.2"
+features = [ "macros" ]
+
+[dependencies.strum]
+version = "0.26.3"
+features = [ "derive" ]
+
+[dev-dependencies.aok]
+path = "../aok"
+version = "0.1.15"
+
+[features]
+default = [ ]
+bincode = [ "dep:bincode" ]

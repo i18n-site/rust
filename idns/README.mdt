@@ -1,0 +1,13 @@
+# idns
+
+```rust
+<+ ./tests/main.rs>
+```
+
+out
+
+```
+<+ ./out.txt>
+```
+
+<+ ../about.md >

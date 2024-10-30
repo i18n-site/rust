@@ -1,0 +1,35 @@
+[package]
+name = "varurl"
+version = "0.1.18"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/varurl"
+description = "varurl"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = [ ]
+
+[dependencies]
+anyhow = "1.0.91"
+aok = "0.1.15"
+daachorse = "1.0.0"
+tracing = "0.1.40"
+xerr = { version = "0.1.15", path = "../xerr" }
+
+[dependencies.mdli]
+version = "0.1.13"
+path = "../mdli"
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

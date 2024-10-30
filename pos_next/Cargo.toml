@@ -1,0 +1,20 @@
+[dependencies]
+rand = "0.8.5"
+
+[package]
+name = "pos_next"
+version = "0.1.5"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/pos_next"
+description = "pos_next"
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[package.metadata.docs.rs]
+all-features = true

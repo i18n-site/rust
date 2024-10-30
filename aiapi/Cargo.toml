@@ -1,0 +1,66 @@
+[package]
+name = "aiapi"
+version = "0.1.31"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/aiapi"
+description = "aiapi"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[package.metadata.cargo-machete]
+ignored = [ "static_init", "prost" ]
+
+[dependencies]
+aok = "0.1.15"
+dashmap = "6.1.0"
+ireq = "0.1.17"
+prost = "0.13.3"
+reqwest = "0.12.9"
+serde_yaml = "0.9.34"
+sonic-rs = "0.3.14"
+strum_macros = "0.26.4"
+thiserror = "1.0.65"
+tracing = "0.1.40"
+
+[dependencies.sts]
+version = "0.1.23"
+path = "../sts"
+
+[dependencies.tokio]
+version = "1.41.0"
+features = [ "rt-multi-thread", "macros", "sync" ]
+
+[dependencies.ifs]
+version = "0.1.44"
+path = "../ifs"
+default-features = false
+features = [ "conf", "confdir" ]
+
+[dependencies.pos_next]
+version = "0.1.5"
+path = "../pos_next"
+
+[dependencies.serde]
+version = "1.0.214"
+features = [ "derive" ]
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.genv]
+path = "../genv"
+version = "0.1.15"
+
+[dev-dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+
+[build-dependencies]
+aok = "0.1.15"
+prost-build = "0.13.3"

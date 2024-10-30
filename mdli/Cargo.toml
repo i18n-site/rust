@@ -1,0 +1,31 @@
+[package]
+name = "mdli"
+version = "0.1.13"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/mdli"
+description = "mdli"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = [ ]
+
+[dependencies]
+aok = "0.1.15"
+
+[dependencies.pos_lines]
+version = "0.1.8"
+path = "../pos_lines"
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

@@ -1,0 +1,22 @@
+[package]
+name = "re"
+version = "0.1.9"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/re"
+description = "error like anyhow for axum"
+
+[dependencies]
+anyhow = "1.0.91"
+axum = "0.7.7"
+bytes = "1.8.0"
+sonic-rs = "0.3.14"
+tracing = "0.1.40"
+
+[dependencies.prost]
+version = "0.13.3"
+
+[dependencies.serde]
+version = "1.0.214"
+features = [ "derive" ]

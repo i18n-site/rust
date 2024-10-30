@@ -1,0 +1,21 @@
+[package]
+name = "rany"
+version = "0.1.12"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/rany"
+description = "decode/encode usize to radix any"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+num-traits = "0.2.19"
+tracing = "0.1.40"
+
+[features]
+default = [ ]
+strany = [ ]
+b255 = [ ]
+url = [ "strany" ]

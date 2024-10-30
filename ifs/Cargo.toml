@@ -1,0 +1,83 @@
+[package]
+name = "ifs"
+version = "0.1.44"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/ifs"
+description = "util for write / read file"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+aok = "0.1.15"
+digest = "0.10.7"
+pipe = "0.4.0"
+tracing = "0.1.40"
+
+[dependencies.dirs]
+version = "5.0.1"
+optional = true
+
+[dependencies.lzma-rs]
+version = "0.3.0"
+optional = true
+
+[dependencies.prost]
+version = "0.13.3"
+optional = true
+
+[dependencies.static_init]
+version = "1.0.3"
+optional = true
+
+[dependencies.tar]
+version = "0.4.42"
+optional = true
+
+[dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
+
+[dependencies.xerr]
+version = "0.1.15"
+path = "../xerr"
+
+[dependencies.walkdir]
+version = "2.5.0"
+optional = true
+
+[dependencies.blake3]
+version = "1.5.4"
+features = [ "traits-preview" ]
+optional = true
+
+[dependencies.intbin]
+version = "0.1.2"
+optional = true
+
+[features]
+default = [ ]
+unix_path = [ ]
+ln = [ ]
+is_hidden = [ "dep:walkdir" ]
+b3_len = [ "hash", "dep:intbin", "b3" ]
+b3 = [ "dep:blake3" ]
+rsync = [ "dep:walkdir" ]
+dir = [ "dep:dirs", "dep:static_init" ]
+hash = [ ]
+is_dir = [ ]
+fs = [ ]
+cp = [ ]
+conf = [ "dir", "dep:prost" ]
+confdir = [ "dep:dirs" ]
+txz_hash_d = [ "dep:lzma-rs", "dep:tar", "hash" ]
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+
+[dev-dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
