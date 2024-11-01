@@ -1,0 +1,9 @@
+# xmail
+
+convert mail address to low trim case , use punycode decode domain
+
+```rust
+<+ ./tests/main.rs>
+```
+
+<+ ../about.md >

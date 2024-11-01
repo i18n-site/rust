@@ -1,0 +1,7 @@
+# ifs : util for write / read file
+
+```rust
+<+ ./tests/main.rs>
+```
+
+<+ ../about.md >

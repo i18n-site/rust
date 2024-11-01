@@ -1,0 +1,19 @@
+[package]
+name = "sts"
+version = "0.1.23"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/sts"
+description = "shortcut for timestamp"
+
+[dependencies]
+chrono = "0.4.38"
+coarsetime = "0.1.34"
+num-traits = "0.2.19"
+
+[features]
+default = []
+
+[package.metadata.docs.rs]
+all-features = true

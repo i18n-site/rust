@@ -1,0 +1,52 @@
+[package]
+name = "npmi"
+version = "0.1.18"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/npmi"
+description = "npmi"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = [ ]
+
+[dependencies]
+aok = "0.1.15"
+dashmap = "6.1.0"
+futures = "0.3.31"
+serde = "1.0.214"
+sonic-rs = "0.3.14"
+tracing = "0.1.40"
+
+[dependencies.sver]
+version = "0.1.9"
+path = "../sver"
+
+[dependencies.sts]
+version = "0.1.23"
+path = "../sts"
+
+[dependencies.tokio]
+version = "1.41.0"
+features = [ "fs" ]
+
+[dependencies.xerr]
+version = "0.1.15"
+path = "../xerr"
+
+[dependencies.npmv]
+version = "0.1.19"
+path = "../npmv"
+
+[dev-dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+static_init = "1.0.3"
+tracing = "0.1.40"
+
+[dev-dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

@@ -1,0 +1,129 @@
+[package]
+name = "i18n-site"
+version = "0.2.100"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/i18n-site"
+description = "i18n-site"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+aok = "0.1.15"
+loginit = "0.1.13"
+clap = "4.5.20"
+tracing = "0.1.40"
+static_init = "1.0.3"
+sonic-rs = "0.3.14"
+gxhash = "3.4.1"
+globset = "0.4.15"
+walkdir = "2.5.0"
+futures = "0.3.31"
+markdown = "1.0.0-alpha.21"
+flate2 = "1.0.34"
+serde = "1.0.214"
+
+[dependencies.npmv]
+version = "0.1.19"
+path = "../npmv"
+
+[dependencies.sver]
+version = "0.1.9"
+path = "../sver"
+
+[dependencies.ver_incr]
+version = "0.1.6"
+path = "../ver_incr"
+
+[dependencies.ckv]
+version = "0.1.13"
+path = "../ckv"
+
+[dependencies.sts]
+version = "0.1.23"
+path = "../sts"
+
+[dependencies.md_title]
+version = "0.1.12"
+path = "../md_title"
+
+[dependencies.rtoc]
+version = "0.1.10"
+path = "../rtoc"
+
+[dependencies.pbar]
+version = "0.1.6"
+path = "../pbar"
+
+[dependencies.tsfmt]
+version = "0.1.10"
+path = "../tsfmt"
+
+[dependencies.ytree]
+version = "0.1.31"
+path = "../ytree"
+features = [ "sitemap" ]
+
+[dependencies.lang]
+version = "0.1.32"
+path = "../lang"
+
+[dependencies.dot_hide]
+version = "0.1.6"
+path = "../dot_hide"
+features = [ "walkdir" ]
+
+[dependencies.xerr]
+version = "0.1.15"
+path = "../xerr"
+
+[dependencies.ifs]
+version = "0.1.44"
+path = "../ifs"
+features = [ "fs" ]
+
+[dependencies.npmi]
+version = "0.1.18"
+path = "../npmi"
+
+[dependencies.refresh_v]
+version = "0.1.10"
+path = "../refresh_v"
+
+[dependencies.yconf]
+version = "0.1.5"
+path = "../yconf"
+
+[dependencies.i18n_js]
+version = "0.1.42"
+path = "../i18n_js"
+
+[dependencies.i18_conf]
+version = "0.1.13"
+path = "../i18_conf"
+
+[dependencies.npm]
+version = "0.1.7"
+path = "../npm"
+
+[dependencies.cmdv]
+version = "0.1.11"
+path = "../cmdv"
+
+[dependencies.i18n_bgu]
+version = "0.1.21"
+path = "../i18n_bgu"
+
+[dependencies.tokio]
+version = "1.41.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
+
+[dependencies.i18]
+version = "0.1.289"
+path = "../i18"
+
+[dev-dependencies]
+static_init = "1.0.3"
+tracing = "0.1.40"
