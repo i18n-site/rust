@@ -19,7 +19,7 @@ aok = "0.1.15"
 flate2 = "1.0.34"
 serde = "1.0.214"
 sonic-rs = "0.3.14"
-tar = "0.4.42"
+tar = "0.4.43"
 tracing = "0.1.40"
 
 [dependencies.ifs]

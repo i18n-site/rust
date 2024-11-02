@@ -5,7 +5,7 @@ flate2 = "1.0.34"
 serde = "1.0.214"
 sonic-rs = "0.3.14"
 static_init = "1.0.3"
-tar = "0.4.42"
+tar = "0.4.43"
 base64 = "0.22.1"
 sha1 = "0.10.6"
 
