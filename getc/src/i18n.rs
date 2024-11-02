@@ -29,7 +29,7 @@ pub fn i18n<'a>(code: &'a str, txtpos: &mut TxtPos<'a>) {
         let mut iter = line.char_indices();
 
         while let Some((pos, i)) = iter.next() {
-          if i.is_ascii() {
+          if i.is_ascii() || upn::is_full_width_break(i) {
             continue;
           }
           if pos != pre {
@@ -40,7 +40,7 @@ pub fn i18n<'a>(code: &'a str, txtpos: &mut TxtPos<'a>) {
           #[allow(clippy::never_loop)]
           'o2: loop {
             while let Some((pos, i)) = iter.next() {
-              if "：><{}):]".contains(i) {
+              if "<>{}):：]".contains(i) {
                 txtpos.push_pos(&line[pre..pos]);
                 pre = pos;
                 break 'o2;

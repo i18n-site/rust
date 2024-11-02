@@ -54,6 +54,7 @@ fn main() {
 - 生成时间：${alarm_active_at}
 <div class="text-title">故障描述</div>
 "text": "分派人员：{{range .Responders}}@{{.PersonName}}{{end}}{{end}}",
+事件4：es.nj.03，cpu.idle = 10%，Ok
   "##;
   getc("i18n", code, &mut txtpos);
 

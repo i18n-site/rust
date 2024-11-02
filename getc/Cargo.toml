@@ -1,6 +1,6 @@
 [package]
 name = "getc"
-version = "0.1.14"
+version = "0.1.15"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -9,6 +9,7 @@ description = "get comment from source code"
 
 [dependencies]
 daachorse = "1.0.0"
+upn = { version = "0.1.9", path = "../upn" }
 
 [dependencies.phf]
 version = "0.11.2"
