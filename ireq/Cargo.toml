@@ -10,7 +10,7 @@ description = "ireq"
 [dependencies]
 bytes = "1.8.0"
 static_init = "1.0.3"
-thiserror = "1.0.65"
+thiserror = "1.0.66"
 
 [dependencies.aok]
 version = "0.1.15"

@@ -9,7 +9,7 @@ description = "use fred connection redis via env"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
-anyhow = "1.0.91"
+anyhow = "1.0.92"
 aok = "0.1.15"
 async-lazy = { version = "0.1.0", features = ["parking_lot", "nightly"] }
 fred = { version = "9.3.0", features = [

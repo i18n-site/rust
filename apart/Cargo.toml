@@ -8,5 +8,5 @@ homepage = "https://github.com/i18n-site/rust/tree/main/apart"
 description = "from_request_parts for axum"
 
 [dependencies]
-anyhow = "1.0.91"
+anyhow = "1.0.92"
 axum = "0.7.7"

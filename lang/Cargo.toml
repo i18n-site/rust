@@ -9,7 +9,7 @@ description = "lang"
 
 [dependencies]
 int-enum = "1.1.2"
-thiserror = "1.0.65"
+thiserror = "1.0.66"
 
 [dependencies.bincode]
 version = "2.0.0-rc.3"

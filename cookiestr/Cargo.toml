@@ -11,4 +11,4 @@ description = "cookiestr"
 base-x = "0.2.11"
 
 [dev-dependencies]
-anyhow = "1.0.91"
+anyhow = "1.0.92"

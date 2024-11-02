@@ -14,7 +14,7 @@ all-features = true
 default = [ ]
 
 [dependencies]
-anyhow = "1.0.91"
+anyhow = "1.0.92"
 aok = "0.1.15"
 daachorse = "1.0.0"
 tracing = "0.1.40"
@@ -24,7 +24,7 @@ version = "0.1.15"
 path = "../xerr"
 
 [dependencies.mdli]
-version = "0.1.26"
+version = "0.1.27"
 path = "../mdli"
 
 [dev-dependencies]
