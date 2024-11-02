@@ -211,7 +211,14 @@ pub fn parse(md: impl AsRef<str>) -> MdLi {
             let mut begin = line_pos + 1;
             // 单行代码
             while let Some(p) = remain.find("`") {
-              if is_转义(&remain[..p]) {
+              if remain[p..].starts_with("```")
+                && let Some(last) = remain[..p].chars().last()
+                && last.is_whitespace()
+              {
+                begin += 4;
+                remain = &remain[p + 3..];
+                continue;
+              } else if is_转义(&remain[..p]) {
                 let p = p + 1;
                 begin += p;
                 remain = &remain[p..];

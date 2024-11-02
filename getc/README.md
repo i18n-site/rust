@@ -39,14 +39,23 @@ fn main() {
   //   - *.{out,log}
   // "##;
   //   getc("yml", code, &mut txtpos);
-  let code = r##"#!bash
-ignore:
-  # 忽略以 _ 开头的所有文件
-  - _*
-  # 忽略以 .out 或 .log 结尾的文件
-  - *.{out,log}
-"##;
-  getc("yml", code, &mut txtpos);
+  //   let code = r##"#!bash
+  // ignore:
+  //   # 忽略以 _ 开头的所有文件
+  //   - _*
+  //   # 忽略以 .out 或 .log 结尾的文件
+  //   - *.{out,log}
+  // "##;
+  // getc("yml", code, &mut txtpos);
+
+  let code = r##"
+#告警级别Md5
+中文
+- 生成时间：${alarm_active_at}
+<div class="text-title">故障描述</div>
+"text": "分派人员：{{range .Responders}}@{{.PersonName}}{{end}}{{end}}",
+  "##;
+  getc("i18n", code, &mut txtpos);
 
   for i in txtpos.pos_li {
     println!("{:?}", txtpos.txt_li[i as usize]);

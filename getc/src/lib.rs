@@ -1,5 +1,6 @@
+mod i18n;
 mod style;
-
+use i18n::i18n;
 pub use style::{Style, LANG_STYLE};
 use tp::TxtPos;
 
@@ -13,6 +14,9 @@ pub enum State {
 }
 
 pub fn getc<'a>(lang: &str, code: &'a str, txtpos: &mut TxtPos<'a>) {
+  if lang == "i18n" {
+    return crate::i18n(code, txtpos);
+  }
   if let Some(style) = LANG_STYLE.get(lang) {
     style.with(|style| {
       let mut pre = 0;
