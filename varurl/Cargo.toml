@@ -24,7 +24,7 @@ version = "0.1.15"
 path = "../xerr"
 
 [dependencies.mdli]
-version = "0.1.27"
+version = "0.1.28"
 path = "../mdli"
 
 [dev-dependencies]
