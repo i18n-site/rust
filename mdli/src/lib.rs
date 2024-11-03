@@ -8,7 +8,7 @@ mod parser;
 
 pub use kind::Kind;
 pub use mdli::MdLi;
-pub use parser::is_转义;
+pub use parser::is转义;
 
 #[derive(Debug, Clone)]
 pub struct Md {
@@ -17,7 +17,7 @@ pub struct Md {
 }
 
 pub fn parse(md: impl AsRef<str>) -> MdLi {
-  let mut mdli = MdLi { li: vec![] };
+  let mut mdli = MdLi::default();
 
   let mut md = md.as_ref();
   let mut line_iter = PosLines::new(md);
@@ -55,7 +55,7 @@ pub fn parse(md: impl AsRef<str>) -> MdLi {
       macro_rules! push {
         () => {
           if line_pos > offset {
-            mdli.push(Kind::Txt, &line[offset..line_pos]);
+            mdli.push_txt(Kind::Txt, &line[offset..line_pos]);
           }
         };
       }
@@ -92,7 +92,7 @@ pub fn parse(md: impl AsRef<str>) -> MdLi {
 
       macro_rules! continue_if_转义 {
         () => {
-          if is_转义(&line[..line_pos]) {
+          if is转义(&line[..line_pos]) {
             continue;
           }
         };
@@ -171,14 +171,14 @@ pub fn parse(md: impl AsRef<str>) -> MdLi {
                       line_pos -= 1;
                       push!();
                       mdli.push(Kind::ImgBegin, txt_begin);
-                      mdli.push(Kind::ImgTxt, txt);
+                      mdli.push_txt(Kind::ImgTxt, txt);
                       mdli.push(Kind::ImgTxtEnd, txt_end);
                       mdli.push(Kind::Img, url);
                       mdli.push(Kind::ImgEnd, url_end);
                     } else {
                       push!();
                       mdli.push(Kind::UrlBegin, txt_begin);
-                      mdli.push(Kind::UrlTxt, txt);
+                      mdli.push_txt(Kind::UrlTxt, txt);
                       mdli.push(Kind::UrlTxtEnd, txt_end);
                       mdli.push(Kind::Url, url);
                       mdli.push(Kind::UrlEnd, url_end);
@@ -199,7 +199,7 @@ pub fn parse(md: impl AsRef<str>) -> MdLi {
             let mut begin = md_begin + 3;
             remain = &md[begin..];
             while let Some(p) = remain.find("```") {
-              if is_转义(&remain[..p]) {
+              if is转义(&remain[..p]) {
                 let p = p + 3;
                 begin += p;
                 remain = &remain[p..];
@@ -218,7 +218,7 @@ pub fn parse(md: impl AsRef<str>) -> MdLi {
                 begin += 4;
                 remain = &remain[p + 3..];
                 continue;
-              } else if is_转义(&remain[..p]) {
+              } else if is转义(&remain[..p]) {
                 let p = p + 1;
                 begin += p;
                 remain = &remain[p..];

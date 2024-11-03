@@ -1,11 +1,19 @@
 use crate::{Kind, Md};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct MdLi {
   pub li: Vec<Md>,
+  pub txt_pos_li: Vec<usize>,
 }
 
 impl MdLi {
+  pub fn txt_iter(&self) -> impl Iterator<Item = (usize, &str)> {
+    self.txt_pos_li.iter().map(|pos| {
+      let pos = *pos;
+      (pos, self.li[pos].str.as_str())
+    })
+  }
+
   pub fn join(&self) -> String {
     self.li.iter().map(|md| md.str.as_str()).collect()
   }
@@ -27,6 +35,11 @@ impl MdLi {
         }
       }
     }
+  }
+
+  pub fn push_txt(&mut self, kind: Kind, str: impl Into<String>) {
+    self.txt_pos_li.push(self.li.len());
+    self.push(kind, str);
   }
 
   pub fn push(&mut self, kind: Kind, str: impl Into<String>) {
