@@ -15,6 +15,8 @@ default = []
 
 [dependencies]
 aok = "0.1.15"
+located_yaml = "0.2.1"
+taplo = "0.13.2"
 
 [dependencies.pos_lines]
 version = "0.1.10"

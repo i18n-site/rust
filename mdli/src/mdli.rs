@@ -1,52 +1,139 @@
 use crate::{Kind, Md};
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct MdLi {
   pub li: Vec<Md>,
-  pub txt_pos_li: Vec<usize>,
+  pub pre_is_break: bool,
 }
 
-impl MdLi {
-  pub fn txt_iter(&self) -> impl Iterator<Item = (usize, &str)> {
-    self.txt_pos_li.iter().map(|pos| {
-      let pos = *pos;
-      (pos, self.li[pos].str.as_str())
-    })
+impl Default for MdLi {
+  fn default() -> Self {
+    Self {
+      li: vec![],
+      pre_is_break: true,
+    }
   }
+}
+
+// pub pre_line: 0;
+// pub pre_line: 0;
+
+pub const TABLE_SPLIT: &str = "|";
+
+impl MdLi {
+  // pub fn txt_iter(&self) -> impl Iterator<Item = (usize, &str)> {
+  //   self.txt_pos_li.iter().map(|pos| {
+  //     let pos = *pos;
+  //     (pos, self.li[pos].str.as_str())
+  //   })
+  // }
 
   pub fn join(&self) -> String {
     self.li.iter().map(|md| md.str.as_str()).collect()
   }
 
-  pub fn end_indent(&mut self) {
-    let li = &mut self.li;
-    if let Some(last) = li.last_mut() {
-      if last.kind == Kind::Txt {
-        let last_str = last.str.to_owned();
-        let last_str_len = last_str.len();
-        let last_trim_end = last_str.trim_end();
-        let diff = last_str_len - last_trim_end.len();
-        if diff > 0 {
-          last.str = last_trim_end.to_string();
-          li.push(Md {
-            kind: Kind::EndIndent,
-            str: (&last_str[last_str_len - diff..]).into(),
-          })
+  pub fn push_txt(&mut self, kind: Kind, str: impl Into<String>) {
+    let str = str.into();
+    let trim = str.trim_start();
+    let trim_len = trim.len();
+    let diff = str.len() - trim_len;
+    if diff > 0 {
+      self.push(Kind::Space, &str[..diff]);
+    }
+    if !trim.is_empty() {
+      for i in ["|-|", "|+|"] {
+        if trim.starts_with(i) {
+          self.push(Kind::Symbol, &trim[..3]);
+          self.push_txt(kind, &trim[3..]);
+          return;
         }
+      }
+      // 表格
+      if trim.starts_with(TABLE_SPLIT) {
+        self.push_break(Kind::TableSplit, TABLE_SPLIT);
+        if trim.len() > 1 {
+          for i in trim[1..].split(TABLE_SPLIT) {
+            self.push_txt(kind, i);
+            self.push_break(Kind::TableSplit, TABLE_SPLIT);
+          }
+          self.li.pop();
+        }
+        return;
+      }
+
+      if self.pre_is_break {
+        // 1. 2. 10. 这种
+        for (p, c) in trim.char_indices() {
+          if c.is_ascii_digit() {
+            continue;
+          }
+          if c == '.' {
+            let p = p + 1;
+            self.push(Kind::Symbol, &trim[..p]);
+            self.push_txt(kind, &trim[p..]);
+            return;
+          } else {
+            break;
+          }
+        }
+
+        'o: loop {
+          for (p, c) in trim.char_indices() {
+            if !"#-+.>|:-=*_\\".contains(c) {
+              let pre = &trim[..p];
+              if matches!(pre, "**" | "__") {
+                let remain = &trim[p..];
+                if let Some(pos) = remain.find(pre) {
+                  let end = &remain[pos + 2..];
+                  // 当行只包含一个 "**" 或 "__" 时
+                  if end.trim().is_empty() {
+                    self.pre_is_break = false;
+                    self.push(Kind::Symbol, pre);
+                    self.push_txt(kind, &remain[..pos]);
+                    self.push(Kind::Symbol, pre);
+                    if !end.is_empty() {
+                      self.push(Kind::Space, end);
+                    }
+                    return;
+                  }
+                }
+              } else if !pre.is_empty() {
+                self.push(Kind::Symbol, pre);
+                self.push_txt(kind, &trim[p..]);
+                return;
+              }
+              break 'o;
+            }
+          }
+          self.push(Kind::Symbol, trim);
+          return;
+        }
+
+        // || "+-*".includes(c)
+        self.pre_is_break = false;
+      }
+
+      let str = trim;
+
+      let trim = str.trim_end();
+
+      if !trim.is_empty() {
+        self.push(kind, trim);
+      }
+
+      let trim_len = trim.len();
+      if trim_len < str.len() {
+        self.push(Kind::Space, &str[trim_len..]);
       }
     }
   }
 
-  pub fn push_txt(&mut self, kind: Kind, str: impl Into<String>) {
-    self.txt_pos_li.push(self.li.len());
+  pub fn push_break(&mut self, kind: Kind, str: impl Into<String>) {
     self.push(kind, str);
+    self.pre_is_break = true;
   }
 
   pub fn push(&mut self, kind: Kind, str: impl Into<String>) {
-    if kind == Kind::Br {
-      self.end_indent();
-    }
-
     self.li.push(Md {
       kind,
       str: str.into(),

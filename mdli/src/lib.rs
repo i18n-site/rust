@@ -2,13 +2,15 @@
 
 use pos_lines::PosLines;
 
+mod hugo;
 pub mod kind;
 mod mdli;
 mod parser;
+pub mod pos;
 
 pub use kind::Kind;
 pub use mdli::MdLi;
-pub use parser::is转义;
+pub use parser::{fmt, is转义, whitespace_or_quote};
 
 #[derive(Debug, Clone)]
 pub struct Md {
@@ -16,35 +18,20 @@ pub struct Md {
   pub str: String,
 }
 
-pub fn parse(md: impl AsRef<str>) -> MdLi {
-  let mut mdli = MdLi::default();
+pub fn fmt_parse(md: impl AsRef<str>) -> MdLi {
+  parse(fmt(md))
+}
 
-  let mut md = md.as_ref();
-  let mut line_iter = PosLines::new(md);
+pub fn md_parse(mut md: &str, mdli: &mut MdLi) {
+  let mut line_iter = PosLines::new(&md);
   let mut prev_line_end = 0;
 
   'line: while let Some((mut md_pos, mut line)) = line_iter.next() {
-    // 处理行首的空白
-    {
-      if md_pos > prev_line_end {
-        mdli.push(Kind::Br, &md[prev_line_end..md_pos]);
-      }
-
-      prev_line_end = md_pos + line.len();
-
-      let line_trim_start = line.trim_start();
-      if line_trim_start.is_empty() {
-        mdli.push(Kind::EmptyLine, line);
-        continue;
-      }
-
-      let start_indent = line.len() - line_trim_start.len();
-      if start_indent > 0 {
-        mdli.push(Kind::StartIndent, &line[..start_indent]);
-        line = line_trim_start;
-        md_pos += start_indent;
-      }
+    if md_pos > prev_line_end {
+      mdli.push_break(Kind::Br, &md[prev_line_end..md_pos]);
     }
+
+    prev_line_end = md_pos + line.len();
 
     let mut chars = line.char_indices();
     let mut offset = 0;
@@ -83,8 +70,8 @@ pub fn parse(md: impl AsRef<str>) -> MdLi {
         ($kind:expr, $begin:expr, $end:expr) => {
           push!();
           mdli.push($kind, &md[$begin..$end]);
-          md = &md[$end..];
-          line_iter = PosLines::new(md);
+          md = md[$end..].into();
+          line_iter = PosLines::new(&md);
           prev_line_end = 0;
           continue 'line;
         };
@@ -294,16 +281,18 @@ pub fn parse(md: impl AsRef<str>) -> MdLi {
 
     // 这里 prev_line_end 的当前行
     if offset < line.len() {
-      mdli.push(Kind::Txt, &line[offset..]);
+      mdli.push_txt(Kind::Txt, &line[offset..]);
     }
   }
 
   if prev_line_end < md.len() {
     let line = &md[prev_line_end..];
     mdli.push(Kind::Br, line);
-  } else {
-    mdli.end_indent();
   }
+}
 
+pub fn parse(md: impl AsRef<str>) -> MdLi {
+  let (mut md, mut mdli) = hugo::remove_head(md.as_ref());
+  md_parse(&mut md, &mut mdli);
   mdli
 }
