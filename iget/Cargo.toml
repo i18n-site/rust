@@ -11,7 +11,7 @@ description = "iget"
 bytes = "1.8.0"
 futures-util = "0.3.31"
 static_init = "1.0.3"
-thiserror = "1.0.66"
+thiserror = "2.0.0"
 
 [dependencies.pbar]
 version = "0.1.6"

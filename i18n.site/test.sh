@@ -11,6 +11,5 @@ fi
 export MREQ_PROTOCOL=http
 export API=$API_HOST:8850
 export MDDIR=$HOME/demo/flashcat/md
-# cargo run -- --dir $(realpath $DIR/../..)/md $@
-cargo run -- --dir $MDDIR -n
+cargo run -- --dir $MDDIR
 # cargo run -- --dir $(realpath $DIR/../..)/md $@ -n

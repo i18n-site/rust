@@ -1,10 +1,11 @@
 include!(concat!(env!("OUT_DIR"), "/api.rs"));
 use aok::Result;
-use reqwest::{RequestBuilder, StatusCode};
+pub use baidu::Baidu;
+use reqwest::{Error as ReqwestError, RequestBuilder, StatusCode};
 use serde::de::DeserializeOwned;
 use tracing::warn;
+
 mod baidu;
-pub use baidu::Baidu;
 
 use crate::{
   msg::MsgLi,
@@ -98,7 +99,13 @@ async fn openai<T: OpenAi + ?Sized>(
             continue;
           }
         } else {
-          warn!("\n{url}\nretry {retry_count}\ntoken {token}\n{err:?}");
+          if let Some(reqwest_err) = err.downcast_ref::<ReqwestError>()
+            && reqwest_err.is_timeout()
+          {
+            warn!("retry {retry_count}: {url} timeout");
+          } else {
+            warn!("\n{url}\nretry {retry_count}\ntoken {token}\n{err:?}");
+          }
         }
         if retry_count > 16 {
           return Err(err);

@@ -26,6 +26,8 @@ pub mod yml {
     pub ak: String,
     pub sk: String,
     pub bucket: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub prefix: String,
   }
 
   #[derive(Debug, Serialize, Deserialize)]
@@ -79,6 +81,7 @@ fn mime_type(rel: &str) -> Option<&'static str> {
 pub struct Client {
   pub s3: S3Client,
   pub bucket: String,
+  pub prefix: String,
 }
 
 pub struct S3 {
@@ -97,14 +100,13 @@ macro_rules! put {
     let mut futures = FuturesUnordered::new();
 
     for client in li {
-      let rel = rel.to_owned();
       futures.push(async move {
         let r = async {
           let mut put_request = client
             .s3
             .put_object()
             .bucket(&client.bucket)
-            .key(&rel)
+            .key(format!("{}{}", client.prefix, rel))
             .body($body);
           if let Some(mime_type) = mime_type {
             put_request = put_request.content_type(mime_type);
@@ -176,6 +178,7 @@ impl S3 {
         li.push(Client {
           s3,
           bucket: conf.bucket,
+          prefix: conf.prefix,
         });
       }
     } else {

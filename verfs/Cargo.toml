@@ -3,7 +3,7 @@ aok = "0.1.15"
 blake3 = "1.5.4"
 intbin = "0.1.2"
 sonic-rs = "0.3.14"
-thiserror = "1.0.66"
+thiserror = "2.0.0"
 
 [dependencies.burl]
 version = "0.1.4"

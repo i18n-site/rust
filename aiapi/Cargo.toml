@@ -1,6 +1,6 @@
 [package]
 name = "aiapi"
-version = "0.1.40"
+version = "0.1.41"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -22,7 +22,7 @@ reqwest = "0.12.9"
 serde_yaml = "0.9.34"
 sonic-rs = "0.3.14"
 strum_macros = "0.26.4"
-thiserror = "1.0.66"
+thiserror = "2.0.0"
 tracing = "0.1.40"
 
 [dependencies.sts]

@@ -2,7 +2,7 @@
 aok = "0.1.15"
 cfapi = "0.11.0"
 serde_yaml = "0.9.34"
-thiserror = "1.0.66"
+thiserror = "2.0.0"
 
 [dependencies.genv]
 version = "0.1.15"

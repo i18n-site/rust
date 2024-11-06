@@ -2,7 +2,7 @@
 aok = "0.1.15"
 boa_engine = "0.19.1"
 boa_runtime = "0.19.1"
-thiserror = "1.0.66"
+thiserror = "2.0.0"
 tracing = "0.1.40"
 
 [package]
@@ -15,7 +15,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/bjs"
 description = "bjs"
 
 [dev-dependencies]
-anyhow = "1.0.92"
+anyhow = "1.0.93"
 aok = "0.1.15"
 loginit = "0.1.13"
 static_init = "1.0.3"

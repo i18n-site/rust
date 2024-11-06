@@ -4,16 +4,11 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
-if [ -z "$1" ]; then
-  PROJECT=$(realpath $DIR)/tests
-else
-  PROJECT=$1
+if [ -f "env.sh" ]; then
+  . env.sh
 fi
 
-# direnv exec . cargo test --all-features -- --nocapture
+export MREQ_PROTOCOL=http
+export API=$API_HOST:8850
 
-# direnv exec . cargo run -- -d ../../md --purge
-direnv exec . cargo run -- -d tests/md
-# direnv exec . cargo run -- -d ../../md
-# direnv exec . cargo run -- -d $PROJECT
-# direnv exec . cargo run -- -d $PROJECT
+cargo run -- -d tests/md

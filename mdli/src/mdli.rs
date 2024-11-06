@@ -77,27 +77,32 @@ impl MdLi {
           }
         }
 
+        // 避免切分到不完整的unicode字符引发异常
+        let trim_bytes = trim.as_bytes();
+        let split: &[u8] = &trim_bytes[..2];
+        if matches!(split, b"**" | b"__" | b"~~") {
+          let split = &trim[..2];
+          let remain = &trim[2..];
+          if let Some(pos) = remain.find(split) {
+            let end = &remain[pos + 2..];
+            // 当行只包含一个 "**" 或 "__" 时
+            if end.trim().is_empty() {
+              self.push(Kind::Symbol, split);
+              self.push_txt(kind, &remain[..pos]);
+              self.push(Kind::Symbol, split);
+              if !end.is_empty() {
+                self.push(Kind::Space, end);
+              }
+              return;
+            }
+          }
+        }
+
         'o: loop {
           for (p, c) in trim.char_indices() {
-            if !"#-+.>|:-=*_\\".contains(c) {
+            if !"\\~#-+.>|:-=*_".contains(c) {
               let pre = &trim[..p];
-              if matches!(pre, "**" | "__") {
-                let remain = &trim[p..];
-                if let Some(pos) = remain.find(pre) {
-                  let end = &remain[pos + 2..];
-                  // 当行只包含一个 "**" 或 "__" 时
-                  if end.trim().is_empty() {
-                    self.pre_is_break = false;
-                    self.push(Kind::Symbol, pre);
-                    self.push_txt(kind, &remain[..pos]);
-                    self.push(Kind::Symbol, pre);
-                    if !end.is_empty() {
-                      self.push(Kind::Space, end);
-                    }
-                    return;
-                  }
-                }
-              } else if !pre.is_empty() {
+              if !pre.is_empty() {
                 self.push(Kind::Symbol, pre);
                 self.push_txt(kind, &trim[p..]);
                 return;
@@ -109,7 +114,6 @@ impl MdLi {
           return;
         }
 
-        // || "+-*".includes(c)
         self.pre_is_break = false;
       }
 

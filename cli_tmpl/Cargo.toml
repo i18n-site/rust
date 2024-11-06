@@ -9,7 +9,7 @@ description = "cli_tmpl"
 
 [dependencies]
 serde_yaml = "0.9.34"
-thiserror = "1.0.66"
+thiserror = "2.0.0"
 tracing = "0.1.40"
 
 [dependencies.serde]

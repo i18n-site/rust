@@ -14,7 +14,7 @@ all-features = true
 default = [ ]
 
 [dependencies]
-anyhow = "1.0.92"
+anyhow = "1.0.93"
 aok = "0.1.15"
 daachorse = "1.0.0"
 tracing = "0.1.40"

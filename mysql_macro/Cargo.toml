@@ -11,7 +11,7 @@ description = "mysql macro for mysql_async"
 genv = "0.1.15"
 gxhash = "3.4.1"
 rustc-hex = "2.1.0"
-thiserror = "1.0.66"
+thiserror = "2.0.0"
 trt = "0.1.29"
 
 [dependencies.mysql_async]
