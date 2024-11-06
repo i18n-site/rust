@@ -3,7 +3,7 @@ thiserror = "2.0.0"
 
 [package]
 name = "str2ts"
-version = "0.1.7"
+version = "0.1.9"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
