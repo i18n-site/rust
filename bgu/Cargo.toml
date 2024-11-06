@@ -55,7 +55,7 @@ default-features = false
 features = [ "hash", "txz_hash_d", "fs", "dir", "conf", "rsync" ]
 
 [dependencies.iget]
-version = "0.1.16"
+version = "0.1.17"
 path = "../iget"
 
 [dependencies.tokio]
