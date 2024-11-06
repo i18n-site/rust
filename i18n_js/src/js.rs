@@ -100,6 +100,7 @@ impl Build {
       .pug
       .iter()
       .map(|(name, i)| i.to_fn(name))
+      .filter(|(_, h)| !h.is_empty())
       .collect::<Vec<_>>();
 
     pug.sort();
