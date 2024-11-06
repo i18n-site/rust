@@ -1,6 +1,6 @@
 [package]
 name = "svg2webp"
-version = "0.1.10"
+version = "0.1.11"
 edition = "2021"
 repository = "https://github.com/i18n-site/rust/tree/main/svg2webp"
 license = "MIT"
