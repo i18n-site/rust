@@ -32,6 +32,9 @@ pub fn pug(htm: &Path, li: &[PathBuf], i18n_li: &mut I18nLi) -> Result<HashMap<S
 
 impl Htm {
   pub fn to_fn(&self, name: &str) -> String {
+    if self.htm.is_empty() {
+      return Default::default();
+    }
     let htm = sonic_rs::to_string(&self.htm).unwrap();
     let htm = &htm[1..htm.len() - 1].replace("\\\"", "\"");
     let func = if self.has_i18n {

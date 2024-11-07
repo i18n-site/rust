@@ -75,7 +75,7 @@ pub async fn scan(
                       let fp = root.join(&lang_rel);
                       if fp.exists() {
                         let mut md_htm = MdHtm::load(root.join(fp))?;
-                        name_title.insert(name, md_htm.title().to_owned());
+                        name_title.insert(name, (md_htm.title().to_owned(), md_htm.only_title));
                         if let Some(htm) = md_htm.htm() {
                           toc_change = true;
                           let title = md_htm.title();
@@ -88,27 +88,44 @@ pub async fn scan(
                     if toc_change {
                       let mut nav = String::new();
                       for name in &toc_li {
-                        if name == README_MD {
-                          continue;
-                        }
                         let rel = format!("{path_rel}/{name}");
-                        let lang_rel = format!("{lang_en}/{rel}");
-                        if let Some(title) = name_title.remove(name) {
-                          nav += &format!(r#"<a href="/{lang_rel}">{title}</a>"#);
+                        let lang_fp = format!("{lang_en}/{rel}");
+                        let lang_rel = if let Some(lang_rel) = lang_fp.strip_suffix(".md") {
+                          format!(
+                            "{}.htm",
+                            if let Some(lang_rel) = lang_rel.strip_suffix("/README") {
+                              lang_rel
+                            } else {
+                              lang_rel
+                            }
+                          )
                         } else {
-                          let fp = root.join(&lang_rel);
+                          lang_fp.clone()
+                        };
+
+                        let title;
+                        let only_title;
+                        if let Some((_title, _only_title)) = name_title.remove(name) {
+                          title = _title;
+                          only_title = _only_title;
+                        } else {
+                          let fp = root.join(&lang_fp);
                           if fp.exists() {
                             let mut md_htm = MdHtm::load(fp)?;
-                            let title = md_htm.title().to_owned();
-                            if md_htm.only_title {
-                              if !title.is_empty() {
-                                nav += &format!(r#"<p>{title}</p>"#);
-                              }
-                              continue;
-                            }
-                            nav += &format!(r#"<a href="/{lang_rel}">{title}</a>"#);
+                            title = md_htm.title().to_owned();
+                            only_title = md_htm.only_title;
+                          } else {
+                            continue;
                           }
                         };
+
+                        if only_title {
+                          if !title.is_empty() {
+                            nav += &format!(r#"<p>{title}</p>"#);
+                          }
+                          continue;
+                        }
+                        nav += &format!(r#"<a href="/{lang_rel}">{title}</a>"#);
                       }
 
                       let readme_rel = format!("{path_rel}/{README_MD}");
