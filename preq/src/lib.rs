@@ -2,7 +2,7 @@ use bytes::Bytes;
 use preq1::{post_form, proxy, IPV6_PROXY_PORT};
 use reqwest::IntoUrl;
 
-genv::s!(IPV6_PROXY);
+genv::s!(IPV6_PROXY_IP_LI);
 
 static mut N: usize = 0;
 
@@ -12,7 +12,7 @@ pub struct Proxy(Vec<reqwest::Client>);
 pub static PROXY: Proxy = {
   let mut v = Vec::new();
   let port: u16 = IPV6_PROXY_PORT();
-  for i in IPV6_PROXY.split(' ') {
+  for i in IPV6_PROXY_IP_LI.split_whitespace() {
     v.push(proxy(format!("{i}:{port}")));
   }
   Proxy(v)
