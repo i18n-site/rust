@@ -1,0 +1,17 @@
+[package]
+name = "svg2avif"
+version = "0.1.14"
+edition = "2021"
+repository = "https://github.com/i18n-site/rust/tree/main/svg2avif"
+license = "MIT"
+description = "convert svg to avif"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+aok = { version = "0.1.15", path = "../aok" }
+bytemuck = "1.21.0"
+ravif = "0.11.11"
+resvg = "0.44.0"
+thiserror = "2.0.9"
+tiny-skia = "0.11.4"
+usvg = "0.44.0"

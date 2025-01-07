@@ -1,0 +1,37 @@
+[package]
+name = "click_captcha"
+version = "0.1.16"
+edition = "2021"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/click_captcha"
+license = "BUSL-1.1"
+description = "gen click captcha"
+
+[dependencies]
+rand = "0.8.5"
+
+[dependencies.aok]
+version = "0.1.15"
+path = "../aok"
+
+[dependencies.getrandom]
+version = "0.2.15"
+features = [ "js" ]
+optional = true
+
+[dependencies.wasm-bindgen]
+version = "0.2.99"
+
+[dependencies.svg2avif]
+version = "0.1.14"
+path = "../svg2avif"
+
+[dev-dependencies]
+anyhow = "1.0.95"
+
+[features]
+wasm = [ "dep:getrandom" ]
+verify = [ ]
+
+[target.wasm32-unknown-unknown]
+crate-type = [ "cdylib" ]

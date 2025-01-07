@@ -1,0 +1,26 @@
+上一个break的位置 上一个文本的位置
+
+如果是first, 那么就要去行首的标记
+
+每个 BREAK 后面的第一个 TXT 需要去掉开头的 1. 或者 纯数字+无字母ascii
+
+可以用加入state实现
+
+html 分为单行html (html标签中只有一个txt) 和 多行html
+
+多行html忽略
+
+单行html
+  如果 只有一层html,当文本翻译
+  否则 嵌入行内翻译
+
+如果一行只有html或者图片, 判断是否需要翻译(比如img)
+
+输出是
+Txt 文本
+Htm 文本
+None 文本
+txt_pos_li roing bitmap
+htm_pos_li roing bitmap
+
+代码注释
