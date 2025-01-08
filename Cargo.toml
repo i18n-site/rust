@@ -124,7 +124,7 @@ members = [
   "mdli",
   "pos_lines",
   "varurl",
-  "upn",
+  "upn", "xr",
 ]
 # "cget/test_cget",
 resolver = "2"

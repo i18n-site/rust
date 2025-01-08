@@ -204,9 +204,3 @@ pub async fn connect(
   client.wait_for_connect().await?;
   Ok(client)
 }
-
-#[cfg(feature = "r")]
-mod r;
-
-#[cfg(feature = "r")]
-pub use r::R;
