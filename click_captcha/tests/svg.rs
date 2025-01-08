@@ -1,6 +1,6 @@
 use std::{collections::HashSet, env, fs, io::Write};
 
-use click_captcha::{gen, svg::gen as svg_gen, ICO_LI};
+use click_captcha::{make, svg::make as svg_gen, ICO_LI};
 
 #[test]
 fn test_svg() -> anyhow::Result<()> {
@@ -37,7 +37,7 @@ fn test_svg() -> anyhow::Result<()> {
   for i in 10..100 {
     let file_path = target_dir.join(format!("{i}.avif"));
     let mut file = fs::File::create(file_path).unwrap();
-    let g = gen(500, 500, &ICO_LI)?;
+    let g = make(500, 500, &ICO_LI)?;
     file.write_all(&g.0).unwrap();
 
     println!("{i} {:?}", g.1);

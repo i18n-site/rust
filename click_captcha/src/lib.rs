@@ -10,27 +10,27 @@ mod wasm;
 #[cfg(feature = "wasm")]
 pub use wasm::Gen;
 
-#[cfg(feature = "gen")]
+#[cfg(feature = "make")]
 mod ico;
-#[cfg(feature = "gen")]
+#[cfg(feature = "make")]
 mod pattern;
-#[cfg(feature = "gen")]
+#[cfg(feature = "make")]
 mod random_pos;
-#[cfg(feature = "gen")]
+#[cfg(feature = "make")]
 pub mod svg;
-#[cfg(feature = "gen")]
+#[cfg(feature = "make")]
 use svg2avif::svg2avif;
 
-#[cfg(feature = "gen")]
+#[cfg(feature = "make")]
 pub use crate::ico::{IcoPosLi, PosLi};
 
-#[cfg(feature = "gen")]
-pub fn gen<S: AsRef<str>>(
+#[cfg(feature = "make")]
+pub fn make<S: AsRef<str>>(
   width: u32,
   height: u32,
   ico_li: impl AsRef<[S]>,
 ) -> aok::Result<(Box<[u8]>, IcoPosLi)> {
-  let (xml, ico) = svg::gen(width, height, ico_li);
+  let (xml, ico) = svg::make(width, height, ico_li);
   Ok((svg2avif(xml, 30.0, 10)?, ico))
 }
 

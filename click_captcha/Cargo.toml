@@ -1,15 +1,15 @@
 [package]
 name = "click_captcha"
-version = "0.1.21"
-edition = "2021"
+version = "0.1.22"
+edition = "2024"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/main/click_captcha"
 license = "BUSL-1.1"
 description = "gen click captcha"
 
 [features]
-wasm = ["dep:getrandom", "dep:js-sys", "dep:wasm-bindgen", "gen"]
-gen = ["dep:svg2avif", "dep:rand", "dep:aok", "dep:bincode"]
+wasm = ["dep:getrandom", "dep:js-sys", "dep:wasm-bindgen", "make"]
+make = ["dep:svg2avif", "dep:rand", "dep:aok", "dep:bincode"]
 verify = []
 ico_li = []
 

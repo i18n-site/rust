@@ -5,10 +5,10 @@ use crate::{
   pattern::PATTERN,
 };
 
-pub fn gen<S: AsRef<str>>(width: u32, height: u32, ico_li: impl AsRef<[S]>) -> (String, IcoPosLi) {
+pub fn make<S: AsRef<str>>(width: u32, height: u32, ico_li: impl AsRef<[S]>) -> (String, IcoPosLi) {
   let mut rng = rand::thread_rng();
   let layer_count = random_int(3, 4) as _;
-  let segment_count = rng.gen::<u32>() % 10 + 5;
+  let segment_count = rng.r#gen::<u32>() % 10 + 5;
   let wave = Wave::new(Properties {
     width, // 此处的 width 和 height 应该是已定义的变量
     height,
@@ -59,7 +59,7 @@ pub fn gen<S: AsRef<str>>(width: u32, height: u32, ico_li: impl AsRef<[S]>) -> (
   }
   let ico_scale = random_int(8, 3) as f32 / 100.0;
   let p_scale = random_int(125, 25) as f32 / 25.0;
-  let p_rotate = rng.gen::<u16>() % 360;
+  let p_rotate = rng.r#gen::<u16>() % 360;
 
   let rect_opacity = random_int(20, 10) as f32 / 100.0;
 
@@ -232,7 +232,7 @@ pub fn generate_closed_path(
 }
 
 fn random_int(base: u8, offset: u8) -> u8 {
-  let n = rand::thread_rng().gen::<u8>() % base;
+  let n = rand::thread_rng().r#gen::<u8>() % base;
   n + offset
 }
 

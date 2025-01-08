@@ -11,7 +11,7 @@ gen = new Gen(ICO_LI);
 
 begin = new Date();
 
-[img, ...ico_li] = gen.gen(500, 600);
+[img, ...ico_li] = gen.make(500, 600);
 
 cost = new Date() - begin;
 

@@ -1,7 +1,7 @@
 use js_sys::{Array, Uint8Array};
 use wasm_bindgen::prelude::{wasm_bindgen, JsError};
 
-use crate::gen;
+use crate::make;
 
 #[wasm_bindgen]
 pub struct Gen {
@@ -24,10 +24,11 @@ impl Gen {
   }
 
   #[wasm_bindgen]
-  pub fn gen(&self, width: u32, height: u32) -> Result<js_sys::Array, wasm_bindgen::JsError> {
-    let (img, ipl) = gen(width, height, &self.ico_li).map_err(|e| JsError::from(&*e))?;
+  pub fn make(&self, width: u32, height: u32) -> Result<js_sys::Array, wasm_bindgen::JsError> {
+    let (img, ipl) = make(width, height, &self.ico_li).map_err(|e| JsError::from(&*e))?;
     let img_ico_li = Array::new();
-    img_ico_li.push(unsafe { &Uint8Array::view(&img) });
+    let img = unsafe { Uint8Array::view(&img) };
+    img_ico_li.push(&img);
     let li = Array::new();
     for i in ipl.ico_li {
       li.push(&i.into());
