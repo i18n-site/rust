@@ -34,16 +34,16 @@ li = JSON.stringify(li)
 write(
   join(
     dirname ROOT
-    'src/flag_li.rs'
+    'src/ico_li.rs'
   )
   """
-pub const FLAG_LI: [&'static str;#{n}] = """+li+';'
+pub const ICO_LI: [&'static str;#{n}] = """+li+';'
 )
 
 write(
   join(
     dirname ROOT
-    'FLAG_LI.js'
+    'ICO_LI.js'
   )
   """export default """+li+';'
 )

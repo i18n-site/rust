@@ -1,8 +1,8 @@
-#[cfg(feature = "flag_li")]
-mod flag_li;
+#[cfg(feature = "ico_li")]
+mod ico_li;
 
-#[cfg(feature = "flag_li")]
-pub use flag_li::FLAG_LI;
+#[cfg(feature = "ico_li")]
+pub use ico_li::ICO_LI;
 
 #[cfg(feature = "wasm")]
 mod wasm;
@@ -11,7 +11,7 @@ mod wasm;
 pub use wasm::Gen;
 
 #[cfg(feature = "gen")]
-mod flag;
+mod ico;
 #[cfg(feature = "gen")]
 mod pattern;
 #[cfg(feature = "gen")]
@@ -22,19 +22,16 @@ pub mod svg;
 use svg2avif::svg2avif;
 
 #[cfg(feature = "gen")]
-pub use crate::flag::{Flag, N};
-
-#[cfg(feature = "gen")]
-pub type CaptchaFlagLi = (Box<[u8]>, [Flag; N]);
+pub use crate::ico::{IcoPosLi, PosLi};
 
 #[cfg(feature = "gen")]
 pub fn gen<S: AsRef<str>>(
   width: u32,
   height: u32,
   ico_li: impl AsRef<[S]>,
-) -> aok::Result<CaptchaFlagLi> {
-  let (xml, flag) = svg::gen(width, height, ico_li);
-  Ok((svg2avif(xml, 30.0, 10)?, flag))
+) -> aok::Result<(Box<[u8]>, IcoPosLi)> {
+  let (xml, ico) = svg::gen(width, height, ico_li);
+  Ok((svg2avif(xml, 30.0, 10)?, ico))
 }
 
 #[cfg(feature = "verify")]
@@ -43,17 +40,20 @@ fn distance(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {
 }
 
 #[cfg(feature = "verify")]
-pub fn verify(flag_x_y_size: &[u64], click_x_y: &[u64], scale: u64) -> bool {
-  if (click_x_y.len() * 3) != (2 * flag_x_y_size.len()) {
+pub fn verify(pos_li: PosLi, click_x_y: &[u64], scale: u64) -> bool {
+  if click_x_y.len() < 2 * pos_li.len() {
     return false;
   }
 
-  for (pos, xys) in flag_x_y_size.chunks(3).enumerate() {
+  for (pos, xys) in pos_li.iter().enumerate() {
     let pos = pos * 2;
     let cx = (click_x_y[pos] * scale) as f32;
     let cy = (click_x_y[pos + 1] * scale) as f32;
-    let size = (xys[2] as f32) / 2.0;
-    if distance(xys[0] as f32 + size, xys[1] as f32 + size, cx, cy) > size {
+
+    // 起点 + 半径 = 圆心
+    let size = (xys.size as f32) / 2.0;
+
+    if distance(xys.x as f32 + size, xys.y as f32 + size, cx, cy) > size {
       return false;
     }
   }

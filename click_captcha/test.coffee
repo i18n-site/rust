@@ -1,15 +1,15 @@
 #!/usr/bin/env coffee
 
 > ./dist/_.js > Gen
-  ./FLAG_LI.js
+  ./ICO_LI.js
 
-gen = new Gen FLAG_LI
+gen = new Gen ICO_LI
 
 
 begin = new Date
 [
   img
-  ...flag_li
+  ...ico_li
 ] = gen.gen(500, 600)
 cost = new Date - begin
 

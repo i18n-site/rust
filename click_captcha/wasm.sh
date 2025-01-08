@@ -4,7 +4,7 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
-export RUSTFLAGS=""
+export RUSTICOS=""
 cargo build --features=wasm -Z build-std=panic_abort,std --target wasm32-unknown-unknown --release
 
 TARGET=$(cargo metadata --no-deps --format-version=1 | jq -r .target_directory)

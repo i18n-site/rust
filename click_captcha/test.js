@@ -1,17 +1,17 @@
 #!/usr/bin/env -S node --trace-uncaught --expose-gc --unhandled-rejections=strict
-var begin, cost, flag_li, gen, img;
+var begin, cost, ico_li, gen, img;
 
 import {
   Gen
 } from './dist/_.js';
 
-import FLAG_LI from './FLAG_LI.js';
+import ICO_LI from './ICO_LI.js';
 
-gen = new Gen(FLAG_LI);
+gen = new Gen(ICO_LI);
 
 begin = new Date();
 
-[img, ...flag_li] = gen.gen(500, 600);
+[img, ...ico_li] = gen.gen(500, 600);
 
 cost = new Date() - begin;
 

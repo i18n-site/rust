@@ -25,18 +25,23 @@ impl Gen {
 
   #[wasm_bindgen]
   pub fn gen(&self, width: u32, height: u32) -> Result<js_sys::Array, wasm_bindgen::JsError> {
-    let (img, flag_li) = gen(width, height, &self.ico_li).map_err(|e| JsError::from(&*e))?;
-    let img_flag_li = Array::new();
-    img_flag_li.push(unsafe { &Uint8Array::view(&img) });
-    for i in flag_li {
-      let li = Array::new();
-      li.push(&i.pos.into());
+    let (img, ipl) = gen(width, height, &self.ico_li).map_err(|e| JsError::from(&*e))?;
+    let img_ico_li = Array::new();
+    img_ico_li.push(unsafe { &Uint8Array::view(&img) });
+    let li = Array::new();
+    for i in ipl.ico_li {
+      li.push(&i.into());
+    }
+    img_ico_li.push(&li);
+
+    let li = Array::new();
+    for i in ipl.pos_li.iter() {
       li.push(&i.size.into());
       li.push(&i.x.into());
       li.push(&i.y.into());
-      img_flag_li.push(&li);
     }
+    img_ico_li.push(&li);
 
-    Ok(img_flag_li)
+    Ok(img_ico_li)
   }
 }
