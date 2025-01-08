@@ -1,5 +1,4 @@
 use linkme::distributed_slice;
-use xboot::BOOT;
 pub use xkv::fred;
 
 // #[macro_export]
@@ -36,12 +35,15 @@ pub mod __xkv {
   // });
 }
 
-fn init() {
+fn init() -> xboot::Task {
   use std::future::IntoFuture;
-  xkv::TRT.block_on(__xkv::R.into_future());
+  tokio::task::spawn(async {
+    __xkv::R.into_future().await;
+    Ok(())
+  })
 }
 
-#[distributed_slice(BOOT)]
-static INIT: fn() = init;
+#[distributed_slice(xboot::ASYNC)]
+static INIT: xboot::AsyncFn = init;
 
 pub static R: xkv::Wrap = xkv::Wrap(&__xkv::R);

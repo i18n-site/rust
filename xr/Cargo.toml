@@ -22,8 +22,12 @@ async-lazy = "0.1.0"
 ctor = "0.2.9"
 linkme = "0.3.31"
 
+[dependencies.tokio]
+version = "1.42.0"
+features = [ "rt", "rt-multi-thread" ]
+
 [dependencies.xboot]
-version = "0.1.9"
+version = "0.1.10"
 path = "../xboot"
 
 [dependencies.xkv]
