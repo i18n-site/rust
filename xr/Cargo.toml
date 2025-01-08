@@ -10,6 +10,9 @@ description = "xr"
 [package.metadata.docs.rs]
 all-features = true
 
+[package.metadata.cargo-machete]
+ignored = [ "static_init" ]
+
 [features]
 default = [ ]
 
@@ -18,7 +21,7 @@ aok = "0.1.15"
 static_init = "1.0.3"
 
 [dependencies.xkv]
-version = "0.1.35"
+version = "0.1.37"
 path = "../xkv"
 
 [dev-dependencies]
