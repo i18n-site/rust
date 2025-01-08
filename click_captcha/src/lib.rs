@@ -10,22 +10,29 @@ mod wasm;
 #[cfg(feature = "wasm")]
 pub use wasm::Gen;
 
+#[cfg(feature = "gen")]
 mod flag;
+#[cfg(feature = "gen")]
 mod pattern;
+#[cfg(feature = "gen")]
 mod random_pos;
+#[cfg(feature = "gen")]
 pub mod svg;
-use aok::Result;
+#[cfg(feature = "gen")]
 use svg2avif::svg2avif;
 
+#[cfg(feature = "gen")]
 pub use crate::flag::{Flag, N};
 
+#[cfg(feature = "gen")]
 pub type CaptchaFlagLi = (Box<[u8]>, [Flag; N]);
 
+#[cfg(feature = "gen")]
 pub fn gen<S: AsRef<str>>(
   width: u32,
   height: u32,
   ico_li: impl AsRef<[S]>,
-) -> Result<CaptchaFlagLi> {
+) -> aok::Result<CaptchaFlagLi> {
   let (xml, flag) = svg::gen(width, height, ico_li);
   Ok((svg2avif(xml, 30.0, 10)?, flag))
 }
