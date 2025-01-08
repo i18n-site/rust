@@ -1,21 +1,34 @@
+#[cfg(feature = "flag_li")]
 mod flag_li;
+
+#[cfg(feature = "flag_li")]
+pub use flag_li::FLAG_LI;
+
+#[cfg(feature = "wasm")]
+mod wasm;
+
+#[cfg(feature = "wasm")]
+pub use wasm::Gen;
+
+mod flag;
 mod pattern;
 mod random_pos;
 pub mod svg;
 use aok::Result;
 use svg2avif::svg2avif;
-use wasm_bindgen::prelude::wasm_bindgen;
 
-pub use crate::flag_li::{Flag, N};
+pub use crate::flag::{Flag, N};
 
-pub fn gen(width: u32, height: u32, ico_li: &[&str]) -> Result<(Box<[u8]>, [Flag; N])> {
-  let (xml, flag_li) = svg::gen(width, height, ico_li);
-  Ok((svg2avif(xml, 30.0, 0)?, flag_li))
+pub type CaptchaFlagLi = (Box<[u8]>, [Flag; N]);
+
+pub fn gen<S: AsRef<str>>(
+  width: u32,
+  height: u32,
+  ico_li: impl AsRef<[S]>,
+) -> Result<CaptchaFlagLi> {
+  let (xml, flag) = svg::gen(width, height, ico_li);
+  Ok((svg2avif(xml, 30.0, 10)?, flag))
 }
-
-#[cfg(feature = "captcha")]
-#[wasm_bindgen]
-pub fn svg_gen(width: u32, height: u32, ico_li: &[&str]) -> Result<(Box<[u8]>, [Flag; N])> {}
 
 #[cfg(feature = "verify")]
 fn distance(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {

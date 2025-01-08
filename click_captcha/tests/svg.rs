@@ -1,8 +1,6 @@
-mod flag;
 use std::{collections::HashSet, env, fs, io::Write};
 
-use click_captcha::{gen, svg::gen as svg_gen};
-use flag::FLAG_LI;
+use click_captcha::{gen, svg::gen as svg_gen, FLAG_LI};
 
 #[test]
 fn test_svg() -> anyhow::Result<()> {

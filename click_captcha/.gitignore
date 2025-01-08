@@ -1,2 +1,4 @@
+/dist/
 /FLAG_LI.js
 /tests/flag.rs
+*.avif

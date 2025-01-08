@@ -1,0 +1,42 @@
+use js_sys::{Array, Uint8Array};
+use wasm_bindgen::prelude::{wasm_bindgen, JsError};
+
+use crate::gen;
+
+#[wasm_bindgen]
+pub struct Gen {
+  ico_li: Box<[Box<str>]>,
+}
+
+#[wasm_bindgen]
+impl Gen {
+  #[wasm_bindgen(constructor)]
+  pub fn new(ico_li: js_sys::Array) -> Gen {
+    let ico_li: Box<[Box<str>]> = ico_li
+      .iter()
+      .map(|js_value| {
+        let string = js_value.as_string().expect("Expected a string");
+        string.into_boxed_str()
+      })
+      .collect::<Vec<Box<str>>>()
+      .into_boxed_slice();
+    Gen { ico_li }
+  }
+
+  #[wasm_bindgen]
+  pub fn gen(&self, width: u32, height: u32) -> Result<js_sys::Array, wasm_bindgen::JsError> {
+    let (img, flag_li) = gen(width, height, &self.ico_li).map_err(|e| JsError::from(&*e))?;
+    let img_flag_li = Array::new();
+    img_flag_li.push(unsafe { &Uint8Array::view(&img) });
+    for i in flag_li {
+      let li = Array::new();
+      li.push(&i.pos.into());
+      li.push(&i.size.into());
+      li.push(&i.x.into());
+      li.push(&i.y.into());
+      img_flag_li.push(&li);
+    }
+
+    Ok(img_flag_li)
+  }
+}

@@ -34,10 +34,9 @@ li = JSON.stringify(li)
 write(
   join(
     dirname ROOT
-    'tests/flag.rs'
+    'src/flag_li.rs'
   )
-  """use std::cell::RefCell;
-
+  """
 pub const FLAG_LI: [&'static str;#{n}] = """+li+';'
 )
 

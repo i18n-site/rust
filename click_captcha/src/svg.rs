@@ -1,11 +1,11 @@
 use rand::Rng;
 
 use crate::{
-  flag_li::{flag_li, Flag, N},
+  flag::{flag, Flag, N},
   pattern::PATTERN,
 };
 
-pub fn gen(width: u32, height: u32, ico_li: &[&str]) -> (String, [Flag; N]) {
+pub fn gen<S: AsRef<str>>(width: u32, height: u32, ico_li: impl AsRef<[S]>) -> (String, [Flag; N]) {
   let mut rng = rand::thread_rng();
   let layer_count = random_int(3, 4) as _;
   let segment_count = rng.gen::<u32>() % 10 + 5;
@@ -45,7 +45,7 @@ pub fn gen(width: u32, height: u32, ico_li: &[&str]) -> (String, [Flag; N]) {
     opacity -= opstep;
   }
 
-  let (flag_li, flag_path) = flag_li(width, height, ico_li);
+  let (flag, flag_path) = flag(width, height, ico_li);
 
   path.insert(path.len() / 2, flag_path);
 
@@ -84,7 +84,7 @@ pub fn gen(width: u32, height: u32, ico_li: &[&str]) -> (String, [Flag; N]) {
     rect_opacity,
     path
   );
-  (xml, flag_li)
+  (xml, flag)
 }
 
 #[derive(Clone, Debug, PartialEq)]
