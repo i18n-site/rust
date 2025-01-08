@@ -40,15 +40,15 @@ fn distance(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {
 }
 
 #[cfg(feature = "verify")]
-pub fn verify(pos_li: PosLi, click_x_y: &[u64], scale: u64) -> bool {
+pub fn verify(pos_li: PosLi, click_x_y: &[u64]) -> bool {
   if click_x_y.len() < 2 * pos_li.len() {
     return false;
   }
 
   for (pos, xys) in pos_li.iter().enumerate() {
     let pos = pos * 2;
-    let cx = (click_x_y[pos] * scale) as f32;
-    let cy = (click_x_y[pos + 1] * scale) as f32;
+    let cx = (click_x_y[pos]) as f32;
+    let cy = (click_x_y[pos + 1]) as f32;
 
     // 起点 + 半径 = 圆心
     let size = (xys.size as f32) / 2.0;

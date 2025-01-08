@@ -1,6 +1,6 @@
 [package]
 name = "click_captcha"
-version = "0.1.20"
+version = "0.1.21"
 edition = "2021"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/main/click_captcha"
