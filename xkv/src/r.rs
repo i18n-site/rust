@@ -1,2 +1,1 @@
-use crate::conn;
-conn!(R);
+crate::conn!(R);

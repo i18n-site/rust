@@ -18,7 +18,17 @@ pub use async_lazy::Lazy;
 #[cfg(feature = "macro")]
 pub use linkme;
 #[cfg(feature = "macro")]
+pub use tokio;
+#[cfg(feature = "macro")]
 pub use wrap::Wrap;
+#[cfg(feature = "macro")]
+pub use xboot;
+
+#[cfg(feature = "r")]
+mod r;
+
+#[cfg(feature = "r")]
+pub use r::R;
 
 pub struct Server;
 

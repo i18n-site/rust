@@ -1,4 +1,5 @@
 use async_lazy::Lazy;
+use fred::prelude::Client;
 
 pub struct Wrap(pub &'static Lazy<Client>);
 
