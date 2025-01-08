@@ -1,14 +1,24 @@
 use std::{collections::BTreeMap, env, path::PathBuf, str::FromStr};
 
-use anyhow::Result;
-pub use async_lazy::Lazy;
-pub use fred::{
-  self,
+use aok::Result;
+pub use fred;
+use fred::{
   interfaces::ClientLike,
   prelude::{Client, Config, ReconnectPolicy, Server as FredServer, ServerConfig},
 };
-pub use tracing;
-pub use trt::TRT;
+
+#[cfg(feature = "macro")]
+mod wrap;
+
+#[cfg(feature = "macro")]
+mod r#macro;
+
+#[cfg(feature = "macro")]
+pub use async_lazy::Lazy;
+#[cfg(feature = "macro")]
+pub use linkme;
+#[cfg(feature = "macro")]
+pub use wrap::Wrap;
 
 pub struct Server;
 
@@ -59,15 +69,6 @@ env!(
   SENTINEL_PASSWORD,
   SENTINEL_USER
 );
-
-pub struct Wrap(pub &'static Lazy<Client>);
-
-impl std::ops::Deref for Wrap {
-  type Target = Client;
-  fn deref(&self) -> &Self::Target {
-    self.0.get().unwrap()
-  }
-}
 
 fn get(u: Option<&String>) -> Option<String> {
   if let Some(u) = u {
