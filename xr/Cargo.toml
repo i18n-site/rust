@@ -23,7 +23,7 @@ ctor = "0.2.9"
 linkme = "0.3.31"
 
 [dependencies.xboot]
-version = "0.1.8"
+version = "0.1.9"
 path = "../xboot"
 
 [dependencies.xkv]
