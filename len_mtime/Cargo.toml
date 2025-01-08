@@ -5,7 +5,7 @@ bytes = "1.9.0"
 gxhash = "3.4.1"
 
 [dependencies.bce]
-version = "0.1.4"
+version = "0.1.5"
 path = "../bce"
 
 [dependencies.trait_len]

@@ -1,5 +1,7 @@
 # bce
 
+bincode encode
+
 ```rust
 use aok::{Result, OK};
 use tracing::info;

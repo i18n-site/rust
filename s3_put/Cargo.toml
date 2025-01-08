@@ -21,10 +21,6 @@ features = [ "behavior-version-latest" ]
 version = "0.1.15"
 path = "../genv"
 
-[dependencies.tokio]
-version = "1.42.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]
-
 [dev-dependencies]
 aok = "0.1.15"
 loginit = "0.1.13"

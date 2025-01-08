@@ -14,14 +14,8 @@ all-features = true
 default = [ ]
 
 [dependencies]
-anyhow = "1.0.95"
-aok = "0.1.15"
 daachorse = "1.0.0"
 tracing = "0.1.41"
-
-[dependencies.xerr]
-version = "0.1.15"
-path = "../xerr"
 
 [dependencies.mdli]
 version = "0.1.28"

@@ -43,3 +43,6 @@ anyhow = "1.0.95"
 
 [lib]
 crate-type = ["cdylib", "lib"]
+
+[package.metadata.cargo-machete]
+ignored = ["getrandom"]

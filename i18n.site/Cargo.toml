@@ -23,7 +23,6 @@ walkdir = "2.5.0"
 futures = "0.3.31"
 markdown = "1.0.0-alpha.21"
 flate2 = "1.0.35"
-serde = "1.0.217"
 
 [dependencies.npmv]
 version = "0.1.19"
