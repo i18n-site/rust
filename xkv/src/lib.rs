@@ -69,43 +69,6 @@ impl std::ops::Deref for Wrap {
   }
 }
 
-#[macro_export]
-macro_rules! conn {
-  ($var:ident = $prefix:ident) => {
-    pub static $var: $crate::Wrap = $crate::Wrap(&__xkv::$var);
-
-    mod __xkv {
-      pub static $var: $crate::Lazy<$crate::Client> = $crate::Lazy::const_new(|| {
-        Box::pin(async move {
-          let prefix = stringify!($prefix);
-          let mut retry = 0;
-          loop {
-            match $crate::conn(prefix).await {
-              Ok(r) => return r,
-              Err(err) => {
-                eprintln!("❌ Connection Redis {prefix} : {}", err);
-                if retry > 99 {
-                  std::process::exit(1);
-                }
-                retry += 1;
-              }
-            }
-          }
-        })
-      });
-      mod init {
-        #[static_init::constructor(0)]
-        extern "C" fn init() {
-          $crate::TRT.block_on(async move {
-            use std::future::IntoFuture;
-            super::$var.into_future().await;
-          });
-        }
-      }
-    }
-  };
-}
-
 fn get(u: Option<&String>) -> Option<String> {
   if let Some(u) = u {
     if u.is_empty() {

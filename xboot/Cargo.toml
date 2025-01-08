@@ -1,11 +1,11 @@
 [package]
-name = "tmpl"
-version = "0.1.7"
+name = "xboot"
+version = "0.1.8"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
-homepage = "https://github.com/i18n-site/rust/tree/main/tmpl"
-description = "tmpl"
+homepage = "https://github.com/i18n-site/rust/tree/main/xboot"
+description = "xboot"
 
 [features]
 default = []
@@ -15,6 +15,7 @@ all-features = true
 
 [dependencies]
 aok = "0.1.15"
+linkme = "0.3.31"
 
 [dev-dependencies]
 aok = "0.1.15"
