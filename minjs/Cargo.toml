@@ -3,7 +3,7 @@ aok = "0.1.15"
 swc = "10.0.0"
 swc_common = "5.0.0"
 swc_ecma_ast = "5.0.1"
-swc_ecma_minifier = "7.0.0"
+swc_ecma_minifier = "7.0.1"
 tracing = "0.1.41"
 
 [dependencies.ifs]
