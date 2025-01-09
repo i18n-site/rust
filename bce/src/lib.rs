@@ -1,5 +1,4 @@
-use bincode::config::Configuration;
-pub use bincode::*;
+use bincode::{config, config::Configuration, decode_from_slice, encode_to_vec, Decode, Encode};
 
 pub static CONF: Configuration = config::standard();
 
