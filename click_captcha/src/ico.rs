@@ -1,22 +1,9 @@
 use std::cmp::min;
 
 use bincode::{Decode, Encode};
-use derive_more::{Deref, DerefMut};
 use rand::{seq::index::sample, thread_rng, Rng};
 
-use crate::random_pos::random_pos;
-
-pub const N: usize = 3;
-
-#[derive(Debug, Encode, Decode)]
-pub struct Pos {
-  pub size: u32,
-  pub x: u32,
-  pub y: u32,
-}
-
-#[derive(Debug, Deref, DerefMut, Encode, Decode)]
-pub struct PosLi(pub [Pos; N]);
+use crate::{random_pos::random_pos, Pos, PosLi, N};
 
 #[derive(Debug)]
 pub struct IcoPosLi {

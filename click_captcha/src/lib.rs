@@ -1,3 +1,9 @@
+/// 需要点击的图片个数
+pub const N: usize = 3;
+
+mod pos_li;
+pub use pos_li::{Pos, PosLi};
+
 #[cfg(feature = "ico_li")]
 mod ico_li;
 
