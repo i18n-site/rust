@@ -46,7 +46,7 @@ fn distance(x1: f32, y1: f32, x2: f32, y2: f32) -> f32 {
 }
 
 #[cfg(feature = "verify")]
-pub fn verify(pos_li: PosLi, click_x_y: &[u64]) -> bool {
+pub fn verify(pos_li: PosLi, click_x_y: &[u32]) -> bool {
   if click_x_y.len() < 2 * pos_li.len() {
     return false;
   }
