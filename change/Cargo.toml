@@ -20,7 +20,7 @@ gxhash = "3.4.1"
 walkdir = "2.5.0"
 
 [dependencies.bce]
-version = "0.1.7"
+version = "0.1.8"
 path = "../bce"
 
 [dependencies.burl]

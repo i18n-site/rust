@@ -9,7 +9,7 @@ version = "0.1.8"
 path = "../set_mtime"
 
 [dependencies.bce]
-version = "0.1.7"
+version = "0.1.8"
 path = "../bce"
 
 [dependencies.refmt]
