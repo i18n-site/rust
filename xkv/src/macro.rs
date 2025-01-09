@@ -4,7 +4,12 @@ macro_rules! conn {
     mod __xkv {
       #[allow(non_snake_case)]
       pub mod $var {
-        use $crate::{fred::prelude::Client, linkme, xboot, Lazy};
+        use $crate::{
+          fred::prelude::Client,
+          linkme,
+          tracing::{info, warn},
+          xboot, Lazy,
+        };
 
         pub static CLIENT: Lazy<Client> = Lazy::const_new(|| {
           Box::pin(async {
@@ -12,9 +17,14 @@ macro_rules! conn {
             let mut retry = 0;
             loop {
               match $crate::conn(prefix).await {
-                Ok(r) => return r,
+                Ok(r) => {
+                  if (retry > 0) {
+                    info!("✅ connected redis {prefix}");
+                  }
+                  return r;
+                }
                 Err(err) => {
-                  eprintln!("❌ Connection Redis {prefix} : {}", err);
+                  warn!("❌ redis {prefix} ( retry {} ): {}", retry, err);
                   if retry > 99 {
                     std::process::exit(1);
                   }

@@ -125,7 +125,7 @@ members = [
   "pos_lines",
   "varurl",
   "upn",
-  "xboot",
+  "xboot", "async_wrap",
 ]
 # "cget/test_cget",
 resolver = "2"

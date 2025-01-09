@@ -14,15 +14,16 @@ mod wrap;
 mod r#macro;
 
 #[cfg(feature = "macro")]
-pub use async_lazy::Lazy;
-#[cfg(feature = "macro")]
-pub use linkme;
-#[cfg(feature = "macro")]
-pub use tokio;
-#[cfg(feature = "macro")]
-pub use wrap::Wrap;
-#[cfg(feature = "macro")]
-pub use xboot;
+mod macro_pub_use {
+  pub use async_lazy::Lazy;
+  pub use linkme;
+  pub use tokio;
+  pub use tracing;
+  pub use wrap::Wrap;
+  pub use xboot;
+}
+
+pub use macro_pub_use::*;
 
 #[cfg(feature = "r")]
 mod r;
