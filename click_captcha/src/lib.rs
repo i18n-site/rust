@@ -28,7 +28,7 @@ pub mod svg;
 use svg2avif::svg2avif;
 
 #[cfg(feature = "make")]
-pub use crate::ico::{IcoPosLi, PosLi};
+pub use crate::ico::IcoPosLi;
 
 #[cfg(feature = "make")]
 pub fn make<S: AsRef<str>>(
