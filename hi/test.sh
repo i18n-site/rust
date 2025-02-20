@@ -3,9 +3,9 @@
 DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -a
-. ../../../hpc/state/conf/rust/smtp.env
-. ../../../hpc/state/conf/rust/cfNotify.env
-. ../../../hpc/state/conf/rust/hi.env
+. ../../../hpc/conf/state/rust/smtp.env
+. ../../../hpc/conf/state/rust/cfNotify.env
+. ../../../hpc/conf/state/rust/hi.env
 set +a
 set -ex
 cargo test -- --nocapture
