@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@3-/extract": "^0.1.6",
+    "@3-/write": "^0.0.2"
+  }
+}

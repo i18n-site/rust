@@ -1,0 +1,34 @@
+[package]
+name = "notify_api"
+version = "0.1.2"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/notify_api"
+description = "notify_api"
+keywords = []
+
+[features]
+default = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+aok = "0.1.17"
+ireq = { version = "0.1.17", path = "../ireq" }
+sonic-rs = "0.3.17"
+static_init = "1.0.3"
+tracing = "0.1.41"
+xerr = { version = "0.1.15", path = "../xerr" }
+
+[dev-dependencies]
+aok = "0.1.17"
+loginit = "0.1.18"
+static_init = "1.0.3"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.43.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

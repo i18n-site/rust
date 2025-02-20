@@ -1,0 +1,7 @@
+# _tmpl
+
+```rust
+<+ ./tests/main.rs>
+```
+
+<+ ../about.md >

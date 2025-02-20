@@ -1,0 +1,37 @@
+[package]
+name = "xsmtp"
+version = "0.1.18"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/xsmtp"
+description = "smtp send mail"
+
+[dependencies]
+anyhow = "1.0.96"
+genv = "0.1.15"
+mail-builder = "0.4.1"
+tracing = "0.1.41"
+trt = "0.1.29"
+static_init = "1.0.3"
+thiserror = "2.0.11"
+rand = "0.9.0"
+
+[dependencies.mail-send]
+version = "0.5.0"
+package = "mail-send-fork"
+
+[dependencies.aok]
+version = "0.1.17"
+path = "../aok"
+
+[dependencies.tokio]
+version = "1.43.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[dependencies.idns]
+version = "0.1.20"
+
+[dev-dependencies.tokio]
+version = "1.43.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

@@ -1,0 +1,9 @@
+# hidden_password
+
+hidden password for `postgresql://xxx:****@us-east-2.aws.neon.tech/xx`
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >
