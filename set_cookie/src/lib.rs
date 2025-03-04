@@ -1,5 +1,3 @@
-use http::HeaderValue;
-
 pub const SET_COOKIE: &str = "Set-Cookie";
 
 const MAX: u32 = 99999999;
@@ -15,17 +13,16 @@ pub fn new(domain: impl Into<String>) -> Cookie {
 }
 
 impl Cookie {
-  pub fn set(&self, key: impl AsRef<str>, val: impl AsRef<str>, max_age: u32) -> HeaderValue {
+  pub fn set(&self, key: impl AsRef<str>, val: impl AsRef<str>, max_age: u32) -> String {
     let key = key.as_ref();
     let val = val.as_ref();
-    let cookie = format!(
+    format!(
       "{key}={val};Max-Age={max_age};Domain={};Secure;HttpOnly;Path=/;Partitioned",
       self.domain
-    );
-    cookie.parse().unwrap()
+    )
   }
 
-  pub fn set_max(&self, key: impl AsRef<str>, val: impl AsRef<str>) -> HeaderValue {
+  pub fn set_max(&self, key: impl AsRef<str>, val: impl AsRef<str>) -> String {
     self.set(key, val, MAX)
   }
 }
