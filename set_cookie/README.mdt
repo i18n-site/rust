@@ -1,4 +1,4 @@
-# cookie_set
+# set_cookie
 
 ```rust
 <+ ./src/lib.rs>

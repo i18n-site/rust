@@ -1,11 +1,11 @@
 [package]
-name = "cookie_set"
-version = "0.1.6"
+name = "set_cookie"
+version = "0.1.1"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
-homepage = "https://github.com/i18n-site/rust/tree/dev/cookie_set"
-description = "cookie_set"
+homepage = "https://github.com/i18n-site/rust/tree/dev/set_cookie"
+description = "set_cookie"
 keywords = []
 
 [features]
