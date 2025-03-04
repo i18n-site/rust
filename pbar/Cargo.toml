@@ -1,0 +1,26 @@
+[dependencies]
+aok = "0.1.17"
+coarsetime = "0.1.36"
+indicatif = { version = "0.17.11", features = ["improved_unicode"] }
+
+[package]
+name = "pbar"
+version = "0.1.6"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/pbar"
+description = "pbar"
+
+[dev-dependencies]
+aok = "0.1.17"
+loginit = "0.1.18"
+static_init = "1.0.3"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.43.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[package.metadata.docs.rs]
+all-features = true

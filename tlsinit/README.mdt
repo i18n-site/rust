@@ -1,0 +1,9 @@
+# tlsinit
+
+tls for [tokio_postgres](https://docs.rs/tokio-postgres/latest/tokio_postgres/), use rustls_native_certs
+
+```rust
+<+ ./tests/main.rs>
+```
+
+<+ ../about.md >

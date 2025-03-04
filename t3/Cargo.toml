@@ -1,0 +1,39 @@
+[package]
+version = "0.1.20"
+name = "t3"
+edition = "2021"
+license = "MulanPSL-2.0"
+homepage = "https://github.com/i18n-site/srv/tree/main/rust/t3/src"
+repository = "https://github.com/i18n-site/srv.git"
+description = "wrap axum for easy use"
+
+[dependencies]
+coarsetime = "0.1.36"
+futures = "0.3.31"
+tracing = "0.1.41"
+thiserror = "2.0.12"
+re = "0.1.9"
+
+[dependencies.xtld]
+version = "0.1.5"
+path = "../xtld"
+
+[dependencies.tower]
+version = "0.5.2"
+features = [ "timeout" ]
+
+[dependencies.tower-http]
+version = "0.6.2"
+features = [ "compression-zstd" ]
+
+[dependencies.tokio]
+version = "1.43.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+
+[dependencies.axum]
+version = "0.8.1"
+features = [ "ws" ]
+
+[features]
+stackdriver = [ ]
+default = [ ]

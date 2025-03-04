@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package api;
+
+message AccessToken
+{
+  uint64 expire = 1;
+  string access_token = 2;
+}
+
+message IdAccessToken
+{
+  map<string, AccessToken> id_token = 1;
+}
