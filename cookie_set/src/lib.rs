@@ -1,5 +1,7 @@
 use http::HeaderValue;
 
+pub const SET_COOKIE: &str = "Set-Cookie";
+
 const MAX: u32 = 99999999;
 
 pub struct Cookie {
