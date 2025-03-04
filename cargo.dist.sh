@@ -31,7 +31,7 @@ dist() {
   git push
   cargo publish --registry crates-io || true
   cd $DIR
-  mise exec -- ./sh/upgrade.coffee
+  bun x cargo_upgrade
   rm Cargo.lock
   git add -u
   gme $(cargo metadata --format-version=1 --no-deps | jq '.packages[] | .name + ":" + .version' -r | grep "$name:") || true
