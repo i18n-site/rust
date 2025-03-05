@@ -44,5 +44,5 @@ pub fn norm(mail: impl AsRef<str>) -> String {
 
 pub fn norm_tld(mail: impl AsRef<str>) -> (String, String) {
   let (user, host) = norm_user_host(mail);
-  (user + "@" + &host, xtld::host_tld(host))
+  (user + "@" + &host, xtld::tld(&host).into())
 }

@@ -16,5 +16,5 @@ pub fn host(header: &HeaderMap) -> Result<String> {
 }
 
 pub fn host_tld(header: &HeaderMap) -> Result<String> {
-  Ok(xtld::host_port_tld(host(header)?))
+  Ok(xtld::host_port_tld(&host(header)?))
 }
