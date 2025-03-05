@@ -1,6 +1,6 @@
 [package]
 name = "header_host"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -10,6 +10,7 @@ keywords = []
 
 [features]
 default = []
+tld = ["dep:xtld"]
 
 [package.metadata.docs.rs]
 all-features = true
@@ -18,6 +19,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 [dependencies]
 aok = "0.1.17"
 http = "1.2.0"
+xtld = { version = "0.1.5", path = "../xtld", optional = true }
 
 [dev-dependencies]
 aok = "0.1.17"

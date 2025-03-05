@@ -24,3 +24,8 @@ pub fn header_host(headers: &http::HeaderMap) -> Result<&str, HeaderNoHost> {
     Err(_) => Err(HeaderNoHost),
   }
 }
+
+#[cfg(feature = "tld")]
+pub fn header_tld(headers: &http::HeaderMap) -> Result<String, HeaderNoHost> {
+  Ok(xtld::host_tld(header_host(headers)?))
+}
