@@ -12,7 +12,7 @@ impl std::fmt::Display for HeaderNoHost {
 
 impl std::error::Error for HeaderNoHost {}
 
-pub fn header_host(headers: &http::HeaderMap) -> Result<&str, HeaderNoHost> {
+pub fn host(headers: &http::HeaderMap) -> Result<&str, HeaderNoHost> {
   let host = if let Some(host) = headers.get("x-forwarded-host") {
     host
   } else if let Some(host) = headers.get("host") {
@@ -29,7 +29,7 @@ pub fn header_host(headers: &http::HeaderMap) -> Result<&str, HeaderNoHost> {
 }
 
 #[cfg(feature = "tld")]
-pub fn header_tld(headers: &http::HeaderMap) -> Result<&str, HeaderNoHost> {
+pub fn tld(headers: &http::HeaderMap) -> Result<&str, HeaderNoHost> {
   Ok(xtld::tld(header_host(headers)?))
 }
 ```
