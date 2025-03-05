@@ -26,12 +26,7 @@ impl Cookie {
     )
   }
   pub fn set(&self, key: impl AsRef<str>, val: impl AsRef<str>, max_age: u32) -> String {
-    let key = key.as_ref();
-    let val = val.as_ref();
-    format!(
-      "{key}={val};Max-Age={max_age};Domain={};Secure;Path=/;Partitioned;HttpOnly",
-      self.domain
-    )
+    format!("{};HttpOnly", self.set_for_js(key, val, max_age),)
   }
 
   pub fn set_max(&self, key: impl AsRef<str>, val: impl AsRef<str>) -> String {
