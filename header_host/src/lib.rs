@@ -27,5 +27,5 @@ pub fn host(headers: &http::HeaderMap) -> Result<&str, HeaderNoHost> {
 
 #[cfg(feature = "tld")]
 pub fn tld(headers: &http::HeaderMap) -> Result<&str, HeaderNoHost> {
-  Ok(xtld::tld(header_host(headers)?))
+  Ok(xtld::tld(host(headers)?))
 }
