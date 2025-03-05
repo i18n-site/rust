@@ -14,5 +14,5 @@ punycode = "0.4.1"
 version = "0.1.11"
 
 [dependencies.xtld]
-version = "0.1.5"
+version = "0.1.6"
 path = "../xtld"

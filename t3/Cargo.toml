@@ -15,7 +15,7 @@ thiserror = "2.0.12"
 re = "0.1.9"
 
 [dependencies.xtld]
-version = "0.1.5"
+version = "0.1.6"
 path = "../xtld"
 
 [dependencies.tower]
