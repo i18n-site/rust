@@ -3,7 +3,8 @@
 ```rust
 pub const SET_COOKIE: &str = "Set-Cookie";
 
-const MAX: u32 = 99999999;
+// https://developer.chrome.com/blog/cookie-max-age-expires?hl=zh-cn
+pub const MAX: u32 = 86400 * 400;
 
 pub struct Cookie {
   pub domain: String,
