@@ -8,13 +8,13 @@ pub enum Error {
   HeaderMissOrigin,
 }
 
-pub fn origin(header: &HeaderMap) -> Result<String> {
+pub fn origin(header: &HeaderMap) -> Result<&str> {
   if let Some(o) = header.get(ORIGIN) {
     return Ok(xtld::url_host_port(o.to_str()?));
   }
   Err(Error::HeaderMissOrigin.into())
 }
 
-pub fn origin_tld(header: &HeaderMap) -> Result<String> {
+pub fn origin_tld(header: &HeaderMap) -> Result<&str> {
   Ok(xtld::host_port_tld(origin(header)?))
 }
