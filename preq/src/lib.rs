@@ -1,5 +1,3 @@
-use std::fmt::format;
-
 use bytes::Bytes;
 use preq1::{post_form, proxy};
 use reqwest::IntoUrl;

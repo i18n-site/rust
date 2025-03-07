@@ -1,10 +1,7 @@
-use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
+use base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD};
 
 pub fn bin_u64_li(bin: impl AsRef<[u8]>) -> Vec<u64> {
-  match vbyte::decompress_list(bin.as_ref()) {
-    Ok(r) => r,
-    Err(_) => vec![],
-  }
+  vbyte::decompress_list(bin.as_ref()).unwrap_or_default()
 }
 
 pub fn b64_decode_u64_li(bin: impl AsRef<[u8]>) -> Vec<u64> {
