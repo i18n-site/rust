@@ -37,8 +37,5 @@ features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 [dependencies.wxpush]
 version = "0.1.16"
 
-[dependencies.xerr]
-version = "0.1.15"
-
 [dependencies.xstr]
 version = "0.1.11"

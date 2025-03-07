@@ -1,8 +1,10 @@
+use std::fmt::format;
+
 use bytes::Bytes;
-use preq1::{post_form, proxy, IPV6_PROXY_PORT};
+use preq1::{post_form, proxy};
 use reqwest::IntoUrl;
 
-genv::s!(IPV6_PROXY_IP_LI);
+genv::s!(IPV6_PROXY_IP_LI, IPV6_PROXY_PORT:u16,IPV6_PROXY_USER, IPV6_PROXY_PASSWD);
 
 static mut N: usize = 0;
 
@@ -11,9 +13,11 @@ pub struct Proxy(Vec<reqwest::Client>);
 #[static_init::dynamic(lazy)]
 pub static PROXY: Proxy = {
   let mut v = Vec::new();
-  let port: u16 = IPV6_PROXY_PORT();
-  for i in IPV6_PROXY_IP_LI.split_whitespace() {
-    v.push(proxy(format!("{i}:{port}")));
+  let url = format!("https://{}:{}@", *IPV6_PROXY_USER, *IPV6_PROXY_PASSWD,);
+  let port: u16 = *IPV6_PROXY_PORT;
+  for ip in IPV6_PROXY_IP_LI.split_whitespace() {
+    let url = format!("{url}{ip}:{port}",);
+    v.push(proxy(reqwest::Proxy::https(url).unwrap()));
   }
   Proxy(v)
 };

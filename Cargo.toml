@@ -8,7 +8,6 @@ members = [
   "static_",
   "axum_cors",
   "b62",
-  "bce",
   "bgu",
   "bintxt",
   "bjs",
