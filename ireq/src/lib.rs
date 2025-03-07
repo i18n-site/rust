@@ -48,9 +48,9 @@ pub async fn req(req: RequestBuilder) -> Result<Bytes> {
   let status = res.status();
   let bin = res.bytes().await?;
   if [StatusCode::OK, StatusCode::NO_CONTENT].contains(&status) {
-    Err(ReqError::Status(status, String::from_utf8_lossy(&bin).into()).into())
-  } else {
     Ok(bin)
+  } else {
+    Err(ReqError::Status(status, String::from_utf8_lossy(&bin).into()).into())
   }
 }
 

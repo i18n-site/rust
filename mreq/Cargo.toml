@@ -19,7 +19,7 @@ version = "0.1.12"
 path = "../citer"
 
 [dependencies.ireq]
-version = "0.1.18"
+version = "0.1.19"
 path = "../ireq"
 features = [ "proxy" ]
 
