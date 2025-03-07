@@ -15,7 +15,7 @@ default = [ ]
 
 [dependencies]
 aok = "0.1.17"
-bincode = "2.0.0-rc.3"
+bincode = "2.0.0"
 gxhash = "3.4.1"
 walkdir = "2.5.0"
 

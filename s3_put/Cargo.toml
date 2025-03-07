@@ -9,12 +9,12 @@ description = "s3_put"
 
 [dependencies]
 aok = "0.1.17"
-aws-sdk-s3 = "1.77.0"
-bytes = "1.10.0"
+aws-sdk-s3 = "1.78.0"
+bytes = "1.10.1"
 tracing = "0.1.41"
 
 [dependencies.aws-config]
-version = "1.5.17"
+version = "1.5.18"
 features = [ "behavior-version-latest" ]
 
 [dependencies.genv]

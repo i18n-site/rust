@@ -14,7 +14,7 @@ default = []
 all-features = true
 
 [dependencies]
-bincode = "2.0.0-rc.3"
+bincode = "2.0.0"
 static_init = "1.0.3"
 
 [dev-dependencies]

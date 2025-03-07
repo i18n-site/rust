@@ -10,7 +10,7 @@ description = "error like anyhow for axum"
 [dependencies]
 anyhow = "1.0.97"
 axum = "0.8.1"
-bytes = "1.10.0"
+bytes = "1.10.1"
 sonic-rs = "0.3.17"
 tracing = "0.1.41"
 

@@ -13,7 +13,7 @@ global = ["dep:static_init"]
 
 [dependencies]
 futures = "0.3.31"
-ring = "0.17.11"
+ring = "0.17.13"
 rustls = "0.23.23"
 tokio-rustls = "0.26.2"
 tracing = "0.1.41"

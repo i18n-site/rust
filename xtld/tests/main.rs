@@ -7,6 +7,9 @@ fn test() {
     "a.b.c.com:322",
     "a.b.c.me",
     "a.b.com.cn",
+    ".....",
+    "b...a",
+    "b...",
   ] {
     println!("{} → {}", d, host_port_tld(d))
   }

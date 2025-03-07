@@ -1,7 +1,7 @@
 [dependencies]
-bincode = "2.0.0-rc.3"
+bincode = "2.0.0"
 aok = "0.1.17"
-bytes = "1.10.0"
+bytes = "1.10.1"
 gxhash = "3.4.1"
 
 [dependencies.bce]
