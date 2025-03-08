@@ -6,7 +6,7 @@ set -ex
 
 set -a
 . ../../../hpc/conf/state/env/_apiToken.env
-. ../../../hpc/conf/state/env/deno.env
+. ../../../hpc/conf/state/env/denoNotifyApi.env
 set +a
 
-cargo nextest run --all-features --nocapture
+cargo test --all-features -- --nocapture

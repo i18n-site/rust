@@ -8,8 +8,8 @@ use std::{
   path::{Path, PathBuf},
 };
 
+use serde::{Deserialize, Serialize};
 use aok::{Void, OK};
-use bincode::{Decode, Encode};
 use gxhash::HashMap;
 use set_mtime::set_mtime;
 pub use walkdir::WalkDir;
@@ -32,13 +32,13 @@ pub fn hash(fp: impl AsRef<Path>) -> std::io::Result<u128> {
   Ok(hasher.digest128())
 }
 
-#[derive(Debug, Clone, Encode, Decode)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LenTs {
   pub ts: u64,
   pub len: u64,
 }
 
-#[derive(Debug, Encode, Decode)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Meta {
   pub len_ts: LenTs,
   pub hash: u128,
@@ -62,7 +62,7 @@ impl State {
   pub fn save(&self) -> Void {
     let mut li = vec![];
     for (rel, meta) in self.changed.iter().chain(&self.no_change) {
-      let meta = burl::e(bce::e(meta)?);
+      let meta = burl::e(pc::e::<Meta>(meta)?);
       li.push(format!("{rel}#{meta}"));
     }
 
@@ -93,7 +93,7 @@ impl Scan {
           if let Some(pos) = line.rfind('#') {
             let bin = &line[pos + 1..];
             if let Ok(meta) = burl::d(bin) {
-              if let Ok::<Meta, _>(meta) = bce::d(&meta) {
+              if let Ok::<Meta, _>(meta) = pc::d(&meta) {
                 let rel = &line[..pos];
                 if let Some(len_ts) = rel_len_ts.remove(rel) {
                   if len_ts.len == meta.len_ts.len && len_ts.ts == meta.len_ts.ts {
