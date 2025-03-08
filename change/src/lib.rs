@@ -45,19 +45,19 @@ pub struct Meta {
 
 #[derive(Debug)]
 pub struct Scan {
-  pub public: PathBuf,
+  pub root: PathBuf,
   pub rel_len_ts: HashMap<String, LenTs>,
 }
 
 #[derive(Debug)]
-pub struct State {
+pub struct Diff {
   pub changed: Vec<(String, Meta)>,
   pub no_change: Vec<(String, Meta)>,
   pub db: PathBuf,
   pub has_change: bool,
 }
 
-impl State {
+impl Diff {
   pub fn save(&self) -> Void {
     let mut li = vec![];
     for (rel, meta) in self.changed.iter().chain(&self.no_change) {
@@ -75,7 +75,7 @@ impl State {
 }
 
 impl Scan {
-  pub fn change(&self, db: impl Into<PathBuf>) -> std::io::Result<State> {
+  pub fn diff(&self, db: impl Into<PathBuf>) -> std::io::Result<Diff> {
     let mut changed = vec![];
     let mut no_change = vec![];
     let db = db.into();
@@ -98,7 +98,7 @@ impl Scan {
                   if len_ts.len == meta.len_ts.len && len_ts.ts == meta.len_ts.ts {
                     no_change.push((rel.into(), meta));
                   } else {
-                    let fp = self.public.join(rel);
+                    let fp = self.root.join(rel);
                     let hash = hash(&fp)?;
                     if hash == meta.hash {
                       set_mtime(&fp, meta.len_ts.ts)?;
@@ -127,7 +127,7 @@ impl Scan {
     }
 
     for (rel, len_ts) in rel_len_ts.drain() {
-      let fp = self.public.join(&rel);
+      let fp = self.root.join(&rel);
       changed.push((
         rel,
         Meta {
@@ -137,7 +137,7 @@ impl Scan {
       ));
     }
 
-    Ok(State {
+    Ok(Diff {
       has_change: !changed.is_empty() || no_change.len() != self.rel_len_ts.len(),
       changed,
       db,
@@ -147,7 +147,7 @@ impl Scan {
 
   pub fn add(&mut self, rel: impl AsRef<str>) -> Void {
     let rel = rel.as_ref();
-    let fp = self.public.join(rel);
+    let fp = self.root.join(rel);
     if let Ok(meta) = std::fs::metadata(fp)
       && let Ok(ts) = meta.modified()
     {
@@ -162,18 +162,18 @@ impl Scan {
     OK
   }
 
-  pub fn new(public: impl Into<PathBuf>) -> std::io::Result<Self> {
-    let public = public.into();
+  pub fn new(root: impl Into<PathBuf>) -> std::io::Result<Self> {
+    let root = root.into();
     let mut rel_len_ts = HashMap::default();
 
-    for entry in WalkDir::new(&public).into_iter() {
+    for entry in WalkDir::new(&root).into_iter() {
       if let Ok(entry) = entry
         && entry.file_type().is_file()
       {
         let path = entry.path();
         if let Ok(meta) = std::fs::metadata(path)
           && let Ok(ts) = meta.modified()
-          && let Ok(rel) = path.strip_prefix(&public)
+          && let Ok(rel) = path.strip_prefix(&root)
         {
           let rel = rel.to_string_lossy();
           let rel = ifs::unix_path(rel);
@@ -188,6 +188,6 @@ impl Scan {
       }
     }
 
-    Ok(Self { rel_len_ts, public })
+    Ok(Self { rel_len_ts, root })
   }
 }

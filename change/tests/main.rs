@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use tracing::info;
 use aok::{Result, OK};
 use static_init::constructor;
 
@@ -8,19 +9,17 @@ extern "C" fn init() {
   loginit::init()
 }
 
-// #[tokio::test]
-// async fn test() -> Result<()> {
-//   info!("{}", 123456);
-//   OK
-// }
-
 #[test]
 fn test() -> Result<()> {
-  let root: PathBuf = "/Users/z/i18n/md".into();
-  let yml_fp = root.join(".i18n").join("data").join("public").join("dev");
-
-  let scan = change::Scan::new(root.join("public"))?;
-  let change = scan.change(&yml_fp)?;
-  change.save()?;
+  let root: PathBuf = env!("CARGO_MANIFEST_DIR").into();
+  info!("root {}", root.display());
+  let yml_fp = root.join("tests").join("change.yml");
+  let scan = change::Scan::new(root.join("src"))?;
+  let diff = scan.diff(&yml_fp)?;
+  info!("has_change {}", diff.has_change);
+  for (fp, _meta) in &diff.changed {
+    info!("{}", fp);
+  }
+  diff.save()?;
   OK
 }

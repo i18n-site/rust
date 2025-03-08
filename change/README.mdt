@@ -1,4 +1,4 @@
-# change
+# change : scan dir for changed file
 
 ```rust
 <+ ./tests/main.rs>
