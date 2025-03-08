@@ -1,7 +1,7 @@
 #![feature(let_chains)]
-#![feature(str_split_remainder)]
 
 use std::{
+  collections::HashMap,
   fs::File,
   hash::Hasher,
   io::{BufRead, BufReader, Read},
@@ -10,7 +10,6 @@ use std::{
 
 use serde::{Deserialize, Serialize};
 use aok::{Void, OK};
-use gxhash::HashMap;
 use set_mtime::set_mtime;
 pub use walkdir::WalkDir;
 use xxhash_rust::xxh3::Xxh3DefaultBuilder;
