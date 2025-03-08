@@ -14,7 +14,7 @@ fn test() -> Result<()> {
   let root: PathBuf = env!("CARGO_MANIFEST_DIR").into();
   info!("root {}", root.display());
   let yml_fp = root.join("tests").join("change.yml");
-  let scan = change::Scan::new(root.join("src"))?;
+  let scan = change::Scan::new(root)?;
   let diff = scan.diff(&yml_fp)?;
   info!("has_change {}", diff.has_change);
   for (fp, _meta) in &diff.changed {

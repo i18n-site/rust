@@ -1,6 +1,6 @@
 [package]
 name = "change"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -15,9 +15,9 @@ default = []
 
 [dependencies]
 aok = "0.1.17"
+ignore = "0.4.23"
 pc = { version = "0.1.12", path = "../pc" }
 serde = { version = "1.0.218", features = ["derive"] }
-walkdir = "2.5.0"
 
 [dependencies.burl]
 version = "0.1.4"

@@ -1,6 +1,6 @@
 [package]
 name = "preq1"
-version = "0.1.11"
+version = "0.1.12"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -14,9 +14,6 @@ ignored = [ "static_init" ]
 bytes = "1.10.1"
 static_init = "1.0.3"
 tracing = "0.1.41"
-
-[dependencies.genv]
-version = "0.1.16"
 
 [dependencies.reqwest]
 version = "0.12.12"

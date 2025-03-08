@@ -11,7 +11,6 @@ use std::{
 use serde::{Deserialize, Serialize};
 use aok::{Void, OK};
 use set_mtime::set_mtime;
-pub use walkdir::WalkDir;
 use xxhash_rust::xxh3::Xxh3DefaultBuilder;
 
 pub fn hash(fp: impl AsRef<Path>) -> std::io::Result<u128> {
@@ -166,9 +165,10 @@ impl Scan {
     let root = root.into();
     let mut rel_len_ts = HashMap::default();
 
-    for entry in WalkDir::new(&root).into_iter() {
+    for entry in ignore::Walk::new(&root).into_iter() {
       if let Ok(entry) = entry
-        && entry.file_type().is_file()
+        && let Some(file_type) = entry.file_type()
+        && file_type.is_file()
       {
         let path = entry.path();
         if let Ok(meta) = std::fs::metadata(path)
