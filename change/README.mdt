@@ -1,4 +1,6 @@
-# change : scan dir for changed file
+# change
+
+scan dir find changed files, ignore files in `.gitignore`
 
 ```rust
 <+ ./tests/main.rs>
