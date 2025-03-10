@@ -139,7 +139,7 @@ members = [
   "cookie_expire",
   "header_host",
   "ub64",
-  "set_cookie",
+  "set_cookie", "index_of",
   # "hsc",
   # "i18n.site",
   # "minjs",
