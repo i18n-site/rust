@@ -165,7 +165,7 @@ impl Scan {
     let root = root.into();
     let mut rel_len_ts = HashMap::default();
 
-    for entry in ignore::Walk::new(&root).into_iter() {
+    for entry in ignore::WalkBuilder::new(&root).hidden(false).build() {
       if let Ok(entry) = entry
         && let Some(file_type) = entry.file_type()
         && file_type.is_file()
