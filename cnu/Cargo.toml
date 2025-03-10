@@ -1,6 +1,6 @@
 [package]
 name = "cnu"
-version = "0.1.15"
+version = "0.1.16"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -15,16 +15,15 @@ version = "0.3.13"
 optional = true
 
 [dependencies.lang]
-version = "0.1.32"
-path = "../lang"
+version = "0.2.0"
 optional = true
 
 [dependencies.phf]
 version = "0.11.3"
-features = [ "macros" ]
+features = ["macros"]
 
 [features]
-default = [ ]
-f2j = [ ]
-j2f = [ ]
-lang = [ "dep:lang", "dep:enum_dispatch", "f2j", "j2f" ]
+default = []
+f2j = []
+j2f = []
+lang = ["dep:lang", "dep:enum_dispatch", "f2j", "j2f"]

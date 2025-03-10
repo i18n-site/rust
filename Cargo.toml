@@ -1,4 +1,5 @@
 [workspace]
+resolver = "3"
 members = [
   "pgw",
   "aiapi",
@@ -20,8 +21,6 @@ members = [
   "cli_tmpl",
   "click_captcha",
   "cmdv",
-  "i18",
-  "i18_hash",
   "i18_json",
   "len_mtime",
   "map_await",
@@ -102,7 +101,6 @@ members = [
   "cnu",
   "cookiestr",
   "dot_hide",
-  "ft",
   "genv",
   "getc",
   "ghapi",
@@ -122,7 +120,6 @@ members = [
   "iver",
   "jarg",
   "kvcache",
-  "lang",
   "li_pos",
   "lineiter",
   "loginit",
@@ -147,9 +144,11 @@ members = [
   # "i18n.site",
   # "minjs",
   # "i18n_js",
+  # "ft",
+  # "i18",
+  # "i18_hash",
 ]
 # "cget/test_cget",
-resolver = "2"
 
 [profile.release]
 lto = true

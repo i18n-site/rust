@@ -30,7 +30,7 @@ version = "0.1.23"
 path = "../sts"
 
 [dependencies.tokio]
-version = "1.43.0"
+version = "1.44.0"
 features = [ "rt-multi-thread", "macros", "sync" ]
 
 [dependencies.ifs]
@@ -44,7 +44,7 @@ version = "0.1.6"
 path = "../pos_next"
 
 [dependencies.serde]
-version = "1.0.218"
+version = "1.0.219"
 features = [ "derive" ]
 
 [dev-dependencies]
@@ -58,7 +58,7 @@ path = "../genv"
 version = "0.1.16"
 
 [dev-dependencies.tokio]
-version = "1.43.0"
+version = "1.44.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]

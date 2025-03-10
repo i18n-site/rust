@@ -17,7 +17,7 @@ default = []
 aok = "0.1.17"
 ignore = "0.4.23"
 pc = { version = "0.1.12", path = "../pc" }
-serde = { version = "1.0.218", features = ["derive"] }
+serde = { version = "1.0.219", features = ["derive"] }
 
 [dependencies.burl]
 version = "0.1.4"
