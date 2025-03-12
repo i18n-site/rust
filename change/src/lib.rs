@@ -163,12 +163,14 @@ impl Scan {
 
   pub fn new(
     root: impl Into<PathBuf>,
-    build: impl Fn(ignore::WalkBuilder) -> ignore::WalkBuilder,
+    build: impl Fn(&mut ignore::WalkBuilder) -> &ignore::WalkBuilder,
   ) -> std::io::Result<Self> {
     let root = root.into();
     let mut rel_len_ts = HashMap::default();
 
-    for entry in build(ignore::WalkBuilder::new(&root)).build() {
+    let mut b = ignore::WalkBuilder::new(&root);
+    build(&mut b);
+    for entry in b.build() {
       if let Ok(entry) = entry
         && let Some(file_type) = entry.file_type()
         && file_type.is_file()
