@@ -5,6 +5,11 @@
 <+ ./src/lib.rs>
 ```
 
+### test out
+```
+<+ ./out.txt>
+```
+
 ## code
 
 ```rust

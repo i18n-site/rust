@@ -18,11 +18,21 @@ pub struct Wrap<T: 'static> {
 }
 
 #[macro_export]
+macro_rules! help {
+  ($name:ident $new:expr) => {
+    $new
+  };
+  ($name:ident) => {
+    $name
+  };
+}
+
+#[macro_export]
 macro_rules! leak {
-  ($($name:ident = $object: expr),+) => {
+  ($($name:ident $(= $new: expr)?),+) => {
     $(
     $crate::paste! {
-      let [<__leak_ $name>] = $crate::_leak($object);
+      let [<__leak_ $name>] = $crate::_leak($crate::help!($name $($new)?));
       let $name = [<__leak_ $name>].ptr;
     }
     )+
@@ -50,6 +60,33 @@ impl<T> Drop for Leak<T> {
 }
 ```
 
+### test out
+```
+    Finished `test` profile [optimized + debuginfo] target(s) in 0.14s
+     Running unittests src/lib.rs (/tmp/rust/target/debug/deps/drop-312dac5912c289bd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/main.rs (/tmp/rust/target/debug/deps/main-35b2cf4e21425308)
+
+running 1 test
+  INFO main: drop/tests/main.rs:14: > obj Test(1)
+[drop/src/lib.rs:51:5] "drop" = "drop"
+  INFO main: drop/tests/main.rs:14: > obj Test(1)
+[drop/src/lib.rs:51:5] "drop" = "drop"
+test test ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests drop
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+```
+
 ## code
 
 ```rust
@@ -69,11 +106,21 @@ pub struct Wrap<T: 'static> {
 }
 
 #[macro_export]
+macro_rules! help {
+  ($name:ident $new:expr) => {
+    $new
+  };
+  ($name:ident) => {
+    $name
+  };
+}
+
+#[macro_export]
 macro_rules! leak {
-  ($($name:ident = $object: expr),+) => {
+  ($($name:ident $(= $new: expr)?),+) => {
     $(
     $crate::paste! {
-      let [<__leak_ $name>] = $crate::_leak($object);
+      let [<__leak_ $name>] = $crate::_leak($crate::help!($name $($new)?));
       let $name = [<__leak_ $name>].ptr;
     }
     )+

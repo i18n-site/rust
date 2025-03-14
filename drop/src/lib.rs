@@ -14,11 +14,21 @@ pub struct Wrap<T: 'static> {
 }
 
 #[macro_export]
+macro_rules! help {
+  ($name:ident $new:expr) => {
+    $new
+  };
+  ($name:ident) => {
+    $name
+  };
+}
+
+#[macro_export]
 macro_rules! leak {
-  ($($name:ident = $object: expr),+) => {
+  ($($name:ident $(= $new: expr)?),+) => {
     $(
     $crate::paste! {
-      let [<__leak_ $name>] = $crate::_leak($object);
+      let [<__leak_ $name>] = $crate::_leak($crate::help!($name $($new)?));
       let $name = [<__leak_ $name>].ptr;
     }
     )+
