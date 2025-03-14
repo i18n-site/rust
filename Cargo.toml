@@ -1,5 +1,5 @@
 [workspace]
-resolver = "3"
+resolver = "2"
 members = [
   "pgw",
   "aiapi",
@@ -139,7 +139,8 @@ members = [
   "cookie_expire",
   "header_host",
   "ub64",
-  "set_cookie", "index_of",
+  "set_cookie",
+  "index_of", "logwait",
   # "hsc",
   # "i18n.site",
   # "minjs",
