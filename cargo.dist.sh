@@ -29,7 +29,7 @@ dist() {
   git add -u
   git commit -m. || true
   git push
-  cargo publish --registry crates-io || true
+  cargo publish --registry crates-io --allow-dirty || true
   cd $DIR
   bun x cargo_upgrade
   rm Cargo.lock
