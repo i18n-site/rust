@@ -5,6 +5,7 @@
 use std::marker::PhantomData;
 
 pub use boxleak::boxleak;
+pub use paste::paste;
 
 pub struct Leak<T> {
   ptr: usize,
@@ -16,7 +17,19 @@ pub struct Wrap<T: 'static> {
   pub ptr: &'static mut T,
 }
 
-pub fn leak<T>(object: T) -> Wrap<T> {
+#[macro_export]
+macro_rules! leak {
+  ($($name:ident = $object: expr),+) => {
+    $(
+    $crate::paste! {
+      let [<__leak_ $name>] = $crate::_leak($object);
+      let $name = [<__leak_ $name>].ptr;
+    }
+    )+
+  };
+}
+
+pub fn _leak<T>(object: T) -> Wrap<T> {
   let ptr = boxleak(object);
   Wrap {
     _leak: Leak::<T> {
@@ -29,6 +42,7 @@ pub fn leak<T>(object: T) -> Wrap<T> {
 
 impl<T> Drop for Leak<T> {
   fn drop(&mut self) {
+    dbg!("drop");
     unsafe {
       drop(Box::from_raw(self.ptr as *mut T));
     }
@@ -42,6 +56,7 @@ impl<T> Drop for Leak<T> {
 use std::marker::PhantomData;
 
 pub use boxleak::boxleak;
+pub use paste::paste;
 
 pub struct Leak<T> {
   ptr: usize,
@@ -53,7 +68,19 @@ pub struct Wrap<T: 'static> {
   pub ptr: &'static mut T,
 }
 
-pub fn leak<T>(object: T) -> Wrap<T> {
+#[macro_export]
+macro_rules! leak {
+  ($($name:ident = $object: expr),+) => {
+    $(
+    $crate::paste! {
+      let [<__leak_ $name>] = $crate::_leak($object);
+      let $name = [<__leak_ $name>].ptr;
+    }
+    )+
+  };
+}
+
+pub fn _leak<T>(object: T) -> Wrap<T> {
   let ptr = boxleak(object);
   Wrap {
     _leak: Leak::<T> {
@@ -66,6 +93,7 @@ pub fn leak<T>(object: T) -> Wrap<T> {
 
 impl<T> Drop for Leak<T> {
   fn drop(&mut self) {
+    dbg!("drop");
     unsafe {
       drop(Box::from_raw(self.ptr as *mut T));
     }

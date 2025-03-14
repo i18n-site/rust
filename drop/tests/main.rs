@@ -1,4 +1,4 @@
-use aok::{OK, Void};
+use aok::{Void, OK};
 use tracing::info;
 use drop::leak;
 
@@ -17,9 +17,9 @@ pub async fn run(t: &Test) {
 #[tokio::test]
 async fn test() -> Void {
   // 不要写 let t = leak(Test(1)).ptr; 这样会导致过早释放
-  let t = leak(Test(1));
+  leak!(t = Test(1));
 
-  let ing = tokio::spawn(run(t.ptr));
+  let ing = tokio::spawn(run(t));
 
   ing.await?;
 

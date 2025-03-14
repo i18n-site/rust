@@ -1,6 +1,6 @@
 [package]
 name = "drop"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -17,6 +17,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 boxleak = { version = "0.1.1", path = "../boxleak" }
+paste = "1.0.15"
 
 [dev-dependencies]
 aok = "0.1.17"
