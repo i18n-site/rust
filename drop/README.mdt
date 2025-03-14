@@ -1,0 +1,14 @@
+# drop
+
+## test
+```rust
+<+ ./src/lib.rs>
+```
+
+## code
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >
