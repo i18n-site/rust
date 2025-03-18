@@ -142,7 +142,7 @@ members = [
   "set_cookie",
   "index_of",
   "logwait",
-  "drop",
+  "drop", "intbin",
   # "hsc",
   # "i18n.site",
   # "minjs",
