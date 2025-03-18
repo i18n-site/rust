@@ -23,7 +23,7 @@ version = "0.1.17"
 [dev-dependencies.ifs]
 path = "../ifs"
 features = [ "fs" ]
-version = "0.1.44"
+version = "0.1.45"
 
 [dev-dependencies.loginit]
 path = "../loginit"

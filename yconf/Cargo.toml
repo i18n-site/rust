@@ -5,7 +5,7 @@ serde_yaml = "0.9.34"
 thiserror = "2.0.12"
 
 [dependencies.ifs]
-version = "0.1.44"
+version = "0.1.45"
 path = "../ifs"
 default-features = false
 features = [ "fs" ]

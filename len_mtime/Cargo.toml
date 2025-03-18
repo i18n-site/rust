@@ -16,10 +16,10 @@ path = "../trait_len"
 version = "2.6.7"
 
 [dependencies.ifs]
-version = "0.1.44"
+version = "0.1.45"
 path = "../ifs"
 default-features = false
-features = ["fs"]
+features = [ "fs" ]
 
 [dependencies.xerr]
 version = "0.1.15"
@@ -45,4 +45,4 @@ tracing = "0.1.41"
 
 [dev-dependencies.tokio]
 version = "1.44.1"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

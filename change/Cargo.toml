@@ -30,7 +30,7 @@ version = "0.1.5"
 path = "../burl"
 
 [dependencies.ifs]
-version = "0.1.44"
+version = "0.1.45"
 path = "../ifs"
 features = [ "fs", "unix_path" ]
 
