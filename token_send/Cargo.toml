@@ -23,7 +23,7 @@ version = "0.1.6"
 path = "../s_"
 
 [dependencies.aerr]
-version = "0.2.7"
+version = "0.2.8"
 path = "../aerr"
 
 [dependencies.api_token]
