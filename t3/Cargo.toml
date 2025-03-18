@@ -27,7 +27,7 @@ version = "0.6.2"
 features = [ "compression-zstd" ]
 
 [dependencies.tokio]
-version = "1.44.0"
+version = "1.44.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dependencies.axum]

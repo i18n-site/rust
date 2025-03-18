@@ -1,6 +1,6 @@
 [dependencies]
 aok = "0.1.17"
-gxhash = "3.4.1"
+gxhash = "3.5.0"
 
 [dependencies.serde]
 version = "1.0.219"
@@ -33,5 +33,5 @@ static_init = "1.0.3"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.44.0"
+version = "1.44.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

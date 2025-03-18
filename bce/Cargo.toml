@@ -14,7 +14,7 @@ default = []
 all-features = true
 
 [dependencies]
-bincode = "2.0.0"
+bincode = "2.0.1"
 static_init = "1.0.3"
 
 [dev-dependencies]
@@ -24,5 +24,5 @@ static_init = "1.0.3"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.44.0"
+version = "1.44.1"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

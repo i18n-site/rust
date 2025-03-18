@@ -102,7 +102,7 @@ impl VerFs {
 
     let hash: Box<[u8]> = [
       hasher.finalize().as_bytes(),
-      &intbin::u64_bin(len as u64)[..],
+      &intbin::to_bin(len as u64)[..],
     ]
     .concat()
     .into();
@@ -150,7 +150,7 @@ impl VerFs {
     }
     let hash: Box<[u8]> = [
       hasher.finalize().as_bytes(),
-      &intbin::u64_bin(len as u64)[..],
+      &intbin::to_bin(len as u64)[..],
     ]
     .concat()
     .into();

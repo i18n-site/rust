@@ -121,7 +121,7 @@ impl LangRelTs {
       lang_rel.entry(lang).or_insert_with(Vec::new).push(format!(
         "{}#{}",
         rel,
-        burl::e(intbin::u64_bin(self.rel_ts[rel.as_str()]))
+        burl::e(intbin::to_bin(self.rel_ts[rel.as_str()]))
       ));
     }
 
@@ -341,7 +341,7 @@ impl Sitemap {
     let mut lang_rel = HashMap::new();
     for (rel, t) in &self.rel_lang_set {
       let lang = lang_li_e(&t.lang_set);
-      let rel = format!("{}#{}", rel, burl::e(intbin::u64_bin(t.ts)));
+      let rel = format!("{}#{}", rel, burl::e(intbin::to_bin(t.ts)));
       lang_rel.entry(lang).or_insert_with(Vec::new).push(rel);
     }
     dumps(lang_rel)

@@ -1,13 +1,13 @@
 [dependencies]
 aok = "0.1.17"
 futures = "0.3.31"
-reqwest = "0.12.12"
+reqwest = "0.12.14"
 serde = "1.0.219"
-sonic-rs = "0.3.17"
+sonic-rs = "0.4.0"
 tracing = "0.1.41"
 
 [dependencies.tokio]
-version = "1.44.0"
+version = "1.44.1"
 features = [ "time", "macros" ]
 
 [dependencies.ireq]
@@ -33,5 +33,5 @@ static_init = "1.0.3"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.44.0"
+version = "1.44.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

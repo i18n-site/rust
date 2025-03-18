@@ -15,7 +15,7 @@ version = "0.3.13"
 optional = true
 
 [dependencies.lang]
-version = "0.2.0"
+version = "0.2.9"
 optional = true
 
 [dependencies.phf]

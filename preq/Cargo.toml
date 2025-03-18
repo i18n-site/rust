@@ -20,7 +20,7 @@ version = "0.1.13"
 path = "../preq1"
 
 [dependencies.reqwest]
-version = "0.12.12"
+version = "0.12.14"
 features = [ "zstd" ]
 
 [dependencies.static_init]
@@ -38,5 +38,5 @@ path = "../loginit"
 version = "0.1.18"
 
 [dev-dependencies.tokio]
-version = "1.44.0"
+version = "1.44.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

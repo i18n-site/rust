@@ -1,6 +1,6 @@
 [package]
 name = "intbin"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -25,5 +25,5 @@ static_init = "1.0.3"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.44.0"
+version = "1.44.1"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

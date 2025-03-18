@@ -16,7 +16,7 @@ pub fn b3(bin: impl AsRef<[u8]>) -> [u8; 32] {
 
 pub fn b3_len(bin: impl AsRef<[u8]>) -> Box<[u8]> {
   let bin = bin.as_ref();
-  [&b3(bin)[..], &intbin::u64_bin(bin.len() as u64)[..]]
+  [&b3(bin)[..], &intbin::to_bin(bin.len() as u64)[..]]
     .concat()
     .into()
 }
@@ -26,6 +26,6 @@ pub fn b3_len_fp(path: impl AsRef<Path>) -> Result<HashLen, std::io::Error> {
   let (hash, len) = hash!(: blake3::Hasher, file);
   Ok(HashLen {
     len,
-    hash: [hash.finalize().as_bytes(), &intbin::u64_bin(len as u64)[..]].concat(),
+    hash: [hash.finalize().as_bytes(), &intbin::to_bin(len as u64)[..]].concat(),
   })
 }

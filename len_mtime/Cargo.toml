@@ -1,8 +1,8 @@
 [dependencies]
-bincode = "2.0.0"
+bincode = "2.0.1"
 aok = "0.1.17"
 bytes = "1.10.1"
-gxhash = "3.4.1"
+gxhash = "3.5.0"
 
 [dependencies.bce]
 version = "0.1.8"
@@ -44,5 +44,5 @@ static_init = "1.0.3"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.44.0"
+version = "1.44.1"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

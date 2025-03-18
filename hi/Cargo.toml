@@ -12,7 +12,7 @@ ignored = [ "static_init" ]
 
 [dependencies]
 futures = "0.3.31"
-sonic-rs = "0.3.17"
+sonic-rs = "0.4.0"
 static_init = "1.0.3"
 tracing = "0.1.41"
 
@@ -31,7 +31,7 @@ version = "0.1.17"
 version = "0.1.20"
 
 [dependencies.tokio]
-version = "1.44.0"
+version = "1.44.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dependencies.wxpush]
