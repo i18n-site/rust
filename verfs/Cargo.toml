@@ -1,12 +1,12 @@
 [dependencies]
 aok = "0.1.17"
 blake3 = "1.6.1"
-intbin = "0.1.2"
+intbin = "0.2.3"
 sonic-rs = "0.4.0"
 thiserror = "2.0.12"
 
 [dependencies.burl]
-version = "0.1.4"
+version = "0.1.5"
 path = "../burl"
 
 [dependencies.cmp_len_str]

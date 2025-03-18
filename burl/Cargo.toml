@@ -4,7 +4,7 @@ base-x = "0.2.11"
 
 [package]
 name = "burl"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -13,7 +13,7 @@ description = "burl"
 
 [dev-dependencies]
 aok = "0.1.17"
-intbin = "0.1.2"
+intbin = "0.2.3"
 loginit = "0.1.18"
 static_init = "1.0.3"
 tracing = "0.1.41"

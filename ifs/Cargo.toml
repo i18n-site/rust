@@ -54,7 +54,7 @@ features = [ "traits-preview" ]
 optional = true
 
 [dependencies.intbin]
-version = "0.1.2"
+version = "0.2.3"
 optional = true
 
 [features]

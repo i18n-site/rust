@@ -11,16 +11,16 @@ description = "ytree"
 all-features = true
 
 [features]
-default = []
+default = [ ]
 sitemap = [
-  "dep:lang",
-  "dep:vb",
-  "dep:burl",
-  "dep:xerr",
-  "dep:roaring",
-  "dep:intbin",
-  "dep:sts",
-  "dep:const-str",
+"dep:lang",
+"dep:vb",
+"dep:burl",
+"dep:xerr",
+"dep:roaring",
+"dep:intbin",
+"dep:sts",
+"dep:const-str"
 ]
 
 [dependencies]
@@ -28,7 +28,7 @@ aok = "0.1.17"
 serde_yaml = "0.9.34"
 
 [dependencies.intbin]
-version = "0.1.2"
+version = "0.2.3"
 optional = true
 
 [dependencies.sts]
@@ -45,13 +45,13 @@ version = "0.1.10"
 path = "../tsfmt"
 
 [dependencies.burl]
-version = "0.1.4"
+version = "0.1.5"
 path = "../burl"
 optional = true
 
 [dependencies.indexmap]
 version = "2.8.0"
-features = ["serde"]
+features = [ "serde" ]
 
 [dependencies.lang]
 version = "0.2.9"
@@ -59,12 +59,12 @@ optional = true
 
 [dependencies.roaring]
 version = "0.10.10"
-features = ["simd"]
+features = [ "simd" ]
 optional = true
 
 [dependencies.serde]
 version = "1.0.219"
-features = ["derive"]
+features = [ "derive" ]
 
 [dependencies.vb]
 version = "0.1.8"
@@ -84,4 +84,4 @@ tracing = "0.1.41"
 
 [dev-dependencies.tokio]
 version = "1.44.1"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

@@ -15,7 +15,7 @@ rustdoc-args = [ "--cfg", "docsrs" ]
 base64 = "0.22.1"
 
 [dependencies.intbin]
-version = "0.1.2"
+version = "0.2.3"
 optional = true
 
 [dependencies.vbyte]

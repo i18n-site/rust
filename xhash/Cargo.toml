@@ -12,7 +12,7 @@ all-features = true
 rustc-args = [ "-C", "target-feature=+aes" ]
 
 [dependencies]
-intbin = "0.1.2"
+intbin = "0.2.3"
 
 [dependencies.xxhash-rust]
 version = "0.8.15"
