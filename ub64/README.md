@@ -1,7 +1,7 @@
 # ub64: urlsafe base64 encode / decode
 
 ```rust
-pub use base64::{engine::general_purpose::URL_SAFE_NO_PAD, DecodeError, Engine};
+pub use base64::{DecodeError, Engine, engine::general_purpose::URL_SAFE_NO_PAD};
 
 pub fn b64e(bin: impl AsRef<[u8]>) -> String {
   URL_SAFE_NO_PAD.encode(bin)
