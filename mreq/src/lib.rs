@@ -16,10 +16,13 @@ pub struct Mreq {
 pub enum Error {
   #[error("{url} : {msg}")]
   InternalServer { url: String, msg: String },
+
   #[error("host li is empty")]
   HostLiEmpty,
-  #[error("request is empty : {0:?}")]
-  RequestEmpty(Request),
+
+  #[error("request is empty")]
+  RequestEmpty,
+
   #[error("{code} {url}\n{msg}")]
   Status {
     code: StatusCode,
@@ -140,7 +143,7 @@ impl Mreq {
             }
           }
         } else {
-          return Err(Error::RequestEmpty(req).into());
+          return Err(Error::RequestEmpty.into());
         }
       }
     } else {

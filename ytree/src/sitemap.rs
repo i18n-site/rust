@@ -3,7 +3,7 @@ use std::{
   path::Path,
 };
 
-use lang::{Lang, LANG_CODE};
+use lang::{Lang, CODE};
 use roaring::RoaringBitmap;
 
 #[derive(Debug, Default)]
@@ -171,7 +171,7 @@ impl LangTree {
             let mut lang_set = RoaringBitmap::new();
             for lang in &i.lang {
               let lang = *lang;
-              if std::fs::exists(root.join(LANG_CODE[lang as usize]).join(rel))? {
+              if std::fs::exists(root.join(CODE[lang as usize]).join(rel))? {
                 lang_set.push(lang as u32);
               }
             }
@@ -259,7 +259,7 @@ impl Sitemap {
             t.lang_set
             .iter()
             .map(|lang| {
-              let lang = LANG_CODE[lang as usize];
+              let lang = CODE[lang as usize];
               format!(
                 r#"<xhtml:link rel="alternate" hreflang="{lang}" href="https://{host}/{lang}/{url}.htm"/>"#
               )

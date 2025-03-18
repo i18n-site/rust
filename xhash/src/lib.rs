@@ -32,7 +32,7 @@ pub fn hash128(bin: impl AsRef<[u8]>) -> u128 {
 pub fn hash_len_concat(hash: u128, len: usize) -> Vec<u8> {
   [
     &hash.to_le_bytes()[..],
-    &intbin::to_bin((len - HASH128_LEN) as _)[..],
+    &intbin::to_bin(len - HASH128_LEN)[..],
   ]
   .concat()
 }
