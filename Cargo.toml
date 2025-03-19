@@ -141,7 +141,7 @@ members = [
   "index_of",
   "logwait",
   "drop",
-  "intbin",
+  "intbin", "range_merge",
   # "hsc",
   # "i18n.site",
   # "minjs",
