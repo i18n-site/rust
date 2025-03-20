@@ -1,0 +1,7 @@
+[package]
+name = "md2htm_without_p"
+version = "0.1.1"
+edition = "2024"
+
+[dependencies]
+pulldown-cmark = "0.13.0"
