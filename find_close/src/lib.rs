@@ -25,7 +25,7 @@ pub fn find_close(htm: &str, tag: impl AsRef<str>) -> usize {
             if c == '>' {
               if t.trim() == tag {
                 if stack == 0 {
-                  return pos;
+                  return pos + 1;
                 }
                 stack -= 1;
               }
