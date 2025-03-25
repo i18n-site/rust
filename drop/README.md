@@ -32,8 +32,8 @@ macro_rules! leak {
   ($($name:ident $(= $new: expr)?),+) => {
     $(
     $crate::paste! {
-      let [<__leak_ $name>] = $crate::_leak($crate::help!($name $($new)?));
-      let $name = [<__leak_ $name>].ptr;
+      let [<__drop_ $name>] = $crate::_leak($crate::help!($name $($new)?));
+      let $name = [<__drop_ $name>].ptr;
     }
     )+
   };
@@ -52,7 +52,7 @@ pub fn _leak<T>(object: T) -> Wrap<T> {
 
 impl<T> Drop for Leak<T> {
   fn drop(&mut self) {
-    dbg!("drop");
+    // dbg!("drop");
     unsafe {
       drop(Box::from_raw(self.ptr as *mut T));
     }
@@ -120,8 +120,8 @@ macro_rules! leak {
   ($($name:ident $(= $new: expr)?),+) => {
     $(
     $crate::paste! {
-      let [<__leak_ $name>] = $crate::_leak($crate::help!($name $($new)?));
-      let $name = [<__leak_ $name>].ptr;
+      let [<__drop_ $name>] = $crate::_leak($crate::help!($name $($new)?));
+      let $name = [<__drop_ $name>].ptr;
     }
     )+
   };
@@ -140,7 +140,7 @@ pub fn _leak<T>(object: T) -> Wrap<T> {
 
 impl<T> Drop for Leak<T> {
   fn drop(&mut self) {
-    dbg!("drop");
+    // dbg!("drop");
     unsafe {
       drop(Box::from_raw(self.ptr as *mut T));
     }
