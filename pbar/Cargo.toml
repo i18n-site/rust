@@ -5,12 +5,12 @@ indicatif = { version = "0.17.11", features = ["improved_unicode"] }
 
 [package]
 name = "pbar"
-version = "0.1.6"
+version = "0.1.8"
 edition = "2021"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/main/pbar"
-description = "pbar"
+description = "process bar"
 
 [dev-dependencies]
 aok = "0.1.17"

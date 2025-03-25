@@ -1,6 +1,7 @@
 use aok::{Result, OK};
 use static_init::constructor;
-use tracing::info;
+use pbar::pbar;
+use tokio::time::Duration;
 
 #[constructor(0)]
 extern "C" fn init() {
@@ -9,6 +10,13 @@ extern "C" fn init() {
 
 #[tokio::test]
 async fn test() -> Result<()> {
-  info!("{}", 123456);
+  let mut pbar = pbar(100);
+  for i in 0..100 {
+    if i % 5 == 0 {
+      pbar.set_message(format!("set message {}", i));
+    }
+    pbar.inc(1);
+    tokio::time::sleep(Duration::from_millis(50)).await;
+  }
   OK
 }
