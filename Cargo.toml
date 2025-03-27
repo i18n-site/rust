@@ -153,7 +153,7 @@ members = [
   # "i18n.site",
   # "minjs",
   # "i18n_js",
-  # "ft",
+  "ft",
   # "i18",
   # "i18_hash",
 ]
