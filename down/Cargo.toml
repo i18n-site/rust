@@ -19,6 +19,7 @@ default = [ ]
 aok = "0.1.17"
 indexmap = "2.9.0"
 kanal = "0.1.1"
+len-trait = "0.6.1"
 roaring = "0.10.12"
 tracing = "0.1.41"
 

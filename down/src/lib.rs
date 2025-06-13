@@ -7,6 +7,7 @@ use std::{
   sync::Arc,
 };
 
+use len_trait::Len;
 use tracing::{error, warn};
 use aok::{OK, Result, Void};
 use indexmap::IndexSet;
@@ -22,20 +23,21 @@ pub const CHUNK_SIZE: u64 = 256 * 1024; // 256KB
 
 pub async fn down<U: IntoUrl>(
   filesize: u64,
-  url_li: impl IntoIterator<Item = U>,
+  url_li: impl IntoIterator<Item = U> + Len,
   to_path: impl AsRef<Path>,
 ) -> Void {
-  let url_li_len = url_li.len();
+  let to_path = to_path.as_ref();
+  let url_li_len = url_li.len() as u64;
 
   if url_li_len == 0 {
-    warn!("{to_path} no url for down");
+    warn!("{} no url for down", to_path.display().to_string());
     return OK;
   }
 
   let mut file = std::fs::File::create(to_path)?;
   file.set_len(filesize)?;
 
-  let chunk_size = if url_li_li * CHUNK_SIZE > filesize {
+  let chunk_size = if url_li_len * CHUNK_SIZE > filesize {
     filesize.div_ceil(url_li_len)
   } else {
     CHUNK_SIZE

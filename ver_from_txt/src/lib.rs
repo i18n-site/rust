@@ -35,7 +35,9 @@ pub fn ver_from_txt(project: &str, pre_ver: &[u64; 3], txt: &str) -> Result<Opti
       let ver = sver.to_string();
       let mut url_li = vec![];
 
+      dbg!(&txt);
       for i in txt.split(";") {
+        dbg!(&i);
         if let Some(first) = i.chars().next()
           && first.is_ascii_uppercase()
         {
@@ -57,23 +59,27 @@ pub fn ver_from_txt(project: &str, pre_ver: &[u64; 3], txt: &str) -> Result<Opti
             }
           }
           continue;
-        } else if let Some((prefix, remain)) = i.split_once("[") {
-          if let Some((digit, remain)) = remain.split_once("]")
-            && let Some((begin, end)) = digit.split_once('-')
-            && let Ok(begin) = begin.parse::<u64>()
-            && let Ok(end) = end.parse::<u64>()
-          {
-            for i in begin..=end {
-              url_li.push(format!("https://{prefix}{i}{remain}",));
-            }
-            break;
-          } else {
-            error!("txt invalid : {i}");
-          }
         } else {
-          url_li.push(format!("https://{i}/{project}/{ver}"));
+          let suffix = format!("/{project}/{ver}");
+
+          if let Some((prefix, remain)) = i.split_once("[") {
+            if let Some((digit, remain)) = remain.split_once("]")
+              && let Some((begin, end)) = digit.split_once('-')
+              && let Ok(begin) = begin.parse::<u64>()
+              && let Ok(end) = end.parse::<u64>()
+            {
+              for i in begin..=end {
+                url_li.push(format!("https://{prefix}{i}{remain}{suffix}",));
+              }
+            } else {
+              error!("txt invalid : {i}");
+            }
+          } else {
+            url_li.push(format!("https://{i}{suffix}"));
+          }
         }
       }
+
       if !url_li.is_empty() {
         return Ok(Some(VerUrlLi { ver: sver, url_li }));
       }
