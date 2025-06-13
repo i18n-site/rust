@@ -1,0 +1,11 @@
+Base on tokio postgres
+
+Keep one postgres connection, will auto reconnect when connect close
+
+基于 tokio postgres , 保留一个 postgres 连接 , 连接关闭时会自动重新连接
+
+```rust
+<+ ./tests/main.rs>
+```
+
+<+ ../about.md >

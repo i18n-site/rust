@@ -1,0 +1,23 @@
+{
+  "name": "@3-/_tmpl_wasm",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i18n-site/rust.git"
+  },
+  "homepage": "https://github.com/i18n-site/rust/tree/main/_tmpl_wasm",
+  "keywords": [],
+  "author": "i18n.site@gmail.com",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./mod.js",
+    "./*": "./*"
+  },
+  "files": [
+    "./*"
+  ],
+  "devDependencies": {},
+  "peerDependencies": {},
+  "scripts": {},
+  "type": "module"
+}

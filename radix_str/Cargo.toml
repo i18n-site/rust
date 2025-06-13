@@ -1,0 +1,14 @@
+[package]
+name = "radix_str"
+version = "0.1.3"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/radix_str"
+description = "use proc_macro convert number radix to static str"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+radix_fmt = "1.0.0"

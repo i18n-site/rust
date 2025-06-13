@@ -1,0 +1,7 @@
+# _tmpl
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >
