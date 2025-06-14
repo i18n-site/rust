@@ -42,7 +42,7 @@ version = "0.1.1"
 path = "../riter"
 
 [dependencies.ver_from_txt]
-version = "0.1.8"
+version = "0.1.9"
 path = "../ver_from_txt"
 
 [dependencies.xerr]

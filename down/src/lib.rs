@@ -119,7 +119,8 @@ pub async fn down<U: IntoUrl>(
   OK
 }
 
-pub async fn meta(url: &str) -> Result<(u64, ireq::reqwest::Url)> {
+pub async fn meta(url: impl AsRef<str>) -> Result<(u64, ireq::reqwest::Url)> {
+  let url = url.as_ref();
   let res = REQ
     .get(url)
     .header("User-Agent", "curl/8.4.0")

@@ -9,6 +9,8 @@ use tracing::{error, warn};
 use sver::Ver;
 use base64::{Engine, engine::general_purpose::STANDARD};
 use aok::Result;
+mod name_li;
+pub use name_li::name_li;
 
 #[derive(Debug)]
 pub struct TxtInvalid;
@@ -38,9 +40,7 @@ pub fn ver_from_txt(project: &str, pre_ver: &[u64; 3], txt: &str) -> Result<Opti
       let ver = sver.to_string();
       let mut url_li = vec![];
 
-      dbg!(&txt);
       for i in txt.split(";") {
-        dbg!(&i);
         if let Some(first) = i.chars().next()
           && first.is_ascii_uppercase()
         {
@@ -51,7 +51,7 @@ pub fn ver_from_txt(project: &str, pre_ver: &[u64; 3], txt: &str) -> Result<Opti
               // url_li.push(format!("https://github.akams.cn/{url}"));
               url_li.push(url);
             }
-            // 不支持断点续传，不用
+            // 不支持断点续传，不用sourceforge
             // 'S' => {
             //   url_li.push(format!(
             //     "https://downloads.sourceforge.net/project/{i}/{project}-{ver}"
@@ -66,12 +66,8 @@ pub fn ver_from_txt(project: &str, pre_ver: &[u64; 3], txt: &str) -> Result<Opti
           let suffix = format!("/{project}/{ver}");
 
           if let Some((prefix, remain)) = i.split_once("[") {
-            if let Some((digit, remain)) = remain.split_once("]")
-              && let Some((begin, end)) = digit.split_once('-')
-              && let Ok(begin) = begin.parse::<u64>()
-              && let Ok(end) = end.parse::<u64>()
-            {
-              for i in begin..=end {
+            if let Some((range, remain)) = remain.split_once("]") {
+              for i in name_li(range) {
                 url_li.push(format!("https://{prefix}{i}{remain}{suffix}",));
               }
             } else {
