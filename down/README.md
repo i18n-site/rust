@@ -1,23 +1,45 @@
 # down
 
+down from multiple URLs to a single file
+
 ```rust
-#![feature(doc_auto_cfg)]
-#![feature(doc_cfg)]
+use std::path::PathBuf;
 
-use aok::Result;
-use ireq::REQ;
+use aok::{OK, Void};
+use down::down;
+use tracing::info;
 
-pub async fn meta(url: &str) -> Result<(u64, ireq::reqwest::Url)> {
-  let res = REQ
-    .get(url)
-    .header("User-Agent", "curl/8.4.0")
-    .send()
-    .await?;
-  let status = res.status();
-  if ireq::SUCCESS_STATUS.contains(&status) {
-    return Ok((res.content_length().unwrap_or(0), res.url().clone()));
+#[static_init::constructor(0)]
+extern "C" fn _loginit() {
+  loginit::init();
+}
+
+#[tokio::test]
+async fn test_async() -> Void {
+  let file = "0.1.51/x86_64-unknown-linux-musl.tar";
+  let tmp: PathBuf = format!("/tmp/{file}").into();
+  std::fs::create_dir_all(tmp.parent().unwrap())?;
+
+  let recv = down(
+    [
+      "github.com/up51/v/releases/download/i18-",
+      "up0.u-01.eu.org/i18/",
+      "up2.u-01.eu.org/i18/",
+      "up3.u-01.eu.org/i18/",
+      "yutk.eu.org/i18/",
+    ]
+    .map(|i| format!("https://{i}{file}")),
+    &tmp,
+  )
+  .await?;
+  if let Ok(size) = xerr::ok!(recv.recv().await) {
+    while let Ok(info) = recv.recv().await {
+      info!("{info}/{size}");
+    }
   }
-  Err(ireq::ReqError::Status(status, res.text().await?).into())
+
+  info!("✅ {}", tmp.display().to_string());
+  OK
 }
 ```
 

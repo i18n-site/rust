@@ -1,7 +1,9 @@
 # down
 
+down from multiple URLs to a single file
+
 ```rust
-<+ ./src/lib.rs>
+<+ ./tests/main.rs>
 ```
 
 <+ ../about.md >

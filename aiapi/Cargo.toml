@@ -11,13 +11,13 @@ description = "aiapi"
 all-features = true
 
 [package.metadata.cargo-machete]
-ignored = [ "static_init", "prost" ]
+ignored = ["static_init", "prost"]
 
 [dependencies]
 aok = "0.1.17"
 dashmap = "6.1.0"
 ireq = "0.1.31"
-prost = "0.14.0"
+prost = "0.13.5"
 reqwest = "0.12.20"
 serde_yaml = "0.9.34"
 sonic-rs = "0.5.1"
@@ -35,13 +35,13 @@ path = "../sts"
 
 [dependencies.tokio]
 version = "1.45.1"
-features = [ "rt-multi-thread", "macros", "sync" ]
+features = ["rt-multi-thread", "macros", "sync"]
 
 [dependencies.ifs]
 version = "0.1.46"
 path = "../ifs"
 default-features = false
-features = [ "conf" ]
+features = ["conf"]
 
 [dependencies.pos_next]
 version = "0.1.6"
@@ -49,7 +49,7 @@ path = "../pos_next"
 
 [dependencies.serde]
 version = "1.0.219"
-features = [ "derive" ]
+features = ["derive"]
 
 [dev-dependencies]
 aok = "0.1.17"
@@ -63,8 +63,8 @@ version = "0.1.16"
 
 [dev-dependencies.tokio]
 version = "1.45.1"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
 
 [build-dependencies]
 aok = "0.1.17"
-prost-build = "0.14.0"
+prost-build = "0.13.5"

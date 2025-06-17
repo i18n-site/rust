@@ -1,5 +1,7 @@
-use aok::{Void, OK};
-use down::{down, meta};
+use std::path::PathBuf;
+
+use aok::{OK, Void};
+use down::down;
 use tracing::info;
 
 #[static_init::constructor(0)]
@@ -9,28 +11,28 @@ extern "C" fn _loginit() {
 
 #[tokio::test]
 async fn test_async() -> Void {
-  let mut url_li = vec![];
-  let mut filesize = 0;
+  let file = "0.1.51/x86_64-unknown-linux-musl.tar";
+  let tmp: PathBuf = format!("/tmp/{file}").into();
+  std::fs::create_dir_all(tmp.parent().unwrap())?;
 
-  let file = "0.1.41/x86_64-unknown-linux-musl.tar";
-  for i in [
-    "https://github.com/up51/v/releases/download/i18-",
-    "https://up0.u-01.eu.org/i18/",
-    "https://up2.u-01.eu.org/i18/",
-    "https://up3.u-01.eu.org/i18/",
-    "https://yutk.eu.org/i18/",
-  ]
-  .map(|i| format!("{i}{file}"))
-  {
-    let (size, url) = meta(i).await?;
-    info!("{} {}", size, url.to_string());
-    if size > 0 {
-      filesize = size;
-      url_li.push(url);
+  let recv = down(
+    [
+      "github.com/up51/v/releases/download/i18-",
+      "up0.u-01.eu.org/i18/",
+      "up2.u-01.eu.org/i18/",
+      "up3.u-01.eu.org/i18/",
+      "yutk.eu.org/i18/",
+    ]
+    .map(|i| format!("https://{i}{file}")),
+    &tmp,
+  )
+  .await?;
+  if let Ok(size) = xerr::ok!(recv.recv().await) {
+    while let Ok(info) = recv.recv().await {
+      info!("{info}/{size}");
     }
   }
 
-  down(filesize, url_li, "/tmp/i18.tar").await?;
-
+  info!("✅ {}", tmp.display().to_string());
   OK
 }
