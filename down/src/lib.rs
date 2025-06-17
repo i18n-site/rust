@@ -1,6 +1,7 @@
 use ireq::{REQ, reqwest::IntoUrl};
 use kanal::{AsyncReceiver, unbounded_async};
 use tracing::warn;
+use tokio::spawn;
 use aok::{OK, Result};
 mod chunk_li;
 use chunk_li::ChunkLi;
@@ -26,10 +27,11 @@ pub async fn down<U: IntoUrl>(
 ) -> Result<AsyncReceiver<u64>> {
   let (send, recv) = kanal::bounded_async(1);
 
+  let mut ing = Vec::new();
   for i in url_li.into_iter() {
     let i = i.into_url()?;
     let send = send.clone();
-    tokio::spawn(async move {
+    ing.push(spawn(async move {
       match meta(i.clone()).await {
         Err(err) => warn!("{} : {err}", i.to_string()),
         Ok((size, url)) => {
@@ -42,7 +44,7 @@ pub async fn down<U: IntoUrl>(
         }
       }
       OK
-    });
+    }));
   }
 
   drop(send);
@@ -51,10 +53,14 @@ pub async fn down<U: IntoUrl>(
   let (info_send, info_recv) = kanal::unbounded_async();
   if let Ok((first_url, filesize)) = recv.recv().await {
     info_send.send(filesize).await?;
-    let mut runner = Runner::new(filesize, to_path, info_send, data_recv);
+    let mut runner = Runner::new(filesize, to_path, info_send, data_recv, || {
+      for i in ing {
+        i.abort();
+      }
+    });
     runner.run(first_url, &data_send);
 
-    tokio::spawn(async move {
+    spawn(async move {
       while let Ok((url, size)) = recv.recv().await {
         if filesize == size {
           runner.run(url, &data_send);

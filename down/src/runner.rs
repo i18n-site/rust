@@ -1,8 +1,10 @@
 use std::{
   io::{Seek, Write},
   path::PathBuf,
+  sync::Arc,
 };
 
+use parking_lot::Mutex;
 use kanal::{AsyncReceiver, AsyncSender};
 use aok::{OK, Result};
 use ireq::{REQ, reqwest::header};
@@ -16,7 +18,7 @@ pub type Ing = JoinHandle<Result<()>>;
 
 pub struct Runner {
   chunk_li: ChunkLi,
-  ing: Vec<Ing>,
+  ing: Arc<Mutex<Vec<Ing>>>,
 }
 
 impl Runner {
@@ -25,11 +27,18 @@ impl Runner {
     path: impl Into<PathBuf>,
     info_send: AsyncSender<u64>,
     data_recv: AsyncReceiver<(u64, Bytes)>,
+    on_end: impl FnOnce() + Send + 'static,
   ) -> Self {
     let path = path.into();
     let chunk_li = ChunkLi::new(size);
 
-    let cl = chunk_li.clone();
+    let ing = Arc::new(Mutex::new(Vec::new()));
+
+    let this = Self {
+      chunk_li: chunk_li.clone(),
+      ing: ing.clone(),
+    };
+
     tokio::spawn(async move {
       let mut file = std::fs::File::create(path)?;
       file.set_len(size)?;
@@ -41,6 +50,11 @@ impl Runner {
           downed += data.len() as u64;
           info_send.send(downed).await?;
           if downed == size {
+            let mut ing = ing.lock();
+            while let Some(i) = ing.pop() {
+              i.abort();
+            }
+            on_end();
             return OK;
           }
         }
@@ -48,16 +62,13 @@ impl Runner {
       OK
     });
 
-    Self {
-      ing: Vec::new(),
-      chunk_li: cl,
-    }
+    this
   }
 
   pub fn run(&mut self, url: ireq::reqwest::Url, send: &AsyncSender<(u64, Bytes)>) {
     let send = send.clone();
     let chunk_li = self.chunk_li.clone();
-    self.ing.push(tokio::spawn(async move {
+    self.ing.lock().push(tokio::spawn(async move {
       while let Some((begin, end)) = chunk_li.get().await {
         match ireq::req(
           REQ

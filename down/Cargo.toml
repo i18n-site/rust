@@ -1,6 +1,6 @@
 [package]
 name = "down"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -22,6 +22,7 @@ coarsetime = "0.1.36"
 indexmap = "2.9.0"
 kanal = "0.1.1"
 len-trait = "0.6.1"
+parking_lot = "0.12.4"
 tracing = "0.1.41"
 
 [dependencies.ireq]
