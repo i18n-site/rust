@@ -1,7 +1,7 @@
 [dependencies]
 tar = "0.4.44"
 tracing = "0.1.41"
-zstd = "0.13.3"
+zstd = { version = "0.13.3", features = ["bindgen"] }
 
 [package]
 name = "tzst"

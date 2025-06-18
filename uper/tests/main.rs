@@ -1,4 +1,4 @@
-use aok::{OK, Void};
+use aok::{Void, OK};
 use upgrade_host::UPGRADE_HOST;
 
 #[static_init::constructor(0)]

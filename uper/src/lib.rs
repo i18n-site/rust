@@ -1,8 +1,13 @@
 #![feature(doc_auto_cfg)]
 #![feature(doc_cfg)]
 
-use std::path::PathBuf;
+use std::{
+  fs::File,
+  path::{Path, PathBuf},
+};
 
+use pbar::pbar;
+use sver::Ver;
 use kanal::AsyncReceiver;
 use aok::{OK, Result, Void};
 pub use const_str;
@@ -18,17 +23,26 @@ use dns_check::dns_check;
 pub struct Uper {
   pub recv: AsyncReceiver<u64>,
   pub file: PathBuf,
+  pub project: String,
   pub channel: String,
-  pub ver: [u64; 3],
+  pub ver: Ver,
+}
+
+fn tar_zstd_to_dir<P1: AsRef<Path>, P2: AsRef<Path>>(path: P1, to_dir: P2) -> std::io::Result<()> {
+  let file = File::open(path)?;
+  let decoder = zstd::stream::read::Decoder::new(file)?;
+  let mut archive = tar::Archive::new(decoder);
+  archive.unpack(to_dir)?;
+  Ok(())
 }
 
 impl Uper {
   pub async fn load(
-    project: impl AsRef<str>,
+    project: impl Into<String>,
     channel: impl Into<String>,
     ver_url_li: VerUrlLi,
   ) -> Result<Self> {
-    let project = project.as_ref();
+    let project = project.into();
     let channel = channel.into();
     let tmpdir = std::env::temp_dir().join(format!("uper/{project}/{}", ver_url_li.ver));
     std::fs::create_dir_all(&tmpdir)?;
@@ -47,21 +61,42 @@ impl Uper {
       recv,
       file,
       channel,
-      ver: ver_url_li.ver.0,
+      ver: ver_url_li.ver,
+      project,
     })
   }
 
   pub async fn join(self, pk: [u8; 32]) -> Void {
     let recv = self.recv;
     if let Ok(size) = xerr::ok!(recv.recv().await) {
-      while let Ok(info) = recv.recv().await {
-        tracing::info!("{info}/{size}");
+      let mut pbar = pbar(size);
+      pbar.set_message(format!("upgrade {} → {}", self.project, self.ver));
+      let mut downed = 0;
+      while let Ok(d) = recv.recv().await {
+        downed = d;
+        pbar.set_position(downed)
       }
-    }
-    if let Some(fp) = upgrade_verify::check(vb::e(self.ver), &self.file, pk)? {
-      std::fs::remove_file(&self.file)?;
-      let tar_zst = fp.join("tar.zst");
-      tracing::info!("下载完成 {}", tar_zst.display());
+      if downed == size {
+        if let Some(verfiy_dir) = upgrade_verify::check(vb::e(self.ver.0), &self.file, pk)? {
+          xerr::log!(std::fs::remove_file(&self.file));
+          let tar_zst = verfiy_dir.join("tar.zst");
+
+          let to_dir = std::env::home_dir()
+            .unwrap_or("/".into())
+            .join(format!(".{}", self.project))
+            .join(TARGET)
+            .join(format!("{}", self.ver));
+
+          std::fs::remove_dir_all(&to_dir).ok();
+          xerr::log!(tar_zstd_to_dir(&tar_zst, &to_dir));
+          xerr::log!(std::fs::remove_dir_all(verfiy_dir));
+
+          pbar.finish_with_message(format!(
+            "✅ {} → {} ( {} channel)",
+            self.project, self.ver, self.channel,
+          ));
+        }
+      }
     }
     OK
   }

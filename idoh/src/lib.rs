@@ -4,14 +4,14 @@
 mod post;
 use std::sync::{
   Arc,
-  atomic::{AtomicU8, Ordering},
+  atomic::{AtomicI16, Ordering},
 };
 
+use tokio::time::{Duration, sleep};
 pub use post::{Answer, DohError, post};
 use defer_lite::defer;
 use aok::{OK, Result};
-use tracing::error;
-use tokio::time::{Duration, sleep};
+use tracing::warn;
 
 pub mod record_type {
   pub const TXT: u16 = 16;
@@ -38,7 +38,7 @@ pub async fn resolve<T: Send + 'static>(
   let (send, recv) = kanal::bounded_async(1);
 
   let spawn = tokio::spawn(async move {
-    let ing = Arc::new(AtomicU8::new(DOH_LI.len() as _));
+    let ing = Arc::new(AtomicI16::new(DOH_LI.len() as _));
 
     for doh in riter::iter(DOH_LI) {
       let query = query.clone();
@@ -47,14 +47,17 @@ pub async fn resolve<T: Send + 'static>(
       let extract = extract.clone();
       tokio::spawn(async move {
         let r = post(doh, &query).await;
-        let runing = ing.fetch_sub(1, Ordering::Relaxed);
+        ing.fetch_sub(1, Ordering::Relaxed);
 
         macro_rules! send_err {
           ($err: expr) => {{
-            let err = $err;
-            error!("{runing} : {doh} {err}");
-            if runing == 1 {
-              xerr::log!(send.send(Err(err)).await);
+            let runing = ing.load(Ordering::Relaxed);
+            if runing >= 0 {
+              let err = $err;
+              warn!("{runing} : {doh} {err}");
+              if runing <= 1 {
+                xerr::log!(send.send(Err(err)).await);
+              }
             }
           }};
         }
@@ -64,6 +67,7 @@ pub async fn resolve<T: Send + 'static>(
             Ok(res) => {
               if let Some(res) = res {
                 let _ = send.send(Ok::<_, aok::Error>(res)).await;
+                ing.store(-1, Ordering::Relaxed);
               }
             }
             Err(err) => send_err!(err),
@@ -74,13 +78,14 @@ pub async fn resolve<T: Send + 'static>(
         }
         OK
       });
-      sleep(Duration::from_millis(700)).await;
+      sleep(Duration::from_millis(500)).await;
     }
+    OK
   });
 
   defer! {
     spawn.abort();
   }
 
-  recv.recv().await?
+  Ok(recv.recv().await??)
 }
