@@ -55,7 +55,7 @@ pub fn check<P: AsRef<Path>>(
   if let Ok(sign) = sign.try_into() {
     let public_key = VerifyingKey::from_bytes(&pk)?;
     let sign = Signature::from_bytes(&sign);
-    dbg!(public_key.verify_prehashed(hasher, None, &sign)?);
+    public_key.verify_prehashed(hasher, None, &sign)?;
     return Ok(Some(dir));
   }
   Ok(None)

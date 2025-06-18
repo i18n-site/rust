@@ -61,7 +61,7 @@ pub async fn load(
   xerr::log!(fs_conf.dump(&conf));
 
   if let Some(ver_url_li) = dns_check(&project, &ver, &txt_host_li).await? {
-    return Ok(Some(Uper::new(project, channel, ver_url_li)));
+    return Ok(Some(Uper::load(project, channel, ver_url_li).await?));
   }
 
   Ok(None)

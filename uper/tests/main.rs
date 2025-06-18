@@ -13,7 +13,13 @@ async fn test_async() -> Void {
   tokio::time::sleep(std::time::Duration::from_secs(3)).await;
 
   if let Some(uper) = uper {
-    uper.join().await?;
+    uper
+      .join(
+        std::fs::read("/Users/z/host/conf/env/upgrade/pk")?
+          .try_into()
+          .unwrap(),
+      )
+      .await?;
   }
   OK
 }
