@@ -21,7 +21,7 @@ pub struct Line {
   pub val: String,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Confer {
   pub li: Vec<String>,
   pub kv: HashMap<String, Line>,

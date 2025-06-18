@@ -71,7 +71,7 @@ version = "0.1.15"
 path = "../xerr"
 
 [dependencies.confer]
-version = "0.1.4"
+version = "0.1.5"
 path = "../confer"
 features = [ "fs" ]
 optional = true

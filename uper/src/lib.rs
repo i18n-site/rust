@@ -6,6 +6,7 @@ use std::{
   path::{Path, PathBuf},
 };
 
+mod dir;
 use pbar::pbar;
 use sver::Ver;
 use kanal::AsyncReceiver;
@@ -81,11 +82,7 @@ impl Uper {
           xerr::log!(std::fs::remove_file(&self.file));
           let tar_zst = verfiy_dir.join("tar.zst");
 
-          let to_dir = std::env::home_dir()
-            .unwrap_or("/".into())
-            .join(format!(".{}", self.project))
-            .join(TARGET)
-            .join(format!("{}", self.ver));
+          let to_dir = dir::project(&self.project).join(format!("{}", self.ver));
 
           std::fs::remove_dir_all(&to_dir).ok();
           xerr::log!(tar_zstd_to_dir(&tar_zst, &to_dir));
