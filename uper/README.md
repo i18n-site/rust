@@ -1,25 +1,37 @@
 # uper
 
 ```rust
-use aok::{Result, OK};
-use static_init::constructor;
-use tracing::info;
+use aok::{OK, Void};
+use upgrade_host::UPGRADE_HOST;
+use uper::{ArgMatches, Command};
 
-#[constructor(0)]
-extern "C" fn init() {
-  loginit::init()
+#[static_init::constructor(0)]
+extern "C" fn _loginit() {
+  loginit::init();
 }
 
-// #[tokio::test]
-// async fn test() -> Result<()> {
-//   info!("{}", 123456);
-//   OK
-// }
+pub fn cmd_build(cmd: Command) -> Command {
+  cmd
+}
 
-#[test]
-fn test() -> Result<()> {
-  info!("{}", 123456);
+pub async fn run(matches: ArgMatches) -> Void {
+  dbg!("!!run");
   OK
+}
+
+#[tokio::main]
+async fn main() -> Void {
+  uper::load(
+    UPGRADE_HOST,
+    std::fs::read("/Users/z/host/conf/env/upgrade/pk")?
+      .try_into()
+      .unwrap(),
+    cmd_build,
+    run,
+    "i18",
+    [0, 1, 2],
+  )
+  .await
 }
 ```
 

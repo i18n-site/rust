@@ -58,7 +58,7 @@ version = "0.2.9"
 optional = true
 
 [dependencies.roaring]
-version = "0.10.12"
+version = "0.11.0"
 features = [ "simd" ]
 optional = true
 

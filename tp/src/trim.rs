@@ -41,7 +41,7 @@ pub fn push_line<'a>(mut line: &'a str, txt_li: &mut Vec<&'a str>, pos_li: &mut 
 
   // 将非空白部分作为一个文本片段添加到 txt_li 中，并记录其位置到 pos_li
   if end > 0 {
-    pos_li.push(txt_li.len() as u64);
+    let _ = pos_li.try_push(txt_li.len() as u64);
     txt_li.push(&line[..end]);
   }
 

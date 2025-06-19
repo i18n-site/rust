@@ -1,26 +1,28 @@
 [package]
 name = "uper"
-version = "0.1.0"
+version = "0.1.2"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/dev/uper"
 description = "uper"
-keywords = [ ]
+keywords = []
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = [ "--cfg", "docsrs" ]
+rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
-default = [ ]
-conf = [ "dep:confer", "dep:confdir" ]
+default = ["conf"]
+conf = ["dep:confer", "dep:confdir"]
 
 [dependencies]
 aok = "0.1.17"
+clap = { version = "4.5.40", features = ["string"] }
 coarsetime = "0.1.36"
 const-str = "0.6.2"
 current_platform = "0.2.0"
+defer-lite = "1.0.0"
 kanal = "0.1.1"
 self-replace = "1.5.0"
 tar = "0.4.44"
@@ -36,7 +38,7 @@ path = "../sver"
 
 [dependencies.zstd]
 version = "0.13.3"
-features = [ "bindgen" ]
+features = ["bindgen"]
 
 [dependencies.upgrade_verify]
 version = "0.1.2"
@@ -53,7 +55,7 @@ path = "../down"
 [dependencies.ireq]
 version = "0.1.31"
 path = "../ireq"
-features = [ "proxy" ]
+features = ["proxy"]
 
 [dependencies.idoh]
 version = "0.1.4"
@@ -74,7 +76,7 @@ path = "../xerr"
 [dependencies.confer]
 version = "0.1.5"
 path = "../confer"
-features = [ "fs" ]
+features = ["fs"]
 optional = true
 
 [dependencies.confdir]
@@ -84,13 +86,4 @@ optional = true
 
 [dependencies.tokio]
 version = "1.45.1"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
-
-[dev-dependencies]
-aok = "0.1.17"
-loginit = "0.1.18"
-static_init = "1.0.4"
-
-[dev-dependencies.upgrade_host]
-path = "../upgrade_host"
-version = "0.1.1"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

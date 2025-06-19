@@ -5,7 +5,7 @@ tokio-rustls = "0.26.2"
 x509-parser = "0.17.0"
 
 [dependencies.rustls]
-version = "0.23.27"
+version = "0.23.28"
 features = [ "ring" ]
 
 [dependencies.tlsinit]

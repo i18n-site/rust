@@ -3,7 +3,7 @@ rustls-native-certs = "0.8.1"
 static_init = "1.0.4"
 
 [dependencies.rustls]
-version = "0.23.27"
+version = "0.23.28"
 features = [ "ring" ]
 
 [package]

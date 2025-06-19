@@ -18,7 +18,7 @@ impl<'a> TxtPos<'a> {
 
   pub fn push_pos(&mut self, txt: &'a str) {
     if !txt.is_empty() {
-      self.pos_li.push(self.txt_li.len() as u64);
+      let _ = self.pos_li.try_push(self.txt_li.len() as u64);
       self.txt_li.push(txt);
     }
   }

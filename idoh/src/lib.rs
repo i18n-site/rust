@@ -87,5 +87,5 @@ pub async fn resolve<T: Send + 'static>(
     spawn.abort();
   }
 
-  Ok(recv.recv().await??)
+  recv.recv().await?
 }

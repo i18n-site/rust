@@ -172,7 +172,7 @@ impl LangTree {
             for lang in &i.lang {
               let lang = *lang;
               if std::fs::exists(root.join(CODE[lang as usize]).join(rel))? {
-                lang_set.push(lang as u32);
+                let _ = lang_set.try_push(lang as u32);
               }
             }
             if !lang_set.is_empty() {

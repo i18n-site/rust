@@ -1,9 +1,7 @@
 # uper
 
-// https://docs.rs/self-replace/latest/self_replace/
-
 ```rust
-<+ ./tests/main.rs>
+<+ ./tests/src/main.rs>
 ```
 
 <+ ../about.md >

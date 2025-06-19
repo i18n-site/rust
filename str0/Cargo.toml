@@ -14,7 +14,7 @@ default = []
 all-features = true
 
 [dependencies]
-roaring = { version = "0.10.12", features = ["simd"] }
+roaring = { version = "0.11.0", features = ["simd"] }
 
 [dev-dependencies]
 aok = "0.1.17"

@@ -1,9 +1,9 @@
 #![feature(let_chains)]
 
-use aok::{Result, OK};
+use aok::{OK, Result};
 use clap::arg;
 use cmdv::cmdv;
-use i18::{find_i18n_dir_or_exit, i18n_conf_path, purge_arg, run, token, Conf};
+use i18::{Conf, find_i18n_dir_or_exit, i18n_conf_path, purge_arg, run, token};
 use i18_conf::build_ignore;
 
 pub async fn cli() -> Result<()> {

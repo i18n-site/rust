@@ -17,7 +17,7 @@ ignored = [ "static_init", "prost" ]
 aok = "0.1.17"
 dashmap = "6.1.0"
 ireq = "0.1.31"
-prost = "0.13.5"
+prost = "0.14.1"
 reqwest = "0.12.20"
 serde_yaml = "0.9.34"
 sonic-rs = "0.5.1"
@@ -67,4 +67,4 @@ features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]
 aok = "0.1.17"
-prost-build = "0.13.5"
+prost-build = "0.14.1"

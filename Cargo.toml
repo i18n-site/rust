@@ -165,6 +165,7 @@ members = [
   "riter",
   "ver_from_txt",
   "down",
+  "uper/tests",
   # "i18",
   # "i18_hash",
 ]
