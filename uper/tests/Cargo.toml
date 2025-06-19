@@ -19,7 +19,7 @@ version = "1.45.1"
 features = [ "rt", "macros", "rt-multi-thread" ]
 
 [dependencies.uper]
-version = "0.1.5"
+version = "0.1.6"
 path = ".."
 features = [ "conf" ]
 
