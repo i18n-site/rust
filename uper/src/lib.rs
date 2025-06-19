@@ -21,7 +21,7 @@ pub use conf::load;
 #[macro_export]
 macro_rules! load {
   ($host_li: expr, $pk: expr, $cmd_build: expr, $run: expr) => {{
-    $crate::conf::load(
+    $crate::load(
       $host_li,
       $pk,
       $cmd_build,

@@ -77,7 +77,6 @@ pub async fn load<F: 'static + Send + std::future::Future<Output = Result<()>>>(
 
     if let Ok(uper) = xerr::ok!(uper) {
       ing.await??;
-      // let ver = uper.ver.to_string();
       uper.join(pk).await?;
       return OK;
     }
