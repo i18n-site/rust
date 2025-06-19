@@ -31,7 +31,7 @@ pub async fn load<F: 'static + Send + std::future::Future<Output = Result<()>>>(
     let pre_check: u64 = conf.get(PRE_CHECK, 0);
     let upgrade_freq: i64 = conf.get("freq", 7);
     if upgrade_freq < 0 {
-      return run().await;
+      return ing.await?;
     }
     now_days > pre_check + (upgrade_freq as u64)
   };
@@ -71,8 +71,6 @@ pub async fn load<F: 'static + Send + std::future::Future<Output = Result<()>>>(
       ing.await??;
       let ver = uper.ver.to_string();
       uper.join(pk).await?;
-      conf.set("ver", ver);
-      xerr::log!(fs_conf.dump(&conf));
       return OK;
     }
   }

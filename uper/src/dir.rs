@@ -6,5 +6,6 @@ pub fn project(name: &str) -> PathBuf {
   std::env::home_dir()
     .unwrap_or("/".into())
     .join(format!(".{}", name))
+    .join("ver")
     .join(TARGET)
 }
