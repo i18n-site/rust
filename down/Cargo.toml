@@ -21,7 +21,6 @@ bytes = "1.10.1"
 coarsetime = "0.1.36"
 indexmap = "2.9.0"
 kanal = "0.1.1"
-len-trait = "0.6.1"
 parking_lot = "0.12.4"
 tracing = "0.1.41"
 

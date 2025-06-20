@@ -12,7 +12,7 @@ pub fn cmd_build(cmd: Command) -> Command {
 }
 
 pub async fn run(matches: ArgMatches) -> Void {
-  dbg!("!!run");
+  dbg!(matches);
   OK
 }
 

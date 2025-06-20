@@ -166,6 +166,8 @@ members = [
   "ver_from_txt",
   "down",
   "uper/tests",
+  "axum_graceful_restart",
+  "axum_graceful_restart/tests",
   # "i18",
   # "i18_hash",
 ]
