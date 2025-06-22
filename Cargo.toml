@@ -167,7 +167,7 @@ members = [
   "down",
   "uper/tests",
   "axum_graceful_restart",
-  "axum_graceful_restart/tests",
+  "axum_graceful_restart/tests", "x_read_ip",
   # "i18",
   # "i18_hash",
 ]
