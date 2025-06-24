@@ -13,7 +13,7 @@ version = "0.2.12"
 path = "../trait_len"
 
 [dependencies.fjall]
-version = "2.11.0"
+version = "2.11.1"
 
 [dependencies.ifs]
 version = "0.1.46"

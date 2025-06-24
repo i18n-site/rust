@@ -32,7 +32,9 @@ pub fn frame_stream<B: AsRef<[u8]>>(
 }
 
 #[cfg(feature = "axum")]
-pub fn response(receiver: AsyncReceiver<Bytes>) -> axum::response::Response {
+pub fn response<B: AsRef<[u8]> + Send + 'static>(
+  receiver: AsyncReceiver<B>,
+) -> axum::response::Response {
   use axum::{body::Body, http::header::CONTENT_TYPE};
 
   axum::response::Response::builder()
