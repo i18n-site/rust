@@ -170,6 +170,8 @@ members = [
   "axum_graceful_restart/tests",
   "x_read_ip",
   "frame_stream",
+  "reload_self",
+  "reload_self/test",
   # "i18",
   # "i18_hash",
 ]

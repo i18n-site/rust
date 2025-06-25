@@ -17,7 +17,7 @@ pub fn frame_stream<B: AsRef<[u8]>>(
         let len = chunk.len();
         let mut framed_chunk = BytesMut::with_capacity(4 + len);
         framed_chunk.put_u32_le(len as u32); // 4 字节长度前缀
-        framed_chunk.put_slice(&chunk);
+        framed_chunk.put_slice(chunk);
 
         let item = Ok(framed_chunk.freeze());
         let next_state = rx;
