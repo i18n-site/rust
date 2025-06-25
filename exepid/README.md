@@ -3,7 +3,7 @@
 ```rust
 use std::{env, fs::write, path::Path, process};
 
-pub fn exepid() -> std::io::Result<()> {
+pub fn save() -> std::io::Result<()> {
   let pid = process::id();
 
   let pid_file = if let Ok(fp) = env::var("PID_FILE") {
