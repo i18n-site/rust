@@ -1,7 +1,7 @@
 #![feature(let_chains)]
 
 use std::{
-  collections::{HashMap, HashSet},
+  collections::HashMap,
   fs::{File, Metadata},
   hash::Hasher,
   io::{BufRead, BufReader, Read},
@@ -50,16 +50,16 @@ impl LenTs {
   }
 }
 
-pub fn path_meta(path: impl AsRef<Path>) -> std::io::Result<Meta> {
-  let len_ts = LenTs::new(std::fs::metadata(path.as_ref())?);
-  let hash = hash(path.as_ref())?;
-  Ok(Meta { len_ts, hash })
-}
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Meta {
   pub len_ts: LenTs,
   pub hash: u128,
+}
+
+pub fn path_meta(path: impl AsRef<Path>) -> std::io::Result<Meta> {
+  let len_ts = LenTs::new(std::fs::metadata(path.as_ref())?);
+  let hash = hash(path.as_ref())?;
+  Ok(Meta { len_ts, hash })
 }
 
 #[derive(Debug)]
@@ -74,27 +74,27 @@ pub struct Diff {
   pub no_change: Vec<(String, Meta)>,
   pub db: PathBuf,
   pub has_change: bool,
-  pub refresh: HashSet<String>,
   pub root: PathBuf,
 }
 
+fn meta_encode(rel: impl AsRef<str>, meta: &Meta) -> pc::Result<String> {
+  Ok(format!("{}#{}", rel.as_ref(), burl::e(pc::e(meta)?)))
+}
+
 impl Diff {
-  pub fn add(&mut self, rel: impl Into<String>) {
-    self.has_change = true;
-    self.refresh.insert(rel.into());
+  pub fn refresh(&self, rel: impl AsRef<str>) -> Void {
+    let rel = rel.as_ref();
+    let meta = path_meta(self.root.join(rel))?;
+    OK
   }
 
-  pub fn save(mut self) -> Void {
+  pub fn save(&self) -> Void {
     if !self.has_change {
       return OK;
     }
     let mut li = vec![];
-    for (rel, meta) in self.changed.into_iter().chain(self.no_change) {
-      let meta = burl::e(pc::e::<Meta>(if self.refresh.remove(&rel) {
-        path_meta(self.root.join(&rel))?
-      } else {
-        meta
-      })?);
+    for (rel, meta) in self.changed.iter().chain(self.no_change.iter()) {
+      let meta = burl::e(pc::e::<Meta>(meta)?);
       li.push(format!("{rel}#{meta}"));
     }
 
@@ -116,6 +116,9 @@ impl Scan {
     let mut rel_len_ts = self.rel_len_ts.clone();
     if db.exists() {
       let file = std::io::BufReader::new(std::fs::File::open(&db)?);
+      // 设计为可追加的模式, 后面的记录会覆盖到前面的
+      let mut rel_meta = HashMap::new();
+
       for line in file.lines().map_while(Result::ok) {
         let line = line.trim_end();
         if let Some(i) = line.chars().next() {
@@ -127,39 +130,40 @@ impl Scan {
             let bin = &line[pos + 1..];
             if let Ok(meta) = burl::d(bin) {
               if let Ok::<Meta, _>(meta) = pc::d(&meta) {
-                let rel = &line[..pos];
-                if let Some(len_ts) = rel_len_ts.remove(rel) {
-                  if len_ts.len == meta.len_ts.len && len_ts.ts == meta.len_ts.ts {
-                    no_change.push((rel.into(), meta));
-                  } else {
-                    let fp = self.root.join(rel);
-                    let hash = hash(&fp)?;
-                    if hash == meta.hash {
-                      set_mtime(&fp, meta.len_ts.ts)?;
-                      no_change.push((
-                        rel.into(),
-                        Meta {
-                          len_ts: LenTs {
-                            len: len_ts.len,
-                            ts: meta.len_ts.ts,
-                          },
-                          hash,
-                        },
-                      ));
-                    } else {
-                      changed.push((rel.into(), Meta { len_ts, hash }));
-                    }
-                  }
-                }
+                rel_meta.insert(line[..pos].to_owned(), meta);
               }
             }
           }
-        } else {
-          continue;
+        }
+      }
+      for (rel, meta) in rel_meta {
+        if let Some(len_ts) = rel_len_ts.remove(&rel) {
+          if len_ts.len == meta.len_ts.len && len_ts.ts == meta.len_ts.ts {
+            no_change.push((rel.into(), meta));
+          } else {
+            let fp = self.root.join(&rel);
+            let hash = hash(&fp)?;
+            if hash == meta.hash {
+              set_mtime(&fp, meta.len_ts.ts)?;
+              no_change.push((
+                rel.into(),
+                Meta {
+                  len_ts: LenTs {
+                    len: len_ts.len,
+                    ts: meta.len_ts.ts,
+                  },
+                  hash,
+                },
+              ));
+            } else {
+              changed.push((rel.into(), Meta { len_ts, hash }));
+            }
+          }
         }
       }
     }
 
+    // 新的文件
     for (rel, len_ts) in rel_len_ts.drain() {
       let fp = self.root.join(&rel);
       changed.push((
@@ -176,7 +180,6 @@ impl Scan {
       changed,
       db,
       no_change,
-      refresh: HashSet::new(),
       root: self.root.clone(),
     })
   }

@@ -5,9 +5,6 @@
 [postcard](https://github.com/jamesmunns/postcard) 序列化解码，支持把不完整类型的序列化解码到完整类型
 
 ```rust
-use aok::{Void, OK};
-use pc::d::from_bytes;
-use postcard;
 use serde::{Deserialize, Serialize};
 
 // 测试不完整的元组的反序列化
@@ -21,7 +18,7 @@ fn test_incomplete_tuple() {
 
   let val = IncompleteTuple(1, 2);
   let serialized = postcard::to_allocvec(&val).unwrap();
-  let deserialized = from_bytes::<CompleteTuple>(&serialized).unwrap();
+  let deserialized = pc::d::<CompleteTuple>(&serialized).unwrap();
 
   // 验证反序列化后的元组的各个字段
   assert_eq!(deserialized, CompleteTuple(1, 2, 0, None));
@@ -49,7 +46,7 @@ fn test_incomplete_struct() {
     b: 255,
   };
   let serialized = postcard::to_allocvec(&val).unwrap();
-  let deserialized = from_bytes::<CompleteStruct>(&serialized).unwrap();
+  let deserialized = pc::d::<CompleteStruct>(&serialized).unwrap();
 
   // 验证反序列化后的结构体的各个字段
   assert_eq!(
@@ -74,7 +71,7 @@ fn test_incomplete_seq() {
 
   let val = vec![IncompleteSeq(1, 2), IncompleteSeq(3, 4)];
   let serialized = postcard::to_allocvec(&val).unwrap();
-  let deserialized = from_bytes::<Vec<CompleteSeq>>(&serialized).unwrap();
+  let deserialized = pc::d::<Vec<CompleteSeq>>(&serialized).unwrap();
   assert_eq!(
     deserialized,
     vec![CompleteSeq(1, 2, 0, None), CompleteSeq(3, 4, 0, None)]

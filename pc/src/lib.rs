@@ -1,7 +1,7 @@
-// pub mod d;
 use std::borrow::Borrow;
 
-use postcard::{from_bytes, to_allocvec, Result};
+pub use postcard::Result;
+use postcard::{from_bytes, to_allocvec};
 use serde::{de::DeserializeOwned, Serialize};
 
 pub fn d<T: DeserializeOwned>(bin: impl AsRef<[u8]>) -> Result<T> {
