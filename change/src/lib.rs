@@ -4,7 +4,7 @@ use std::{
   collections::HashMap,
   fs::{File, Metadata},
   hash::Hasher,
-  io::{BufRead, BufReader, Read},
+  io::{BufRead, BufReader, Read, Write},
   path::{Path, PathBuf},
 };
 
@@ -78,13 +78,29 @@ pub struct Diff {
 }
 
 fn meta_encode(rel: impl AsRef<str>, meta: &Meta) -> pc::Result<String> {
-  Ok(format!("{}#{}", rel.as_ref(), burl::e(pc::e(meta)?)))
+  Ok(format!(
+    "{}#{}",
+    rel.as_ref(),
+    burl::e(pc::e::<Meta>(meta)?)
+  ))
 }
 
 impl Diff {
   pub fn refresh(&self, rel: impl AsRef<str>) -> Void {
     let rel = rel.as_ref();
     let meta = path_meta(self.root.join(rel))?;
+    let line = meta_encode(rel, &meta)?;
+
+    // 判断self.db 是否存在,如果存在就追加"\n{line}"到文件末尾,否则写入line到文件
+    if self.db.exists() {
+      std::fs::OpenOptions::new()
+        .append(true)
+        .open(&self.db)?
+        .write_all(format!("\n{line}").as_bytes())?;
+    } else {
+      ifs::wstr(&self.db, line)?;
+    }
+
     OK
   }
 
@@ -94,8 +110,7 @@ impl Diff {
     }
     let mut li = vec![];
     for (rel, meta) in self.changed.iter().chain(self.no_change.iter()) {
-      let meta = burl::e(pc::e::<Meta>(meta)?);
-      li.push(format!("{rel}#{meta}"));
+      li.push(meta_encode(rel, meta)?);
     }
 
     // 确保没有修改时候,diff不会变化
