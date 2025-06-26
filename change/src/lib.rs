@@ -79,7 +79,15 @@ pub struct Diff {
 }
 
 impl Diff {
+  pub fn add(&mut self, rel: impl Into<String>) {
+    self.has_change = true;
+    self.refresh.insert(rel.into());
+  }
+
   pub fn save(mut self) -> Void {
+    if !self.has_change {
+      return OK;
+    }
     let mut li = vec![];
     for (rel, meta) in self.changed.into_iter().chain(self.no_change) {
       let meta = burl::e(pc::e::<Meta>(if self.refresh.remove(&rel) {
@@ -87,7 +95,6 @@ impl Diff {
       } else {
         meta
       })?);
-
       li.push(format!("{rel}#{meta}"));
     }
 
