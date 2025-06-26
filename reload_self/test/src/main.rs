@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use aok::{Void, OK};
+use aok::{OK, Void};
 use reload_self::{self, CancellationToken};
 use tracing::info;
 

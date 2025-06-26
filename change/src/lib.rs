@@ -93,10 +93,10 @@ impl Diff {
 
     // 判断self.db 是否存在,如果存在就追加"\n{line}"到文件末尾,否则写入line到文件
     if self.db.exists() {
-      std::fs::OpenOptions::new()
-        .append(true)
-        .open(&self.db)?
-        .write_all(format!("\n{line}").as_bytes())?;
+      let mut f = std::fs::OpenOptions::new().append(true).open(&self.db)?;
+
+      f.write_all(b"\n")?;
+      f.write_all(line.as_bytes())?;
     } else {
       ifs::wstr(&self.db, line)?;
     }
@@ -154,14 +154,14 @@ impl Scan {
       for (rel, meta) in rel_meta {
         if let Some(len_ts) = rel_len_ts.remove(&rel) {
           if len_ts.len == meta.len_ts.len && len_ts.ts == meta.len_ts.ts {
-            no_change.push((rel.into(), meta));
+            no_change.push((rel, meta));
           } else {
             let fp = self.root.join(&rel);
             let hash = hash(&fp)?;
             if hash == meta.hash {
               set_mtime(&fp, meta.len_ts.ts)?;
               no_change.push((
-                rel.into(),
+                rel,
                 Meta {
                   len_ts: LenTs {
                     len: len_ts.len,
@@ -171,7 +171,7 @@ impl Scan {
                 },
               ));
             } else {
-              changed.push((rel.into(), Meta { len_ts, hash }));
+              changed.push((rel, Meta { len_ts, hash }));
             }
           }
         }

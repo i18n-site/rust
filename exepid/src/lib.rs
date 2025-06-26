@@ -14,7 +14,7 @@ pub fn save() -> std::io::Result<()> {
       .and_then(|os_str| os_str.to_str())
       .unwrap_or("");
 
-    exe_folder.join(format!("{}.pid", program_name))
+    exe_folder.join(format!("{program_name}.pid"))
   };
 
   write(pid_file, pid.to_string())?;
