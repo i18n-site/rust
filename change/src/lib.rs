@@ -1,8 +1,8 @@
 #![feature(let_chains)]
 
 use std::{
-  collections::HashMap,
-  fs::File,
+  collections::{HashMap, HashSet},
+  fs::{File, Metadata},
   hash::Hasher,
   io::{BufRead, BufReader, Read},
   path::{Path, PathBuf},
@@ -36,6 +36,26 @@ pub struct LenTs {
   pub len: u64,
 }
 
+impl LenTs {
+  pub fn new(meta: Metadata) -> Self {
+    Self {
+      ts: meta
+        .modified()
+        .unwrap()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs(),
+      len: meta.len(),
+    }
+  }
+}
+
+pub fn path_meta(path: impl AsRef<Path>) -> std::io::Result<Meta> {
+  let len_ts = LenTs::new(std::fs::metadata(path.as_ref())?);
+  let hash = hash(path.as_ref())?;
+  Ok(Meta { len_ts, hash })
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Meta {
   pub len_ts: LenTs,
@@ -54,13 +74,20 @@ pub struct Diff {
   pub no_change: Vec<(String, Meta)>,
   pub db: PathBuf,
   pub has_change: bool,
+  pub refresh: HashSet<String>,
+  pub root: PathBuf,
 }
 
 impl Diff {
-  pub fn save(&self) -> Void {
+  pub fn save(mut self) -> Void {
     let mut li = vec![];
-    for (rel, meta) in self.changed.iter().chain(&self.no_change) {
-      let meta = burl::e(pc::e::<Meta>(meta)?);
+    for (rel, meta) in self.changed.into_iter().chain(self.no_change) {
+      let meta = burl::e(pc::e::<Meta>(if self.refresh.remove(&rel) {
+        path_meta(self.root.join(&rel))?
+      } else {
+        meta
+      })?);
+
       li.push(format!("{rel}#{meta}"));
     }
 
@@ -142,22 +169,16 @@ impl Scan {
       changed,
       db,
       no_change,
+      refresh: HashSet::new(),
+      root: self.root.clone(),
     })
   }
 
   pub fn add(&mut self, rel: impl AsRef<str>) -> Void {
     let rel = rel.as_ref();
     let fp = self.root.join(rel);
-    if let Ok(meta) = std::fs::metadata(fp)
-      && let Ok(ts) = meta.modified()
-    {
-      self.rel_len_ts.insert(
-        rel.into(),
-        LenTs {
-          ts: ts.duration_since(std::time::UNIX_EPOCH).unwrap().as_secs(),
-          len: meta.len(),
-        },
-      );
+    if let Ok(meta) = std::fs::metadata(fp) {
+      self.rel_len_ts.insert(rel.into(), LenTs::new(meta));
     }
     OK
   }
@@ -178,18 +199,11 @@ impl Scan {
       {
         let path = entry.path();
         if let Ok(meta) = std::fs::metadata(path)
-          && let Ok(ts) = meta.modified()
           && let Ok(rel) = path.strip_prefix(&root)
         {
           let rel = rel.to_string_lossy();
           let rel = ifs::unix_path(rel);
-          rel_len_ts.insert(
-            rel,
-            LenTs {
-              ts: ts.duration_since(std::time::UNIX_EPOCH).unwrap().as_secs(),
-              len: meta.len(),
-            },
-          );
+          rel_len_ts.insert(rel, LenTs::new(meta));
         }
       }
     }
