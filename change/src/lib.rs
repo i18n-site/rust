@@ -64,9 +64,10 @@ impl Diff {
       li.push(format!("{rel}#{meta}"));
     }
 
-    let db = li.join("\n");
-    li.sort();
+    // 确保没有修改时候,diff不会变化
 
+    li.sort();
+    let db = li.join("\n");
     ifs::wstr(&self.db, db)?;
 
     OK
