@@ -1,7 +1,7 @@
 # bing : a search engine
 
 ```rust
-<+ ./src/lib.rs>
+<+ ./tests/main.rs>
 ```
 
 <+ ../about.md >

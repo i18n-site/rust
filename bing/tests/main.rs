@@ -14,8 +14,10 @@ fn test_search_engine() -> Result<()> {
 
   let mut writer = db.writer()?;
 
+  let id = 99;
+
   let doc1 = Doc {
-    id: 99,
+    id,
     uid: 100,
     org_id: 2,
     repo_id: 10,
@@ -29,7 +31,13 @@ fn test_search_engine() -> Result<()> {
   dbg!(doc_id);
 
   let mut seacher = db.searcher()?;
-  let li = seacher.search("品牌", 1, 0, vec![], [], None, None, 10, 0)?;
+  let li = seacher.search("品牌", 0, 0, vec![], [], None, None, 10, 0)?;
+  dbg!(li);
+
+  writer.rm(id)?;
+
+  let mut seacher = db.searcher()?;
+  let li = seacher.search("品牌", 0, 0, vec![], [], None, None, 10, 0)?;
   dbg!(li);
 
   Ok(())
