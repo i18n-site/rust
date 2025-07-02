@@ -9,4 +9,4 @@ description = "json parser with re::bad_reqesut"
 
 [dependencies]
 axum = "0.8.4"
-sonic-rs = "0.5.1"
+sonic-rs = "0.5.2"

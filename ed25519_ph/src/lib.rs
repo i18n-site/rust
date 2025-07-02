@@ -1,6 +1,6 @@
 use ed25519_dalek::SigningKey;
-use wasm_bindgen::prelude::{JsError, wasm_bindgen};
 use sha3::{Digest, Sha3_512};
+use wasm_bindgen::prelude::{JsError, wasm_bindgen};
 
 #[wasm_bindgen]
 pub struct Ed25519Ph {

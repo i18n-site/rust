@@ -82,5 +82,5 @@ path = "../confdir"
 optional = true
 
 [dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

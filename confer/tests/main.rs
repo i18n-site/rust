@@ -1,5 +1,5 @@
-use confer::Confer;
 use aok::{OK, Void};
+use confer::Confer;
 use tracing::info;
 
 #[static_init::constructor(0)]

@@ -7,10 +7,10 @@ use std::sync::{
   atomic::{AtomicI16, Ordering},
 };
 
-use tokio::time::{Duration, sleep};
-pub use post::{Answer, DohError, post};
-use defer_lite::defer;
 use aok::{OK, Result};
+use defer_lite::defer;
+pub use post::{Answer, DohError, post};
+use tokio::time::{Duration, sleep};
 use tracing::warn;
 
 pub mod record_type {

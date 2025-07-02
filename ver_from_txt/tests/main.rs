@@ -1,6 +1,6 @@
 use aok::{OK, Void};
-use ver_from_txt::ver_from_txt;
 use tracing::info;
+use ver_from_txt::ver_from_txt;
 
 #[static_init::constructor(0)]
 extern "C" fn _loginit() {

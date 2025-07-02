@@ -4,15 +4,15 @@ use std::{
   path::{Path, PathBuf},
 };
 
-use defer_lite::defer;
-use self_replace::self_replace;
-use pbar::pbar;
-use sver::Ver;
-use kanal::AsyncReceiver;
 use aok::{OK, Result, Void};
-use ver_from_txt::VerUrlLi;
 use current_platform::CURRENT_PLATFORM as TARGET;
+use defer_lite::defer;
 use down::down;
+use kanal::AsyncReceiver;
+use pbar::pbar;
+use self_replace::self_replace;
+use sver::Ver;
+use ver_from_txt::VerUrlLi;
 
 #[derive(Debug)]
 pub struct Uper {

@@ -37,7 +37,7 @@ pub fn make<S: AsRef<str>>(width: u32, height: u32, ico_li: impl AsRef<[S]>) -> 
       random_int(5, 0),
       n % 4,
       opacity,
-      if n % 2 == 0 { 0 } else { 180 },
+      if n.is_multiple_of(2) { 0 } else { 180 },
       width / 2,
       height / 2
     );
@@ -55,7 +55,7 @@ pub fn make<S: AsRef<str>>(width: u32, height: u32, ico_li: impl AsRef<[S]>) -> 
   let (psize, pattern) = PATTERN[rng.random_range(0..PATTERN.len())];
   let mut color = [random_color(90), random_color(180)];
 
-  if rand::random::<u8>() % 2 != 0 {
+  if !rand::random::<u8>().is_multiple_of(2) {
     color.reverse();
   }
   let ico_scale = random_int(8, 3) as f32 / 100.0;

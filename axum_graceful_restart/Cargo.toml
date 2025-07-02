@@ -21,7 +21,7 @@ axum = "0.8.4"
 listeners = "0.2.1"
 nix = { version = "0.30.1", features = ["signal", "process"] }
 socket2 = "0.5.10"
-tokio = { version = "1.45.1", features = [
+tokio = { version = "1.46.0", features = [
   "macros",
   "rt",
   "rt-multi-thread",
@@ -36,5 +36,5 @@ static_init = "1.0.4"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = ["macros", "rt", "rt-multi-thread", "sync"]

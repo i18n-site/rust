@@ -18,9 +18,9 @@ aok = "0.1.17"
 dashmap = "6.1.0"
 ireq = "0.1.31"
 prost = "0.14.1"
-reqwest = "0.12.20"
+reqwest = "0.12.22"
 serde_yaml = "0.9.34"
-sonic-rs = "0.5.1"
+sonic-rs = "0.5.2"
 strum_macros = "0.27.1"
 thiserror = "2.0.12"
 tracing = "0.1.41"
@@ -34,7 +34,7 @@ version = "0.1.23"
 path = "../sts"
 
 [dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = [ "rt-multi-thread", "macros", "sync" ]
 
 [dependencies.ifs]
@@ -62,7 +62,7 @@ path = "../genv"
 version = "0.1.16"
 
 [dev-dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [build-dependencies]

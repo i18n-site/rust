@@ -1,6 +1,6 @@
 [dependencies]
 aok = "0.1.17"
-indicatif = "0.17.11"
+indicatif = "0.17.12"
 kanal = "0.1.1"
 
 [package]

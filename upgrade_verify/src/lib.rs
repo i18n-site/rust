@@ -9,9 +9,9 @@ use std::{
   path::{Path, PathBuf},
 };
 
+use aok::Result;
 use ed25519_dalek::{Signature, VerifyingKey};
 use sha3::{Digest, Sha3_512};
-use aok::Result;
 
 pub fn check<P: AsRef<Path>>(
   version: impl AsRef<[u8]>,

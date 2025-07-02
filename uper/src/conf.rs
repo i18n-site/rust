@@ -1,7 +1,7 @@
+use aok::{OK, Result, Void};
 use clap::{ArgMatches, Command};
 use coarsetime::Clock;
 use confdir::confdir;
-use aok::{OK, Result, Void};
 use confer::FsConf;
 
 use crate::{Uper, cmd, dns_check};

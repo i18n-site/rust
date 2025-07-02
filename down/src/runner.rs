@@ -4,13 +4,13 @@ use std::{
   sync::Arc,
 };
 
-use parking_lot::Mutex;
-use kanal::{AsyncReceiver, AsyncSender};
 use aok::{OK, Result};
-use ireq::{REQ, reqwest::header};
-use tracing::warn;
 use bytes::Bytes;
+use ireq::{REQ, reqwest::header};
+use kanal::{AsyncReceiver, AsyncSender};
+use parking_lot::Mutex;
 use tokio::task::JoinHandle;
+use tracing::warn;
 
 use crate::ChunkLi;
 

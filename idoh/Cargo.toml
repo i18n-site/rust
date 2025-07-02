@@ -20,7 +20,7 @@ tracing = "0.1.41"
 aok = "0.1.17"
 kanal = "0.1.1"
 defer-lite = "1.0.0"
-sonic-rs = "0.5.1"
+sonic-rs = "0.5.2"
 
 [dependencies.riter]
 version = "0.1.1"
@@ -36,7 +36,7 @@ path = "../ireq"
 features = [ "proxy" ]
 
 [dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = [ "time", "net", "rt" ]
 
 [dependencies.xerr]
@@ -48,5 +48,5 @@ loginit = "0.1.18"
 static_init = "1.0.4"
 
 [dev-dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = [ "test-util", "macros" ]

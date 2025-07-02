@@ -1,6 +1,6 @@
 use aok::{OK, Void};
-use tracing::info;
 use drop::leak;
+use tracing::info;
 
 #[static_init::constructor(0)]
 extern "C" fn _loginit() {

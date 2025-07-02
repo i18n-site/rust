@@ -7,10 +7,10 @@ pub mod cmd;
 mod dns_check;
 mod uper;
 
+pub use clap::{ArgAction, ArgMatches, Command, arg};
 pub use cmd::Cmd;
 pub use dns_check::dns_check;
 pub use uper::Uper;
-pub use clap::{ArgAction, ArgMatches, Command, arg};
 
 #[cfg(feature = "conf")]
 mod conf;

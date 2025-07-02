@@ -37,7 +37,7 @@ version = "0.4.44"
 optional = true
 
 [dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = ["macros", "rt", "rt-multi-thread", "time", "fs", "io-util"]
 
 [dependencies.xerr]
@@ -78,5 +78,5 @@ aok = "0.1.17"
 loginit = "0.1.18"
 
 [dev-dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

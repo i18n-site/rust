@@ -4,8 +4,8 @@ use std::{
   sync::Arc,
 };
 
-use tokio::sync::Mutex;
 use indexmap::IndexSet;
+use tokio::sync::Mutex;
 
 pub const CHUNK_SIZE: u64 = 512 * 1024;
 

@@ -33,7 +33,7 @@ version = "0.1.7"
 path = "../tlsinit"
 
 [dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = [ "io-util", "net", "time" ]
 
 [dev-dependencies]
@@ -47,5 +47,5 @@ path = "../genv"
 version = "0.1.16"
 
 [dev-dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

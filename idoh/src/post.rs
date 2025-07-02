@@ -1,9 +1,9 @@
 use std::fmt;
 
+use aok::Result;
+use ireq::REQ;
 use serde::Deserialize;
 use sonic_rs::{JsonValueTrait, Value, from_slice, from_value};
-use ireq::REQ;
-use aok::Result;
 
 #[derive(Debug)]
 pub struct DohError {

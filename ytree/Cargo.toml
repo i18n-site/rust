@@ -50,7 +50,7 @@ path = "../burl"
 optional = true
 
 [dependencies.indexmap]
-version = "2.9.0"
+version = "2.10.0"
 features = [ "serde" ]
 
 [dependencies.lang]
@@ -83,5 +83,5 @@ static_init = "1.0.4"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

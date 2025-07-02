@@ -19,7 +19,7 @@ default = [ ]
 aok = "0.1.17"
 bytes = "1.10.1"
 coarsetime = "0.1.36"
-indexmap = "2.9.0"
+indexmap = "2.10.0"
 kanal = "0.1.1"
 parking_lot = "0.12.4"
 tracing = "0.1.41"
@@ -30,7 +30,7 @@ path = "../ireq"
 features = [ "proxy" ]
 
 [dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dev-dependencies]

@@ -1,6 +1,6 @@
 use aok::{OK, Void};
-use upgrade_host::UPGRADE_HOST;
 use uper::{ArgMatches, Command};
+use upgrade_host::UPGRADE_HOST;
 
 #[static_init::constructor(0)]
 extern "C" fn _loginit() {

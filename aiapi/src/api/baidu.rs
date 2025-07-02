@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
 use aok::Result;
+use confdir::confdir;
 use dashmap::DashMap;
 use ifs::conf;
-use confdir::confdir;
 use pos_next::PosNext;
 use sonic_rs::Deserialize;
 

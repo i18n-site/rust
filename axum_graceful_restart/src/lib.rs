@@ -3,7 +3,6 @@
 
 use std::net::SocketAddr;
 
-use tracing::info;
 use aok::Result;
 use axum::Router;
 use nix::{
@@ -12,6 +11,7 @@ use nix::{
 };
 use socket2::{Domain, Socket, Type};
 use tokio::signal::unix::{SignalKind, signal};
+use tracing::info;
 
 fn listen(addr: SocketAddr) -> Result<tokio::net::TcpListener> {
   let socket = Socket::new(Domain::for_address(addr), Type::STREAM, None)?;

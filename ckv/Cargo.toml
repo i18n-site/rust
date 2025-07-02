@@ -20,7 +20,7 @@ gxhash = "3.5.0"
 serde_yaml = "0.9.34"
 
 [dependencies.aws-sdk-s3]
-version = "1.94.0"
+version = "1.95.0"
 features = [ "behavior-version-latest" ]
 
 [dependencies.ifs]
@@ -39,5 +39,5 @@ static_init = "1.0.4"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.45.1"
+version = "1.46.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

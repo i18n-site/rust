@@ -3,7 +3,7 @@ pub const SECONDS_PER_DAY: u64 = 86400;
 pub const DAYS_IN_MONTHS: [u64; 12] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 pub fn is_leap_year(year: u64) -> bool {
-  (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
+  (year.is_multiple_of(4) && !year.is_multiple_of(100)) || year.is_multiple_of(400)
 }
 
 pub const fn leap_years(year: u64) -> u64 {

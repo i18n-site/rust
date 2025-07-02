@@ -1,7 +1,7 @@
 use std::time::Duration;
 
-use axum::{Router, routing::get};
 use aok::Result;
+use axum::{Router, routing::get};
 use axum_graceful_restart::serve;
 
 #[tokio::main]

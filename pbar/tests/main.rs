@@ -1,6 +1,6 @@
 use aok::{Result, OK};
-use static_init::constructor;
 use pbar::pbar;
+use static_init::constructor;
 use tokio::time::Duration;
 
 #[constructor(0)]

@@ -1,9 +1,9 @@
 use std::{error::Error, fmt, time::Duration};
 
 use aok::Result;
-use reqwest::{redirect::Policy, Body, Client, IntoUrl, RequestBuilder, StatusCode};
 use bytes::Bytes;
 pub use reqwest;
+use reqwest::{redirect::Policy, Body, Client, IntoUrl, RequestBuilder, StatusCode};
 
 #[derive(Debug)]
 pub struct ReqError(pub reqwest::Response);
