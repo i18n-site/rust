@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use anyhow::Result;
 use bing::Doc;
 
@@ -36,7 +38,7 @@ fn test_search_engine() -> Result<()> {
 
   writer.rm(id)?;
 
-  let mut seacher = db.searcher()?;
+  std::thread::sleep(Duration::from_secs(1));
   let li = seacher.search("品牌", 0, 0, vec![], [], None, None, 10, 0)?;
   dbg!(li);
 
