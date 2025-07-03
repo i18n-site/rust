@@ -1,16 +1,7 @@
 #![feature(doc_auto_cfg)]
 #![feature(doc_cfg)]
 
-//   fn increment(&self) {
-//     unsafe {
-//       *self.ptr += 1;
-//     }
-//   }
-//
-//   fn get_value(&self) -> usize {
-//     unsafe { *self.ptr }
-//   }
-// }
+use rand::Rng;
 
 pub struct Aier {
   pub api: String,
@@ -30,7 +21,7 @@ impl Drop for Aier {
 
 impl Aier {
   pub fn new(api: String, token_li: Vec<String>) -> Aier<'a> {
-    let pos = Box::new(0);
+    let pos = Box::new(rand::rng().random_range(0..li.len()));
     Self {
       api,
       token_li,
@@ -38,3 +29,13 @@ impl Aier {
     }
   }
 }
+//   fn increment(&self) {
+//     unsafe {
+//       *self.ptr += 1;
+//     }
+//   }
+//
+//   fn get_value(&self) -> usize {
+//     unsafe { *self.ptr }
+//   }
+// }
