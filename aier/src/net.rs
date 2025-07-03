@@ -1,4 +1,4 @@
-use std::{error::Error, fmt, time::Duration};
+use std::{fmt, time::Duration};
 
 use aok::Result;
 pub use reqwest;
@@ -11,7 +11,7 @@ use crate::Error;
 pub static REQ: Client = {
   let b = Client::builder()
     .redirect(Policy::limited(6))
-    .timeout(Duration::from_secs(100))
+    .timeout(Duration::from_secs(6000))
     .zstd(true)
     .connect_timeout(Duration::from_secs(9));
 
