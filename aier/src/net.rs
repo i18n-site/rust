@@ -2,6 +2,8 @@ use aok::Result;
 use reqwest::{Body, Client, IntoUrl, RequestBuilder, StatusCode, redirect::Policy};
 use serde::de::DeserializeOwned;
 
+use crate::Error;
+
 pub async fn post<R: DeserializeOwned>(
   url: impl AsRef<str>,
   body: impl Into<String>,
@@ -18,11 +20,11 @@ pub async fn post<R: DeserializeOwned>(
   if status == StatusCode::OK {
     match sonic_rs::from_str(&msg) {
       Ok(r) => Ok(r),
-      Err(err) => Err(ApiError::DecodeError { msg, err }.into()),
+      Err(err) => Err(Error::DecodeError { msg, err }.into()),
     }
   } else {
     Err(
-      ApiError::RequestError {
+      Error::RequestError {
         status,
         url: url.into(),
         msg,
