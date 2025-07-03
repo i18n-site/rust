@@ -1,6 +1,6 @@
 [package]
 name = "doc_pyramid"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -18,6 +18,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 [dependencies]
 aok = "0.1.17"
 doc_chunk = { version = "0.1.1", path = "../doc_chunk" }
+futures = "0.3.31"
 
 [dev-dependencies]
 aok = "0.1.17"

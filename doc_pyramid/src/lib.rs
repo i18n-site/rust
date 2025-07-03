@@ -1,15 +1,19 @@
+use std::future::Future;
+
 use aok::Result;
 use doc_chunk::DocChunk;
+use futures::{StreamExt, TryStreamExt, stream};
 
 pub async fn digest<AsyncString: Future<Output = Result<String>>>(
   txt: &str,
   doc_chunk: DocChunk,
   short: &impl Fn(String) -> AsyncString,
 ) -> Result<String> {
-  let mut li = vec![];
-  for i in doc_chunk.parse(txt) {
-    li.push(short(i).await?);
-  }
+  let li = stream::iter(doc_chunk.parse(txt))
+    .map(|i| short(i))
+    .buffered(16)
+    .try_collect::<Vec<String>>()
+    .await?;
   Ok(li.join("\n"))
 }
 
