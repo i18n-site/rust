@@ -10,7 +10,7 @@ pub struct Aier<'a> {
 }
 
 impl<'a> Aier<'a> {
-  pub fn new(api: String, token_li: Vec<String>) -> Self<'a> {
+  pub fn new(api: String, token_li: Vec<String>) -> Aier<'a> {
     Self {
       api,
       token_li,
