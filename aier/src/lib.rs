@@ -8,3 +8,13 @@ pub struct Aier<'a> {
   pub token_iter: CIter<'a, String>,
   pub token_li: Vec<String>,
 }
+
+impl<'a> Aier<'a> {
+  pub fn new(api: String, token_li: Vec<String>) -> Self<'a> {
+    Self {
+      api,
+      token_li,
+      token_iter: CIter::rand(&token_li),
+    }
+  }
+}
