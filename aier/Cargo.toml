@@ -17,6 +17,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 aok = "0.1.17"
+ireq = { version = "0.1.31", path = "../ireq" }
 mreplace = { version = "0.1.7", path = "../mreplace" }
 rand = "0.9.1"
 
