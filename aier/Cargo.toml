@@ -10,6 +10,7 @@ keywords = []
 
 [features]
 default = []
+proxy = []
 
 [package.metadata.docs.rs]
 all-features = true
@@ -17,10 +18,8 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 aok = "0.1.17"
-ireq = { version = "0.1.31", path = "../ireq" }
 mreplace = { version = "0.1.7", path = "../mreplace" }
 rand = "0.9.1"
-reqwest = "0.12.22"
 serde = "1.0.219"
 sonic-rs = "0.5.2"
 thiserror = "2.0.12"
@@ -34,3 +33,8 @@ tracing = "0.1.41"
 [dev-dependencies.tokio]
 version = "1.46.0"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[dependencies.reqwest]
+version = "0.12.22"
+default-features = false
+features = ["rustls-tls", "rustls-tls-native-roots", "zstd", "stream"]

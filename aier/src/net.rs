@@ -1,8 +1,34 @@
+use std::{error::Error, fmt, time::Duration};
+
 use aok::Result;
+pub use reqwest;
 use reqwest::{Body, Client, IntoUrl, RequestBuilder, StatusCode, redirect::Policy};
 use serde::de::DeserializeOwned;
 
 use crate::Error;
+
+#[static_init::dynamic]
+pub static REQ: Client = {
+  let b = Client::builder()
+    .redirect(Policy::limited(6))
+    .timeout(Duration::from_secs(100))
+    .zstd(true)
+    .connect_timeout(Duration::from_secs(9));
+
+  #[cfg(feature = "proxy")]
+  let b = {
+    use reqwest::Proxy;
+    // export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+    let mut b = b;
+    if let Ok(url) = std::env::var("https_proxy") {
+      b = b.proxy(Proxy::https(url).unwrap());
+    }
+
+    b
+  };
+
+  b.build().unwrap()
+};
 
 pub async fn post<R: DeserializeOwned>(
   url: impl AsRef<str>,
