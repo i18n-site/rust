@@ -1,3 +1,4 @@
+use aok::Result;
 use serde::de::DeserializeOwned;
 
 pub async fn post<R: DeserializeOwned>(
