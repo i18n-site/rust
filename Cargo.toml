@@ -172,7 +172,7 @@ members = [
   "frame_stream",
   "reload_self",
   "reload_self/test",
-  "exepid", "bing", "doc_chunk",
+  "exepid", "bing", "doc_chunk", "doc_pyramid",
   # "i18",
   # "i18_hash",
 ]
