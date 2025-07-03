@@ -18,12 +18,12 @@ impl Drop for Aier {
 }
 
 impl Aier {
-  pub fn new(api: String, token_li: Vec<String>) -> Self {
+  pub fn new(api: impl Into<String>, token_li: Vec<String>) -> Self {
     let pos = Box::new(rand::rng().random_range(0..token_li.len()));
     Self {
-      api,
+      api: api.into(),
       token_li,
-      token_pos: unsafe { Box::into_raw(pos) },
+      token_pos: Box::into_raw(pos),
     }
   }
 }

@@ -1,3 +1,4 @@
+use aier::Aier;
 use aok::{OK, Void};
 use tracing::info;
 
@@ -6,14 +7,9 @@ extern "C" fn _loginit() {
   loginit::init();
 }
 
-// #[tokio::test]
-// async fn test_async() -> Void {
-//   info!("async {}", 123456);
-//   OK
-// }
+#[tokio::test]
+async fn test_async() -> Void {
+  let aier = Aier::new("zxx", vec!["c".into(), "b".into(), "c".into()]);
 
-#[test]
-fn test() -> Void {
-  info!("> test {}", 123456);
   OK
 }
