@@ -1,4 +1,4 @@
-use aok::{Void, OK};
+use aok::{OK, Void};
 use doc_chunk::DocChunk;
 use tracing::info;
 

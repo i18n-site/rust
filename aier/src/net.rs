@@ -1,8 +1,8 @@
-use std::{fmt, time::Duration};
+use std::time::Duration;
 
 use aok::Result;
 pub use reqwest;
-use reqwest::{Body, Client, IntoUrl, RequestBuilder, StatusCode, redirect::Policy};
+use reqwest::{Client, RequestBuilder, StatusCode, redirect::Policy};
 use serde::de::DeserializeOwned;
 
 use crate::Error;

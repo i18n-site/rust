@@ -10,7 +10,7 @@ pub async fn digest<AsyncString: Future<Output = Result<String>>>(
   short: &impl Fn(String) -> AsyncString,
 ) -> Result<String> {
   let li = stream::iter(doc_chunk.parse(txt))
-    .map(|i| short(i))
+    .map(short)
     .buffered(16)
     .try_collect::<Vec<String>>()
     .await?;
