@@ -1,6 +1,7 @@
 #![feature(doc_auto_cfg)]
 #![feature(doc_cfg)]
 
+use aok::Result;
 use rand::Rng;
 
 pub struct Aier {
@@ -25,6 +26,23 @@ impl Aier {
       token_li,
       token_pos: Box::into_raw(pos),
     }
+  }
+  pub async fn chat(&self) -> Result<String> {
+    let mut pos = unsafe { *self.token_pos };
+    if pos >= self.token_li.len() {
+      pos = 0;
+      unsafe {
+        *self.token_pos = 0;
+      }
+    } else {
+      unsafe {
+        *self.token_pos += 1;
+      }
+    }
+
+    let token = &self.token_li[pos];
+    dbg!((pos, token));
+    Ok("xx".into())
   }
 }
 

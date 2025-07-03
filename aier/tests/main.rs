@@ -11,5 +11,11 @@ extern "C" fn _loginit() {
 async fn test_async() -> Void {
   let aier = Aier::new("zxx", vec!["c".into(), "b".into(), "c".into()]);
 
+  aier.chat().await?;
+  aier.chat().await?;
+  aier.chat().await?;
+  aier.chat().await?;
+  aier.chat().await?;
+  aier.chat().await?;
   OK
 }
