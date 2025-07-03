@@ -11,16 +11,14 @@ pub struct Aier {
 
 impl Drop for Aier {
   fn drop(&mut self) {
-    if !self.ptr.is_null() {
-      unsafe {
-        let _ = Box::from_raw(self.token_pos);
-      }
+    unsafe {
+      let _ = Box::from_raw(self.token_pos);
     }
   }
 }
 
 impl Aier {
-  pub fn new(api: String, token_li: Vec<String>) -> Aier<'a> {
+  pub fn new(api: String, token_li: Vec<String>) -> Self {
     let pos = Box::new(rand::rng().random_range(0..li.len()));
     Self {
       api,
@@ -29,6 +27,7 @@ impl Aier {
     }
   }
 }
+
 //   fn increment(&self) {
 //     unsafe {
 //       *self.ptr += 1;
