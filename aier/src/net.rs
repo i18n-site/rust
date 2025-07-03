@@ -37,7 +37,7 @@ pub async fn post<R: DeserializeOwned>(
 ) -> Result<R> {
   let url = url.as_ref();
   let body = body.into();
-  let req = ireq::REQ.post(url).body(body.clone());
+  let req = REQ.post(url).body(body.clone());
   let response = headers(req).send().await?;
 
   let status = response.status();
