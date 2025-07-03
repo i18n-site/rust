@@ -22,6 +22,7 @@ mreplace = { version = "0.1.7", path = "../mreplace" }
 rand = "0.9.1"
 serde = "1.0.219"
 sonic-rs = "0.5.2"
+static_init = "1.0.4"
 thiserror = "2.0.12"
 
 [dev-dependencies]
