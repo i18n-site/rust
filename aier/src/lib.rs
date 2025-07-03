@@ -1,4 +1,6 @@
 #![feature(doc_auto_cfg)]
 #![feature(doc_cfg)]
 
-pub fn aier() {}
+pub struct Aier {
+  pub api: String,
+}
