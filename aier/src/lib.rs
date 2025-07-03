@@ -3,4 +3,5 @@
 
 pub struct Aier {
   pub api: String,
+  pub token_li: Vec<String>,
 }
