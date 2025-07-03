@@ -9,7 +9,7 @@ extern "C" fn _loginit() {
 
 #[tokio::test]
 async fn test_async() -> Void {
-  let aier = Aier::new("zxx", vec!["c".into(), "b".into(), "c".into()]);
+  let aier = Aier::new("zxx", vec!["t1".into(), "t2".into(), "t3".into()]);
 
   aier.chat().await?;
   aier.chat().await?;
