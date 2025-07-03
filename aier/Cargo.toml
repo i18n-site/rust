@@ -23,6 +23,7 @@ rand = "0.9.1"
 reqwest = "0.12.22"
 serde = "1.0.219"
 sonic-rs = "0.5.2"
+thiserror = "2.0.12"
 
 [dev-dependencies]
 aok = "0.1.17"

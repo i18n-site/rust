@@ -1,9 +1,10 @@
 #![feature(doc_auto_cfg)]
 #![feature(doc_cfg)]
 
+mod error;
 pub(crate) mod net;
-
 use aok::Result;
+pub use error::Error;
 use rand::Rng;
 
 pub struct Aier {
