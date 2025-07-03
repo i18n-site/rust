@@ -67,7 +67,7 @@ impl DocChunk {
           let len = i.len();
           if len > 0 {
             t.push_str(i);
-            if i.len() > 16 && t.len() > 256 {
+            if i.len() > 16 && t.len() > 95 {
               parse!(&t);
               t = String::new();
             }
