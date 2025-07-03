@@ -1,6 +1,8 @@
 #![feature(doc_auto_cfg)]
 #![feature(doc_cfg)]
 
+pub(crate) mod net;
+
 use aok::Result;
 use rand::Rng;
 

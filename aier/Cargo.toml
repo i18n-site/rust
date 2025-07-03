@@ -20,6 +20,7 @@ aok = "0.1.17"
 ireq = { version = "0.1.31", path = "../ireq" }
 mreplace = { version = "0.1.7", path = "../mreplace" }
 rand = "0.9.1"
+serde = "1.0.219"
 
 [dev-dependencies]
 aok = "0.1.17"
