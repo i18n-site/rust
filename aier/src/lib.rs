@@ -19,7 +19,7 @@ impl Drop for Aier {
 
 impl Aier {
   pub fn new(api: String, token_li: Vec<String>) -> Self {
-    let pos = Box::new(rand::rng().random_range(0..li.len()));
+    let pos = Box::new(rand::rng().random_range(0..token_li.len()));
     Self {
       api,
       token_li,
