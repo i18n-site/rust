@@ -6,19 +6,22 @@ license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/dev/doc_pyramid"
 description = "doc_pyramid"
-keywords = []
-
-[features]
-default = []
+keywords = [ ]
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = ["--cfg", "docsrs"]
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
 
 [dependencies]
 aok = "0.1.17"
-doc_chunk = { version = "0.1.1", path = "../doc_chunk" }
 futures = "0.3.31"
+
+[dependencies.doc_chunk]
+version = "0.1.2"
+path = "../doc_chunk"
 
 [dev-dependencies]
 aok = "0.1.17"
@@ -28,4 +31,4 @@ tracing = "0.1.41"
 
 [dev-dependencies.tokio]
 version = "1.46.0"
-features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

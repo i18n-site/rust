@@ -17,40 +17,70 @@ impl DocChunk {
 
     let mut tmp = String::new();
 
-    for line in txt.as_ref().lines() {
-      let line = line.trim_end();
-      if line.trim_start().is_empty() {
-        continue;
-      }
-      let n = count + line.len() + 1;
-
-      let tmp_not_empty = !tmp.is_empty();
-      if n > limit {
-        count = 0;
-        if tmp_not_empty {
-          result.push(tmp.to_owned());
-        }
+    macro_rules! parse {
+      ($line:expr) => {{
+        let line = $line;
         let len = line.len();
-        if len > limit {
-          let mut end = limit;
-          while !line.is_char_boundary(end) {
-            end -= 1;
-          }
-          result.push(line[..end].into());
 
-          tmp = String::new();
+        let line = line.trim_end();
+        if line.trim_start().is_empty() {
+          continue;
+        }
+        let n = count + len + 1;
+
+        let tmp_not_empty = !tmp.is_empty();
+        if n > limit {
+          if tmp_not_empty {
+            result.push(tmp.to_owned());
+          }
+          if len > limit {
+            let mut end = limit;
+            while !line.is_char_boundary(end) {
+              end -= 1;
+            }
+            result.push(line[..end].into());
+
+            tmp = String::new();
+          } else {
+            tmp = line.into();
+          }
+          count = tmp.len();
         } else {
-          tmp = line.into();
+          count = n;
+          if tmp_not_empty {
+            tmp.push('\n');
+          }
+          tmp.push_str(line);
+        }
+      }};
+    }
+
+    for line in txt.as_ref().lines() {
+      if line.len() > limit {
+        use unicode_segmentation::UnicodeSegmentation;
+        let mut t = String::new();
+        for i in line.unicode_sentences() {
+          let i = i.trim();
+          let len = i.len();
+          if len > 0 {
+            t.push_str(i);
+            if i.len() > 16 && t.len() > 256 {
+              parse!(&t);
+              t = String::new();
+            }
+          }
+        }
+        if !t.is_empty() {
+          parse!(&t);
         }
       } else {
-        count = n;
-        if tmp_not_empty {
-          tmp.push('\n');
-        }
-        tmp.push_str(line);
+        parse!(line);
       }
     }
 
+    if !tmp.is_empty() {
+      result.push(tmp);
+    }
     result
   }
 }
