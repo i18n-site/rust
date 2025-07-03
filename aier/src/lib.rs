@@ -3,12 +3,12 @@
 
 use citer::CIter;
 
-pub struct Aier<'a> {
+pub struct Aier {
   pub api: String,
   pub token_li: Vec<String>,
 }
 
-impl<'a> Aier<'a> {
+impl Aier {
   pub fn new(api: String, token_li: Vec<String>) -> Aier<'a> {
     Self {
       api,
