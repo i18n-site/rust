@@ -28,16 +28,12 @@ impl Aier {
     }
   }
   pub async fn chat(&self) -> Result<String> {
-    let mut pos = unsafe { *self.token_pos };
+    let mut pos = unsafe { *self.token_pos } + 1;
     if pos >= self.token_li.len() {
       pos = 0;
-      unsafe {
-        *self.token_pos = 0;
-      }
-    } else {
-      unsafe {
-        *self.token_pos += 1;
-      }
+    }
+    unsafe {
+      *self.token_pos = pos;
     }
 
     let token = &self.token_li[pos];
