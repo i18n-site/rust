@@ -17,6 +17,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 aok = "0.1.17"
+riter = { version = "0.1.1", path = "../riter" }
 
 [dev-dependencies]
 aok = "0.1.17"
