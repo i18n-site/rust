@@ -1,0 +1,7 @@
+# getc : get comment from source code
+
+```rust
+<+ ./tests/main.rs>
+```
+
+<+ ../about.md >

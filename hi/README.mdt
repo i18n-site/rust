@@ -1,0 +1,13 @@
+# hi: hi with mail & wxpusher
+
+send message via
+
+* smtp
+* lark
+* https://wxpusher.zjiecode.com
+
+```rust
+<+ ./tests/main.rs>
+```
+
+<+ ../about.md >
