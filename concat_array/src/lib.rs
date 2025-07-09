@@ -1,26 +1,29 @@
-pub const fn concat_array<const A: usize, const B: usize, const C: usize>(
-  a: [i32; A],
-  b: [i32; B],
-) -> [i32; C] {
-  // Assert that `A + B == C`.
-  // These overflow if that is not the case, which produces an error at compile-time.
-  let _ = C - (A + B); // Assert that `A + B <= C`
-  let _ = (A + B) - C; // Assert that `A + B >= C`
+pub const fn concat_array<const A: usize, const B: usize, const C: usize, T: Copy>(
+  a: [T; A],
+  b: [T; B],
+) -> [T; C] {
+  let _ = C - (A + B);
+  let _ = (A + B) - C;
 
-  let mut result = [0; C];
+  let mut result = std::mem::MaybeUninit::<[T; C]>::uninit();
+  let ptr = result.as_mut_ptr() as *mut T;
 
   let mut i = 0;
   while i < A {
-    result[i] = a[i];
+    unsafe {
+      ptr.add(i).write(a[i]);
+    }
     i += 1;
   }
 
   while i < A + B {
-    result[i] = b[i - A];
+    unsafe {
+      ptr.add(i).write(b[i - A]);
+    }
     i += 1;
   }
 
-  result
+  unsafe { result.assume_init() }
 }
 
 #[macro_export]
@@ -38,7 +41,7 @@ macro_rules! concat_array {
 (@concat [$a:expr; $a_len:expr] [$b:expr; $b_len:expr] $($tail:tt)*) => {
   concat_array!(
     @concat
-   [concat_array::<{ $a_len }, { $b_len }, { $a_len + $b_len }>($a, $b); $a_len + $b_len]
+   [concat_array::<{ $a_len }, { $b_len }, { $a_len + $b_len }, _>($a, $b); $a_len + $b_len]
    $($tail)*
   )
 };
