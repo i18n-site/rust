@@ -167,7 +167,7 @@ members = [
   "xtld",
   "yconf",
   "yml_dict_li",
-  "ytree", "tran_term", "code_replace",
+  "ytree", "tran_term", "code_replace", "concat_array",
   # "bgu",
   # "cli_tmpl",
   # "hsc",

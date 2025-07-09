@@ -9,12 +9,12 @@ use std::{
   collections::{HashMap, HashSet},
 };
 
-use htmlize::{escape_attribute, unescape_attribute};
-use unicode_categories::UnicodeCategories;
-use unicode_segmentation::UnicodeSegmentation;
 use code_replace::{code_replace, word_push};
 use daachorse::{CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind};
+use htmlize::{escape_attribute, unescape_attribute};
 use thiserror::Error;
+use unicode_categories::UnicodeCategories;
+use unicode_segmentation::UnicodeSegmentation;
 
 #[derive(Error, Debug)]
 pub enum Error {

@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use saphyr::{LoadableYamlNode, Yaml, Yaml::Mapping};
 use aok::Result;
+use saphyr::{LoadableYamlNode, Yaml, Yaml::Mapping};
 
 #[derive(PartialEq, Default)]
 pub struct Term {
