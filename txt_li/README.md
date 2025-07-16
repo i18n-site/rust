@@ -17,7 +17,7 @@ fn test_restore() -> Void {
   txt_li.push_no_tran("2");
   txt_li.push_tran("3");
   txt_li.push_no_tran("4");
-  info!("{}", txt_li.restore << txt_li.li);
+  info!("{}", &txt_li.restore.load(&txt_li.li));
   OK
 }
 ```
