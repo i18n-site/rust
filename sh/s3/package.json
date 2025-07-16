@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@3-/cf": "^0.1.11",
+    "@3-/fastly": "^0.1.2"
+  }
+}
