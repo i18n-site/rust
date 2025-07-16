@@ -37,10 +37,12 @@ impl TxtLi {
           len = diff;
         } else {
           let mut end = limit;
-          while !i.is_char_boundary(end) {
+          while !i.is_char_boundary(end) && end > 0 {
             end -= 1;
           }
-          r.push(vec![i[..end].to_string()]);
+          if end > 0 {
+            r.push(vec![i[..end].into()]);
+          }
           t = vec![];
           len = 0;
         }
