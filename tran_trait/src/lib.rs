@@ -49,6 +49,10 @@ impl TxtLi {
       }
     }
 
+    if !t.is_empty() {
+      r.push(t);
+    }
+
     r
   }
 }
