@@ -1,11 +1,11 @@
 [package]
-name = "tran_trait"
-version = "0.2.7"
+name = "txt_li"
+version = "0.1.1"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
-homepage = "https://github.com/i18n-site/rust/tree/dev/tran_trait"
-description = "tran_trait"
+homepage = "https://github.com/i18n-site/rust/tree/dev/txt_li"
+description = "txt_li"
 keywords = []
 
 [features]

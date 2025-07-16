@@ -1,6 +1,6 @@
 use aok::{OK, Void};
 use tracing::info;
-use tran_trait::TxtLi;
+use txt_li::TxtLi;
 
 #[static_init::constructor(0)]
 extern "C" fn _loginit() {

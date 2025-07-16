@@ -18,7 +18,6 @@ rustdoc-args = ["--cfg", "docsrs"]
 [dependencies]
 aok = "0.1.17"
 unicode-segmentation = "1.12.0"
-unicode_categories = "0.1.1"
 
 [dev-dependencies]
 aok = "0.1.17"
