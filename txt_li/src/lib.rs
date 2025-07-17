@@ -28,9 +28,7 @@ impl TxtLi {
   }
 
   pub fn push_no_tran_line(&mut self, txt: impl Into<String>) {
-    let len = self.li.len();
-    self.restore.push(len, txt.into());
-    self.restore.push(len, "\n".into());
+    self.push_no_tran(txt.into() + "\n");
   }
 }
 

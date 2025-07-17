@@ -21,9 +21,13 @@ impl hugo_head::Parse for P {
         txt_li.push_tran_line(i);
       }
       // 不要新增回车
-      txt_li.restore.li.pop();
+      if let Some((p, t)) = txt_li.restore.li.pop() {
+        let t = t.trim_end();
+        if !t.is_empty() {
+          txt_li.restore.li.push((p, t.into()));
+        }
+      }
     };
-
     OK
   }
 }
