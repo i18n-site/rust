@@ -62,10 +62,17 @@ pub fn parse<P: Parse>(txt_li: &mut TxtLi, txt: String) -> Void {
                   let k = k.to_string();
                   let end = k.len() - len;
 
-                  P::parse(txt_li, k[len..end].lines())?;
-                  txt_li.restore.li.pop();
-
-                  pre = pos + end;
+                  let content = &k[len..end];
+                  let trim_end = content.trim_end();
+                  if !trim_end.is_empty() {
+                    P::parse(txt_li, trim_end.lines())?;
+                    txt_li.restore.li.pop();
+                    let reamin = &content[trim_end.len()..];
+                    if !reamin.is_empty() {
+                      txt_li.push_no_tran(reamin);
+                    }
+                    pre = pos + end;
+                  }
                 }
                 pos += klen;
                 OK
