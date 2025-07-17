@@ -18,8 +18,19 @@ impl TxtLi {
     self.li.push(txt.into());
   }
 
+  pub fn push_tran_line(&mut self, txt: impl Into<String>) {
+    self.push_tran(txt);
+    self.push_no_tran("\n");
+  }
+
   pub fn push_no_tran(&mut self, txt: impl Into<String>) {
     self.restore.push(self.li.len(), txt.into());
+  }
+
+  pub fn push_no_tran_line(&mut self, txt: impl Into<String>) {
+    let mut txt = txt.into();
+    txt.push('\n');
+    self.restore.push(self.li.len(), txt);
   }
 }
 
