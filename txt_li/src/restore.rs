@@ -1,22 +1,22 @@
 #[derive(Default, Debug)]
 pub struct Restore {
-  pub pos_li: Vec<(usize, String)>,
+  pub li: Vec<(usize, String)>,
 }
 
 impl Restore {
   pub fn push(&mut self, pos: usize, str: String) {
-    self.pos_li.push((pos, str));
+    self.li.push((pos, str));
   }
 
-  pub fn load<S, I>(&self, li: I) -> String
+  pub fn load<S, I>(&self, iter: I) -> String
   where
     I: IntoIterator<Item = S>,
     S: AsRef<str>,
   {
     let mut result = String::new();
-    let mut pos_iter = self.pos_li.iter().peekable();
+    let mut pos_iter = self.li.iter().peekable();
 
-    for (pos, item) in li.into_iter().enumerate() {
+    for (pos, item) in iter.into_iter().enumerate() {
       while let Some((p, s)) = pos_iter.peek() {
         if *p == pos {
           result.push_str(s);
