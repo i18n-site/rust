@@ -15,7 +15,8 @@ struct P {}
 impl hugo_head::Parse for P {
   fn parse<I: IntoIterator<Item = S>, S: Into<String>>(txt_li: &mut TxtLi, iter: I) -> Void {
     for i in iter {
-      txt_li.push_tran_line(i.into());
+      let i = i.into();
+      txt_li.push_tran_line(i);
     }
     OK
   }

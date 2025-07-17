@@ -63,11 +63,19 @@ pub fn parse<P: Parse>(txt_li: &mut TxtLi, txt: String) -> Void {
                   let end = k.len() - len;
 
                   let content = &k[len..end];
-                  let trim_end = content.trim_end();
+
+                  let trim_start = content.trim_start();
+                  let prefix = &content[..content.len() - trim_start.len()];
+
+                  if !prefix.is_empty() {
+                    txt_li.push_no_tran(prefix);
+                  }
+
+                  let trim_end = trim_start.trim_end();
                   if !trim_end.is_empty() {
                     P::parse(txt_li, trim_end.lines())?;
                     txt_li.restore.li.pop();
-                    let reamin = &content[trim_end.len()..];
+                    let reamin = &trim_start[trim_end.len()..];
                     if !reamin.is_empty() {
                       txt_li.push_no_tran(reamin);
                     }
