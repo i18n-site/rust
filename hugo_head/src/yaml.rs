@@ -36,7 +36,6 @@ pub fn parse<P: Parse>(txt_li: &mut TxtLi, txt: String) -> Void {
 
             if !trim_end.is_empty() {
               P::parse(txt_li, trim_end.lines())?;
-              txt_li.restore.li.pop();
               {
                 let end_str = t[trim_end.len()..].to_owned();
                 if !end_str.is_empty() {
@@ -62,8 +61,9 @@ pub fn parse<P: Parse>(txt_li: &mut TxtLi, txt: String) -> Void {
     if is_tran_tag {
       P::parse(txt_li, remain.lines())?;
     } else {
-      txt_li.push_tran(remain.to_owned() + "\n");
+      txt_li.push_no_tran(remain.to_owned());
     }
+    txt_li.push_no_tran("\n");
   }
   OK
 }

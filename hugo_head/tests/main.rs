@@ -10,14 +10,20 @@ extern "C" fn _loginit() {
   loginit::init();
 }
 
-struct P {}
+struct P;
 
 impl hugo_head::Parse for P {
   fn parse<I: IntoIterator<Item = S>, S: Into<String>>(txt_li: &mut TxtLi, iter: I) -> Void {
-    for i in iter {
-      let i = i.into();
-      txt_li.push_tran_line(i);
-    }
+    let mut iter = iter.into_iter();
+    if let Some(first_line) = iter.next() {
+      for i in [first_line].into_iter().chain(iter) {
+        let i = i.into();
+        txt_li.push_tran_line(i);
+      }
+      // 不要新增回车
+      txt_li.restore.li.pop();
+    };
+
     OK
   }
 }
