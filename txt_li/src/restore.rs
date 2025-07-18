@@ -3,6 +3,7 @@ pub struct Restore {
   pub li: Vec<(usize, String)>,
 }
 
+#[cfg(feature = "impl")]
 impl Restore {
   pub fn push(&mut self, pos: usize, str: String) {
     self.li.push((pos, str));

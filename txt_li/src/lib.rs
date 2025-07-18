@@ -7,9 +7,7 @@ pub struct TxtLi {
   pub restore: Restore,
 }
 
-#[cfg(feature = "impl")]
 pub mod restore;
-#[cfg(feature = "impl")]
 pub use restore::Restore;
 
 #[cfg(feature = "impl")]

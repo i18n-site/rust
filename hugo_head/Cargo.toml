@@ -20,8 +20,12 @@ aok = "0.1.17"
 located_yaml = "0.2.1"
 taplo = "0.14.0"
 
+[dependencies.tran_trait]
+version = "0.3.0"
+path = "../tran_trait"
+
 [dependencies.txt_li]
-version = "0.1.13"
+version = "0.1.14"
 path = "../txt_li"
 
 [dev-dependencies]
