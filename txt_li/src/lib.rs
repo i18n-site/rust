@@ -35,6 +35,49 @@ impl TxtLi {
 
   #[cfg(feature = "push_md_line")]
   pub fn push_md_line(&mut self, txt: impl Into<String>) {
+    let txt = txt.into();
+    let mut 小括号 = false;
+    let mut 中括号 = false;
+    let mut 转义 = false;
+    let mut offset = 0;
+
+    for (pos, i) in txt.char_indices() {
+      if 转义 {
+        转义 = false;
+      } else if i == '|' {
+        if 小括号 || 中括号 {
+          continue;
+        }
+        let t = &txt[offset..pos];
+        let trim_end = t.trim_end();
+        self.push_md(trim_end);
+
+        let end = &t[trim_end.len()..];
+        if !end.is_empty() {
+          self.push_no_tran(end);
+        }
+        self.push_no_tran("|");
+        offset = pos + 1;
+      } else if i == '\\' {
+        转义 = true;
+      } else if i == '(' {
+        小括号 = true;
+      } else if i == '[' {
+        中括号 = true;
+      } else if i == ')' {
+        小括号 = false;
+      } else if i == ']' {
+        中括号 = false;
+      }
+    }
+    if offset < txt.len() {
+      self.push_md(&txt[offset..]);
+    }
+    self.push_no_tran("\n");
+  }
+
+  #[cfg(feature = "push_md_line")]
+  pub fn push_md(&mut self, txt: impl Into<String>) {
     let org = txt.into();
     let org_len = org.len();
     let mut txt = &org[..];
@@ -104,6 +147,7 @@ impl TxtLi {
         split_pos = pos + offset;
         break;
       }
+
       if !("#>.:|=".contains(i) || i.is_whitespace()) {
         split_pos = pos + offset;
         break;
@@ -124,6 +168,5 @@ impl TxtLi {
         self.push_tran(remain);
       }
     }
-    self.push_no_tran("\n");
   }
 }

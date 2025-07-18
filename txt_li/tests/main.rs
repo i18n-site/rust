@@ -34,7 +34,11 @@ fn test_restore() -> Void {
   txt_li.push_md_line("1. ");
   txt_li.push_md_line("1.");
   txt_li.push_md_line("1. 测试");
+  txt_li.push_md_line("| 表头1 | 表头2 |");
+  txt_li.push_md_line("| <a> 表头1 | 表头2 |</a> |");
+  txt_li.push_md_line(r"表头1 | 表头2 \| 123 | 表头3");
   dbg!(&txt_li.li);
   info!("{}", &txt_li.restore.load(&txt_li.li));
+
   OK
 }
