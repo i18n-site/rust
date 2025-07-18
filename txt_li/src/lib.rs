@@ -54,7 +54,18 @@ impl TxtLi {
         }};
       }
 
-      if "-+".contains(i)
+      if i.is_ascii_digit() {
+        let p = pos + 1;
+        for (pos2, c) in txt[p..].char_indices() {
+          if c.is_ascii_digit() {
+            continue;
+          }
+          if c == '.' {
+            jump!(p + pos2 + 1);
+          }
+          break;
+        }
+      } else if "-+".contains(i)
         && let Some(c) = txt[pos + 1..].chars().next()
       {
         if c.is_whitespace() || ".-|:".contains(c) {
