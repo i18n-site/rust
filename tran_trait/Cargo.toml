@@ -1,6 +1,6 @@
 [package]
 name = "tran_trait"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -24,11 +24,6 @@ path = "../txt_li"
 default-features = false
 
 [dev-dependencies]
-aok = "0.1.17"
 loginit = "0.1.18"
 static_init = "1.0.4"
 tracing = "0.1.41"
-
-[dev-dependencies.tokio]
-version = "1.46.1"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

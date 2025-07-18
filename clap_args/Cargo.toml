@@ -18,8 +18,8 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 aok = "0.1.17"
-clap = { version = "4.5.40", features = ["string"] }
-const-str = "0.6.2"
+clap = { version = "4.5.41", features = ["string"] }
+const-str = "0.6.3"
 current_platform = "0.2.0"
 xerr = { version = "0.1.15", path = "../xerr" }
 

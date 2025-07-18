@@ -37,7 +37,7 @@ path = "../sts"
 optional = true
 
 [dependencies.const-str]
-version = "0.6.2"
+version = "0.6.3"
 optional = true
 
 [dependencies.tsfmt]
@@ -58,7 +58,7 @@ version = "0.2.15"
 optional = true
 
 [dependencies.roaring]
-version = "0.11.0"
+version = "0.11.1"
 features = [ "simd" ]
 optional = true
 

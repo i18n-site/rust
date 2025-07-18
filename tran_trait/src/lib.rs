@@ -1,6 +1,4 @@
-#![feature(doc_auto_cfg)]
-#![feature(doc_cfg)]
-
+use aok::Void;
 use txt_li::TxtLi;
 
 pub trait Parse {

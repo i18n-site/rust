@@ -3,7 +3,7 @@
 use tran_trait::Parse;
 mod toml;
 mod yaml;
-use aok::{Result, Void};
+use aok::Result;
 use txt_li::TxtLi;
 
 pub const TRAN: [&str; 5] = ["description", "title", "summary", "brief", "author"];

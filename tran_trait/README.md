@@ -1,25 +1,11 @@
 # tran_trait
 
 ```rust
-use aok::{Result, OK};
-use static_init::constructor;
-use tracing::info;
+use aok::Void;
+use txt_li::TxtLi;
 
-#[constructor(0)]
-extern "C" fn init() {
-  loginit::init()
-}
-
-// #[tokio::test]
-// async fn test() -> Result<()> {
-//   info!("{}", 123456);
-//   OK
-// }
-
-#[test]
-fn test() -> Result<()> {
-  info!("{}", 123456);
-  OK
+pub trait Parse {
+  fn parse<I: IntoIterator<Item = S>, S: Into<String>>(txt_li: &mut TxtLi, iter: I) -> Void;
 }
 ```
 

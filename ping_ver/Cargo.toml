@@ -1,7 +1,7 @@
 [dependencies]
 aok = "0.1.17"
 axum = "0.8.4"
-const-str = "0.6.2"
+const-str = "0.6.3"
 
 [package]
 name = "ping_ver"

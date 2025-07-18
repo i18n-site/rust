@@ -21,7 +21,7 @@ sha3 = "0.10.8"
 tar = "0.4.44"
 
 [dependencies.ed25519-dalek]
-version = "2.1.1"
+version = "2.2.0"
 features = [ "digest" ]
 
 [dev-dependencies]
