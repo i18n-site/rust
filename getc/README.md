@@ -2,10 +2,11 @@
 
 ```rust
 use getc::getc;
+use txt_li::TxtLi;
 
 #[test]
 fn main() {
-  let mut txt_li = tp::TxtPos::default();
+  let mut txt_li = TxtLi::new();
   //   let code = r##"
   // // 1 引入必要的库
   // use std::iter::from_fn;
@@ -49,19 +50,20 @@ fn main() {
   // getc("yml", code, &mut txt_li);
 
   let code = r##"
-#告警级别Md5
-中文
-- 生成时间：${alarm_active_at}
+  #告警级别Md5
+// 中文
+- 生成时间：${alarm_active_at} // 测试
 <div class="text-title">故障描述</div>
-"text": "分派人员：{{range .Responders}}@{{.PersonName}}{{end}}{{end}}",
+"text": "//分派人员：{{range .Responders}}@{{.PersonName}}{{end}}{{end}}",
 事件4：es.nj.03，cpu.idle = 10%，Ok
-  "##;
-  getc("i18n", code, &mut txt_li);
+  "##
+    .trim();
+  getc(&mut txt_li, "i18n", code);
 
-  for i in txt_li.pos_li {
-    println!("{:?}", txt_li.txt_li[i as usize]);
+  for i in &txt_li.li {
+    println!("{}", i);
   }
-  assert_eq!(code, txt_li.txt_li.join(""));
+  assert_eq!(code, txt_li.restore.load(&txt_li.li));
 }
 ```
 

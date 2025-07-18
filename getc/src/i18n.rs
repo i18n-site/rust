@@ -16,7 +16,7 @@ pub fn i18n(txt_li: &mut TxtLi, code: &str) {
           if start > 0 {
             txt_li.push_no_tran(&line[..start]);
           }
-          txt_li.push_md_line(&line[start..]);
+          txt_li.push_md(&line[start..]);
           break 'out;
         }
       }
@@ -49,7 +49,7 @@ pub fn i18n(txt_li: &mut TxtLi, code: &str) {
           }
         }
         if pre < line.len() {
-          txt_li.push_md(&line[pre..]);
+          txt_li.push_no_tran(&line[pre..]);
         }
         break;
       }
