@@ -68,7 +68,7 @@ pub fn getc(txt_li: &mut TxtLi, lang: &str, code: &str) {
           State::MulitlineComment => match style {
             Style::CEnd | Style::Break => {
               let end = stmt.start();
-              txt_li.push_md_line(&code[pre..end]);
+              txt_li.push_md(&code[pre..end]);
               pre = end;
               if style == Style::CEnd {
                 state = State::Normal;
@@ -92,7 +92,7 @@ pub fn getc(txt_li: &mut TxtLi, lang: &str, code: &str) {
           State::Comment => {
             if Style::Break == style {
               let end = stmt.start();
-              txt_li.push_md_line(&code[pre..end]);
+              txt_li.push_md(&code[pre..end]);
               pre = end;
               state = State::Normal;
             }
@@ -101,7 +101,7 @@ pub fn getc(txt_li: &mut TxtLi, lang: &str, code: &str) {
       }
       let code = &code[pre..];
       if state == State::Comment {
-        txt_li.push_md_line(code);
+        txt_li.push_md(code);
       } else {
         txt_li.push_no_tran(code);
       }
