@@ -1,0 +1,8 @@
+#![feature(doc_auto_cfg)]
+#![feature(doc_cfg)]
+
+use txt_li::TxtLi;
+
+pub trait Parse {
+  fn parse<I: IntoIterator<Item = S>, S: Into<String>>(txt_li: &mut TxtLi, iter: I) -> Void;
+}

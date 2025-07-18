@@ -14,6 +14,24 @@ fn test_restore() -> Void {
   txt_li.push_no_tran("2");
   txt_li.push_tran("3");
   txt_li.push_no_tran("4");
+  txt_li.push_md_line("## abc");
+  txt_li.push_md_line("-");
+  txt_li.push_md_line("  [");
+  txt_li.push_md_line("  + -987");
+  txt_li.push_md_line("******");
+  txt_li.push_md_line("_____");
+  txt_li.push_md_line("----");
+  txt_li.push_md_line("-5+1");
+  txt_li.push_md_line("- [x] efg");
+  txt_li.push_md_line("- [ ] hlq");
+  txt_li.push_md_line("- [ ]");
+  txt_li.push_md_line("*. abc");
+  txt_li.push_md_line("**abc**");
+  txt_li.push_md_line("[ ]");
+  txt_li.push_md_line("[ ] abc");
+  txt_li.push_md_line("[^bignote]:");
+  txt_li.push_md_line("[^bignote]:xyz");
+  dbg!(&txt_li.li);
   info!("{}", &txt_li.restore.load(&txt_li.li));
   OK
 }

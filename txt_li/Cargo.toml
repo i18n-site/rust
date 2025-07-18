@@ -1,6 +1,6 @@
 [package]
 name = "txt_li"
-version = "0.1.12"
+version = "0.1.13"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -9,8 +9,9 @@ description = "txt_li"
 keywords = []
 
 [features]
-default = []
-push_trim_line = []
+default = ["impl"]
+impl = []
+push_md_line = ["impl"]
 
 [package.metadata.docs.rs]
 all-features = true

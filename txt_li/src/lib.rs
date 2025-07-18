@@ -1,17 +1,18 @@
 #![feature(doc_auto_cfg)]
 #![feature(doc_cfg)]
 
-use anyhow::Result;
-
-pub mod restore;
-pub use restore::Restore;
-
 #[derive(Default, Debug)]
 pub struct TxtLi {
   pub li: Vec<String>,
   pub restore: Restore,
 }
 
+#[cfg(feature = "impl")]
+pub mod restore;
+#[cfg(feature = "impl")]
+pub use restore::Restore;
+
+#[cfg(feature = "impl")]
 impl TxtLi {
   pub fn new() -> Self {
     Default::default()
@@ -34,44 +35,86 @@ impl TxtLi {
     self.push_no_tran(txt.into() + "\n");
   }
 
-  #[cfg(feature = "push_trim_line")]
-  pub fn push_trim_line(&mut self, txt: impl Into<String>) {
-    let txt = txt.into();
-    let txt_len = txt.len();
-    let mut split_pos = txt_len;
+  #[cfg(feature = "push_md_line")]
+  pub fn push_md_line(&mut self, txt: impl Into<String>) {
+    let org = txt.into();
+    let org_len = org.len();
+    let mut txt = &org[..];
+    let mut split_pos = org_len;
 
-    let mut iter = txt.char_indices().peekable();
-    while let Some((pos, i)) = iter.next() {
-      if i == '-'
-        && let Some((_, next)) = iter.peek()
-        && (".-|:".contains(*next) || next.is_whitespace())
-      {
-        continue;
+    let mut iter = txt.char_indices();
+    let mut offset = 0;
+
+    'out: while let Some((pos, i)) = iter.next() {
+      macro_rules! jump {
+        ($n: expr) => {{
+          let n = $n;
+          txt = &txt[n..];
+          iter = txt.char_indices();
+          offset += n;
+          continue 'out;
+        }};
       }
 
-      if "*_".contains(i)
-        && let Some((_, next)) = iter.peek()
-        && *next == i
+      if "-+".contains(i)
+        && let Some(c) = txt[pos + 1..].chars().next()
       {
-        split_pos = pos;
+        if c.is_whitespace() || ".-|:".contains(c) {
+          let _ = iter.next();
+          continue;
+        }
+      } else if i == '_' {
+        if txt[pos + 1..].chars().all(|c| c == '_') {
+          split_pos = org_len;
+          break;
+        }
+      } else if i == '*'
+        && let Some(c) = txt[pos + 1..].chars().next()
+      {
+        if c != '*' {
+          let _ = iter.next();
+          continue;
+        } else if txt[pos + 2..].chars().all(|c| c == '*') {
+          split_pos = org_len;
+          break;
+        }
+      } else if i == '[' {
+        let p = pos + 1;
+        let remain = &txt[p..];
+        if remain.starts_with("x]") || remain.starts_with(" ]") {
+          jump!(p + 2);
+        } else if let Some(remain) = remain.strip_prefix("^") {
+          for (pos2, c) in remain.char_indices() {
+            if c == ']' {
+              jump!(p + pos2 + 2);
+            } else if c.is_whitespace() {
+              continue 'out;
+            }
+          }
+        }
+        split_pos = pos + offset;
         break;
       }
-
       if !("#>.:|=".contains(i) || i.is_whitespace()) {
-        split_pos = pos;
+        split_pos = pos + offset;
         break;
       }
     }
+
     if split_pos > 0 {
-      self.push_no_tran(&txt[..split_pos]);
+      self.push_no_tran(&org[..split_pos]);
     }
-    if split_pos < txt_len {
-      self.push_tran(&txt[split_pos..]);
+    if split_pos < org_len {
+      let remain = &org[split_pos..];
+      if remain.len() == 1
+        && let Some(c) = remain.chars().next()
+        && !c.is_ascii_alphabetic()
+      {
+        self.push_no_tran(remain);
+      } else {
+        self.push_tran(remain);
+      }
     }
     self.push_no_tran("\n");
   }
-}
-
-pub trait Parser {
-  fn parse(&self, txt: impl AsRef<str>) -> Result<TxtLi>;
 }

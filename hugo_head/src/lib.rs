@@ -13,10 +13,6 @@ pub const HUGO_HEAD: [&str; 2] = [HUGO_YAML, HUGO_TOML];
 pub const HUGO_YAML_POS: usize = 0;
 pub const HUGO_TOML_POS: usize = 1;
 
-pub trait Parse {
-  fn parse<I: IntoIterator<Item = S>, S: Into<String>>(txt_li: &mut TxtLi, iter: I) -> Void;
-}
-
 pub fn parse<P: Parse, S: Into<String>>(iter: impl IntoIterator<Item = S>) -> Result<TxtLi> {
   let mut txt_li = TxtLi::new();
   let mut iter = iter.into_iter().map(|i| i.into());

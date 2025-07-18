@@ -21,7 +21,7 @@ located_yaml = "0.2.1"
 taplo = "0.14.0"
 
 [dependencies.txt_li]
-version = "0.1.12"
+version = "0.1.13"
 path = "../txt_li"
 
 [dev-dependencies]
