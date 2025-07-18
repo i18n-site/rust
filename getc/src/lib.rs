@@ -2,7 +2,7 @@ mod i18n;
 mod style;
 use i18n::i18n;
 pub use style::{LANG_STYLE, Style};
-use tp::TxtPos;
+use txt_li::TxtLi;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum State {
@@ -13,10 +13,11 @@ pub enum State {
   MulitlineStr,
 }
 
-pub fn getc<'a>(lang: &str, code: &'a str, txtpos: &mut TxtPos<'a>) {
+pub fn getc(txt_li: &mut TxtLi, lang: &str, code: &str) {
   if lang == "i18n" {
-    return crate::i18n(code, txtpos);
+    return crate::i18n(txt_li, code);
   }
+
   if let Some(style) = LANG_STYLE.get(lang) {
     style.with(|style| {
       let mut pre = 0;
@@ -42,7 +43,7 @@ pub fn getc<'a>(lang: &str, code: &'a str, txtpos: &mut TxtPos<'a>) {
               let pos = stmt.start();
               if !(code[..pos].trim().is_empty() && code.starts_with("#!")) {
                 let end = stmt.end();
-                txtpos.push(&code[pre..end]);
+                txt_li.push_no_tran(&code[pre..end]);
                 pre = end;
                 state = State::Comment;
               }
@@ -58,7 +59,7 @@ pub fn getc<'a>(lang: &str, code: &'a str, txtpos: &mut TxtPos<'a>) {
             }
             Style::CBegin => {
               let end = stmt.end();
-              txtpos.push(&code[pre..end]);
+              txt_li.push_no_tran(&code[pre..end]);
               pre = end;
               state = State::MulitlineComment;
             }
@@ -67,7 +68,7 @@ pub fn getc<'a>(lang: &str, code: &'a str, txtpos: &mut TxtPos<'a>) {
           State::MulitlineComment => match style {
             Style::CEnd | Style::Break => {
               let end = stmt.start();
-              txtpos.push_txt_line(&code[pre..end]);
+              txt_li.push_md_line(&code[pre..end]);
               pre = end;
               if style == Style::CEnd {
                 state = State::Normal;
@@ -91,7 +92,7 @@ pub fn getc<'a>(lang: &str, code: &'a str, txtpos: &mut TxtPos<'a>) {
           State::Comment => {
             if Style::Break == style {
               let end = stmt.start();
-              txtpos.push_txt_line(&code[pre..end]);
+              txt_li.push_md_line(&code[pre..end]);
               pre = end;
               state = State::Normal;
             }
@@ -100,13 +101,13 @@ pub fn getc<'a>(lang: &str, code: &'a str, txtpos: &mut TxtPos<'a>) {
       }
       let code = &code[pre..];
       if state == State::Comment {
-        txtpos.push_txt_line(code);
+        txt_li.push_md_line(code);
       } else {
-        txtpos.push(code);
+        txt_li.push_no_tran(code);
       }
     })
   } else {
-    txtpos.push(code);
+    txt_li.push_no_tran(code);
   };
 }
 // match i {

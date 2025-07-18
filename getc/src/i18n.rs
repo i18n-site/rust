@@ -1,13 +1,11 @@
-use crate::TxtPos;
+use txt_li::TxtLi;
 
-pub fn i18n<'a>(code: &'a str, txtpos: &mut TxtPos<'a>) {
+pub fn i18n(txt_li: &mut TxtLi, code: &str) {
   if code.is_empty() {
     return;
   }
 
-  let code = code.split('\n');
-
-  for line in code {
+  for line in code.lines() {
     #[allow(clippy::never_loop)]
     'out: loop {
       let trim = line.trim_start();
@@ -16,9 +14,9 @@ pub fn i18n<'a>(code: &'a str, txtpos: &mut TxtPos<'a>) {
           let indent = line.len() - trim.len();
           let start = indent + i.len();
           if start > 0 {
-            txtpos.txt_li.push(&line[..start]);
+            txt_li.push_no_tran(&line[..start]);
           }
-          txtpos.push_txt_line(&line[start..]);
+          txt_li.push_md_line(&line[start..]);
           break 'out;
         }
       }
@@ -33,7 +31,7 @@ pub fn i18n<'a>(code: &'a str, txtpos: &mut TxtPos<'a>) {
             continue;
           }
           if pos != pre {
-            txtpos.txt_li.push(&line[pre..pos]);
+            txt_li.push_no_tran(&line[pre..pos]);
           }
 
           pre = pos;
@@ -41,24 +39,24 @@ pub fn i18n<'a>(code: &'a str, txtpos: &mut TxtPos<'a>) {
           'o2: loop {
             for (pos, i) in iter.by_ref() {
               if "<>{}):：]".contains(i) {
-                txtpos.push_pos(&line[pre..pos]);
+                txt_li.push_md(&line[pre..pos]);
                 pre = pos;
                 break 'o2;
               }
             }
-            txtpos.push_pos(&line[pre..]);
+            txt_li.push_md(&line[pre..]);
             break 'o1;
           }
         }
         if pre < line.len() {
-          txtpos.txt_li.push(&line[pre..]);
+          txt_li.push_md(&line[pre..]);
         }
         break;
       }
 
       break;
     }
-    txtpos.txt_li.push("\n");
+    txt_li.push_no_tran("\n");
   }
-  txtpos.txt_li.pop();
+  txt_li.restore.trim_last();
 }

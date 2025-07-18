@@ -8,6 +8,14 @@ impl Restore {
   pub fn push(&mut self, pos: usize, str: String) {
     self.li.push((pos, str));
   }
+  pub fn trim_last(&mut self) {
+    if let Some((pos, mut line)) = self.li.pop() {
+      let _ = line.pop();
+      if !line.is_empty() {
+        self.li.push((pos, line))
+      }
+    }
+  }
 
   pub fn load<S, I>(&self, iter: I) -> String
   where

@@ -9,13 +9,16 @@ description = "get comment from source code"
 
 [dependencies]
 daachorse = "1.0.0"
-upn = { version = "0.1.9", path = "../upn" }
+
+[dependencies.txt_li]
+version = "0.1.23"
+path = "../txt_li"
+features = [ "push_md_line" ]
+
+[dependencies.upn]
+version = "0.1.9"
+path = "../upn"
 
 [dependencies.phf]
 version = "0.12.1"
 features = [ "macros" ]
-
-[dependencies.tp]
-version = "0.1.26"
-path = "../tp"
-features = [ "mut" ]
