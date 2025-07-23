@@ -34,6 +34,37 @@ impl TxtLi {
   }
 
   #[cfg(feature = "push_md_line")]
+  pub fn push_md_trim_start_line(&mut self, txt: impl Into<String>) {
+    let txt = txt.into();
+    for prefix in ["[", "!["] {
+      if let Some(remain) = txt.strip_prefix(prefix) {
+        if let Some(p) = find_close(remain, '[', ']')
+          && p + 1 < remain.len()
+          && remain[p + 1..].starts_with('(')
+        {
+          let url = &remain[p + 2..];
+          if let Some(end) = find_close(url, '(', ')')
+            && end + 1 == url.len()
+          {
+            let prefix_len = prefix.len();
+            self.push_no_tran(prefix);
+            let end = p + prefix_len;
+            let t = txt[prefix_len..end].trim();
+            if !t.is_empty() {
+              self.push_md_trim_start_line(t);
+            }
+            self.push_no_tran(&txt[end..]);
+            return;
+          }
+        }
+        break;
+      }
+    }
+
+    self.push_tran(txt);
+  }
+
+  #[cfg(feature = "push_md_line")]
   pub fn push_md_line(&mut self, txt: impl Into<String>) {
     let txt = txt.into();
     let mut 小括号 = false;
@@ -165,7 +196,7 @@ impl TxtLi {
       {
         self.push_no_tran(remain);
       } else {
-        self.push_tran(remain);
+        self.push_md_trim_start_line(remain);
       }
     }
   }

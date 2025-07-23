@@ -179,7 +179,7 @@ members = [
   "txt_li",
   "txt_chunk",
   "hugo_head",
-  "tran_trait",
+  "tran_trait", "find_close_bucket",
   # "bgu",
   # "cli_tmpl",
   # "hsc",

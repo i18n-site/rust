@@ -37,7 +37,12 @@ fn test_restore() -> Void {
   txt_li.push_md_line("| 表头1 | 表头2 |");
   txt_li.push_md_line("| <a> 表头1 | 表头2 |</a> |");
   txt_li.push_md_line(r"表头1 | 表头2 \| 123 | 表头3");
-  dbg!(&txt_li.li);
+  txt_li.push_md_line(r"[![License](https://img.shields.io/crates/l/volo)](#license)");
+  txt_li.push_md_line(r"![License](https://img.shields.io/crates/l/volo)");
+  txt_li.push_md_line(r"![License]()");
+  txt_li.push_md_line(r"![License](");
+  txt_li.push_md_line(r"![](https://img.shields.io/crates/l/volo)");
+  // dbg!(&txt_li.li);
   info!("{}", &txt_li.restore.load(&txt_li.li));
 
   OK
