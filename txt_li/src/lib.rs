@@ -35,15 +35,16 @@ impl TxtLi {
 
   #[cfg(feature = "push_md_line")]
   pub fn push_md_trim_start_line(&mut self, txt: impl Into<String>) {
+    use find_close_bucket::find_close_bucket;
     let txt = txt.into();
     for prefix in ["[", "!["] {
       if let Some(remain) = txt.strip_prefix(prefix) {
-        if let Some(p) = find_close(remain, '[', ']')
+        if let Some(p) = find_close_bucket(remain, '[', ']')
           && p + 1 < remain.len()
           && remain[p + 1..].starts_with('(')
         {
           let url = &remain[p + 2..];
-          if let Some(end) = find_close(url, '(', ')')
+          if let Some(end) = find_close_bucket(url, '(', ')')
             && end + 1 == url.len()
           {
             let prefix_len = prefix.len();

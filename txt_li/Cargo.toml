@@ -6,19 +6,24 @@ license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/dev/txt_li"
 description = "txt_li"
-keywords = []
-
-[features]
-default = ["impl"]
-impl = []
-push_md_line = ["impl"]
+keywords = [ ]
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = ["--cfg", "docsrs"]
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ "impl" ]
+impl = [ ]
+push_md_line = [ "impl", "dep:find_close_bucket" ]
 
 [dependencies]
 anyhow = "1.0.98"
+
+[dependencies.find_close_bucket]
+version = "0.1.2"
+path = "../find_close_bucket"
+optional = true
 
 [dev-dependencies]
 aok = "0.1.17"
