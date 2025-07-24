@@ -7,50 +7,61 @@
 用状态机实现，标签可能不规范，比如 </ pre >
 */
 
-pub fn find_close(htm: impl AsRef<str>, tag: impl AsRef<str>) -> usize {
-  let htm = htm.as_ref();
-  let tag = tag.as_ref();
-  let mut stack = 0; // 用于跟踪嵌套层级
+#[derive(Debug)]
+pub struct FindClose<'a> {
+  pub stack: usize,
+  pub tag: &'a str,
+}
 
-  let htm = htm.to_lowercase();
-  let mut iter = htm.char_indices();
-  while let Some((_, c)) = iter.next() {
-    if c == '<' {
-      while let Some((_, c)) = iter.next() {
-        if c.is_whitespace() {
-          continue;
-        }
-        if c == '/' {
-          let mut t = String::new();
-          for (pos, c) in iter.by_ref() {
-            if c == '>' {
-              if t.trim() == tag {
-                if stack == 0 {
-                  return pos + 1;
-                }
-                stack -= 1;
-              }
-              break;
-            }
-            t.push(c);
-          }
-        } else {
-          let mut t = String::from(c);
-          for (_, c) in iter.by_ref() {
-            if c == '>' {
-              if t.trim() == tag {
-                stack += 1;
-              }
-              break;
-            }
-            t.push(c);
-          }
-        }
-        break;
-      }
-    }
+impl<'a> FindClose<'a> {
+  pub fn new(tag: &'a str) -> Self {
+    Self { stack: 0, tag }
   }
 
-  // 没有找到匹配的闭合标签
-  0
+  pub fn find(&mut self, htm: impl AsRef<str>) -> Option<usize> {
+    let htm = htm.as_ref();
+    let tag = self.tag;
+
+    let htm = htm.to_lowercase();
+    let mut iter = htm.char_indices();
+    while let Some((_, c)) = iter.next() {
+      if c == '<' {
+        while let Some((_, c)) = iter.next() {
+          if c.is_whitespace() {
+            continue;
+          }
+          if c == '/' {
+            let mut t = String::new();
+            for (pos, c) in iter.by_ref() {
+              if c == '>' {
+                if t.trim() == tag {
+                  if self.stack == 0 {
+                    return Some(pos + 1);
+                  }
+                  self.stack -= 1;
+                }
+                break;
+              }
+              t.push(c);
+            }
+          } else {
+            let mut t = String::from(c);
+            for (_, c) in iter.by_ref() {
+              if c == '>' {
+                if t.trim() == tag {
+                  self.stack += 1;
+                }
+                break;
+              }
+              t.push(c);
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    // 没有找到匹配的闭合标签
+    None
+  }
 }
