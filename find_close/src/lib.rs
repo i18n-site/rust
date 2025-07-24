@@ -7,7 +7,8 @@
 用状态机实现，标签可能不规范，比如 </ pre >
 */
 
-pub fn find_close(htm: &str, tag: impl AsRef<str>) -> usize {
+pub fn find_close(htm: impl AsRef<str>, tag: impl AsRef<str>) -> usize {
+  let htm = htm.as_ref();
   let tag = tag.as_ref();
   let mut stack = 0; // 用于跟踪嵌套层级
 

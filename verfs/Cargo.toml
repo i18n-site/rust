@@ -2,7 +2,7 @@
 aok = "0.1.17"
 blake3 = "1.8.2"
 intbin = "0.2.3"
-sonic-rs = "0.5.2"
+sonic-rs = "0.5.3"
 thiserror = "2.0.12"
 
 [dependencies.burl]

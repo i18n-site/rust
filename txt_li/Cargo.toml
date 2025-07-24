@@ -1,24 +1,23 @@
 [package]
 name = "txt_li"
-version = "0.1.24"
+version = "0.1.25"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/dev/txt_li"
 description = "txt_li"
-keywords = [ ]
+keywords = []
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = [ "--cfg", "docsrs" ]
+rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
-default = [ "impl" ]
-impl = [ ]
-push_md_line = [ "impl", "dep:find_close_bucket" ]
+default = ["impl"]
+impl = []
+push_md_line = ["impl", "dep:find_close_bucket"]
 
 [dependencies]
-anyhow = "1.0.98"
 
 [dependencies.find_close_bucket]
 version = "0.1.2"

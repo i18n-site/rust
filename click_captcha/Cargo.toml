@@ -24,7 +24,7 @@ version = "0.3.77"
 optional = true
 
 [dependencies.rand]
-version = "0.9.1"
+version = "0.9.2"
 optional = true
 
 [dependencies.serde]

@@ -10,7 +10,7 @@ description = "api for https://wxpusher.zjiecode.com"
 [dependencies]
 anyhow = "1.0.98"
 serde_with = "3.14.0"
-sonic-rs = "0.5.2"
+sonic-rs = "0.5.3"
 thiserror = "2.0.12"
 
 [dependencies.reqwest]

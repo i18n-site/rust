@@ -16,7 +16,7 @@ rustdoc-args = [ "--cfg", "docsrs" ]
 default = [ ]
 
 [dependencies]
-sonic-rs = "0.5.2"
+sonic-rs = "0.5.3"
 
 [dependencies.s_]
 version = "0.1.6"
