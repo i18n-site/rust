@@ -45,9 +45,16 @@ fn test_restore() -> Void {
   txt_li.push_md_line(r"![License]()");
   txt_li.push_md_line(r"![License](");
   txt_li.push_md_line(r"![](https://img.shields.io/crates/l/volo)");
+  txt_li.push_md_line(r"[1]: https://img.shields.io");
+  txt_li.push_md_line(r"[1] https://img.shields.io");
+  txt_li.push_md_line(r"`测试一下`");
+  txt_li.push_md_line(r"<code>测试一下</code>");
   // dbg!(&txt_li.li);
-  info!("{}", &txt_li.restore.load(&txt_li.li));
+  // info!("{}", &txt_li.restore.load(&txt_li.li));
 
+  for i in txt_li.li {
+    info!("{}", i);
+  }
   OK
 }
 ```

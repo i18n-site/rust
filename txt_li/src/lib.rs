@@ -112,6 +112,42 @@ impl TxtLi {
   pub fn push_md(&mut self, txt: impl Into<String>) {
     let org = txt.into();
     let org_len = org.len();
+
+    if org.starts_with("`") && org_len > 1 {
+      let mut iter = org[1..].char_indices();
+      while let Some((p, i)) = iter.next() {
+        if i == '`' {
+          let p = p + 2;
+          if p == org_len {
+            self.push_no_tran(org);
+            return;
+          }
+          break;
+        }
+        if i == '\\' {
+          iter.next();
+        }
+      }
+    } else if let Some(remain) = org.strip_prefix("<") {
+      for tag in ["script", "code", "pre"] {
+        if let Some(remain) = remain.strip_prefix(tag) {
+          if let Some(next) = remain.chars().next()
+            && (next.is_whitespace() || next == '>')
+          {
+            let remain = &remain[next.len_utf8()..];
+            let mut find_close = find_close::FindClose::new(tag);
+            if let Some(p) = find_close.find(remain)
+              && p == remain.len()
+            {
+              self.push_no_tran(org);
+              return;
+            }
+          }
+          break;
+        }
+      }
+    }
+
     let mut txt = &org[..];
     let mut split_pos = org_len;
 
@@ -171,9 +207,17 @@ impl TxtLi {
           for (pos2, c) in remain.char_indices() {
             if c == ']' {
               jump!(p + pos2 + 2);
-            } else if c.is_whitespace() {
-              continue 'out;
             }
+          }
+        } else {
+          for (pos2, c) in remain.char_indices() {
+            if c.is_ascii_digit() {
+              continue;
+            }
+            if c == ']' {
+              jump!(p + pos2 + 1);
+            }
+            break;
           }
         }
         split_pos = pos + offset;
