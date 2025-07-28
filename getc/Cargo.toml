@@ -11,7 +11,7 @@ description = "get comment from source code"
 daachorse = "1.0.0"
 
 [dependencies.txt_li]
-version = "0.1.27"
+version = "0.1.28"
 path = "../txt_li"
 features = [ "push_md_line" ]
 

@@ -41,10 +41,15 @@ impl TxtLi {
       if let Some(remain) = txt.strip_prefix(prefix) {
         if let Some(p) = find_close_bucket(remain, '[', ']')
           && p + 1 < remain.len()
-          && remain[p + 1..].starts_with('(')
+          && let Some(bucket) = remain[p + 1..].chars().next()
+          && let Some(bucket_close) = match bucket {
+            '(' => Some(')'),
+            '[' => Some(']'),
+            _ => None,
+          }
         {
           let url = &remain[p + 2..];
-          if let Some(end) = find_close_bucket(url, '(', ')')
+          if let Some(end) = find_close_bucket(url, bucket, bucket_close)
             && end + 1 == url.len()
           {
             let prefix_len = prefix.len();
@@ -130,6 +135,11 @@ impl TxtLi {
         }
       }
     } else if let Some(remain) = org.strip_prefix("<") {
+      if remain.starts_with("!--") && remain.ends_with("-->") {
+        self.push_no_tran(org);
+        return;
+      }
+
       for tag in ["script", "code", "pre"] {
         if let Some(remain) = remain.strip_prefix(tag) {
           if let Some(next) = remain.chars().next()
@@ -205,13 +215,8 @@ impl TxtLi {
         let remain = &txt[p..];
         if remain.starts_with("x]") || remain.starts_with(" ]") {
           jump!(p + 2);
-        } else if let Some(remain) = remain.strip_prefix("^") {
-          for (pos2, c) in remain.char_indices() {
-            if c == ']' {
-              jump!(p + pos2 + 2);
-            }
-          }
         } else {
+          // [1] http://xxx
           for (pos2, c) in remain.char_indices() {
             if c.is_ascii_digit() {
               continue;
@@ -220,6 +225,21 @@ impl TxtLi {
               jump!(p + pos2 + 1);
             }
             break;
+          }
+          let mut iter = remain.chars();
+          while let Some(c) = iter.next() {
+            if c.is_whitespace() {
+              break;
+            }
+            if c == ']' {
+              if let Some(next) = iter.next()
+                && next == ':'
+              {
+                self.push_no_tran(org);
+                return;
+              }
+              break;
+            }
           }
         }
         split_pos = pos + offset;

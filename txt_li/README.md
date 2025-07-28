@@ -52,9 +52,12 @@ fn test_restore() -> Void {
   txt_li.push_md_line(r"***");
   txt_li.push_md_line(r"**");
   txt_li.push_md_line(r"*");
+  txt_li.push_md_line(r"[SurrealDB-url]: https://surrealdb.com/");
+  txt_li.push_md_line(r"<!-- 测试 -->");
   txt_li.push_md_line(
     r"- 🌐 **abc No Vendor Lock-in**: Switch providers, deploy anywhere, own your data",
   );
+  txt_li.push_md_line(r"[![Forks][forks-shield]][forks-url]");
   // dbg!(&txt_li.li);
   // info!("{}", &txt_li.restore.load(&txt_li.li));
 
