@@ -111,6 +111,7 @@ impl TxtLi {
   #[cfg(feature = "push_md_line")]
   pub fn push_md(&mut self, txt: impl Into<String>) {
     let org = txt.into();
+
     let org_len = org.len();
 
     if org.starts_with("`") && org_len > 1 {
@@ -195,6 +196,7 @@ impl TxtLi {
           let _ = iter.next();
           continue;
         } else if txt[pos + 2..].chars().all(|c| c == '*') {
+          // ******
           split_pos = org_len;
           break;
         }
@@ -222,6 +224,8 @@ impl TxtLi {
         }
         split_pos = pos + offset;
         break;
+      } else if unic_emoji_char::is_emoji(i) {
+        continue;
       }
 
       if !("#>.:|=".contains(i) || i.is_whitespace()) {
