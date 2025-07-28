@@ -11,9 +11,24 @@ pub struct TxtLi {
 mod htm_tag;
 #[cfg(feature = "push_md_line")]
 use htm_tag::htm_tag;
+#[cfg(feature = "push_md_line")]
+use unic_emoji_char::is_emoji;
 
 pub mod restore;
 pub use restore::Restore;
+
+#[cfg(feature = "push_md_line")]
+pub const REMOVE: &str = "»:";
+
+#[cfg(feature = "push_md_line")]
+pub fn is_remove_char(char: char) -> Option<usize> {
+  let len = char.len_utf8();
+  if char.is_whitespace() || (is_emoji(char) && len > 1) || REMOVE.contains(char) {
+    Some(len)
+  } else {
+    None
+  }
+}
 
 #[cfg(feature = "impl")]
 impl TxtLi {
@@ -62,7 +77,7 @@ impl TxtLi {
             let end = p + prefix_len;
             let t = txt[prefix_len..end].trim();
             if !t.is_empty() {
-              self.push_md_trim_start_line(t);
+              self.push_md(t);
             }
             self.push_no_tran(&txt[end..]);
             return;
@@ -119,18 +134,19 @@ impl TxtLi {
   }
 
   #[cfg(feature = "push_md_line")]
-  pub fn push_md(&mut self, txt: impl Into<String>) {
-    let org = txt.into();
+  pub fn push_md(&mut self, txt: impl AsRef<str>) {
+    let txt = txt.as_ref();
 
-    let org_len = org.len();
-
-    if org.starts_with("`") && org_len > 1 {
-      let mut iter = org[1..].char_indices();
+    let txt_len = txt.len();
+    if txt_len == 0 {
+      return;
+    } else if let Some(remain) = txt.strip_prefix("`") {
+      let mut iter = remain.char_indices();
       while let Some((p, i)) = iter.next() {
         if i == '`' {
           let p = p + 2;
-          if p == org_len {
-            self.push_no_tran(org);
+          if p == txt_len {
+            self.push_no_tran(txt);
             return;
           }
           break;
@@ -139,9 +155,9 @@ impl TxtLi {
           iter.next();
         }
       }
-    } else if let Some(remain) = org.strip_prefix("<") {
+    } else if let Some(remain) = txt.strip_prefix("<") {
       if remain.starts_with("!--") && remain.ends_with("-->") {
-        self.push_no_tran(org);
+        self.push_no_tran(txt);
         return;
       }
 
@@ -156,7 +172,7 @@ impl TxtLi {
             if let Some(p) = find_close.find(remain)
               && p == remain.len()
             {
-              self.push_no_tran(org);
+              self.push_no_tran(txt);
               return;
             }
           }
@@ -166,14 +182,14 @@ impl TxtLi {
             && p == remain.len()
           {
             let offset = tag.len() + 1;
-            if let Some(begin) = org[offset..].find(">") {
-              let end = org.len() - tag.len() - 1;
-              if let Some(end) = org[..end].rfind("<") {
+            if let Some(begin) = txt[offset..].find(">") {
+              let end = txt.len() - tag.len() - 1;
+              if let Some(end) = txt[..end].rfind("<") {
                 let begin = begin + offset + 1;
                 if begin < end {
-                  self.push_no_tran(&org[..begin]);
-                  self.push_md(&org[begin..end]);
-                  self.push_no_tran(&org[end..]);
+                  self.push_no_tran(&txt[..begin]);
+                  self.push_md(&txt[begin..end]);
+                  self.push_no_tran(&txt[end..]);
                   return;
                 }
               }
@@ -183,135 +199,204 @@ impl TxtLi {
       }
     }
 
-    let mut txt = &org[..];
-    let mut split_pos = org_len;
+    {
+      // 移除开头的表情符号
+      let mut remove = 0;
+      for i in txt.chars() {
+        if ".#=>:|·".contains(i) {
+          remove += i.len_utf8();
+        } else if let Some(len) = is_remove_char(i) {
+          remove += len;
+        } else {
+          break;
+        }
+      }
+      if remove > 0 {
+        self.push_no_tran(&txt[..remove]);
+        self.push_md(&txt[remove..]);
+        return;
+      }
+    }
 
-    let mut iter = txt.char_indices();
-    let mut offset = 0;
+    {
+      // 移除结尾的表情符号
+      let mut remove = 0;
+      for i in txt.chars().rev() {
+        if ":-".contains(i) {
+          remove += 1;
+        } else if let Some(len) = is_remove_char(i) {
+          remove += len;
+        } else {
+          break;
+        }
+      }
+      if remove > 0 {
+        let end = txt_len - remove;
+        self.push_md(&txt[..end]);
+        self.push_no_tran(&txt[end..]);
+        return;
+      }
+    }
 
-    'out: while let Some((pos, i)) = iter.next() {
-      macro_rules! jump {
+    if let Some((pos, i)) = txt.char_indices().next() {
+      macro_rules! split {
         ($n: expr) => {{
           let n = $n;
-          txt = &txt[n..];
-          iter = txt.char_indices();
-          offset += n;
-          continue 'out;
+          self.push_no_tran(&txt[..n]);
+          self.push_md(&txt[n..]);
+          return;
         }};
       }
-
+      macro_rules! tran_middle {
+        ($begin: expr, $end:expr) => {{
+          let begin = $begin;
+          let end = $end;
+          self.push_no_tran(&txt[..begin]);
+          self.push_md(&txt[begin..end]);
+          self.push_no_tran(&txt[end..]);
+          return;
+        }};
+      }
       if i.is_ascii_digit() {
         let p = pos + 1;
-        for (pos2, c) in txt[p..].char_indices() {
-          if c.is_ascii_digit() {
-            continue;
-          }
-          if c == '.' {
-            jump!(p + pos2 + 1);
-          }
-          break;
-        }
-      } else if "-+".contains(i)
-        && let Some(c) = txt[pos + 1..].chars().next()
-      {
-        if c.is_whitespace() || ".-|:".contains(c) {
-          let _ = iter.next();
-          continue;
-        }
-      } else if i == '_' {
-        if txt[pos + 1..].chars().all(|c| c == '_') {
-          split_pos = org_len;
-          break;
-        }
-      } else if i == '*'
-        && let Some(c) = txt[pos + 1..].chars().next()
-      {
-        if c != '*' {
-          let _ = iter.next();
-          continue;
-        } else {
-          let t = &txt[pos + 2..];
-          if t.chars().all(|c| c == '*') {
-            // ******
-            split_pos = org_len;
-            break;
-          } else if let Some(p) = t.find("**")
-            && p + 2 == t.len()
-          {
-            let p = pos + 2 + offset;
-            self.push_no_tran(&org[..p]);
-            self.push_md(&org[p..org_len - 2]);
-            self.push_no_tran("**");
-            return;
-          }
-        }
-      } else if i == '[' {
-        let p = pos + 1;
-        let remain = &txt[p..];
-        if remain.starts_with("x]") || remain.starts_with(" ]") {
-          jump!(p + 2);
-        } else {
-          // [1] http://xxx
-          for (pos2, c) in remain.char_indices() {
+        #[allow(clippy::never_loop)]
+        'o: loop {
+          for (pos2, c) in txt[p..].char_indices() {
             if c.is_ascii_digit() {
               continue;
             }
-            if c == ']' {
-              jump!(p + pos2 + 1);
+            if c == '.' {
+              split!(p + pos2 + 1);
+            }
+            break 'o;
+          }
+          self.push_no_tran(txt);
+          return;
+        }
+      } else if "-+".contains(i) {
+        if let Some(c) = txt[pos + 1..].chars().next() {
+          if c.is_whitespace() || ".-|:".contains(c) {
+            split!(pos + 1 + c.len_utf8());
+          }
+        } else {
+          self.push_no_tran(txt);
+          return;
+        }
+      } else if '_' == i && txt[pos + 1..].chars().all(|c| c == i) {
+        self.push_no_tran(txt);
+        return;
+      } else if i == '*' {
+        if let Some(c) = txt[pos + 1..].chars().next() {
+          if c == '*' {
+            let t = &txt[pos + 2..];
+            if t.chars().all(|k| k == '*') {
+              self.push_no_tran(txt);
+              return;
+            } else {
+              const END_FLAG: &str = "**";
+              if let Some(p) = t.find(END_FLAG) {
+                let p = p + 2;
+                let tlen = t.len();
+                if p <= tlen {
+                  if p == tlen {
+                    let begin = pos + 2;
+                    tran_middle!(begin, txt_len - 2);
+                  } else {
+                    let mut len = 0;
+                    for i in t[p..].chars() {
+                      if i.is_whitespace() {
+                        len += i.len_utf8();
+                      } else if ":-".contains(i) {
+                        len += i.len_utf8();
+                        let p = p + pos + 2;
+                        self.push_md(&txt[..p]);
+                        let end = p + len;
+                        self.push_no_tran(&txt[p..end]);
+                        self.push_md(&txt[end..]);
+                        return;
+                      } else {
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          } else {
+            split!(pos + 1);
+          }
+        } else {
+          self.push_no_tran(txt);
+          return;
+        }
+      } else if i == '[' {
+        let mut len = 0;
+        let t = &txt[pos + 1..];
+        for i in t.chars() {
+          if i.is_whitespace() || i == 'x' {
+            len += i.len_utf8();
+          } else if i == ']' {
+            len += 1;
+            split!(pos + 1 + len);
+          } else {
+            break;
+          }
+        }
+        for (pos2, c) in t.char_indices() {
+          if c.is_ascii_digit() {
+            continue;
+          }
+          if c == ']' {
+            split!(pos2 + pos + 2);
+          }
+          break;
+        }
+        let mut iter = t.chars();
+        while let Some(c) = iter.next() {
+          if c.is_whitespace() {
+            break;
+          }
+          if c == ']' {
+            if let Some(next) = iter.next()
+              && next == ':'
+            {
+              self.push_no_tran(txt);
+              return;
             }
             break;
           }
-          let mut iter = remain.chars();
-          while let Some(c) = iter.next() {
-            if c.is_whitespace() {
-              break;
-            }
-            if c == ']' {
-              if let Some(next) = iter.next()
-                && next == ':'
-              {
-                self.push_no_tran(org);
-                return;
-              }
-              break;
-            }
-          }
         }
-        split_pos = pos + offset;
-        break;
-      } else if let Some(remain) = txt.strip_prefix("(") {
-        if let Some(p) = remain.find(")")
-          && p + 1 == remain.len()
-        {
-          let p = pos + 1 + offset;
-          self.push_no_tran(&org[..p]);
-          self.push_md(&org[p..org_len - 1]);
-          self.push_no_tran(")");
-          return;
-        }
-      } else if unic_emoji_char::is_emoji(i) {
-        continue;
-      }
-
-      if !("#>.:|=·".contains(i) || i.is_whitespace()) {
-        split_pos = pos + offset;
-        break;
-      }
-    }
-
-    if split_pos > 0 {
-      self.push_no_tran(&org[..split_pos]);
-    }
-    if split_pos < org_len {
-      let remain = &org[split_pos..];
-      if remain.len() == 1
-        && let Some(c) = remain.chars().next()
-        && !c.is_ascii_alphabetic()
+      } else if let Some(remain) = txt.strip_prefix("(")
+        && let Some(p) = remain.find(")")
+        && p + 1 == remain.len()
       {
-        self.push_no_tran(remain);
-      } else {
-        self.push_md_trim_start_line(remain);
+        let p = pos + 1;
+        self.push_no_tran(&txt[..p]);
+        self.push_md(&txt[p..txt_len - 1]);
+        self.push_no_tran(")");
+        return;
       }
+      // if !("#>.:|=·".contains(i) || i.is_whitespace()) {
+      //   split_pos = pos + offset;
+      //   break;
+      // }
     }
+
+    // if split_pos > 0 {
+    //   self.push_no_tran(&txt[..split_pos]);
+    // }
+    // if split_pos < txt_len {
+    //   let remain = &txt[split_pos..];
+    //   if remain.len() == 1
+    //     && let Some(c) = remain.chars().next()
+    //     && !c.is_ascii_alphabetic()
+    //   {
+    //     self.push_no_tran(remain);
+    //   } else {
+    //     self.push_md_trim_start_line(remain);
+    //   }
+    // }
+
+    self.push_md_trim_start_line(txt);
   }
 }

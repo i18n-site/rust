@@ -9,7 +9,6 @@ extern "C" fn _loginit() {
 
 #[test]
 fn test_restore() -> Void {
-  let mut txt_li = TxtLi::new();
   // txt_li.push_md_line("## abc");
   // txt_li.push_md_line("-");
   // txt_li.push_md_line("  [");
@@ -21,15 +20,10 @@ fn test_restore() -> Void {
   // txt_li.push_md_line("- [x] efg");
   // txt_li.push_md_line("- [ ] hlq");
   // txt_li.push_md_line("- [ ]");
-  // txt_li.push_md_line("*. abc");
-  // txt_li.push_md_line("**abc**");
   // txt_li.push_md_line("[ ]");
   // txt_li.push_md_line("[ ] abc");
   // txt_li.push_md_line("[^bignote]:");
   // txt_li.push_md_line("[^bignote]:xyz");
-  // txt_li.push_md_line("1. ");
-  // txt_li.push_md_line("1.");
-  // txt_li.push_md_line("1. 测试");
   // txt_li.push_md_line("| 表头1 | 表头2 |");
   // txt_li.push_md_line("| <a> 表头1 | 表头2 |</a> |");
   // txt_li.push_md_line(r"表头1 | 表头2 \| 123 | 表头3");
@@ -60,12 +54,40 @@ fn test_restore() -> Void {
   // txt_li.push_md_line("<p align=\"right\">(<a href=\"#readme-top\">back to top</a>)</p>");
   // txt_li.push_md_line("<p align=\"right\"></p>");
   // dbg!(&txt_li.li);
-  // info!("{}", &txt_li.restore.load(&txt_li.li));
 
-  txt_li.push_md_line(r"<strong>Checkout our website »</strong>");
-  txt_li.push_md_line(r"<strong Checkout our website »</strong>");
-  for i in txt_li.li {
-    info!("{:?}", i);
+  for i in [
+    "- a",
+    "+ b",
+    "+",
+    "1. ",
+    "1.",
+    "1. 测试",
+    "1",
+    r"<strong>Checkout our website »</strong>",
+    "**[Discord Server](https://discord.gg/37XJPXfz2w)** - Get help, share ideas, and connect with other users",
+    "Recently Completed ✅",
+    "✅ Recently Completed",
+    "**[🚀 Deployment](docs/deployment/index.md)** - Complete deployment guides for all scenarios",
+    "*. abc",
+    "** abc123 **",
+    "** abc456 **",
+    "***",
+    "**",
+    "*",
+    r"**Cost**:",
+    r"**Cost** - cost good",
+    r"- [x] **Cost**",
+    r"- 🌐 **abc No Vendor Lock-in**: Switch providers, deploy anywhere, own your data",
+    r"[SurrealDB-url]: https://surrealdb.com/",
+    r"[12] https://x.com/",
+    "<p align=\"right\">(<a href=\"#readme-top\">back to top</a>)</p>",
+  ] {
+    let mut txt_li = TxtLi::new();
+    txt_li.push_md_line(i);
+    for i in &txt_li.li {
+      info!("{:?}", i);
+    }
+    assert_eq!(i.trim_end(), txt_li.restore.load(&txt_li.li).trim_end());
   }
   OK
 }
