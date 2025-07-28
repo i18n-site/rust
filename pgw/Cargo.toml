@@ -14,7 +14,7 @@ global = ["dep:static_init"]
 [dependencies]
 futures = "0.3.31"
 ring = "0.17.14"
-rustls = "0.23.29"
+rustls = "0.23.30"
 tokio-rustls = "0.26.2"
 tracing = "0.1.41"
 x509-certificate = "0.24.0"
@@ -37,7 +37,7 @@ version = "0.1.5"
 path = "../hidden_password"
 
 [dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = ["macros", "rt", "rt-multi-thread", "sync"]
 
 [dev-dependencies]

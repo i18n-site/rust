@@ -19,4 +19,4 @@ aok = "0.1.17"
 gensym = "0.1.1"
 linkme = "0.3.33"
 paste = "1.0.15"
-tokio = { version = "1.46.1", features = ["rt"] }
+tokio = { version = "1.47.0", features = ["rt"] }

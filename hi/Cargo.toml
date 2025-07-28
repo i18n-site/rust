@@ -31,7 +31,7 @@ version = "0.1.17"
 version = "0.1.31"
 
 [dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dependencies.wxpush]

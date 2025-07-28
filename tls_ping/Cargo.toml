@@ -5,7 +5,7 @@ tokio-rustls = "0.26.2"
 x509-parser = "0.17.0"
 
 [dependencies.rustls]
-version = "0.23.29"
+version = "0.23.30"
 features = [ "ring" ]
 
 [dependencies.tlsinit]
@@ -13,7 +13,7 @@ version = "0.1.7"
 path = "../tlsinit"
 
 [dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "time", "net" ]
 
 [package]
@@ -35,5 +35,5 @@ static_init = "1.0.4"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "fs", "io-util" ]

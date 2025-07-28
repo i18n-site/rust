@@ -19,7 +19,7 @@ default = [ ]
 anyhow = "1.0.98"
 aok = "0.1.17"
 base64 = "0.22.1"
-rustls = "0.23.29"
+rustls = "0.23.30"
 thiserror = "2.0.12"
 tokio-rustls = "0.26.2"
 x509-parser = "0.17.0"
@@ -33,7 +33,7 @@ version = "0.1.7"
 path = "../tlsinit"
 
 [dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "io-util", "net", "time" ]
 
 [dev-dependencies]
@@ -47,5 +47,5 @@ path = "../genv"
 version = "0.1.16"
 
 [dev-dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

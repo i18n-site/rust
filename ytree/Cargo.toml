@@ -37,7 +37,7 @@ path = "../sts"
 optional = true
 
 [dependencies.const-str]
-version = "0.6.3"
+version = "0.6.4"
 optional = true
 
 [dependencies.tsfmt]
@@ -58,7 +58,7 @@ version = "0.2.15"
 optional = true
 
 [dependencies.roaring]
-version = "0.11.1"
+version = "0.11.2"
 features = [ "simd" ]
 optional = true
 
@@ -83,5 +83,5 @@ static_init = "1.0.4"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

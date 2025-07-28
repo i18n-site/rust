@@ -165,15 +165,17 @@ impl TxtLi {
           if let Some(p) = find_close.find(remain)
             && p == remain.len()
           {
-            let offset = tag.len() + 2;
+            let offset = tag.len() + 1;
             if let Some(begin) = org[offset..].find(">") {
               let end = org.len() - tag.len() - 1;
               if let Some(end) = org[..end].rfind("<") {
                 let begin = begin + offset + 1;
-                self.push_no_tran(&org[..begin]);
-                self.push_md(&org[begin..end]);
-                self.push_no_tran(&org[end..]);
-                return;
+                if begin < end {
+                  self.push_no_tran(&org[..begin]);
+                  self.push_md(&org[begin..end]);
+                  self.push_no_tran(&org[end..]);
+                  return;
+                }
               }
             }
           }

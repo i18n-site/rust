@@ -35,5 +35,5 @@ path = "../vb"
 version = "0.1.8"
 
 [dev-dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

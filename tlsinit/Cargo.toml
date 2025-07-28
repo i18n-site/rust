@@ -3,7 +3,7 @@ rustls-native-certs = "0.8.1"
 static_init = "1.0.4"
 
 [dependencies.rustls]
-version = "0.23.29"
+version = "0.23.30"
 features = [ "ring" ]
 
 [package]
@@ -35,5 +35,5 @@ path = "../genv"
 version = "0.1.16"
 
 [dev-dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

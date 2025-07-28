@@ -19,7 +19,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 [dependencies]
 aok = "0.1.17"
 clap = { version = "4.5.41", features = ["string"] }
-const-str = "0.6.3"
+const-str = "0.6.4"
 current_platform = "0.2.0"
 xerr = { version = "0.1.15", path = "../xerr" }
 
@@ -30,5 +30,5 @@ static_init = "1.0.4"
 tracing = "0.1.41"
 
 [dev-dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

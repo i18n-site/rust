@@ -36,7 +36,7 @@ path = "../ireq"
 features = [ "proxy" ]
 
 [dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "time", "net", "rt" ]
 
 [dependencies.xerr]
@@ -48,5 +48,5 @@ loginit = "0.1.18"
 static_init = "1.0.4"
 
 [dev-dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "test-util", "macros" ]

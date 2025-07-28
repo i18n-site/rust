@@ -19,7 +19,7 @@ conf = [ "dep:confer", "dep:confdir" ]
 [dependencies]
 aok = "0.1.17"
 coarsetime = "0.1.36"
-const-str = "0.6.3"
+const-str = "0.6.4"
 current_platform = "0.2.0"
 defer-lite = "1.0.0"
 kanal = "0.1.1"
@@ -86,5 +86,5 @@ path = "../confdir"
 optional = true
 
 [dependencies.tokio]
-version = "1.46.1"
+version = "1.47.0"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
