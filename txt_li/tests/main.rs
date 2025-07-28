@@ -55,6 +55,8 @@ fn test_restore() -> Void {
     r"- 🌐 **abc No Vendor Lock-in**: Switch providers, deploy anywhere, own your data",
   );
   txt_li.push_md_line(r"[![Forks][forks-shield]][forks-url]");
+  txt_li.push_md_line(r"**Cost**");
+  txt_li.push_md_line(r"- [x] **Cost**");
   // dbg!(&txt_li.li);
   // info!("{}", &txt_li.restore.load(&txt_li.li));
 

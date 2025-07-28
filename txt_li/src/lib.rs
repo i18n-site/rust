@@ -205,10 +205,21 @@ impl TxtLi {
         if c != '*' {
           let _ = iter.next();
           continue;
-        } else if txt[pos + 2..].chars().all(|c| c == '*') {
-          // ******
-          split_pos = org_len;
-          break;
+        } else {
+          let t = &txt[pos + 2..];
+          if t.chars().all(|c| c == '*') {
+            // ******
+            split_pos = org_len;
+            break;
+          } else if let Some(p) = t.find("**")
+            && p + 2 == t.len()
+          {
+            let p = pos + 2 + offset;
+            self.push_no_tran(&org[..p]);
+            self.push_md(&org[p..org_len - 2]);
+            self.push_no_tran("**");
+            return;
+          }
         }
       } else if i == '[' {
         let p = pos + 1;
