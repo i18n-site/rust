@@ -10,10 +10,6 @@ extern "C" fn _loginit() {
 #[test]
 fn test_restore() -> Void {
   let mut txt_li = TxtLi::new();
-  txt_li.push_tran("1");
-  txt_li.push_no_tran("2");
-  txt_li.push_tran("3");
-  txt_li.push_no_tran("4");
   txt_li.push_md_line("## abc");
   txt_li.push_md_line("-");
   txt_li.push_md_line("  [");

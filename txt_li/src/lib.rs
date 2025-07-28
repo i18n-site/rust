@@ -7,7 +7,9 @@ pub struct TxtLi {
   pub restore: Restore,
 }
 
+#[cfg(feature = "push_md_line")]
 mod htm_tag;
+#[cfg(feature = "push_md_line")]
 use htm_tag::htm_tag;
 
 pub mod restore;
