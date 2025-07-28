@@ -7,6 +7,9 @@ pub struct TxtLi {
   pub restore: Restore,
 }
 
+mod htm_tag;
+use htm_tag::htm_tag;
+
 pub mod restore;
 pub use restore::Restore;
 
@@ -140,9 +143,10 @@ impl TxtLi {
         return;
       }
 
-      for tag in ["script", "code", "pre"] {
-        if let Some(remain) = remain.strip_prefix(tag) {
-          if let Some(next) = remain.chars().next()
+      if let Some(tag) = htm_tag(remain) {
+        if ["script", "code", "pre"].contains(&tag) {
+          if let Some(remain) = remain.strip_prefix(tag)
+            && let Some(next) = remain.chars().next()
             && (next.is_whitespace() || next == '>')
           {
             let remain = &remain[next.len_utf8()..];
@@ -154,7 +158,23 @@ impl TxtLi {
               return;
             }
           }
-          break;
+        } else {
+          let mut find_close = find_close::FindClose::new(tag);
+          if let Some(p) = find_close.find(remain)
+            && p == remain.len()
+          {
+            let offset = tag.len() + 2;
+            if let Some(begin) = org[offset..].find(">") {
+              let end = org.len() - tag.len() - 1;
+              if let Some(end) = org[..end].rfind("<") {
+                let begin = begin + offset + 1;
+                self.push_no_tran(&org[..begin]);
+                self.push_md(&org[begin..end]);
+                self.push_no_tran(&org[end..]);
+                return;
+              }
+            }
+          }
         }
       }
     }
@@ -255,11 +275,21 @@ impl TxtLi {
         }
         split_pos = pos + offset;
         break;
+      } else if let Some(remain) = txt.strip_prefix("(") {
+        if let Some(p) = remain.find(")")
+          && p + 1 == remain.len()
+        {
+          let p = pos + 1 + offset;
+          self.push_no_tran(&org[..p]);
+          self.push_md(&org[p..org_len - 1]);
+          self.push_no_tran(")");
+          return;
+        }
       } else if unic_emoji_char::is_emoji(i) {
         continue;
       }
 
-      if !("#>.:|=".contains(i) || i.is_whitespace()) {
+      if !("#>.:|=·".contains(i) || i.is_whitespace()) {
         split_pos = pos + offset;
         break;
       }
