@@ -186,7 +186,7 @@ impl TxtLi {
               let end = txt.len() - tag.len() - 1;
               if let Some(end) = txt[..end].rfind("<") {
                 let begin = begin + offset + 1;
-                if begin < end {
+                if begin <= end {
                   self.push_no_tran(&txt[..begin]);
                   self.push_md(&txt[begin..end]);
                   self.push_no_tran(&txt[end..]);
