@@ -25,7 +25,7 @@ version = "0.3.1"
 path = "../tran_trait"
 
 [dependencies.txt_li]
-version = "0.1.35"
+version = "0.1.36"
 path = "../txt_li"
 
 [dev-dependencies]

@@ -85,6 +85,7 @@ fn test_restore() -> Void {
     // "----",
     // "## abc",
     "<p align=\"right\"></p>",
+    "🎙️ **Better Podcasts**: Full script control and multi-speaker flexibility vs limited 2-speaker deep-dive format",
   ] {
     let mut txt_li = TxtLi::new();
     txt_li.push_md_line(i);

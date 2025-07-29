@@ -11,8 +11,6 @@ pub struct TxtLi {
 mod htm_tag;
 #[cfg(feature = "push_md_line")]
 use htm_tag::htm_tag;
-#[cfg(feature = "push_md_line")]
-use unic_emoji_char::is_emoji;
 
 pub mod restore;
 pub use restore::Restore;
@@ -22,8 +20,22 @@ pub const REMOVE: &str = "»:";
 
 #[cfg(feature = "push_md_line")]
 pub fn is_remove_char(char: char) -> Option<usize> {
+  use unicode_properties::{GeneralCategory, UnicodeEmoji, UnicodeGeneralCategory};
+
   let len = char.len_utf8();
-  if char.is_whitespace() || (is_emoji(char) && len > 1) || REMOVE.contains(char) {
+
+  if (len > 1 && char.is_emoji_char())
+    || matches!(
+      char.general_category(),
+      GeneralCategory::Control
+        | GeneralCategory::Format
+        | GeneralCategory::NonspacingMark
+        | GeneralCategory::LineSeparator
+        | GeneralCategory::ParagraphSeparator
+        | GeneralCategory::SpaceSeparator
+    )
+    || REMOVE.contains(char)
+  {
     Some(len)
   } else {
     None
@@ -376,26 +388,7 @@ impl TxtLi {
         self.push_no_tran(")");
         return;
       }
-      // if !("#>.:|=·".contains(i) || i.is_whitespace()) {
-      //   split_pos = pos + offset;
-      //   break;
-      // }
     }
-
-    // if split_pos > 0 {
-    //   self.push_no_tran(&txt[..split_pos]);
-    // }
-    // if split_pos < txt_len {
-    //   let remain = &txt[split_pos..];
-    //   if remain.len() == 1
-    //     && let Some(c) = remain.chars().next()
-    //     && !c.is_ascii_alphabetic()
-    //   {
-    //     self.push_no_tran(remain);
-    //   } else {
-    //     self.push_md_trim_start_line(remain);
-    //   }
-    // }
 
     self.push_md_trim_start_line(txt);
   }

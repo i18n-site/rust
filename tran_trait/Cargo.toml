@@ -19,7 +19,7 @@ default = [ ]
 aok = "0.1.17"
 
 [dependencies.txt_li]
-version = "0.1.35"
+version = "0.1.36"
 path = "../txt_li"
 default-features = false
 
