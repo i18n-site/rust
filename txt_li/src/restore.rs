@@ -6,8 +6,15 @@ pub struct Restore {
 #[cfg(feature = "impl")]
 impl Restore {
   pub fn push(&mut self, pos: usize, str: String) {
+    if let Some(i) = self.li.last_mut()
+      && i.0 == pos
+    {
+      i.1 += &str;
+      return;
+    }
     self.li.push((pos, str));
   }
+
   pub fn trim_last(&mut self) {
     if let Some((pos, mut line)) = self.li.pop() {
       let _ = line.pop();
