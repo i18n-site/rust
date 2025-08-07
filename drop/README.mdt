@@ -1,0 +1,19 @@
+# drop
+
+## test
+```rust
+<+ ./src/lib.rs>
+```
+
+### test out
+```
+<+ ./out.txt>
+```
+
+## code
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >

@@ -1,0 +1,7 @@
+# hugo_head
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >

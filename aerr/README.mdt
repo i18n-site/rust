@@ -1,0 +1,7 @@
+# aerr : error / result like anyhow for axum
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >

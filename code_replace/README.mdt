@@ -1,0 +1,7 @@
+# code_replace
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >
