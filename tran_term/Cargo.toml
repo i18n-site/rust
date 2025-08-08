@@ -37,7 +37,7 @@ version = "0.0.6"
 optional = true
 
 [dependencies.tag_replace]
-version = "0.1.16"
+version = "0.1.17"
 path = "../tag_replace"
 
 [dev-dependencies]
