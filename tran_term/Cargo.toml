@@ -1,7 +1,7 @@
 [package]
 name = "tran_term"
 license = "MulanPSL-2.0"
-version = "0.1.24"
+version = "0.1.25"
 edition = "2024"
 description = "tran_term"
 repository = "https://github.com/i18n-site/rust.git"
@@ -19,6 +19,7 @@ yml = [ "dep:saphyr", "dep:lang" ]
 [dependencies]
 aok = "0.1.17"
 daachorse = "1.0.0"
+static_init = "1.0.4"
 thiserror = "2.0.12"
 unicode-segmentation = "1.12.0"
 unicode_categories = "0.1.1"
@@ -28,7 +29,7 @@ version = "1.0.6"
 features = [ "unescape" ]
 
 [dependencies.lang]
-version = "0.2.15"
+version = "0.2.24"
 optional = true
 
 [dependencies.saphyr]
@@ -36,7 +37,7 @@ version = "0.0.6"
 optional = true
 
 [dependencies.code_replace]
-version = "0.1.12"
+version = "0.1.14"
 path = "../code_replace"
 
 [dev-dependencies]

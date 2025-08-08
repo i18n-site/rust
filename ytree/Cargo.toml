@@ -54,7 +54,7 @@ version = "2.10.0"
 features = [ "serde" ]
 
 [dependencies.lang]
-version = "0.2.15"
+version = "0.2.24"
 optional = true
 
 [dependencies.roaring]

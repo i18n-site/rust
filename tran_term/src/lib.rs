@@ -9,12 +9,15 @@ use std::{
   collections::{HashMap, HashSet},
 };
 
-use code_replace::{code_replace, word_push};
+use code_replace::{CodeReplace, word_push};
 use daachorse::{CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind};
 use htmlize::{escape_attribute, unescape_attribute};
 use thiserror::Error;
 use unicode_categories::UnicodeCategories;
 use unicode_segmentation::UnicodeSegmentation;
+
+#[static_init::dynamic]
+pub static CODE: CodeReplace = CodeReplace::new("v");
 
 #[derive(Error, Debug)]
 pub enum Error {
@@ -66,7 +69,7 @@ impl Term {
 
   pub fn restore(&self, txt: impl AsRef<str>) -> String {
     let txt = txt.as_ref();
-    code_replace(txt, |li, _origin, val: &str| {
+    CODE.replace(txt, |li, _origin, val: &str| {
       word_push(li, unescape_attribute(val));
     })
   }

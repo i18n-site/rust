@@ -85,6 +85,8 @@ fn test_restore() -> Void {
     "<div class=a>",
     // "🎙️ **Better Podcasts**: Full script control and multi-speaker flexibility vs limited 2-speaker deep-dive format",
     "<br />测试",
+    "测1<br />测2",
+    "测2<br>测4",
   ] {
     let mut txt_li = TxtLi::new();
     txt_li.push_md_line(i);

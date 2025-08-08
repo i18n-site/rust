@@ -20,4 +20,4 @@ tracing = "0.1.41"
 default = []
 
 [dependencies]
-lang = "0.2.15"
+lang = "0.2.24"
