@@ -1,4 +1,3 @@
-
 use unicode_segmentation::UnicodeSegmentation;
 
 const END_TAG: &str = "</code>";

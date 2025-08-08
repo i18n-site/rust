@@ -180,7 +180,7 @@ members = [
   "txt_chunk",
   "hugo_head",
   "tran_trait",
-  "find_close_bucket", "htm_tag",
+  "find_close_bucket", "htm_tag", "is_escape",
   # "bgu",
   # "cli_tmpl",
   # "hsc",
