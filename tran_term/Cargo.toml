@@ -37,7 +37,7 @@ version = "0.0.6"
 optional = true
 
 [dependencies.code_replace]
-version = "0.1.14"
+version = "0.1.15"
 path = "../code_replace"
 
 [dev-dependencies]

@@ -1,11 +1,7 @@
 # code_replace
 
 ```rust
-
 use unicode_segmentation::UnicodeSegmentation;
-
-const END_TAG: &str = "</code>";
-const END_TAG_LEN: usize = END_TAG.len();
 
 // 判断是否需要插入空格
 pub fn word_push(pre: &mut String, txt: impl Into<String>) {
@@ -26,13 +22,16 @@ pub fn word_push(pre: &mut String, txt: impl Into<String>) {
 
 pub struct CodeReplace {
   pub start_tag: String,
+  pub end_tag: String,
 }
 
 impl CodeReplace {
-  pub fn new(attr: impl AsRef<str>) -> Self {
+  pub fn new(tag: impl AsRef<str>, attr: impl AsRef<str>) -> Self {
+    let tag = tag.as_ref();
     let attr = attr.as_ref();
     Self {
-      start_tag: format!("<code {attr}=\""),
+      start_tag: format!("<{tag} {attr}=\""),
+      end_tag: format!("</{tag}>"),
     }
   }
 
@@ -54,8 +53,8 @@ impl CodeReplace {
         let end = start_tag_len + pos;
         let val = &txt2[start_tag_len..end];
         let begin = end + 2;
-        if let Some(pos) = txt2[begin..].find(END_TAG) {
-          let offset = begin + pos + END_TAG_LEN;
+        if let Some(pos) = txt2[begin..].find(&self.end_tag) {
+          let offset = begin + pos + self.end_tag.len();
           let org = &txt[start_tag..offset + start_tag];
           replacer(&mut result, org, val);
           txt = &txt2[offset..];
