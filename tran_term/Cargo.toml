@@ -36,9 +36,9 @@ optional = true
 version = "0.0.6"
 optional = true
 
-[dependencies.code_replace]
-version = "0.1.15"
-path = "../code_replace"
+[dependencies.tag_replace]
+version = "0.1.16"
+path = "../tag_replace"
 
 [dev-dependencies]
 aok = "0.1.17"

@@ -8,7 +8,7 @@ extern "C" fn _loginit() {
 
 #[test]
 fn test() -> Void {
-  let replacer = code_replace::CodeReplace::new("code", "v");
+  let replacer = tag_replace::TagReplace::new("code", "v");
   for i in [
     "x<code x=\"123\">abc</code>y<code x=\"123\">abc</code>",
     "a<code x=\"1\">bd</code>e",

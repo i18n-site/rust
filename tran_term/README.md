@@ -12,7 +12,7 @@ use std::{
   collections::{HashMap, HashSet},
 };
 
-use code_replace::{CodeReplace, word_push};
+use tag_replace::{TagReplace, word_push};
 use daachorse::{CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind};
 use htmlize::{escape_attribute, unescape_attribute};
 use thiserror::Error;
@@ -20,7 +20,7 @@ use unicode_categories::UnicodeCategories;
 use unicode_segmentation::UnicodeSegmentation;
 
 #[static_init::dynamic]
-pub static CODE: CodeReplace = CodeReplace::new("v");
+pub static CODE: TagReplace = TagReplace::new("v");
 
 #[derive(Error, Debug)]
 pub enum Error {

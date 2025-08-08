@@ -1,11 +1,11 @@
 [package]
-name = "code_replace"
-version = "0.1.15"
+name = "tag_replace"
+version = "0.1.16"
 edition = "2024"
 license = "MulanPSL-2.0"
-description = "code_replace"
+description = "tag_replace"
 repository = "https://github.com/i18n-site/rust.git"
-homepage = "https://github.com/i18n-site/rust/tree/dev/code_replace"
+homepage = "https://github.com/i18n-site/rust/tree/dev/tag_replace"
 keywords = []
 
 [features]
