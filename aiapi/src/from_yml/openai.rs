@@ -12,9 +12,6 @@ pub fn loads(yml: impl AsRef<str>) -> Result<TokenLi<OpenAI>> {
   let url = yml["url"]
     .as_str()
     .ok_or(Error::ConfTrait("url".to_string()))?;
-  let model = yml["model"]
-    .as_str()
-    .ok_or(Error::ConfTrait("model".to_string()))?;
   let concurrent = yml["concurrent"].as_integer().unwrap_or(1);
   let token_li = yml["token_li"]
     .as_vec()
@@ -29,7 +26,7 @@ pub fn loads(yml: impl AsRef<str>) -> Result<TokenLi<OpenAI>> {
   Ok(TokenLi::new(
     token_li,
     concurrent as usize,
-    OpenAI::new(url.to_string(), model.to_string()),
+    OpenAI::new(url.to_string()),
   ))
 }
 
@@ -41,4 +38,3 @@ pub fn load(path: impl AsRef<std::path::Path>) -> Result<TokenLi<OpenAI>> {
   })?;
   loads(&content)
 }
-

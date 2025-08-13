@@ -34,7 +34,12 @@ impl<T: AiApi> TokenLi<T> {
     }
   }
 
-  pub async fn chat(&self, conf: &impl ConfTrait, body: impl Into<String>) -> Result<ChatResult> {
+  pub async fn chat(
+    &self,
+    conf: &impl ConfTrait,
+    model: &str,
+    prompt: impl Into<String>,
+  ) -> Result<ChatResult> {
     // Acquire a permit. It will be released when `_permit` goes out of scope (RAII).
     let _permit = self.semaphore.acquire().await;
     let mut pos = self.token_pos.fetch_add(1, Ordering::Relaxed);
@@ -43,13 +48,13 @@ impl<T: AiApi> TokenLi<T> {
       self.token_pos.store(0, Ordering::Relaxed);
     }
     let token_li_len = self.token_li.len();
-    let body = self.aiapi.body(conf.borrow(), body)?;
+    let req = self.aiapi.req(conf.borrow(), model, prompt)?;
     let aiapi = &self.aiapi;
 
     let mut retry = token_li_len;
     loop {
       let token = &self.token_li[pos % token_li_len];
-      match aiapi.chat(token, &body).await {
+      match aiapi.chat(token, &req).await {
         Ok(mut r) => {
           r.content = conf.fmt(r.content);
           return Ok(r);

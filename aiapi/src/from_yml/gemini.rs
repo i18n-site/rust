@@ -9,9 +9,6 @@ pub fn loads(yml: impl AsRef<str>) -> Result<TokenLi<Gemini>> {
     return Err(Error::ConfTrait("yml format error".to_string()));
   }
   let yml = &yml[0];
-  let model = yml["model"]
-    .as_str()
-    .ok_or(Error::ConfTrait("model".to_string()))?;
   let concurrent = yml["concurrent"].as_integer().unwrap_or(1);
   let token_li = yml["token_li"]
     .as_vec()
@@ -23,11 +20,7 @@ pub fn loads(yml: impl AsRef<str>) -> Result<TokenLi<Gemini>> {
       "token_li must be an array of strings".to_string(),
     ))?;
 
-  Ok(TokenLi::new(
-    token_li,
-    concurrent as usize,
-    Gemini::new(model.to_string()),
-  ))
+  Ok(TokenLi::new(token_li, concurrent as usize, Gemini::new()))
 }
 
 pub fn load(path: impl AsRef<std::path::Path>) -> Result<TokenLi<Gemini>> {

@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use reqwest::Client;
+use reqwest::{Client, RequestBuilder};
 use serde::{Deserialize, Serialize};
 use sonic_rs::to_value;
 
@@ -28,22 +28,25 @@ pub struct ChatResponse {
 #[derive(Debug)]
 pub struct OpenAI {
   pub url: String,
-  pub model: String,
   pub client: Client,
 }
 
 impl OpenAI {
-  pub fn new(url: impl Into<String>, model: impl Into<String>) -> Self {
+  pub fn new(url: impl Into<String>) -> Self {
     Self {
       url: url.into(),
-      model: model.into(),
       client: Client::new(),
     }
   }
 }
 
 impl crate::AiApi for OpenAI {
-  fn body(&self, conf: &impl ConfTrait, content: impl Into<String>) -> Result<String> {
+  fn req(
+    &self,
+    conf: &impl ConfTrait,
+    model: &str,
+    content: impl Into<String>,
+  ) -> Result<RequestBuilder> {
     let content = content.into();
     let mut messages = vec![];
     let system = conf.system();
@@ -61,7 +64,7 @@ impl crate::AiApi for OpenAI {
 
     let mut map = HashMap::new();
 
-    map.insert("model", to_value(&self.model)?);
+    map.insert("model", to_value(model)?);
     map.insert("messages", to_value(&messages)?);
     map.insert("temperature", to_value(&conf.temperature())?);
 
@@ -69,19 +72,19 @@ impl crate::AiApi for OpenAI {
     if reasoning_effort != ReasoningEffort::Default {
       map.insert("reasoning_effort", to_value(&reasoning_effort)?);
     }
-
-    Ok(sonic_rs::to_string(&map)?)
-  }
-
-  async fn chat(&self, token: &str, body: &str) -> Result<ChatResult> {
     let url = format!("{}/chat/completions", self.url);
 
     let req = self
       .client
       .post(&url)
       .header("Content-Type", "application/json")
-      .bearer_auth(token)
-      .body(body.to_owned());
+      .body(sonic_rs::to_string(&map)?);
+
+    Ok(req)
+  }
+
+  async fn chat(&self, token: &str, req: &RequestBuilder) -> Result<ChatResult> {
+    let req = req.try_clone().unwrap().bearer_auth(token);
 
     let response = req.send().await?;
     let status = response.status();

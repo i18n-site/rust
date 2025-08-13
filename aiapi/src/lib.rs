@@ -1,6 +1,7 @@
 #![feature(doc_auto_cfg)]
 #![feature(doc_cfg)]
 
+use reqwest::RequestBuilder;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -68,11 +69,17 @@ pub struct ChatResult {
 
 pub trait AiApi {
   fn url(&self) -> &str;
-  fn body(&self, conf: &impl ConfTrait, content: impl Into<String>) -> Result<String>;
+  fn req(
+    &self,
+    conf: &impl ConfTrait,
+    model: &str,
+    content: impl Into<String>,
+  ) -> Result<RequestBuilder>;
+
   fn chat(
     &self,
     token: &str,
-    body: &str,
+    req: &RequestBuilder,
   ) -> impl std::future::Future<Output = Result<ChatResult>> + Send;
 }
 

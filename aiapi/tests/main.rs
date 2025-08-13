@@ -21,8 +21,8 @@ async fn test_qwen_chat() -> Void {
     system: "".into(),
     temperature: 0.0,
   };
-  for (name, conf) in [
-    ("gemini", conf),
+  for (name, model, conf) in [
+    ("gemini", "gemini-2.5-pro", conf),
     // (
     //   "groq",
     //   aiapi::ConfQroq::new("", 0.0, aiapi::ReasoningEffort::None),
@@ -42,7 +42,7 @@ async fn test_qwen_chat() -> Void {
       let conf = conf.clone();
       let ai = ai.clone();
       ing.push(tokio::spawn(async move {
-        let body = r#"请对照英文HTML校对中文译文,译文要信达雅。只输出校对后的译文(首列为行号),用```包裹：
+        let prompt = r#"请对照英文HTML校对中文译文,译文要信达雅。只输出校对后的译文(首列为行号),用```包裹：
 英文原文:
 1 An essay has to tell people something they don't already know. But there are three different reasons people might not know something, and they yield three very different kinds of essays.
 2 One reason people won't know something is if it's <b style="color:red">not important</b> to know. That doesn't mean it will make a bad essay. For example, you might write a good essay about a particular model of car. Readers would learn something from it. It would add to their picture of the world. For a handful of readers it might even spur some kind of epiphany. But unless this is a very unusual car it's not critical for everyone to know about it. 
@@ -53,7 +53,7 @@ async fn test_qwen_chat() -> Void {
 3 如果某件事不重要，那么人们为什么不知道这个问题就没有答案。不知道随机的事实是默认的。但如果你要写一些重要的事情，你必须问问你的读者为什么还不知道它们。是因为他们聪明但缺乏经验，还是因为他们愚钝？"#;
 
         // let body = format!("{body}  /no_think");
-        let r = ai.chat(conf.as_ref(), body ).await?;
+        let r = ai.chat(conf.as_ref(), model,  prompt).await?;
         // assert!(r.content.contains("人"));
         info!("{:?}", r);
         println!("\n{}\n{i}", r.content);

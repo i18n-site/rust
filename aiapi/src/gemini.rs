@@ -1,4 +1,4 @@
-use reqwest::Client;
+use reqwest::{Client, RequestBuilder};
 use serde::{Deserialize, Serialize};
 
 use crate::{ChatResult, Error, FinishReason, ReasoningEffort, Result, Usage, conf::ConfTrait};
@@ -94,14 +94,12 @@ impl From<Content> for String {
 
 #[derive(Debug)]
 pub struct Gemini {
-  pub model: String,
   pub client: Client,
 }
 
 impl Gemini {
-  pub fn new(model: impl Into<String>) -> Self {
+  pub fn new() -> Self {
     Self {
-      model: model.into(),
       client: Client::new(),
     }
   }
@@ -110,7 +108,12 @@ impl Gemini {
 pub const URL: &str = "https://generativelanguage.googleapis.com/v1beta";
 
 impl crate::AiApi for Gemini {
-  fn body(&self, conf: &impl ConfTrait, content: impl Into<String>) -> Result<String> {
+  fn req(
+    &self,
+    conf: &impl ConfTrait,
+    model: &str,
+    content: impl Into<String>,
+  ) -> Result<RequestBuilder> {
     let system = conf.system();
 
     let request_body = GeminiRequest {
@@ -123,7 +126,13 @@ impl crate::AiApi for Gemini {
         temperature: conf.temperature(),
         thinking_config: ThinkingConfig {
           thinking_budget: match conf.reasoning_effort() {
-            ReasoningEffort::None => 0,
+            ReasoningEffort::None => {
+              if model == "gemini-2.5-pro" {
+                128
+              } else {
+                0
+              }
+            }
             ReasoningEffort::Default => -1,
             ReasoningEffort::Minimal => 128,
             ReasoningEffort::Low => 4096,
@@ -142,23 +151,23 @@ impl crate::AiApi for Gemini {
         None
       },
     };
-    Ok(sonic_rs::to_string(&request_body)?)
+    let url = format!("{URL}/models/{}:generateContent", model);
+    let body = sonic_rs::to_string(&request_body)?;
+    let req = self
+      .client
+      .post(&url)
+      .header("Content-Type", "application/json")
+      .body(body.to_owned());
+    Ok(req)
   }
 
-  async fn chat(&self, token: &str, body: &str) -> Result<ChatResult> {
-    let url = format!("{URL}/models/{}:generateContent", self.model);
-
+  async fn chat(&self, token: &str, req: &RequestBuilder) -> Result<ChatResult> {
     let mut response;
     let mut status;
     let mut text;
 
     loop {
-      let req = self
-        .client
-        .post(&url)
-        .header("Content-Type", "application/json")
-        .header("X-goog-api-key", token)
-        .body(body.to_owned());
+      let req = req.try_clone().unwrap().header("X-goog-api-key", token);
 
       response = req.send().await?;
       status = response.status();
