@@ -1,7 +1,7 @@
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 
-use crate::{ChatResult, Error, FinishReason, Result, Usage, conf::ConfTrait};
+use crate::{ChatResult, Error, FinishReason, ReasoningEffort, Result, Usage, conf::ConfTrait};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct Part {
@@ -16,8 +16,15 @@ struct Content {
 
 #[derive(Serialize, Debug, Default)]
 #[serde(rename_all = "camelCase")]
+struct ThinkingConfig {
+  thinking_budget: i64,
+}
+
+#[derive(Serialize, Debug, Default)]
+#[serde(rename_all = "camelCase")]
 struct GenerationConfig {
   temperature: f32,
+  thinking_config: ThinkingConfig,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -114,6 +121,16 @@ impl crate::AiApi for Gemini {
       }],
       generation_config: GenerationConfig {
         temperature: conf.temperature(),
+        thinking_config: ThinkingConfig {
+          thinking_budget: match conf.reasoning_effort() {
+            ReasoningEffort::None => 0,
+            ReasoningEffort::Default => -1,
+            ReasoningEffort::Minimal => 128,
+            ReasoningEffort::Low => 4096,
+            ReasoningEffort::Medium => 16000,
+            ReasoningEffort::High => 32768,
+          },
+        },
       },
       system_instruction: if !system.is_empty() {
         Some(SystemInstruction {

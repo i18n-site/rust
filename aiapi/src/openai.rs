@@ -4,7 +4,7 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use sonic_rs::to_value;
 
-use crate::{ChatResult, ConfTrait, Error, FinishReason, Result, Usage};
+use crate::{ChatResult, ConfTrait, Error, FinishReason, Result, Usage, conf::ReasoningEffort};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Msg {
@@ -65,7 +65,8 @@ impl crate::AiApi for OpenAI {
     map.insert("messages", to_value(&messages)?);
     map.insert("temperature", to_value(&conf.temperature())?);
 
-    if let Some(reasoning_effort) = conf.reasoning_effort() {
+    let reasoning_effort = conf.reasoning_effort();
+    if reasoning_effort != ReasoningEffort::Default {
       map.insert("reasoning_effort", to_value(&reasoning_effort)?);
     }
 

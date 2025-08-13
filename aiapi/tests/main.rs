@@ -22,14 +22,18 @@ async fn test_qwen_chat() -> Void {
     temperature: 0.0,
   };
   for (name, conf) in [
-    // ("gemini", conf),
-    // ("groq", aiapi::ConfQroq::new("", 0.0, Some("none"))),
-    ("modelscope", conf),
+    ("gemini", conf),
+    // (
+    //   "groq",
+    //   aiapi::ConfQroq::new("", 0.0, aiapi::ReasoningEffort::None),
+    // ),
+    // ("modelscope", conf),
     // "free_qwq"
   ] {
     let yml_fp = home.join(format!(".config/aiapi/{name}.yml"));
     // let ai = Arc::new(aiapi::gemini_from_yml(yml)?);
-    let ai = Arc::new(aiapi::from_yml::openai::load(yml_fp)?);
+    let ai = Arc::new(aiapi::from_yml::gemini::load(yml_fp)?);
+    // let ai = Arc::new(aiapi::from_yml::openai::load(yml_fp)?);
 
     let conf = Arc::new(conf);
     let mut ing = Vec::new();

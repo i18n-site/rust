@@ -1,6 +1,6 @@
 [package]
 name = "aiapi"
-version = "0.2.6"
+version = "0.2.7"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -18,6 +18,8 @@ from_yml = ["dep:saphyr"]
 
 [dependencies]
 sonic-rs = "0.5.3"
+strum = { version = "0.27.2", features = ["derive"] }
+strum_macros = "0.27.2"
 thiserror = "2.0.14"
 tracing = "0.1.41"
 
