@@ -148,7 +148,6 @@ impl crate::AiApi for Gemini {
 
       if status.is_success() {
         text = response.text().await?;
-        // dbg!(&text);
         let chat_response: GeminiResponse = sonic_rs::from_str(&text)?;
         let usage_metadata = &chat_response.usage_metadata;
         if let Some(c) = chat_response.candidates.into_iter().next()
