@@ -23,13 +23,13 @@ async fn test_qwen_chat() -> Void {
   };
   for (name, conf) in [
     // ("gemini", conf),
-    ("groq", aiapi::ConfQroq::new("", 0.0, Some("none"))),
-    // ("modelscope", conf),
+    // ("groq", aiapi::ConfQroq::new("", 0.0, Some("none"))),
+    ("modelscope", conf),
     // "free_qwq"
   ] {
-    let yml = ifs::rstr(home.join(format!(".config/gpt/{name}.yml")))?;
+    let yml_fp = home.join(format!(".config/aiapi/{name}.yml"));
     // let ai = Arc::new(aiapi::gemini_from_yml(yml)?);
-    let ai = Arc::new(aiapi::openai_from_yml(yml)?);
+    let ai = Arc::new(aiapi::from_yml::openai::load(yml_fp)?);
 
     let conf = Arc::new(conf);
     let mut ing = Vec::new();

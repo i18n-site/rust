@@ -2,14 +2,16 @@ use saphyr::{LoadableYamlNode, Yaml};
 
 use crate::{Error, Result, TokenLi, openai::OpenAI};
 
-pub fn openai_from_yml(yml: impl AsRef<str>) -> Result<TokenLi<OpenAI>> {
+pub fn loads(yml: impl AsRef<str>) -> Result<TokenLi<OpenAI>> {
   let yml = yml.as_ref();
   let yml = Yaml::load_from_str(yml)?;
   if yml.is_empty() {
     return Err(Error::ConfTrait("yml format error".to_string()));
   }
   let yml = &yml[0];
-  let url = yml["url"].as_str().ok_or(Error::ConfTrait("url".to_string()))?;
+  let url = yml["url"]
+    .as_str()
+    .ok_or(Error::ConfTrait("url".to_string()))?;
   let model = yml["model"]
     .as_str()
     .ok_or(Error::ConfTrait("model".to_string()))?;
@@ -29,4 +31,9 @@ pub fn openai_from_yml(yml: impl AsRef<str>) -> Result<TokenLi<OpenAI>> {
     concurrent as usize,
     OpenAI::new(url.to_string(), model.to_string()),
   ))
+}
+
+pub fn load(path: impl AsRef<std::path::Path>) -> Result<TokenLi<OpenAI>> {
+  let content = std::fs::read_to_string(path)?;
+  loads(&content)
 }

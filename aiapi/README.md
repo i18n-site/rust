@@ -19,6 +19,10 @@ pub enum Error {
   #[error("Yml: {0}")]
   Yml(#[from] saphyr::ScanError),
 
+  #[cfg(feature = "from_yml")]
+  #[error("File: {0}")]
+  File(#[from] std::io::Error),
+
   #[error("API: {status}\n{text}")]
   Api {
     status: reqwest::StatusCode,
@@ -30,10 +34,6 @@ pub enum Error {
 
   #[error("Timeout: {token}\n{text}")]
   Timeout { token: String, text: String },
-
-  #[cfg(feature = "from_env")]
-  #[error("MissEnv : {0}")]
-  MissEnv(String),
 
   #[cfg(feature = "from_yml")]
   #[error("ConfTraitError: {0}")]
@@ -92,14 +92,7 @@ pub mod gemini;
 pub use gemini::Gemini;
 
 #[cfg(feature = "from_yml")]
-pub mod openai_from_yml;
-#[cfg(feature = "from_yml")]
-pub use openai_from_yml::openai_from_yml;
-
-#[cfg(feature = "from_yml")]
-pub mod gemini_from_yml;
-#[cfg(feature = "from_yml")]
-pub use gemini_from_yml::gemini_from_yml;
+pub mod from_yml;
 ```
 
 ## About

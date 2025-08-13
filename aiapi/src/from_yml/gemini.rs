@@ -2,7 +2,7 @@ use saphyr::{LoadableYamlNode, Yaml};
 
 use crate::{Error, Result, TokenLi, gemini::Gemini};
 
-pub fn gemini_from_yml(yml: impl AsRef<str>) -> Result<TokenLi<Gemini>> {
+pub fn loads(yml: impl AsRef<str>) -> Result<TokenLi<Gemini>> {
   let yml = yml.as_ref();
   let yml = Yaml::load_from_str(yml)?;
   if yml.is_empty() {
@@ -28,4 +28,9 @@ pub fn gemini_from_yml(yml: impl AsRef<str>) -> Result<TokenLi<Gemini>> {
     concurrent as usize,
     Gemini::new(model.to_string()),
   ))
+}
+
+pub fn load(path: impl AsRef<std::path::Path>) -> Result<TokenLi<Gemini>> {
+  let content = std::fs::read_to_string(path)?;
+  loads(&content)
 }
