@@ -29,7 +29,7 @@ features = [ "fs" ]
 optional = true
 
 [dependencies.reqwest]
-version = "0.12.22"
+version = "0.12.23"
 features = [ "stream" ]
 
 [dependencies.sts]

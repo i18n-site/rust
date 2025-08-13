@@ -1,70 +1,61 @@
 [package]
 name = "aiapi"
-version = "0.1.41"
+version = "0.2.1"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
-homepage = "https://github.com/i18n-site/rust/tree/main/aiapi"
+homepage = "https://github.com/i18n-site/rust/tree/dev/aiapi"
 description = "aiapi"
+keywords = [ ]
 
 [package.metadata.docs.rs]
 all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
 
-[package.metadata.cargo-machete]
-ignored = [ "static_init", "prost" ]
+[features]
+default = [ ]
+from_env = [ ]
+from_yml = [ "dep:saphyr" ]
 
 [dependencies]
-aok = "0.1.17"
-dashmap = "6.1.0"
-ireq = "0.1.31"
-prost = "0.14.1"
-reqwest = "0.12.22"
-serde_yaml = "0.9.34"
 sonic-rs = "0.5.3"
-strum_macros = "0.27.2"
-thiserror = "2.0.12"
+thiserror = "2.0.14"
 tracing = "0.1.41"
 
-[dependencies.confdir]
-version = "0.1.4"
-path = "../confdir"
+[dependencies.rand]
+version = "0.9.2"
+features = [ "thread_rng" ]
 
-[dependencies.sts]
-version = "0.1.23"
-path = "../sts"
+[dependencies.reqwest]
+version = "0.12.23"
+
+[dependencies.serde]
+version = "1.0"
+features = [ "derive" ]
 
 [dependencies.tokio]
 version = "1.47.1"
-features = [ "rt-multi-thread", "macros", "sync" ]
+features = [ "sync" ]
 
-[dependencies.ifs]
-version = "0.1.46"
-path = "../ifs"
-default-features = false
-features = [ "conf" ]
-
-[dependencies.pos_next]
-version = "0.1.6"
-path = "../pos_next"
-
-[dependencies.serde]
-version = "1.0.219"
-features = [ "derive" ]
+[dependencies.saphyr]
+version = "0.0.6"
+optional = true
 
 [dev-dependencies]
 aok = "0.1.17"
+dirs = "6.0.0"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.41"
 
-[dev-dependencies.genv]
-path = "../genv"
-version = "0.1.16"
+[dev-dependencies.ifs]
+path = "../ifs"
+features = [ "fs" ]
+version = "0.1.46"
+
+[dev-dependencies.xerr]
+path = "../xerr"
+version = "0.1.15"
 
 [dev-dependencies.tokio]
 version = "1.47.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
-
-[build-dependencies]
-aok = "0.1.17"
-prost-build = "0.14.1"

@@ -1,7 +1,7 @@
 # aiapi
 
 ```rust
-<+ ./tests/main.rs>
+<+ ./src/lib.rs>
 ```
 
 <+ ../about.md >

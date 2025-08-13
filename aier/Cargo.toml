@@ -22,7 +22,7 @@ rand = "0.9.2"
 serde = "1.0.219"
 sonic-rs = "0.5.3"
 static_init = "1.0.4"
-thiserror = "2.0.12"
+thiserror = "2.0.14"
 
 [dev-dependencies]
 aok = "0.1.17"
@@ -35,6 +35,6 @@ version = "1.47.1"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
 
 [dependencies.reqwest]
-version = "0.12.22"
+version = "0.12.23"
 default-features = false
 features = ["rustls-tls", "rustls-tls-native-roots", "zstd", "stream"]

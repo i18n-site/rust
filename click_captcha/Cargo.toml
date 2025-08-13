@@ -51,7 +51,7 @@ path = "../svg2avif"
 optional = true
 
 [dev-dependencies]
-anyhow = "1.0.98"
+anyhow = "1.0.99"
 
 [lib]
 crate-type = ["cdylib", "lib"]

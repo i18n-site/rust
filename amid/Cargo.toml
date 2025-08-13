@@ -8,6 +8,6 @@ homepage = "https://github.com/i18n-site/rust/tree/main/amid"
 description = "amid"
 
 [dependencies]
-anyhow = "1.0.98"
+anyhow = "1.0.99"
 axum = "0.8.4"
 tracing = "0.1.41"

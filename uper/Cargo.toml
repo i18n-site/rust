@@ -31,7 +31,7 @@ version = "0.1.7"
 path = "../clap_args"
 
 [dependencies.clap]
-version = "4.5.43"
+version = "4.5.45"
 features = [ "string" ]
 
 [dependencies.pbar]

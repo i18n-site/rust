@@ -1,80 +1,64 @@
-use aiapi::{Api, role};
-use aok::{OK, Result};
-use static_init::constructor;
+use std::sync::Arc;
 
-#[constructor(0)]
-extern "C" fn init() {
-  loginit::init()
-}
+use aiapi::Conf;
+use aok::{OK, Void};
+use tracing::info;
 
-genv::def!(AI_YML);
-
-pub fn line_no_dump<S: AsRef<str>>(li: impl IntoIterator<Item = S>) -> String {
-  let mut n = 0;
-  let mut r = String::new();
-  for s in li {
-    n += 1;
-    r += n.to_string().as_ref();
-    r += "\t";
-    r += s.as_ref();
-    r += "\n";
-  }
-  if n > 0 {
-    r.pop();
-  }
-  r
+#[static_init::constructor(0)]
+extern "C" fn _loginit() {
+  loginit::init();
 }
 
 #[tokio::test]
-async fn test() -> Result<()> {
-  // let token_li: Vec<String> = std::env::var("DOUBAO")
-  // let token_li: Vec<String> = std::env::var("BIGMODEL")
+async fn test_async() -> Void {
+  OK
+}
 
-  let dir: String = AI_YML();
-  // let site_token = SiteTokenModel::load(format!("{dir}/doubao.yml"))?;
-  // let ai = aiapi::baidu(format!("{dir}/bd.ernie_speed_128k.yml"))?;
-  // let ai = aiapi::openai_token(format!("{dir}/sf.glm_4_9b.yml"))?;
+#[tokio::test]
+async fn test_qwen_chat() -> Void {
+  let home = dirs::home_dir().unwrap();
+  let conf = Conf {
+    system: "".into(),
+    temperature: 0.0,
+  };
+  for (name, conf) in [
+    // ("gemini", conf),
+    ("groq", aiapi::ConfNoThink::new("", 0.0)),
+    // ("modelscope", conf),
+    // "free_qwq"
+  ] {
+    let yml = ifs::rstr(home.join(format!(".config/gpt/{name}.yml")))?;
+    // let ai = Arc::new(aiapi::gemini_from_yml(yml)?);
+    let ai = Arc::new(aiapi::openai_from_yml(yml)?);
 
-  let from_txt = r#"“目前还没接到相关通知，咪咕也还没官宣，即便官宣了，是否进行二次分销我们也不知道。”
-10月中旬有媒体爆料英超联赛2025~2028年的中国大陆新媒体版权已归属咪咕视频，针对该信息，《中国企业家》询问现有英超版权方爱奇艺体育相关人员，得到如上回复。
-英超版权是体育行业最顶级的资源，历来是各大视频平台必争之地，但今年“静悄悄”的。据自媒体懒熊体育称，英超官方已与咪咕视频达成了一份3年总价超1.7亿美元的版权合同。按此信息，这个价格超过了上个版权周期，虽然没有官方数据，但行业普遍认为爱奇艺体育在2021年以4年1.2亿美元的价格拿下了英超版权。"#;
-  let to_txt = r#""We haven't received any relevant notification yet, and Migu hasn't made an official announcement yet. Even if it does, we don't know whether there will be secondary distribution."
-In mid-October, some media broke the news that the new media copyright of the Premier League in mainland China from 2025 to 2028 has belonged to Migu Video. In response to this information, "Chinese Entrepreneur" asked relevant personnel of iQiyi Sports, the existing copyright owner of the Premier League, and received the above reply.
-Premier League copyright is the top resource in the sports industry. It has always been a battleground for major video platforms, but this year it has been "quiet". According to the self-media Lanxiong Sports, the Premier League has officially reached a three-year copyright contract with Migu Video with a total price of more than 170 million US dollars. According to this information, this price exceeds the previous copyright cycle. Although there is no official data, the industry generally believes that iQiyi Sports will win the Premier League rights in 2021 at a price of US$120 million over four years."#;
-  let from_txt = line_no_dump(from_txt.lines());
-  let to_txt = line_no_dump(to_txt.lines());
+    let conf = Arc::new(conf);
+    let mut ing = Vec::new();
 
-  let from_name = "中文";
-  let to_name = "英文";
+    for i in 0..2 {
+      let conf = conf.clone();
+      let ai = ai.clone();
+      ing.push(tokio::spawn(async move {
+        let body = r#"请对照英文HTML校对中文译文,译文要信达雅。只输出校对后的译文(首列为行号),用```包裹：
+英文原文:
+1 An essay has to tell people something they don't already know. But there are three different reasons people might not know something, and they yield three very different kinds of essays.
+2 One reason people won't know something is if it's <b style="color:red">not important</b> to know. That doesn't mean it will make a bad essay. For example, you might write a good essay about a particular model of car. Readers would learn something from it. It would add to their picture of the world. For a handful of readers it might even spur some kind of epiphany. But unless this is a very unusual car it's not critical for everyone to know about it. 
+3 If something isn't important to know, there's no answer to the question of why people don't know it. Not knowing random facts is the default. But if you're going to write about things that are important to know, you have to ask why your readers don't already know them. Is it because they're smart but inexperienced, or because they're obtuse?
+中文译文：
+1 一篇文章必须告诉人们一些他们尚不知道的事情。但人们可能不知道某件事的原因有三种，这三种原因又会造就三种截然不同的文章。
+2 人们不知道某件事的原因之一是它<b style="color:red">不重要</b>。但这并不意味着它会成为一篇糟糕的文章。例如，你可以写一篇关于某种车型的好文章。读者会从中学到一些东西。这会丰富他们对世界的认知。对少数读者来说，它甚至可能激发某种顿悟。但除非这是一辆非常不寻常的车，否则并非每个人都必须知道它。
+3 如果某件事不重要，那么人们为什么不知道这个问题就没有答案。不知道随机的事实是默认的。但如果你要写一些重要的事情，你必须问问你的读者为什么还不知道它们。是因为他们聪明但缺乏经验，还是因为他们愚钝？"#;
 
-  let msg_li = [
-    (role::USER, from_txt),
-    (role::ASSISTANT, format!("输入上文的{to_name}译文")),
-    (role::USER, to_txt),
-    (role::ASSISTANT, "我将按行号逐句对照原文校正译文".into()),
-    (
-      role::USER,
-      format!(
-        "输出行号及润色后的{to_name}译文,译文要信达雅并保留原文的html标签和markdown格式(不译行内代码、链接)"
-      ),
-    ),
-  ];
-  let system = format!("校对下面{from_name}原文的{to_name}译文(首列为行号)");
-
-  println!("system :\n{}\n", system);
-  for i in &msg_li {
-    println!("{} :\n{}\n", i.0, i.1);
+        // let body = format!("{body}  /no_think");
+        let r = ai.chat(conf.as_ref(), body ).await?;
+        // assert!(r.content.contains("人"));
+        info!("{:?}", r);
+        println!("\n{}\n{i}", r.content);
+        OK
+      }));
+    }
+    for i in ing {
+      xerr::log!(i.await?);
+    }
   }
-  let ai = aiapi::openai_token(format!("{dir}/siliconflow.yml"))?;
-  let r = ai
-    .send(
-      system,
-      msg_li
-        .into_iter()
-        .map(|i| i.into())
-        .collect::<Vec<aiapi::Msg>>(),
-    )
-    .await?;
-  println!("{} :\n{}\n", ai.name, r.txt);
   OK
 }

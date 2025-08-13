@@ -10,7 +10,7 @@ base64 = "0.22.1"
 sha1 = "0.10.6"
 
 [dependencies.reqwest]
-version = "0.12.22"
+version = "0.12.23"
 
 [dependencies.genv]
 version = "0.1.16"

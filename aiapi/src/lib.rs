@@ -1,69 +1,99 @@
-#![feature(trait_alias)]
+#![feature(doc_auto_cfg)]
+#![feature(doc_cfg)]
 
-use std::{ops::Deref, path::Path, sync::Arc};
+use serde::{Deserialize, Serialize};
+use thiserror::Error;
 
-use aok::Result;
+#[derive(Error, Debug)]
+pub enum Error {
+  #[error("JSON: {0}")]
+  Json(#[from] sonic_rs::Error),
 
-pub use crate::api::{Api, Baidu, EnumApi, OpenAi, Token, TokenModel};
+  #[error("Request: {0}")]
+  Request(#[from] reqwest::Error),
 
-pub mod msg;
-pub use msg::Msg;
+  #[cfg(feature = "from_yml")]
+  #[error("Yml: {0}")]
+  Yml(#[from] saphyr::ScanError),
 
-pub mod response;
-pub use response::Response;
-pub mod api;
+  #[error("API: {status}\n{text}")]
+  Api {
+    status: reqwest::StatusCode,
+    text: String,
+  },
 
-pub mod role {
-  pub const ASSISTANT: &str = "assistant";
-  pub const USER: &str = "user";
+  #[error("RateLimit: {token}\n{text}")]
+  RateLimit { token: String, text: String },
+
+  #[error("Timeout: {token}\n{text}")]
+  Timeout { token: String, text: String },
+
+  #[cfg(feature = "from_env")]
+  #[error("MissEnv : {0}")]
+  MissEnv(String),
+
+  #[cfg(feature = "from_yml")]
+  #[error("ConfTraitError: {0}")]
+  ConfTrait(String),
 }
 
-#[derive(Clone, Debug)]
-pub struct Ai {
-  pub api: Arc<EnumApi>,
-  pub name: String,
+pub type Result<T> = std::result::Result<T, Error>;
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Usage {
+  pub prompt_tokens: u64,
+  pub completion_tokens: u64,
+  #[serde(default)]
+  pub think_tokens: u64,
 }
 
-impl Deref for Ai {
-  type Target = Arc<EnumApi>;
-
-  fn deref(&self) -> &Self::Target {
-    &self.api
-  }
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum FinishReason {
+  Stop,
+  Length,
+  ToolCalls,
+  ContentFilter,
+  #[serde(other)]
+  Unknown,
 }
 
-pub fn file_name<P: AsRef<Path>>(path: P) -> String {
-  let path = path.as_ref();
-
-  if let Some(file_stem) = path.file_stem()
-    && let Some(file_stem_str) = file_stem.to_str()
-  {
-    return file_stem_str.to_string();
-  }
-
-  "unknown".to_string()
+#[derive(Debug)]
+pub struct ChatResult {
+  pub id: String,
+  pub content: String,
+  pub usage: Usage,
+  pub finish_reason: FinishReason,
 }
 
-pub fn _load(
-  fp: impl AsRef<std::path::Path>,
-  load_api: impl Fn(&[u8]) -> Result<EnumApi>,
-) -> Result<Ai> {
-  let fp = fp.as_ref();
-  let yml = std::fs::read(fp)?;
-  Ok(Ai {
-    name: file_name(fp),
-    api: Arc::new(load_api(&yml)?),
-  })
+pub trait AiApi {
+  fn url(&self) -> &str;
+  fn body(&self, conf: &impl ConfTrait, content: impl Into<String>) -> Result<String>;
+  fn chat(
+    &self,
+    token: &str,
+    body: &str,
+  ) -> impl std::future::Future<Output = Result<ChatResult>> + Send;
 }
 
-pub fn baidu(fp: impl AsRef<std::path::Path>) -> Result<Ai> {
-  _load(fp, |yml| Ok(EnumApi::Baidu(Baidu::loads(yml)?)))
-}
+pub mod conf;
+pub use conf::{Conf, ConfNoThink, ConfTrait};
 
-pub fn openai_token(fp: impl AsRef<std::path::Path>) -> Result<Ai> {
-  _load(fp, |yml| Ok(EnumApi::Token(Token::loads(yml)?)))
-}
+pub mod openai;
+pub use openai::OpenAI;
 
-pub fn openai_token_model(fp: impl AsRef<std::path::Path>) -> Result<Ai> {
-  _load(fp, |yml| Ok(EnumApi::TokenModel(TokenModel::loads(yml)?)))
-}
+pub mod token_li;
+pub use token_li::TokenLi;
+
+pub mod gemini;
+pub use gemini::Gemini;
+
+#[cfg(feature = "from_yml")]
+pub mod openai_from_yml;
+#[cfg(feature = "from_yml")]
+pub use openai_from_yml::openai_from_yml;
+
+#[cfg(feature = "from_yml")]
+pub mod gemini_from_yml;
+#[cfg(feature = "from_yml")]
+pub use gemini_from_yml::gemini_from_yml;

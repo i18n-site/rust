@@ -1,7 +1,7 @@
 [dependencies]
 aok = "0.1.17"
 futures = "0.3.31"
-reqwest = "0.12.22"
+reqwest = "0.12.23"
 serde = "1.0.219"
 sonic-rs = "0.5.3"
 tracing = "0.1.41"
