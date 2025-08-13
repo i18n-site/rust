@@ -31,6 +31,10 @@ pub fn loads(yml: impl AsRef<str>) -> Result<TokenLi<Gemini>> {
 }
 
 pub fn load(path: impl AsRef<std::path::Path>) -> Result<TokenLi<Gemini>> {
-  let content = std::fs::read_to_string(path)?;
+  let path = path.as_ref();
+  let content = std::fs::read_to_string(path).map_err(|error| Error::File {
+    error,
+    path: path.display().to_string(),
+  })?;
   loads(&content)
 }

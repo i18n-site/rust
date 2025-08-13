@@ -17,8 +17,8 @@ pub enum Error {
   Yml(#[from] saphyr::ScanError),
 
   #[cfg(feature = "from_yml")]
-  #[error("File: {0}")]
-  File(#[from] std::io::Error),
+  #[error("{path}: {error}")]
+  File { error: std::io::Error, path: String },
 
   #[error("API: {status}\n{text}")]
   Api {
