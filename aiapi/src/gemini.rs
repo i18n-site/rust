@@ -97,6 +97,12 @@ pub struct Gemini {
   pub client: Client,
 }
 
+impl Default for Gemini {
+  fn default() -> Self {
+    Self::new()
+  }
+}
+
 impl Gemini {
   pub fn new() -> Self {
     Self {

@@ -1,11 +1,10 @@
 use std::{
   borrow::Borrow,
   sync::atomic::{AtomicUsize, Ordering},
-  time::Duration,
 };
 
 use rand::Rng;
-use tokio::{sync::Semaphore, time::sleep};
+use tokio::sync::Semaphore;
 
 use crate::{AiApi, ChatResult, ConfTrait, Error, Result};
 pub const RESET: usize = usize::MAX / 2;
@@ -65,12 +64,10 @@ impl<T: AiApi> TokenLi<T> {
             retry -= 1;
             if let Error::Timeout { token, text } = e {
               tracing::warn!("Timeout {} {}\n{}", aiapi.url(), token, text);
-              sleep(Duration::from_secs(10)).await;
               continue;
             }
             if let Error::RateLimit { token, text } = e {
               tracing::warn!("RateLimit {} {}\n{}", aiapi.url(), token, text);
-              sleep(Duration::from_secs(10)).await;
               continue;
             }
           }
