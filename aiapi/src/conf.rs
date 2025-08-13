@@ -1,7 +1,12 @@
 pub trait ConfTrait {
   fn system(&self) -> &str;
   fn temperature(&self) -> f32;
-  fn fmt(&self, txt: String) -> String;
+  fn reasoning_effort(&self) -> &Option<String> {
+    &None
+  }
+  fn fmt(&self, txt: String) -> String {
+    txt
+  }
 }
 
 #[derive(Debug, Clone)]
@@ -17,42 +22,37 @@ impl ConfTrait for Conf {
   fn temperature(&self) -> f32 {
     self.temperature
   }
-  fn fmt(&self, txt: String) -> String {
-    txt
-  }
 }
 
 #[derive(Debug, Clone)]
-pub struct ConfNoThink {
+pub struct ConfQroq {
   pub system: String,
   pub temperature: f32,
+  pub reasoning_effort: Option<String>,
 }
 
-impl ConfNoThink {
-  pub fn new(system: impl AsRef<str>, temperature: f32) -> ConfNoThink {
-    let system = system.as_ref();
-    ConfNoThink {
-      system: if system.is_empty() {
-        "/no-think".into()
-      } else {
-        format!("{system}  /no-think")
-      },
+impl ConfQroq {
+  pub fn new<S: Into<String>>(
+    system: impl Into<String>,
+    temperature: f32,
+    reasoning_effort: Option<S>,
+  ) -> ConfQroq {
+    ConfQroq {
+      system: system.into(),
       temperature,
+      reasoning_effort: reasoning_effort.map(|i| i.into()),
     }
   }
 }
 
-impl ConfTrait for ConfNoThink {
+impl ConfTrait for ConfQroq {
   fn system(&self) -> &str {
     &self.system
   }
   fn temperature(&self) -> f32 {
     self.temperature
   }
-  fn fmt(&self, txt: String) -> String {
-    if let Some(p) = txt.find("</think>") {
-      return txt[p + 8..].trim_start().into();
-    }
-    txt
+  fn reasoning_effort(&self) -> &Option<String> {
+    &self.reasoning_effort
   }
 }

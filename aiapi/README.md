@@ -80,7 +80,7 @@ pub trait AiApi {
 }
 
 pub mod conf;
-pub use conf::{Conf, ConfNoThink, ConfTrait};
+pub use conf::{Conf, ConfQroq, ConfTrait};
 
 pub mod openai;
 pub use openai::OpenAI;

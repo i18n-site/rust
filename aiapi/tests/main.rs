@@ -23,7 +23,7 @@ async fn test_qwen_chat() -> Void {
   };
   for (name, conf) in [
     // ("gemini", conf),
-    ("groq", aiapi::ConfNoThink::new("", 0.0)),
+    ("groq", aiapi::ConfQroq::new("", 0.0, Some("none"))),
     // ("modelscope", conf),
     // "free_qwq"
   ] {

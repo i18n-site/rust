@@ -1,5 +1,8 @@
+use std::collections::HashMap;
+
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
+use sonic_rs::to_value;
 
 use crate::{ChatResult, ConfTrait, Error, FinishReason, Result, Usage};
 
@@ -7,13 +10,6 @@ use crate::{ChatResult, ConfTrait, Error, FinishReason, Result, Usage};
 pub struct Msg {
   pub role: String,
   pub content: String,
-}
-
-#[derive(Serialize, Debug)]
-struct ChatRequest<'a> {
-  model: &'a str,
-  messages: Vec<Msg>,
-  temperature: f32,
 }
 
 #[derive(Deserialize, Debug)]
@@ -63,13 +59,17 @@ impl crate::AiApi for OpenAI {
       content,
     });
 
-    let request_body = ChatRequest {
-      model: &self.model,
-      messages,
-      temperature: conf.temperature(),
-    };
+    let mut map = HashMap::new();
 
-    Ok(sonic_rs::to_string(&request_body)?)
+    map.insert("model", to_value(&self.model)?);
+    map.insert("messages", to_value(&messages)?);
+    map.insert("temperature", to_value(&conf.temperature())?);
+
+    if let Some(reasoning_effort) = conf.reasoning_effort() {
+      map.insert("reasoning_effort", to_value(&reasoning_effort)?);
+    }
+
+    Ok(sonic_rs::to_string(&map)?)
   }
 
   async fn chat(&self, token: &str, body: &str) -> Result<ChatResult> {
@@ -86,7 +86,6 @@ impl crate::AiApi for OpenAI {
     let status = response.status();
     if status.is_success() {
       let text = response.text().await?;
-      // dbg!(&text);
       let chat_response: ChatResponse = sonic_rs::from_str(&text)?;
       let id = chat_response.id;
       let result = if let Some(c) = chat_response.choices.into_iter().next() {
