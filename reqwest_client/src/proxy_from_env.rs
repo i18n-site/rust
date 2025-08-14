@@ -1,5 +1,6 @@
-use crate::{TIMEOUT, proxy};
+use std::cell::UnsafeCell;
 
+use crate::{TIMEOUT, proxy};
 genv::s!(
   IPV6_PROXY_IP_LI, IPV6_PROXY_PORT:u16,IPV6_PROXY_USER, IPV6_PROXY_PASSWD
 );
@@ -64,7 +65,17 @@ impl Iterator for ProxyIter {
   }
 }
 
-pub fn proxy_iter() -> impl FnMut() -> &'static reqwest::Client {
-  let mut iter = ProxyIter::new();
-  move || iter.next().unwrap()
+pub fn proxy_iter() -> impl Fn() -> &'static reqwest::Client {
+  unsafe { (N, _) = N.overflowing_add(1) };
+  let pos: UnsafeCell<usize> = unsafe { N.into() };
+  let len = PROXY.len();
+  move || {
+    let p = pos.get();
+    let n;
+    unsafe {
+      n = (*p).overflowing_add(1).0;
+      *p = n;
+    }
+    &PROXY[n % len]
+  }
 }
