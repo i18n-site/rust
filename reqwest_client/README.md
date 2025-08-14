@@ -7,6 +7,7 @@ use reqwest::{Client, ClientBuilder};
 
 pub fn client() -> ClientBuilder {
   Client::builder()
+    .user_agent("")
     .zstd(true)
     .gzip(true)
     .brotli(true)

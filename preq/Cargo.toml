@@ -12,7 +12,7 @@ bytes = "1.10.1"
 tracing = "0.1.41"
 
 [dependencies.reqwest_client]
-version = "0.1.7"
+version = "0.1.8"
 path = "../reqwest_client"
 features = [ "proxy_from_env" ]
 
