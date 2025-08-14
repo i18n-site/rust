@@ -1,4 +1,4 @@
-use std::cell::UnsafeCell;
+use pos_next::PosNext;
 
 use crate::{TIMEOUT, proxy};
 genv::s!(
@@ -59,15 +59,7 @@ impl Iterator for ProxyIter {
 
 pub fn proxy_iter() -> impl Fn() -> &'static reqwest::Client {
   unsafe { (N, _) = N.overflowing_add(1) };
-  let pos: UnsafeCell<usize> = unsafe { N.into() };
+  let pos = PosNext::new(unsafe { N });
   let len = PROXY.len();
-  move || {
-    let p = pos.get();
-    let n;
-    unsafe {
-      n = (*p).overflowing_add(1).0;
-      *p = n;
-    }
-    &PROXY[n % len]
-  }
+  move || &PROXY[pos.next() % len]
 }
