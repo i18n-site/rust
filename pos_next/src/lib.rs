@@ -1,8 +1,8 @@
 use std::{cell::UnsafeCell, ops::Deref};
 
-use rand::{Rng, SeedableRng, rngs::StdRng};
-
+#[cfg(feature = "rand")]
 pub fn random() -> usize {
+  use rand::{Rng, SeedableRng, rngs::StdRng};
   let mut rng = StdRng::from_rng(&mut rand::rng());
   rng.random::<u64>() as usize
 }
@@ -22,22 +22,16 @@ impl Deref for PosNext {
   }
 }
 
-impl Default for PosNext {
-  fn default() -> Self {
-    Self::new()
-  }
-}
-
 impl PosNext {
-  pub fn new() -> Self {
+  pub fn new(n: usize) -> Self {
     Self {
-      pos: UnsafeCell::new(random()),
+      pos: UnsafeCell::new(n),
     }
   }
 
-  pub fn get<'a, T>(&self, li: &'a [T]) -> &'a T {
-    let pos = self.next() % li.len();
-    &li[pos]
+  #[cfg(feature = "rand")]
+  pub fn rand() -> Self {
+    Self::new(random())
   }
 
   pub fn next(&self) -> usize {

@@ -3,7 +3,7 @@
 一个不同线程之间可以共享的 pos , 用了不安全代码, 不保证数字的连续性
 
 ```rust
-use aok::{Result, OK};
+use aok::{OK, Result};
 use pos_next::PosNext;
 use static_init::constructor;
 use tracing::info;
@@ -15,7 +15,7 @@ extern "C" fn init() {
 
 #[test]
 fn test() -> Result<()> {
-  let p = PosNext::new();
+  let p = PosNext::new(1000);
   info!("{}", p.next());
   info!("{}", p.next());
   info!("{}", p.next());

@@ -10,7 +10,7 @@ extern "C" fn init() {
 
 #[test]
 fn test() -> Result<()> {
-  let p = PosNext::new();
+  let p = PosNext::new(1000);
   info!("{}", p.next());
   info!("{}", p.next());
   info!("{}", p.next());
