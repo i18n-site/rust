@@ -50,7 +50,7 @@ impl<T: AiApi> TokenLi<T> {
     let req = self.aiapi.req(conf.borrow(), model, prompt)?;
     let aiapi = &self.aiapi;
 
-    let mut retry = token_li_len;
+    let mut retry = 3;
     loop {
       let token = &self.token_li[pos % token_li_len];
       match aiapi.chat(token, &req).await {
