@@ -17,7 +17,7 @@ pub static PROXY: Vec<reqwest::Client> = {
   let port: u16 = *IPV6_PROXY_PORT;
 
   let is_https = protocol == "https";
-  let timeout = std::time::Duration::from_millis(TIMEOUT);
+  let timeout = std::time::Duration::from_secs(TIMEOUT);
   for ip in IPV6_PROXY_IP_LI.split_whitespace() {
     let url = format!("{url}{ip}:{port}",);
     v.push(

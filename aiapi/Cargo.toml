@@ -54,7 +54,7 @@ static_init = "1.0.4"
 [dev-dependencies.reqwest_client]
 path = "../reqwest_client"
 features = [ "client" ]
-version = "0.1.5"
+version = "0.1.6"
 
 [dev-dependencies.xerr]
 path = "../xerr"
