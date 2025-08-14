@@ -162,9 +162,9 @@ impl crate::AiApi for Gemini {
 
       response = req.send().await?;
       status = response.status();
+      text = response.text().await?;
 
       if status.is_success() {
-        text = response.text().await?;
         let chat_response: GeminiResponse = sonic_rs::from_str(&text)?;
         let usage_metadata = &chat_response.usage_metadata;
         for c in chat_response.candidates {
@@ -191,8 +191,7 @@ impl crate::AiApi for Gemini {
       }
     }
 
-    let err = crate::response_to_error::to_error(response).await?;
-    Err(err)
+    Err(Error::Response { status, text })
   }
 
   fn url(&self) -> &str {

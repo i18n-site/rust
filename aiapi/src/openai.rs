@@ -84,8 +84,8 @@ impl crate::AiApi for OpenAI {
 
     let response = req.send().await?;
     let status = response.status();
+    let text = response.text().await?;
     if status.is_success() {
-      let text = response.text().await?;
       let chat_response: ChatResponse = sonic_rs::from_str(&text)?;
       let id = chat_response.id;
       let result = if let Some(c) = chat_response.choices.into_iter().next() {
@@ -101,7 +101,7 @@ impl crate::AiApi for OpenAI {
       return Ok(result);
     }
 
-    Err(crate::response_to_error::to_error(response).await?)
+    Err(Error::Response { status, text })
   }
 
   fn url(&self) -> &str {

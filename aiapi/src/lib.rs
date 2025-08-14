@@ -7,14 +7,20 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum Error {
-  #[error("JSON: {0}")]
+  #[error("json: {0}")]
   Json(#[from] sonic_rs::Error),
 
-  #[error("Request: {0:?}")]
+  #[error("reqwest: {0:?}")]
   Reqwest(#[from] reqwest::Error),
 
+  #[error("{status}\n{text}")]
+  Response {
+    status: reqwest::StatusCode,
+    text: String,
+  },
+
   #[cfg(feature = "from_yml")]
-  #[error("Yml: {0}")]
+  #[error("yml: {0}")]
   Yml(#[from] saphyr::ScanError),
 
   #[cfg(feature = "from_yml")]
@@ -26,15 +32,6 @@ pub enum Error {
     status: reqwest::StatusCode,
     text: String,
   },
-
-  #[error("RateLimit: {text}")]
-  RateLimit { text: String },
-
-  #[error("Timeout: {text}")]
-  Timeout { text: String },
-
-  #[error("ApiKeyInvalid: {text}")]
-  ApiKeyInvalid { text: String },
 
   #[error("EmptyResponse: {text}")]
   EmptyResponse { text: String },
@@ -94,7 +91,6 @@ pub mod conf;
 pub use conf::{Conf, ConfQroq, ConfTrait, ReasoningEffort};
 
 pub mod openai;
-pub mod response_to_error;
 pub use openai::OpenAI;
 
 pub mod token_li;

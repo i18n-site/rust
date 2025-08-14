@@ -4,6 +4,7 @@ use std::{
 };
 
 use rand::Rng;
+use reqwest::StatusCode;
 use tokio::sync::Semaphore;
 
 use crate::{AiApi, ChatResult, ConfTrait, Error, Result};
@@ -70,16 +71,17 @@ impl<T: AiApi> TokenLi<T> {
               tracing::warn!("token {token}\n{e:?}");
               continue;
             }
-
-            if matches!(
-              e,
-              Error::Timeout { .. }
-                | Error::RateLimit { .. }
-                | Error::ApiKeyInvalid { .. }
-                | Error::EmptyResponse { .. }
-            ) {
-              tracing::warn!("{} {token}\n{e}", aiapi.url());
-              continue;
+            if let Error::Response { status, text } = &e {
+              match *status {
+                StatusCode::INTERNAL_SERVER_ERROR
+                | StatusCode::TOO_MANY_REQUESTS
+                | StatusCode::BAD_REQUEST
+                | StatusCode::GATEWAY_TIMEOUT => {
+                  tracing::warn!("{status} {} {token}\n{text}", aiapi.url());
+                  continue;
+                }
+                _ => {}
+              }
             }
           }
           if let Error::Reqwest(e) = &e {
