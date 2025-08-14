@@ -28,21 +28,18 @@ pub struct ChatResponse {
 #[derive(Debug)]
 pub struct OpenAI {
   pub url: String,
-  pub client: Client,
 }
 
 impl OpenAI {
   pub fn new(url: impl Into<String>) -> Self {
-    Self {
-      url: url.into(),
-      client: Client::new(),
-    }
+    Self { url: url.into() }
   }
 }
 
 impl crate::AiApi for OpenAI {
   fn req(
     &self,
+    client: &Client,
     conf: &impl ConfTrait,
     model: &str,
     content: impl Into<String>,
@@ -74,8 +71,7 @@ impl crate::AiApi for OpenAI {
     }
     let url = format!("{}/chat/completions", self.url);
 
-    let req = self
-      .client
+    let req = client
       .post(&url)
       .header("Content-Type", "application/json")
       .body(sonic_rs::to_string(&map)?);

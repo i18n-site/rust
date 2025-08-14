@@ -8,8 +8,6 @@ genv::s!(
 
 genv::s!(IPV6_PROXY_PROTOCOL: String | "http".to_string());
 
-static mut N: usize = 0;
-
 pub struct Proxy(Vec<reqwest::Client>);
 
 #[static_init::dynamic(lazy)]
@@ -20,10 +18,13 @@ pub static PROXY: Proxy = {
 
   let url = format!("{protocol}://{}:{}@", *IPV6_PROXY_USER, *IPV6_PROXY_PASSWD,);
   let port: u16 = *IPV6_PROXY_PORT;
+
+  let is_https = protocol == "https";
+
   for ip in IPV6_PROXY_IP_LI.split_whitespace() {
     let url = format!("{url}{ip}:{port}",);
     v.push(proxy(
-      if protocol == "https" {
+      if is_https {
         reqwest::Proxy::https(url)
       } else {
         reqwest::Proxy::http(url)
@@ -33,6 +34,8 @@ pub static PROXY: Proxy = {
   }
   Proxy(v)
 };
+
+static mut N: usize = 0;
 
 impl Proxy {
   pub async fn post_form(

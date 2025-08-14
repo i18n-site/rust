@@ -33,8 +33,9 @@ impl<T: AiApi> TokenLi<T> {
     }
   }
 
-  pub async fn chat(
+  pub async fn chat<'a>(
     &self,
+    client: impl Fn() -> &'a reqwest::Client,
     conf: &impl ConfTrait,
     model: &str,
     prompt: impl Into<String>,
@@ -47,7 +48,7 @@ impl<T: AiApi> TokenLi<T> {
       self.token_pos.store(0, Ordering::Relaxed);
     }
     let token_li_len = self.token_li.len();
-    let req = self.aiapi.req(conf.borrow(), model, prompt)?;
+    let req = self.aiapi.req(client(), conf.borrow(), model, prompt)?;
     let aiapi = &self.aiapi;
 
     let mut retry = 3;
@@ -62,6 +63,14 @@ impl<T: AiApi> TokenLi<T> {
           if retry > 0 {
             pos = pos.overflowing_add(1).0;
             retry -= 1;
+
+            if let Error::Reqwest(e) = &e
+              && e.is_timeout()
+            {
+              tracing::warn!("token {token}\n{e:?}");
+              continue;
+            }
+
             if matches!(
               e,
               Error::Timeout { .. }
@@ -73,7 +82,11 @@ impl<T: AiApi> TokenLi<T> {
               continue;
             }
           }
-          tracing::error!("{} {token}\n{e}", aiapi.url());
+          if let Error::Reqwest(e) = &e {
+            tracing::error!("token {token}\n{e:?}");
+          } else {
+            tracing::error!("{} {token}\n{e}", aiapi.url());
+          }
           return Err(e);
         }
       }

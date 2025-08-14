@@ -20,7 +20,7 @@ pub fn loads(yml: impl AsRef<str>) -> Result<TokenLi<Gemini>> {
       "token_li must be an array of strings".to_string(),
     ))?;
 
-  Ok(TokenLi::new(token_li, concurrent as usize, Gemini::new()))
+  Ok(TokenLi::new(token_li, concurrent as usize, Gemini))
 }
 
 pub fn load(path: impl AsRef<std::path::Path>) -> Result<TokenLi<Gemini>> {

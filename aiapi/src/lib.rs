@@ -1,7 +1,7 @@
 #![feature(doc_auto_cfg)]
 #![feature(doc_cfg)]
 
-use reqwest::RequestBuilder;
+use reqwest::{Client, RequestBuilder};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -10,8 +10,8 @@ pub enum Error {
   #[error("JSON: {0}")]
   Json(#[from] sonic_rs::Error),
 
-  #[error("Request: {0}")]
-  Request(#[from] reqwest::Error),
+  #[error("Request: {0:?}")]
+  Reqwest(#[from] reqwest::Error),
 
   #[cfg(feature = "from_yml")]
   #[error("Yml: {0}")]
@@ -77,6 +77,7 @@ pub trait AiApi {
   fn url(&self) -> &str;
   fn req(
     &self,
+    client: &Client,
     conf: &impl ConfTrait,
     model: &str,
     content: impl Into<String>,

@@ -13,6 +13,8 @@ pub fn proxy(proxy: Proxy) -> reqwest::Client {
   Client::builder()
         .proxy(proxy)
         .zstd(true)
+        .gzip(true)
+        .brotli(true)
         // .http3_prior_knowledge()
         .timeout(TIMEOUT)
         .danger_accept_invalid_certs(true)

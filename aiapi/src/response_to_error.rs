@@ -2,9 +2,7 @@ use reqwest::{Response, StatusCode};
 
 use crate::Error;
 
-pub async fn to_error(
-  response: Response,
-) -> Result<Error, reqwest::Error> {
+pub async fn to_error(response: Response) -> Result<Error, reqwest::Error> {
   let status = response.status();
   let text = response.text().await?;
   Ok(match status {

@@ -93,29 +93,14 @@ impl From<Content> for String {
 }
 
 #[derive(Debug)]
-pub struct Gemini {
-  pub client: Client,
-}
-
-impl Default for Gemini {
-  fn default() -> Self {
-    Self::new()
-  }
-}
-
-impl Gemini {
-  pub fn new() -> Self {
-    Self {
-      client: Client::new(),
-    }
-  }
-}
+pub struct Gemini;
 
 pub const URL: &str = "https://generativelanguage.googleapis.com/v1beta";
 
 impl crate::AiApi for Gemini {
   fn req(
     &self,
+    client: &Client,
     conf: &impl ConfTrait,
     model: &str,
     content: impl Into<String>,
@@ -159,8 +144,7 @@ impl crate::AiApi for Gemini {
     };
     let url = format!("{URL}/models/{}:generateContent", model);
     let body = sonic_rs::to_string(&request_body)?;
-    let req = self
-      .client
+    let req = client
       .post(&url)
       .header("Content-Type", "application/json")
       .body(body.to_owned());

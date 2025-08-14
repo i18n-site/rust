@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use aiapi::Conf;
 use aok::{OK, Void};
+use reqwest_client::CLIENT;
 use tracing::info;
 
 #[static_init::constructor(0)]
@@ -53,7 +54,7 @@ async fn test_qwen_chat() -> Void {
 3 如果某件事不重要，那么人们为什么不知道这个问题就没有答案。不知道随机的事实是默认的。但如果你要写一些重要的事情，你必须问问你的读者为什么还不知道它们。是因为他们聪明但缺乏经验，还是因为他们愚钝？"#;
 
         // let body = format!("{body}  /no_think");
-        let r = ai.chat(conf.as_ref(), model,  prompt).await?;
+        let r = ai.chat(||&CLIENT, conf.as_ref(), model,  prompt).await?;
         // assert!(r.content.contains("人"));
         info!("{:?}", r);
         println!("\n{}\n{i}", r.content);
