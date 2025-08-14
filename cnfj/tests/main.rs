@@ -1,4 +1,4 @@
-use cnfj::{f1j, j2f};
+use cnfj::{f2j, j2f};
 
 #[test]
 fn test_f2j() {
