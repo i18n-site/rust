@@ -46,12 +46,12 @@ impl Default for ProxyIter {
   }
 }
 
+static mut N: usize = 0;
+
 impl ProxyIter {
   pub fn new() -> ProxyIter {
-    use rand::Rng;
-    ProxyIter {
-      pos: rand::rng().random_range(0..PROXY.len()),
-    }
+    unsafe { (N, _) = N.overflowing_add(1) };
+    ProxyIter { pos: unsafe { N } }
   }
 }
 
