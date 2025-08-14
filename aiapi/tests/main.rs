@@ -61,7 +61,7 @@ async fn test_qwen_chat() -> Void {
       }));
     }
     for i in ing {
-      xerr::log!(i.await?);
+      let _ = i.await?;
     }
   }
   OK

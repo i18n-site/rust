@@ -62,15 +62,18 @@ impl<T: AiApi> TokenLi<T> {
           if retry > 0 {
             pos = pos.overflowing_add(1).0;
             retry -= 1;
-            if let Error::Timeout { token, text } = e {
-              tracing::warn!("Timeout {} {}\n{}", aiapi.url(), token, text);
-              continue;
-            }
-            if let Error::RateLimit { token, text } = e {
-              tracing::warn!("RateLimit {} {}\n{}", aiapi.url(), token, text);
+            if matches!(
+              e,
+              Error::Timeout { .. }
+                | Error::RateLimit { .. }
+                | Error::ApiKeyInvalid { .. }
+                | Error::EmptyResponse { .. }
+            ) {
+              tracing::warn!("{} {token}\n{e}", aiapi.url());
               continue;
             }
           }
+          tracing::error!("{} {token}\n{e}", aiapi.url());
           return Err(e);
         }
       }

@@ -100,32 +100,12 @@ impl crate::AiApi for OpenAI {
           finish_reason: c.finish_reason,
         }
       } else {
-        ChatResult {
-          id,
-          content: "".to_string(),
-          usage: chat_response.usage,
-          finish_reason: FinishReason::Stop,
-        }
+        return Err(Error::EmptyResponse { text });
       };
       return Ok(result);
     }
 
-    let text = response.text().await?;
-    if status == reqwest::StatusCode::TOO_MANY_REQUESTS {
-      return Err(Error::RateLimit {
-        token: token.into(),
-        text,
-      });
-    }
-    if status == reqwest::StatusCode::GATEWAY_TIMEOUT {
-      return Err(Error::Timeout {
-        token: token.into(),
-        text,
-      });
-    }
-
-    let current_error = Error::Api { status, text };
-    Err(current_error)
+    Err(crate::response_to_error::to_error(response).await?)
   }
 
   fn url(&self) -> &str {

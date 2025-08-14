@@ -30,11 +30,17 @@ pub enum Error {
     text: String,
   },
 
-  #[error("RateLimit: {token}\n{text}")]
-  RateLimit { token: String, text: String },
+  #[error("RateLimit: {text}")]
+  RateLimit { text: String },
 
-  #[error("Timeout: {token}\n{text}")]
-  Timeout { token: String, text: String },
+  #[error("Timeout: {text}")]
+  Timeout { text: String },
+
+  #[error("ApiKeyInvalid: {text}")]
+  ApiKeyInvalid { text: String },
+
+  #[error("EmptyResponse: {text}")]
+  EmptyResponse { text: String },
 
   #[cfg(feature = "from_yml")]
   #[error("ConfTraitError: {0}")]
@@ -90,6 +96,7 @@ pub mod conf;
 pub use conf::{Conf, ConfQroq, ConfTrait, ReasoningEffort};
 
 pub mod openai;
+pub mod response_to_error;
 pub use openai::OpenAI;
 
 pub mod token_li;

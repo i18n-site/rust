@@ -172,6 +172,7 @@ impl crate::AiApi for Gemini {
     let mut status;
     let mut text;
 
+    let mut retry = 6;
     loop {
       let req = req.try_clone().unwrap().header("X-goog-api-key", token);
 
@@ -182,42 +183,32 @@ impl crate::AiApi for Gemini {
         text = response.text().await?;
         let chat_response: GeminiResponse = sonic_rs::from_str(&text)?;
         let usage_metadata = &chat_response.usage_metadata;
-        if let Some(c) = chat_response.candidates.into_iter().next()
-          && !c.content.parts.is_empty()
-        {
-          return Ok(ChatResult {
-            id: chat_response.response_id,
-            content: c.content.into(),
-            usage: Usage {
-              prompt_tokens: usage_metadata.prompt_token_count,
-              completion_tokens: usage_metadata.candidates_token_count,
-              think_tokens: usage_metadata.thoughts_token_count,
-            },
-            finish_reason: c.finish_reason.into(),
-          });
-        };
-        tracing::warn!("gemini {token} {text}")
+        for c in chat_response.candidates {
+          if !c.content.parts.is_empty() {
+            return Ok(ChatResult {
+              id: chat_response.response_id,
+              content: c.content.into(),
+              usage: Usage {
+                prompt_tokens: usage_metadata.prompt_token_count,
+                completion_tokens: usage_metadata.candidates_token_count,
+                think_tokens: usage_metadata.thoughts_token_count,
+              },
+              finish_reason: c.finish_reason.into(),
+            });
+          }
+        }
+        if retry > 0 {
+          retry -= 1;
+        } else {
+          return Err(Error::EmptyResponse { text });
+        }
       } else {
         break;
       }
     }
 
-    let text = response.text().await?;
-    if status == reqwest::StatusCode::TOO_MANY_REQUESTS {
-      return Err(Error::RateLimit {
-        token: token.into(),
-        text,
-      });
-    }
-    if status == reqwest::StatusCode::GATEWAY_TIMEOUT {
-      return Err(Error::Timeout {
-        token: token.into(),
-        text,
-      });
-    }
-
-    let current_error = Error::Api { status, text };
-    Err(current_error)
+    let err = crate::response_to_error::to_error(response).await?;
+    Err(err)
   }
 
   fn url(&self) -> &str {
