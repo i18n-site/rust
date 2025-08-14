@@ -181,7 +181,7 @@ members = [
   "tran_trait",
   "find_close_bucket",
   "htm_tag",
-  "is_escape", "aiapi", "reqwest_client",
+  "is_escape", "aiapi", "reqwest_client", "is_cn_char",
   # "bgu",
   # "cli_tmpl",
   # "hsc",

@@ -10,20 +10,8 @@ description = "cnu"
 [package.metadata.docs.rs]
 all-features = true
 
-[dependencies.enum_dispatch]
-version = "0.3.13"
-optional = true
-
-[dependencies.lang]
-version = "0.2.24"
-optional = true
-
-[dependencies.phf]
-version = "0.12.1"
-features = ["macros"]
-
 [features]
 default = []
+is_cn_char = []
 f2j = []
 j2f = []
-lang = ["dep:lang", "dep:enum_dispatch", "f2j", "j2f"]
