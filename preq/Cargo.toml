@@ -11,12 +11,17 @@ description = "ipv6 proxyed reqwest"
 bytes = "1.10.1"
 tracing = "0.1.41"
 
+[dependencies.reqwest_client]
+version = "0.1.2"
+path = "../reqwest_client"
+features = [ "proxy_from_env" ]
+
 [dependencies.genv]
 version = "0.1.16"
 path = "../genv"
 
 [dependencies.preq1]
-version = "0.1.13"
+version = "0.1.14"
 path = "../preq1"
 
 [dependencies.reqwest]

@@ -1,25 +1,5 @@
-use std::time::Duration;
-
 use bytes::Bytes;
-use reqwest::{Client, IntoUrl, Proxy, RequestBuilder};
-
-pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(8);
-
-pub const TIMEOUT: Duration = Duration::from_secs(120);
-
-// genv::def!(IPV6_PROXY, IPV6_PROXY_PORT);
-
-pub fn proxy(proxy: Proxy) -> reqwest::Client {
-  Client::builder()
-        .proxy(proxy)
-        .zstd(true)
-        .gzip(true)
-        .brotli(true)
-        // .http3_prior_knowledge()
-        .timeout(TIMEOUT)
-        .danger_accept_invalid_certs(true)
-        .connect_timeout(CONNECT_TIMEOUT).build().unwrap()
-}
+use reqwest::{IntoUrl, RequestBuilder};
 
 pub const MAX_RETRY: usize = 3;
 
