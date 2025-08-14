@@ -6,14 +6,11 @@ extern "C" fn _loginit() {
   loginit::init();
 }
 
-// #[tokio::test]
-// async fn test_async() -> Void {
-//   info!("async {}", 123456);
-//   OK
-// }
+#[tokio::test]
+async fn test_async() -> Void {
+  let client = reqwest_client::proxy_iter()();
+  let r = client.get("https://api-ipv6.ip.sb/ip").send().await?;
+  info!("{}", r.text().await?);
 
-#[test]
-fn test() -> Void {
-  info!("> test {}", 123456);
   OK
 }
