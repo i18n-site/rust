@@ -1,0 +1,21 @@
+[package]
+name = "cnfj"
+version = "0.1.2"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/cnfj"
+description = "cnfj"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = []
+f2j = ["dep:concat_array"]
+j2f = []
+
+[dependencies]
+concat_array = { version = "0.1.3", path = "../concat_array", optional = true }
+daachorse = "1.0.0"
+static_init = "1.0.4"

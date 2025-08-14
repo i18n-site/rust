@@ -4,4 +4,4 @@ DIR=$(realpath $0) && DIR=${DIR%/*}
 cd $DIR
 set -ex
 
-direnv exec . cargo test -- --nocapture 2>&1 | tee out.txt
+cargo test --all-features -- --nocapture

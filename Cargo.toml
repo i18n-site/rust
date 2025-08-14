@@ -30,7 +30,7 @@ members = [
   "clap_args",
   "cmdv",
   "cmp_len_str",
-  "cnu",
+  "cnfj",
   "confdir",
   "confer",
   "cookie_expire",
