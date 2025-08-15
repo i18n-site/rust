@@ -1,96 +1,58 @@
-# 中文繁简体转换
+# 中文繁简体转换 / Traditional and Simplified Chinese conversion
+
+基于 [daachorse](https://github.com/daac-tools/daachorse) 实现快速替换，效率高
+
+转换表经过精修，效果好
 
 ```rust
 use cnfj::{f2j, j2f};
 
+fn get_test_cases() -> Vec<(&'static str, &'static str)> {
+  vec![
+    ("河水都乾涸了", "河水都干涸了"),
+    ("計劃度假", "计划度假"),
+    ("憂鬱的烏龜", "忧郁的乌龟"),
+    ("發財", "发财"),
+    ("我是一個正體字。", "我是一个正体字。"),
+    ("你好世界", "你好世界"),
+    ("", ""),
+    ("abc 123", "abc 123"),
+    ("龍", "龙"),
+    ("蘋果", "苹果"),
+    ("理髮", "理发"),
+    ("發現", "发现"),
+    ("皇后", "皇后"),
+    ("後面", "后面"),
+    ("乾淨", "干净"),
+    ("幹部", "干部"),
+    ("我只愛你", "我只爱你"),
+    ("醜陋", "丑陋"),
+    ("子丑寅卯", "子丑寅卯"),
+    ("歷史", "历史"),
+    ("日曆", "日历"),
+    ("游泳", "游泳"),
+    ("旅遊", "旅游"),
+    ("舞臺", "舞台"),
+    ("颱風", "台风"),
+    ("家裡", "家里"),
+    ("公里", "公里"),
+  ]
+}
+
 #[test]
 fn test_f2j() {
-  assert_eq!(f2j("河水都乾涸了"), "河水都干涸了");
-  assert_eq!(f2j("計畫渡假"), "计划度假");
-  assert_eq!(f2j("憂鬱的烏龜"), "忧郁的乌龟");
-  assert_eq!(f2j("發財"), "发财");
-  assert_eq!(f2j("我是一個正體字。"), "我是一个正体字。");
-  assert_eq!(f2j("你好世界"), "你好世界");
-  assert_eq!(f2j(""), "");
-  assert_eq!(f2j("abc 123"), "abc 123");
-  assert_eq!(f2j("龍"), "龙");
+  for (traditional, simplified) in get_test_cases() {
+    assert_eq!(f2j(traditional), simplified);
+  }
+  assert_eq!(f2j("一隻"), "一只");
 }
 
 #[test]
 fn test_j2f() {
-  assert_eq!(j2f("河水都干涸了"), "河水都乾涸了");
-  assert_eq!(j2f("计划度假"), "計畫渡假");
-  assert_eq!(j2f("忧郁的乌龟"), "憂鬱的烏龜");
-  assert_eq!(j2f("发财"), "發財");
-  assert_eq!(j2f("我是一个正体字。"), "我是一個正體字。");
-  assert_eq!(j2f("你好世界"), "你好世界");
-  assert_eq!(j2f(""), "");
-  assert_eq!(j2f("abc 123"), "abc 123");
-  assert_eq!(j2f("龙"), "龍");
+  for (traditional, simplified) in get_test_cases() {
+    assert_eq!(j2f(simplified), traditional);
+  }
 }
-```
-
-输出
-
-```
-   Compiling cnfj v0.1.16 (/Users/z/i18n/rust/cnfj)
-warning: unused import: `MatchKind`
-  --> cnfj/src/lib.rs:10:49
-   |
-10 | use daachorse::{CharwiseDoubleArrayAhoCorasick, MatchKind};
-   |                                                 ^^^^^^^^^
-   |
-   = note: `#[warn(unused_imports)]` on by default
-
-warning: unused import: `static_init::dynamic`
-  --> cnfj/src/lib.rs:11:5
-   |
-11 | use static_init::dynamic;
-   |     ^^^^^^^^^^^^^^^^^^^^
-
-warning: function `replace_with_dict` is never used
-  --> cnfj/src/lib.rs:34:4
-   |
-34 | fn replace_with_dict(
-   |    ^^^^^^^^^^^^^^^^^
-   |
-   = note: `#[warn(dead_code)]` on by default
-
-warning: `cnfj` (lib) generated 3 warnings (3 duplicates)
-warning: `cnfj` (lib test) generated 3 warnings (run `cargo fix --lib -p cnfj --tests` to apply 2 suggestions)
-error[E0432]: unresolved imports `cnfj::f2j`, `cnfj::j2f`
-  --> cnfj/tests/main.rs:1:11
-   |
- 1 | use cnfj::{f2j, j2f};
-   |           ^^^  ^^^ no `j2f` in the root
-   |           |
-   |           no `f2j` in the root
-   |           help: a similar name exists in the module: `fj`
-   |
-note: found an item that was configured out
-  --> /Users/z/i18n/rust/cnfj/src/lib.rs:5:9
-   |
- 4 | #[cfg(feature = "f2j")]
-   |       --------------- the item is gated behind the `f2j` feature
- 5 | pub mod f2j;
-   |         ^^^
-note: found an item that was configured out
-  --> /Users/z/i18n/rust/cnfj/src/lib.rs:51:8
-   |
-50 | #[cfg(feature = "f2j")]
-   |       --------------- the item is gated behind the `f2j` feature
-51 | pub fn f2j(text: impl AsRef<str>) -> String {
-   |        ^^^
-note: found an item that was configured out
-  --> /Users/z/i18n/rust/cnfj/src/lib.rs:56:8
-   |
-55 | #[cfg(feature = "j2f")]
-   |       --------------- the item is gated behind the `j2f` feature
-56 | pub fn j2f(text: impl AsRef<str>) -> String {
-   |        ^^^
-
-For more information about this error, try `rustc --explain E0432`.
-error: could not compile `cnfj` (test "main") due to 1 previous error
 ```
 
 ## About

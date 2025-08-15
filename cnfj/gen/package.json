@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@3-/aiapi": "^0.1.36"
+  }
+}

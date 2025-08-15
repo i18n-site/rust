@@ -1,13 +1,11 @@
-# 中文繁简体转换
+# 中文繁简体转换 / Traditional and Simplified Chinese conversion
+
+基于 [daachorse](https://github.com/daac-tools/daachorse) 实现快速替换，效率高
+
+转换表经过精修，效果好
 
 ```rust
 <+ ./tests/main.rs>
-```
-
-输出
-
-```
-<+ ./out.txt>
 ```
 
 <+ ../about.md >
