@@ -3,17 +3,19 @@
 
 use daachorse::CharwiseDoubleArrayAhoCorasick;
 
+pub mod f;
+pub mod j;
+
 #[cfg(feature = "f2j")]
 pub mod f2j;
-pub mod fj;
 
 #[cfg(feature = "f2j")]
 use concat_array::concat_array;
 
 #[cfg(feature = "f2j")]
-const F2J_F: &[&str] = &concat_array!(fj::F, f2j::F);
+const F2J_F: &[&str] = &concat_array!(f::F, f2j::F);
 #[cfg(feature = "f2j")]
-const F2J_J: &[&str] = &concat_array!(fj::J, f2j::J);
+const F2J_J: &[&str] = &concat_array!(j::J, f2j::J);
 
 #[cfg(feature = "f2j")]
 #[static_init::dynamic]
@@ -28,7 +30,7 @@ static F2J_AC: CharwiseDoubleArrayAhoCorasick<usize> =
 static J2F_AC: CharwiseDoubleArrayAhoCorasick<usize> =
   daachorse::CharwiseDoubleArrayAhoCorasickBuilder::new()
     .match_kind(daachorse::MatchKind::LeftmostLongest)
-    .build(fj::J)
+    .build(j::J)
     .unwrap();
 
 pub fn replace_with_dict(
@@ -54,5 +56,5 @@ pub fn f2j(text: impl AsRef<str>) -> String {
 
 #[cfg(feature = "j2f")]
 pub fn j2f(text: impl AsRef<str>) -> String {
-  replace_with_dict(text.as_ref(), &J2F_AC, &fj::F)
+  replace_with_dict(text.as_ref(), &J2F_AC, &f::F)
 }

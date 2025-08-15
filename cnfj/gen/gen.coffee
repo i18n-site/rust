@@ -71,17 +71,15 @@ console.log FJLI.length
 FJLI_len = FJLI.length
 
 write(
-  join ROOT, 'src/fj.rs'
+  join ROOT, 'src/f.rs'
   """
-  pub const F: [&str; #{FJLI_len}] = #{JSON.stringify FJLI.map(([f,_])=>f),null,2};
-  pub const J: [&str; #{FJLI_len}] = #{JSON.stringify FJLI.map(([_,j])=>j),null,2};
+pub const F: [&str; #{FJLI_len}] = #{JSON.stringify FJLI.map(([f,_])=>f),null,2};
   """
 )
 
-# for [f,j] from Object.entries fNj
-#   pos = F.indexOf(f)
-#   if ~pos
-#     console.log f,j
-#   else
-#     fli.push f
-#     jli.push j
+write(
+  join ROOT, 'src/j.rs'
+  """
+pub const J: [&str; #{FJLI_len}] = #{JSON.stringify FJLI.map(([_,j])=>j),null,2};
+  """
+)
