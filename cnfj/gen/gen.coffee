@@ -30,7 +30,7 @@ fjadd = (f,j)=>
 
 for f,pos in F
   j = J[pos]
-  if fNj[f] or jNf[j] and not '别'.includes(j)
+  if fNj[f] or jNf[j] and not '干别'.includes(j)
     continue
   fjadd f,j
 
