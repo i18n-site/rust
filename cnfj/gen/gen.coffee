@@ -22,13 +22,15 @@ fjadd = (f,j)=>
   for i in t
     if EXIST.has(i)
       return
+  # 避免2个一样的词被return
+  for i in t
     EXIST.add i
   FJLI.push t
   return
 
 for f,pos in F
   j = J[pos]
-  if fNj[f] or jNf[j] or EXIST.has(f) or EXIST.has(j)
+  if fNj[f] or jNf[j]
     continue
   fjadd f,j
 
