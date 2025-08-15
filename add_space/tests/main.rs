@@ -109,9 +109,8 @@ fn test() -> Void {
   }
   info!(
     "{}",
-    add_space("请参阅我们的[贡献指南](CONTRIBUTING.md)，了解如何开始的详细信息。")
+    add_space("请参阅我们的[贡献指南](CONTRIBUTING.md)，了解如何上手的详细信息。")
   );
-  info!("{}", add_space("信息。信息。"));
 
   OK
 }
