@@ -107,5 +107,11 @@ fn test() -> Void {
     info!("{}", add);
     assert_eq!(add, exp);
   }
+  info!(
+    "{}",
+    add_space("请参阅我们的[贡献指南](CONTRIBUTING.md)，了解如何开始的详细信息。")
+  );
+  info!("{}", add_space("信息。信息。"));
+
   OK
 }
