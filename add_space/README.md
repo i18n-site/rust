@@ -21,13 +21,19 @@ pub fn state(c: char) -> State {
   {
     return State::Char;
   }
-  if r##"'=!"#%*+,-.:：?@^`·—‘’“”…、。「」『』！，？"##.contains(c)
+  if r##"!"#%\'*+,-.:<=>?@^`·—‘’“”…、。「」『』！，：？"##.contains(c)
     || (c.len_utf8() > 1 && unic_emoji_char::is_emoji(c))
   {
     return State::Punctuation;
   }
 
   State::Letter
+}
+
+fn push_stack(c: char, stack: &mut Vec<char>) {
+  if "[({".contains(c) {
+    stack.push(c);
+  }
 }
 
 #[derive(PartialEq, Debug, Copy, Clone)]
@@ -49,9 +55,8 @@ pub fn add_space(txt: impl AsRef<str>) -> String {
     let mut pre = state(c);
     let mut pre_c = c;
     let mut stack = Vec::new();
-    if "[({".contains(c) {
-      stack.push(c);
-    }
+
+    push_stack(c, &mut stack);
     for c in iter {
       if is_escape {
         is_escape = false;
@@ -59,12 +64,9 @@ pub fn add_space(txt: impl AsRef<str>) -> String {
         continue;
       }
       let s = state(c);
-      if "[({".contains(c) {
-        stack.push(c);
-      }
+      push_stack(c, &mut stack);
       match s {
         State::Char => {
-          // [](){}
           if pre == State::Letter && !"[({".contains(pre_c) {
             r.push(' ');
           }

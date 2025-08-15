@@ -102,15 +102,20 @@ fn test() -> Void {
     ("你好\n world\t!", "你好\n world\t!"),
     (r#"你好\n world\t!"#, r#"你好\n world\t!"#),
     ("你好world", "你好 world"),
+    (
+      "请参阅我们的[贡献指南](CONTRIBUTING.md)，了解如何上手的详细信息。",
+      "请参阅我们的[贡献指南](CONTRIBUTING.md)，了解如何上手的详细信息。",
+    ),
+    (
+      r#"测试<img alt="图片描述">一下"#,
+      r#"测试<img alt="图片描述">一下"#,
+    ),
   ] {
     let add = add_space(txt);
     info!("{}", add);
     assert_eq!(add, exp);
   }
-  info!(
-    "{}",
-    add_space("请参阅我们的[贡献指南](CONTRIBUTING.md)，了解如何上手的详细信息。")
-  );
+  // info!("{}", add_space(r#"测试<p>图片描述</p>一下"#));
 
   OK
 }
