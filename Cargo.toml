@@ -185,7 +185,7 @@ members = [
   "aiapi",
   "reqwest_client",
   "is_cn_char",
-  "add_space",
+  "add_space", "hashlen",
   # "bgu",
   # "cli_tmpl",
   # "hsc",
