@@ -1,6 +1,7 @@
 #!/usr/bin/env coffee
 
-> ./fj.js > F J
+> ./F.js
+  ./J.js
   ./fNj.js
   ./jNf.js
   @3-/write
