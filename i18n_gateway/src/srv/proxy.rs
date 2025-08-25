@@ -41,7 +41,6 @@ pub async fn proxy(
     },
   );
 
-  // 发送请求
   let mut req_builder = client.request(method, &url).headers(headers);
   if let Some(body) = body {
     req_builder = req_builder.body(body);

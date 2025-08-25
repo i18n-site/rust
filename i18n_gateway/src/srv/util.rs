@@ -1,7 +1,7 @@
 use faststr::FastStr;
 use http_body_util::{BodyExt, Full};
 use hyper::{
-  body::{Bytes, Incoming},
+  body::Bytes,
   header::HOST,
   Request, Response, StatusCode,
 };
