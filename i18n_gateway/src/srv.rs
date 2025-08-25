@@ -122,7 +122,7 @@ pub fn srv<D: CertStrDb>(
     .with_cert_resolver(Arc::new(resolver));
 
   // 开启 h2
-  tls_config.alpn_protocols = vec![b"h2".to_vec(), b"http/1.1".to_vec()];
+  tls_config.alpn_protocols = vec![b"h2".to_vec()];
 
   let tls_settings = TlsSettings::with_server_config(Arc::new(tls_config));
 
