@@ -1,8 +1,8 @@
 use std::{net::SocketAddr, pin::Pin, sync::Arc};
 
 use bytes::{Buf, Bytes};
-use http::{Response, StatusCode};
-use http_body_util::Full;
+use http::{Request, Response, StatusCode};
+use http_body_util::{BodyExt, Full};
 use s2n_quic::{
   Server,
   provider::tls::s2n_tls::{
@@ -176,14 +176,14 @@ async fn handle_request(
     while let Some(chunk) = request_stream.recv_data().await.map_err(Error::H3Stream)? {
       body_bytes.extend_from_slice(chunk.chunk());
     }
-    let body = Full::new(Bytes::from(body_bytes));
-    let req = http::Request::from_parts(parts, body);
+    let body = Bytes::from(body_bytes);
+    let req = Request::from_parts(parts, hyper::body::Incoming::empty());
 
     // 转换请求
-    let reqwest_req = super::util::http_to_reqwest(req).await?;
+    let (method, path_and_query, headers, _) = super::util::hyper_to_reqwest(req).await?;
 
     // 代理请求到上游服务器
-    match super::proxy::proxy(reqwest_req, &site_conf.upstream).await {
+    match super::proxy::proxy(method, &path_and_query, headers, body, &site_conf.upstream).await {
       Ok(response) => {
         // 通过 H3 流发送响应
         let status = response.status();

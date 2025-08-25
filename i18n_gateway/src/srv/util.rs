@@ -1,9 +1,9 @@
 use faststr::FastStr;
 use http_body_util::{BodyExt, Full};
 use hyper::{
-  Request, Response, StatusCode,
   body::{Bytes, Incoming},
   header::HOST,
+  Request, Response, StatusCode,
 };
 
 use crate::error::{Error, Result};
@@ -40,4 +40,25 @@ pub async fn reqwest_to_hyper(res: reqwest::Response) -> Result<Response<Full<By
   *hyper_res.headers_mut() = headers;
 
   Ok(hyper_res)
+}
+
+pub async fn hyper_to_reqwest(
+  req: Request<Incoming>,
+) -> Result<(
+  http::Method,
+  String,
+  http::HeaderMap,
+  Bytes,
+)> {
+  let method = req.method().clone();
+  let path_and_query = req
+    .uri()
+    .path_and_query()
+    .map(|pq| pq.as_str())
+    .unwrap_or("/")
+    .to_string();
+  let headers = req.headers().clone();
+  let body = req.collect().await?.to_bytes();
+
+  Ok((method, path_and_query, headers, body))
 }

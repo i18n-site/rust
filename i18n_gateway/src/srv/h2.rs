@@ -93,9 +93,9 @@ async fn handle_request(
 
   if let Some(site_conf) = route.host_conf.get(&host) {
     // 转换请求
-    let reqwest_req = util::hyper_to_reqwest(req).await?;
+    let (method, path_and_query, headers, body) = util::hyper_to_reqwest(req).await?;
     // 转发请求到上游服务器
-    let res = proxy::proxy(reqwest_req, &site_conf.upstream).await?;
+    let res = proxy::proxy(method, &path_and_query, headers, body, &site_conf.upstream).await?;
     // 转换响应
     let hyper_res = util::reqwest_to_hyper(res).await?;
     Ok(hyper_res.map(|full| full.map_err(|e| -> Error { match e {} }).boxed()))

@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use bytes::Bytes;
-use http::{HeaderMap, method::Method, uri::Uri};
+use http::{HeaderMap, method::Method};
 
 use crate::{
   error::{Error, Result},
@@ -13,7 +13,7 @@ pub async fn proxy(
   method: Method,
   path_and_query: &str,
   headers: HeaderMap,
-  body: Bytes,
+  body: Option<Bytes>,
   upstream: &Upstream,
 ) -> Result<reqwest::Response> {
   // 选择一个上游服务器地址（简单轮询）
