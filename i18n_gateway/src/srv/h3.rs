@@ -77,7 +77,7 @@ impl<D: CertStrDb + std::fmt::Debug> ClientHelloCallback for CertResolver<D> {
       let config = s2n_quic::provider::tls::s2n_tls::Server::builder()
         .with_certificate(&cert_entry.pem.cert, &cert_entry.pem.key)?
         // H3 alpn 协议
-        .with_application_protocols(&[&b"h3"])?
+        .with_application_protocols([&b"h3"])?
         .build()?;
 
       dbg!("TLS config built successfully");
@@ -96,10 +96,9 @@ pub(super) async fn run<D: CertStrDb + std::fmt::Debug>(
 ) -> Result<()> {
   let tls = s2n_quic::provider::tls::s2n_tls::Server::builder()
     // H3 alpn 协议
-    .with_application_protocols(&[&b"h3", ])?
+    .with_application_protocols([&b"h3", ])?
     .with_client_hello_handler(CertResolver::new(cert_loader))?
-    .build()
-    .map_err(|e| Error::S2nQuicProvider(e.to_string()))?;
+    .build()?;
 
   let mut server = Server::builder()
     .with_tls(tls)?

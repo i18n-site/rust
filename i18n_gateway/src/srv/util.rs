@@ -60,4 +60,3 @@ pub fn hyper_to_reqwest_parts(
 
   Ok((method, path_and_query, headers))
 }
-
