@@ -92,13 +92,14 @@ async fn handle_request(
   let host = util::extract_host(&req)?;
 
   if let Some(site_conf) = route.host_conf.get(&host) {
-    // 转换请求
-    let (method, path_and_query, headers) = util::hyper_to_reqwest(&req).await?;
+    let (parts, body) = req.into_parts();
+    let (method, path_and_query, headers) = util::hyper_to_reqwest_parts(parts)?;
 
     let body = if method == http::Method::GET {
       None
     } else {
-      Some(req.into_body())
+      let body_bytes = body.collect().await?.to_bytes();
+      Some(body_bytes)
     };
 
     // 转发请求到上游服务器

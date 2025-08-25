@@ -1,6 +1,6 @@
 use faststr::FastStr;
 use http_body_util::Full;
-use hyper::{Request, Response, StatusCode, body::Bytes, header::HOST};
+use hyper::{body::Bytes, header::HOST, Request, Response, StatusCode};
 
 use crate::error::{Error, Result};
 
@@ -38,20 +38,17 @@ pub async fn reqwest_to_hyper(res: reqwest::Response) -> Result<Response<Full<By
   Ok(hyper_res)
 }
 
-pub async fn hyper_to_reqwest<B>(req: Request<B>) -> Result<(http::Method, String, http::HeaderMap)>
-where
-  B: http_body::Body<Data = Bytes> + Send + 'static,
-  B::Error: Into<Error>,
-{
-  let method = req.method().clone();
-  let path_and_query = req
-    .uri()
+pub fn hyper_to_reqwest_parts(
+  parts: http::request::Parts,
+) -> Result<(http::Method, String, http::HeaderMap)> {
+  let method = parts.method.clone();
+  let path_and_query = parts
+    .uri
     .path_and_query()
     .map(|pq| pq.as_str())
     .unwrap_or("/")
     .to_string();
-  let headers = req.headers().clone();
+  let headers = parts.headers.clone();
 
   Ok((method, path_and_query, headers))
 }
-
