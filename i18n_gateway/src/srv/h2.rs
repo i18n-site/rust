@@ -93,9 +93,13 @@ async fn handle_request(
 
   if let Some(site_conf) = route.host_conf.get(&host) {
     // 转换请求
-    let (method, path_and_query, headers) = util::hyper_to_reqwest(req).await?;
+    let (method, path_and_query, headers) = util::hyper_to_reqwest(&req).await?;
 
-    let body = if method == GET { None } else { Some() };
+    let body = if method == http::Method::GET {
+      None
+    } else {
+      Some(req.into_body())
+    };
 
     // 转发请求到上游服务器
     let res = proxy::proxy(method, &path_and_query, headers, body, &site_conf.upstream).await?;

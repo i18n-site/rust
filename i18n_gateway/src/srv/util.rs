@@ -1,5 +1,5 @@
 use faststr::FastStr;
-use http_body_util::{BodyExt, Full};
+use http_body_util::Full;
 use hyper::{Request, Response, StatusCode, body::Bytes, header::HOST};
 
 use crate::error::{Error, Result};
