@@ -177,10 +177,9 @@ async fn handle_request(
       body_bytes.extend_from_slice(chunk.chunk());
     }
     let body = Bytes::from(body_bytes);
-    let req = Request::from_parts(parts, Empty::new());
 
     // 转换请求
-    let (method, path_and_query, headers,) = super::util::hyper_to_reqwest(req).await?;
+    let (method, path_and_query, headers) = super::util::hyper_to_reqwest_parts(parts)?;
 
     // 代理请求到上游服务器
     match super::proxy::proxy(
