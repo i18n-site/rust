@@ -41,8 +41,6 @@ pub async fn proxy(
 
   let mut last_err: Option<Error> = None;
 
-  // 根据 max_retry 策略进行重试
-  // 最多尝试 `max_retry + 1` 次, 每次从地址列表中选择一个不同的地址
   for upstream_addr in upstream.addr_li.iter().take(upstream.max_retry + 1) {
     let url = format!("{scheme}://{upstream_addr}{path_and_query}");
 
