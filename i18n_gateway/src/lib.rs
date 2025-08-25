@@ -4,4 +4,3 @@ pub mod conf;
 pub mod error;
 pub mod route;
 pub use self::error::{Error, Result};
-pub mod srv;
