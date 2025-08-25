@@ -177,7 +177,7 @@ async fn handle_request(
       body_bytes.extend_from_slice(chunk.chunk());
     }
     let body = Bytes::from(body_bytes);
-    let req = Request::from_parts(parts, Empty::new().map_err(|e| match e {}).boxed());
+    let req = Request::from_parts(parts, Empty::new());
 
     // 转换请求
     let (method, path_and_query, headers, _) = super::util::hyper_to_reqwest(req).await?;
