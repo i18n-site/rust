@@ -1,12 +1,21 @@
 use std::time::Duration;
 
+use bytes::Bytes;
+use http::{HeaderMap, method::Method, uri::Uri};
+
 use crate::{
   error::{Error, Result},
   route::{Protocol, Upstream},
 };
 
 /// 代理请求到上游服务器
-pub async fn proxy(req: reqwest::Request, upstream: &Upstream) -> Result<reqwest::Response> {
+pub async fn proxy(
+  method: Method,
+  path_and_query: &str,
+  headers: HeaderMap,
+  body: Bytes,
+  upstream: &Upstream,
+) -> Result<reqwest::Response> {
   // 选择一个上游服务器地址（简单轮询）
   let upstream_addr = upstream.addr_li.first().ok_or(Error::UpstreamNotFound)?;
 
@@ -23,22 +32,13 @@ pub async fn proxy(req: reqwest::Request, upstream: &Upstream) -> Result<reqwest
 
   let client = client.build()?;
 
-  // 修改请求 URI
-  let mut path_and_query = req.url().path().to_string();
-  if let Some(query) = req.url().query() {
-    path_and_query.push('?');
-    path_and_query.push_str(query);
-  }
-
   let url = format!(
-    "{}://{}{}",
+    "{}://{upstream_addr}{path_and_query}",
     if upstream.protocol == Protocol::H1 {
       "http"
     } else {
       "https"
     },
-    upstream_addr,
-    path_and_query
   );
 
   // 复制请求方法、头和体

@@ -1,9 +1,9 @@
 use faststr::FastStr;
 use http_body_util::{BodyExt, Full};
 use hyper::{
+  Request, Response, StatusCode,
   body::{Bytes, Incoming},
   header::HOST,
-  Request, Response, StatusCode,
 };
 
 use crate::error::{Error, Result};
@@ -28,40 +28,6 @@ pub fn not_found_response() -> Response<Full<Bytes>> {
   let mut res = Response::new(Full::new(Bytes::from("Not Found")));
   *res.status_mut() = StatusCode::NOT_FOUND;
   res
-}
-
-pub async fn hyper_to_reqwest(req: Request<Incoming>) -> Result<reqwest::Request> {
-  let method = req.method().clone();
-  let url = req.uri().to_string();
-  let headers = req.headers().clone();
-  let body = req.into_body().collect().await?.to_bytes();
-
-  let client = reqwest::Client::new();
-  let mut req_builder = client.request(method, url);
-
-  for (name, value) in headers.iter() {
-    req_builder = req_builder.header(name.clone(), value.clone());
-  }
-
-  let reqwest_req = req_builder.body(body).build()?;
-  Ok(reqwest_req)
-}
-
-pub async fn http_to_reqwest(req: http::Request<Full<Bytes>>) -> Result<reqwest::Request> {
-  let method = req.method().clone();
-  let url = req.uri().to_string();
-  let headers = req.headers().clone();
-  let body = req.into_body().collect().await?.to_bytes();
-
-  let client = reqwest::Client::new();
-  let mut req_builder = client.request(method, url);
-
-  for (name, value) in headers.iter() {
-    req_builder = req_builder.header(name.clone(), value.clone());
-  }
-
-  let reqwest_req = req_builder.body(body).build()?;
-  Ok(reqwest_req)
 }
 
 pub async fn reqwest_to_hyper(res: reqwest::Response) -> Result<Response<Full<Bytes>>> {
