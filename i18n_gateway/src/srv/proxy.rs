@@ -41,15 +41,6 @@ pub async fn proxy(
     },
   );
 
-  // 复制请求方法、头和体
-  let method = req.method().clone();
-  let headers = req.headers().clone();
-  let body = if let Some(body) = req.body() {
-    body.as_bytes().unwrap().to_vec()
-  } else {
-    Vec::new()
-  };
-
   // 发送请求
   let res = client
     .request(method, &url)
