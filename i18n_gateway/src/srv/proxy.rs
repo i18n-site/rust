@@ -8,6 +8,8 @@ use crate::{
   route::{Protocol, Upstream},
 };
 
+static mut N: usize = 0;
+
 /// 代理请求到上游服务器
 pub async fn proxy(
   method: Method,
@@ -39,9 +41,16 @@ pub async fn proxy(
     "https"
   };
 
-  let mut last_err: Option<Error> = None;
+  let len = upstream.addr_li.len();
 
-  for upstream_addr in upstream.addr_li.iter().take(upstream.max_retry + 1) {
+  let pos = unsafe {
+    N = N.overflowing_add(1).0;
+    N
+  };
+
+  let mut retryed = 0;
+  loop {
+    let upstream_addr = &upstream.addr_li[pos % len];
     let url = format!("{scheme}://{upstream_addr}{path_and_query}");
 
     let mut req_builder = client
@@ -55,11 +64,14 @@ pub async fn proxy(
       Ok(res) => return Ok(res),
       Err(e) => {
         tracing::warn!("proxy failed: {upstream_addr} {e}");
-        last_err = Some(e.into());
+        retryed += 1;
+        if retryed < upstream.max_retry {
+          continue;
+        }
+        return Err(e.into());
       }
     }
-  }
 
-  // 如果所有重试都失败了, 返回最后一个错误
-  Err(last_err.unwrap_or(Error::UpstreamNotFound))
+    let pos = pos.overflowing_add(1).1;
+  }
 }
