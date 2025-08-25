@@ -66,12 +66,11 @@ pub async fn proxy(
         tracing::warn!("proxy failed: {upstream_addr} {e}");
         retryed += 1;
         if retryed < upstream.max_retry {
+          let pos = pos.overflowing_add(1).1;
           continue;
         }
         return Err(e.into());
       }
     }
-
-    let pos = pos.overflowing_add(1).1;
   }
 }
