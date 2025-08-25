@@ -16,8 +16,9 @@ pub async fn proxy(
   body: Option<Bytes>,
   upstream: &Upstream,
 ) -> Result<reqwest::Response> {
-  // 选择一个上游服务器地址（简单轮询）
-  let upstream_addr = upstream.addr_li.first().ok_or(Error::UpstreamNotFound)?;
+  if upstream.addr_li.is_empty() {
+    return Err(Error::UpstreamNotFound);
+  }
 
   // 构建 reqwest 客户端
   let client = reqwest::Client::builder()
@@ -32,20 +33,35 @@ pub async fn proxy(
 
   let client = client.build()?;
 
-  let url = format!(
-    "{}://{upstream_addr}{path_and_query}",
-    if upstream.protocol == Protocol::H1 {
-      "http"
-    } else {
-      "https"
-    },
-  );
+  let scheme = if upstream.protocol == Protocol::H1 {
+    "http"
+  } else {
+    "https"
+  };
 
-  let mut req_builder = client.request(method, &url).headers(headers);
-  if let Some(body) = body {
-    req_builder = req_builder.body(body);
+  let mut last_err: Option<Error> = None;
+
+  // 根据 max_retry 策略进行重试
+  // 最多尝试 `max_retry + 1` 次, 每次从地址列表中选择一个不同的地址
+  for upstream_addr in upstream.addr_li.iter().take(upstream.max_retry + 1) {
+    let url = format!("{scheme}://{upstream_addr}{path_and_query}");
+
+    let mut req_builder = client
+      .request(method.clone(), &url)
+      .headers(headers.clone());
+    if let Some(ref body_bytes) = body {
+      req_builder = req_builder.body(body_bytes.clone());
+    }
+
+    match req_builder.send().await {
+      Ok(res) => return Ok(res),
+      Err(e) => {
+        tracing::warn!("proxy failed: {upstream_addr} {e}");
+        last_err = Some(e.into());
+      }
+    }
   }
-  let res = req_builder.send().await?;
 
-  Ok(res)
+  // 如果所有重试都失败了, 返回最后一个错误
+  Err(last_err.unwrap_or(Error::UpstreamNotFound))
 }
