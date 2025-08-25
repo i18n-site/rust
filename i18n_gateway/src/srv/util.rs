@@ -1,10 +1,6 @@
 use faststr::FastStr;
 use http_body_util::{BodyExt, Full};
-use hyper::{
-  body::Bytes,
-  header::HOST,
-  Request, Response, StatusCode,
-};
+use hyper::{Request, Response, StatusCode, body::Bytes, header::HOST};
 
 use crate::error::{Error, Result};
 
@@ -44,12 +40,7 @@ pub async fn reqwest_to_hyper(res: reqwest::Response) -> Result<Response<Full<By
 
 pub async fn hyper_to_reqwest<B>(
   req: Request<B>,
-) -> Result<(
-  http::Method,
-  String,
-  http::HeaderMap,
-  Bytes,
-)>
+) -> Result<(http::Method, String, http::HeaderMap, Bytes)>
 where
   B: http_body::Body<Data = Bytes> + Send + 'static,
   B::Error: Into<Error>,
@@ -66,3 +57,4 @@ where
 
   Ok((method, path_and_query, headers, body))
 }
+
