@@ -20,5 +20,5 @@ version = "0.1.9"
 path = "../upn"
 
 [dependencies.phf]
-version = "0.12.1"
+version = "0.13.1"
 features = [ "macros" ]
