@@ -2,7 +2,7 @@ use std::{net::SocketAddr, pin::Pin, sync::Arc};
 
 use bytes::{Buf, Bytes};
 use http::{Request, Response, StatusCode};
-use http_body_util::{BodyExt, Full};
+use http_body_util::{BodyExt, Empty};
 use s2n_quic::{
   Server,
   provider::tls::s2n_tls::{
@@ -177,13 +177,13 @@ async fn handle_request(
       body_bytes.extend_from_slice(chunk.chunk());
     }
     let body = Bytes::from(body_bytes);
-    let req = Request::from_parts(parts, hyper::body::Incoming::empty());
+    let req = Request::from_parts(parts, Empty::new().map_err(|e| match e {}).boxed());
 
     // 转换请求
     let (method, path_and_query, headers, _) = super::util::hyper_to_reqwest(req).await?;
 
     // 代理请求到上游服务器
-    match super::proxy::proxy(method, &path_and_query, headers, body, &site_conf.upstream).await {
+    match super::proxy::proxy(method, &path_and_query, headers, Some(body), &site_conf.upstream).await {
       Ok(response) => {
         // 通过 H3 流发送响应
         let status = response.status();

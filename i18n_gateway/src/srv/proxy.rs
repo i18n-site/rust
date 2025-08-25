@@ -42,12 +42,12 @@ pub async fn proxy(
   );
 
   // 发送请求
-  let res = client
-    .request(method, &url)
-    .headers(headers)
-    .body(body)
-    .send()
-    .await?;
+  '''  // 发送请求
+  let mut req_builder = client.request(method, &url).headers(headers);
+  if let Some(body) = body {
+    req_builder = req_builder.body(body);
+  }
+  let res = req_builder.send().await?;
 
   Ok(res)
-}
+}''
