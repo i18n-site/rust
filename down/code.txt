@@ -1,0 +1,259 @@
+use anyhow::Result;
+use bytes::Bytes;
+use kanal::{AsyncReceiver, AsyncSender};
+use reqwest::{IntoUrl, Url};
+use std::collections::VecDeque;
+use std::path::Path;
+use std::sync::Arc;
+use tokio::sync::Mutex;
+
+// 为了在不同平台（Unix/Windows）上使用 pwrite (positional write)
+#[cfg(unix)]
+use std::os::unix::fs::FileExt;
+#[cfg(windows)]
+use std::os::windows::fs::FileExt;
+
+// --- 自定义错误类型，方便统一处理 ---
+#[derive(Debug, thiserror::Error)]
+pub enum DownloadError {
+    #[error("IO error: {0}")]
+    Io(#[from] std::io::Error),
+
+    #[error("HTTP request error: {0}")]
+    Reqwest(#[from] reqwest::Error),
+
+    #[error("URL parse error: {0}")]
+    UrlParse(#[from] url::ParseError),
+
+    #[error("Concurrency error (task join): {0}")]
+    Join(#[from] tokio::task::JoinError),
+
+    #[error("Channel communication error: {0}")]
+    KanalSend(#[from] kanal::SendError<(u64, Bytes)>),
+
+    #[error("Channel communication error: {0}")]
+    KanalRecv(#[from] kanal::ReceiveError),
+
+    #[error("All download workers failed to start")]
+    NoWorkers,
+}
+
+// 定义一个通用的 Result 类型
+pub type Void = Result<(), DownloadError>;
+
+// 定义块大小常量
+const CHUNK_SIZE: u64 = 256 * 1024; // 256KB
+
+/// 多线程分块下载器
+///
+/// # 参数
+/// * `filesize` - 目标文件的总大小.
+/// * `url_li` - 一个URL列表的迭代器，所有URL都指向同一个文件.
+/// * `to_path` - 下载后保存的文件路径.
+pub async fn down<U: IntoUrl + Send + 'static>(
+    filesize: u64,
+    url_li: impl IntoIterator<Item = U>,
+    to_path: impl AsRef<Path>,
+) -> Void {
+    // 1. 创建并预分配稀疏文件
+    let file = Arc::new(std::fs::File::create(to_path)?);
+    file.set_len(filesize)?;
+
+    // 2. 初始化任务队列和数据通道
+    let total_chunks = (filesize + CHUNK_SIZE - 1) / CHUNK_SIZE;
+
+    // 使用 Mutex<VecDeque> 作为任务队列，以支持失败后 "push_first"
+    let tasks = Arc::new(Mutex::new(VecDeque::from_iter(0..total_chunks)));
+
+    // 使用 kanal 作为下载数据块的通信通道
+    // 容量设为32，可以缓冲32个下载好的块
+    let (data_tx, data_rx): (AsyncSender<(u64, Bytes)>, AsyncReceiver<(u64, Bytes)>) =
+        kanal::bounded_async(32);
+
+    // 3. 启动文件写入任务
+    // 这个任务独立运行，负责从通道接收数据并写入文件
+    let writer_handle = {
+        let file = file.clone();
+        let writer_task = async move {
+            // 我们期望接收 total_chunks 个数据块
+            for i in 0..total_chunks {
+                match data_rx.recv().await {
+                    Ok((chunk_id, data)) => {
+                        let offset = chunk_id * CHUNK_SIZE;
+                        let file_clone = file.clone();
+
+                        // spawn_blocking 用于执行阻塞的IO操作，防止阻塞tokio运行时
+                        tokio::task::spawn_blocking(move || {
+                            #[cfg(unix)]
+                            file_clone.write_all_at(&data, offset)?;
+                            #[cfg(windows)]
+                            file_clone.write_all_at(&data, offset)?;
+                            Ok::<(), std::io::Error>(())
+                        })
+                        .await??; // 第一个 `?` 处理 JoinError, 第二个处理 IO Error
+                        println!("[Writer] Wrote chunk {}/{} (ID: {})", i + 1, total_chunks, chunk_id);
+                    }
+                    Err(e) => {
+                        // 如果通道关闭且仍有块未写入，说明出错了
+                        eprintln!("[Writer] Error receiving chunk data: {}", e);
+                        return Err(DownloadError::from(e));
+                    }
+                }
+            }
+            println!("[Writer] All chunks written. Finishing.");
+            Ok(())
+        };
+        tokio::spawn(writer_task)
+    };
+
+    // 4. 启动下载工人（downloader workers）
+    let client = reqwest::Client::new();
+    let mut worker_handles = Vec::new();
+
+    for url_input in url_li.into_iter() {
+        let url = url_input.into_url()?;
+        let tasks_clone = tasks.clone();
+        let data_tx_clone = data_tx.clone();
+        let client_clone = client.clone();
+
+        let worker_task = async move {
+            loop {
+                // --- 从队列认领任务 ---
+                let task_id = {
+                    let mut queue = tasks_clone.lock().await;
+                    queue.pop_front() // 从头部取任务
+                };
+
+                if let Some(id) = task_id {
+                    let start = id * CHUNK_SIZE;
+                    let end = std::cmp::min(start + CHUNK_SIZE - 1, filesize - 1);
+                    let range = format!("bytes={}-{}", start, end);
+
+                    println!("[Worker {:?}] Downloading chunk {} (range: {})", std::thread::current().id(), id, range);
+
+                    // --- 执行下载 ---
+                    match client_clone.get(url.clone()).header("Range", range).send().await {
+                        Ok(response) if response.status().is_success() => {
+                            match response.bytes().await {
+                                Ok(data) => {
+                                    // 发送数据到写入任务
+                                    if data_tx_clone.send((id, data)).await.is_err() {
+                                        // 如果发送失败，说明写入任务已退出，无需继续
+                                        eprintln!("[Worker] Failed to send chunk {} to writer. Aborting.", id);
+                                        break;
+                                    }
+                                }
+                                Err(e) => {
+                                    eprintln!("[Worker] Failed to get bytes for chunk {}: {}. Re-queueing.", id, e);
+                                    // 下载失败，将任务ID放回队列头部，以便快速重试
+                                    tasks_clone.lock().await.push_front(id);
+                                }
+                            }
+                        }
+                        Ok(response) => { // HTTP 错误 (e.g., 404, 500)
+                            eprintln!("[Worker] HTTP error for chunk {}: Status {}. Re-queueing.", id, response.status());
+                            tasks_clone.lock().await.push_front(id);
+                        }
+                        Err(e) => { // 网络错误
+                            eprintln!("[Worker] Network error for chunk {}: {}. Re-queueing.", id, e);
+                            tasks_clone.lock().await.push_front(id);
+                        }
+                    }
+                } else {
+                    // 队列为空，工人任务结束
+                    println!("[Worker {:?}] No more tasks. Shutting down.", std::thread::current().id());
+                    break;
+                }
+            }
+        };
+        worker_handles.push(tokio::spawn(worker_task));
+    }
+
+    if worker_handles.is_empty() {
+        return Err(DownloadError::NoWorkers);
+    }
+
+    // 5. 等待所有任务完成
+    // 首先丢弃此处的 data_tx，这样当所有工人都结束后，data_rx 才会感知到通道关闭
+    drop(data_tx);
+
+    // 等待所有工人完成
+    for handle in worker_handles {
+        handle.await?; // 这里只处理 JoinError，工人内部的逻辑错误已自行处理
+    }
+
+    println!("All workers finished.");
+
+    // 最后等待写入任务完成
+    writer_handle.await??;
+
+    println!("Download completed successfully!");
+    Ok(())
+}
+
+
+// --- main 函数，用于演示和测试 ---
+#[tokio::main]
+async fn main() -> Result<()> {
+    // 设置日志，方便观察
+    tracing_subscriber::fmt::init();
+
+    // 1. 启动一个本地文件服务器
+    let server_handle = tokio::spawn(start_test_server());
+    // 等待服务器启动
+    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+
+    // 2. 准备下载参数
+    // 我们假设知道文件大小。在真实场景中，可能需要先发一个 HEAD 请求获取。
+    let filesize = 10 * 1024 * 1024; // 10 MB
+    let urls = vec![
+        "http://127.0.0.1:3000/testfile",
+        "http://127.0.0.1:3000/testfile", // 多个URL指向同一个文件
+        "http://127.0.0.1:3000/testfile",
+    ];
+    let output_path = "downloaded_file.bin";
+
+    // 3. 执行下载
+    println!("Starting download...");
+    match down(filesize, urls, output_path).await {
+        Ok(_) => println!("\nSUCCESS: File '{}' downloaded.", output_path),
+        Err(e) => eprintln!("\nERROR: Download failed: {}", e),
+    }
+
+    // 4. 验证文件大小
+    if let Ok(metadata) = std::fs::metadata(output_path) {
+        println!("Verification: Output file size is {} bytes.", metadata.len());
+        assert_eq!(metadata.len(), filesize, "File size mismatch!");
+        // 清理
+        std::fs::remove_file(output_path)?;
+    }
+
+    // 停止服务器
+    server_handle.abort();
+
+    Ok(())
+}
+
+/// 启动一个 axum 测试服务器，提供一个大文件供下载
+async fn start_test_server() {
+    use axum::{routing::get_service, Router};
+    use tower_http::services::ServeFile;
+
+    // 创建一个 10MB 的临时文件
+    let temp_file_path = "testfile.tmp";
+    let mut file = std::fs::File::create(temp_file_path).unwrap();
+    // 写入一些数据以确保它不是全零
+    file.write_all(&vec![0u8; 10 * 1024 * 1024]).unwrap();
+
+    let app = Router::new().route(
+        "/testfile",
+        get_service(ServeFile::new(temp_file_path)),
+    );
+
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+        .await
+        .unwrap();
+    println!("Test server listening on {}", listener.local_addr().unwrap());
+
+    axum::serve(listener, app).await.unwrap();
+}
