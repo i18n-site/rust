@@ -16,22 +16,11 @@ tracing = []
 bytes = "1.10.1"
 dashmap = "6.1.0"
 faststr = "0.2.31"
-futures = "0.3.31"
-futures-util = "0.3.31"
-h3 = "0.0.8"
 http = "1.3.1"
-http-body = "1.0.1"
-http-body-util = { version = "0.1.3", features = ["full"] }
-hyper = { version = "1.7.0", features = ["server", "client", "http1", "http2"] }
-hyper-util = { version = "0.1.16", features = ["tokio"] }
 parking_lot = "0.12.4"
-reqwest = { version = "0.12.23", features = ["http3", "json", "rustls-tls", "stream"] }
-rustls = "0.23.31"
+pingora = { version = "0.6.0", features = ["rustls"] }
 rustls-pemfile = "2.2.0"
-rustls-pki-types = "1.12.0"
-s2n-quic = { version = "1.63.0", features = ["unstable_client_hello"] }
 thiserror = "2.0.16"
-tokio-rustls = "0.26.2"
 tracing = "0.1.41"
 x509-parser = "0.17.0"
 
@@ -54,21 +43,13 @@ features = [
 
 [dev-dependencies]
 static_init = "1.0.4"
-reqwest = { version = "0.12.23", features = ["json", "rustls-tls", "http3"] }
 url = "2.5.6"
 anyhow = "1.0.99"
 env_logger = "0.11.8"
-tracing-subscriber = "0.3.19"
-tokio = { version = "1.47.1", features = ["macros", "rt-multi-thread"] }
 faststr = "0.2.31"
-rustls = "0.23.31"
-rustls-pemfile = "2.2.0"
-webpki-roots = "1.0.2"
 tracing = "0.1.41"
 parking_lot = "0.12.4"
 const-str = "0.6.4"
-quinn = "0.11.8"
-hyper = "1.7.0"
 
 [dev-dependencies.aok]
 path = "../aok"
@@ -81,5 +62,3 @@ version = "0.1.18"
 [[example]]
 name = "cert_loader_test"
 path = "examples/cert_loader_test.rs"
-
-
