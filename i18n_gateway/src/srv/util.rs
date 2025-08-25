@@ -38,9 +38,7 @@ pub async fn reqwest_to_hyper(res: reqwest::Response) -> Result<Response<Full<By
   Ok(hyper_res)
 }
 
-pub async fn hyper_to_reqwest<B>(
-  req: Request<B>,
-) -> Result<(http::Method, String, http::HeaderMap, Bytes)>
+pub async fn hyper_to_reqwest<B>(req: Request<B>) -> Result<(http::Method, String, http::HeaderMap)>
 where
   B: http_body::Body<Data = Bytes> + Send + 'static,
   B::Error: Into<Error>,
@@ -53,8 +51,7 @@ where
     .unwrap_or("/")
     .to_string();
   let headers = req.headers().clone();
-  let body = req.collect().await.map_err(|e| e.into())?.to_bytes();
 
-  Ok((method, path_and_query, headers, body))
+  Ok((method, path_and_query, headers))
 }
 

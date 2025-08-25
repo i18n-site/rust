@@ -180,10 +180,18 @@ async fn handle_request(
     let req = Request::from_parts(parts, Empty::new());
 
     // 转换请求
-    let (method, path_and_query, headers, _) = super::util::hyper_to_reqwest(req).await?;
+    let (method, path_and_query, headers,) = super::util::hyper_to_reqwest(req).await?;
 
     // 代理请求到上游服务器
-    match super::proxy::proxy(method, &path_and_query, headers, Some(body), &site_conf.upstream).await {
+    match super::proxy::proxy(
+      method,
+      &path_and_query,
+      headers,
+      Some(body),
+      &site_conf.upstream,
+    )
+    .await
+    {
       Ok(response) => {
         // 通过 H3 流发送响应
         let status = response.status();
@@ -197,10 +205,7 @@ async fn handle_request(
         match request_stream.send_response(res_for_h3).await {
           Ok(_) => {
             if !body.is_empty() {
-              log_h3_error(
-                "send response body",
-                request_stream.send_data(body).await,
-              );
+              log_h3_error("send response body", request_stream.send_data(body).await);
             }
             log_h3_error("finish response stream", request_stream.finish().await);
           }
