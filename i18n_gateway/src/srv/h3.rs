@@ -100,11 +100,7 @@ pub(super) async fn run<D: CertStrDb + std::fmt::Debug>(
     .with_client_hello_handler(CertResolver::new(cert_loader))?
     .build()?;
 
-  let mut server = Server::builder()
-    .with_tls(tls)?
-    .with_io(addr)?
-    .start()
-    .map_err(|e| Error::S2nQuicProvider(e.to_string()))?;
+  let mut server = Server::builder().with_tls(tls)?.with_io(addr)?.start()?;
 
   dbg!("H3 server started");
 
