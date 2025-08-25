@@ -43,7 +43,7 @@ pub async fn proxy(
 
   let len = upstream.addr_li.len();
 
-  let pos = unsafe {
+  let mut pos = unsafe {
     N = N.overflowing_add(1).0;
     N
   };
@@ -66,7 +66,7 @@ pub async fn proxy(
         tracing::warn!("proxy failed: {upstream_addr} {e}");
         retryed += 1;
         if retryed < upstream.max_retry {
-          let pos = pos.overflowing_add(1).1;
+          pos = pos.overflowing_add(1).1;
           continue;
         }
         return Err(e.into());
