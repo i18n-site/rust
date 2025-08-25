@@ -22,7 +22,7 @@ impl SiteConf {
   }
 }
 
-#[derive(PartialEq,Eq,Debug)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum Protocol {
   H1,
   H2,

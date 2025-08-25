@@ -1,6 +1,6 @@
 use faststr::FastStr;
 use http_body_util::Full;
-use hyper::{body::Bytes, header::HOST, Request, Response, StatusCode};
+use hyper::{Request, Response, StatusCode, body::Bytes, header::HOST};
 
 use crate::error::{Error, Result};
 

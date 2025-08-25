@@ -1,8 +1,7 @@
 use std::{net::SocketAddr, pin::Pin, sync::Arc};
 
 use bytes::{Buf, Bytes};
-use http::{Request, Response, StatusCode};
-use http_body_util::Empty;
+use http::{Response, StatusCode};
 use s2n_quic::{
   Server,
   provider::tls::s2n_tls::{
