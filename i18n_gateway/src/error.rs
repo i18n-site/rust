@@ -35,7 +35,7 @@ pub enum Error {
   S2nQuic(#[from] s2n_quic::provider::tls::s2n_tls::error::Error),
 
   #[error("s2n_quic provider: {0}")]
-  S2nQuicProvider(#[from] s2n_quic::provider::Error),
+  S2nQuicProvider(#[from] s2n_quic::provider::StartError),
 
   #[error("Invalid Host: {0}")]
   InvalidHost(#[from] http::uri::InvalidUri),
