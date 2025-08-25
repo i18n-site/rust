@@ -1,6 +1,11 @@
 use faststr::FastStr;
-use http_body_util::Full;
-use hyper::{Request, Response, StatusCode, body::Bytes, header::HOST};
+use futures::TryStreamExt;
+use http_body_util::{Full, StreamBody};
+use hyper::{
+  Request, Response, StatusCode,
+  body::{Bytes, Frame},
+  header::HOST,
+};
 
 use crate::error::{Error, Result};
 
@@ -26,16 +31,19 @@ pub fn not_found_response() -> Response<Full<Bytes>> {
   res
 }
 
-pub async fn reqwest_to_hyper(res: reqwest::Response) -> Result<Response<Full<Bytes>>> {
+pub fn reqwest_to_hyper(
+  res: reqwest::Response,
+) -> Response<StreamBody<impl futures::Stream<Item = Result<Frame<Bytes>, Error>>>> {
   let status = res.status();
   let headers = res.headers().clone();
-  let body = res.bytes().await?;
+  let stream = res.bytes_stream().map_err(Error::from).map_ok(Frame::data);
+  let body = StreamBody::new(stream);
 
-  let mut hyper_res = Response::new(Full::new(body));
+  let mut hyper_res = Response::new(body);
   *hyper_res.status_mut() = status;
   *hyper_res.headers_mut() = headers;
 
-  Ok(hyper_res)
+  hyper_res
 }
 
 pub fn hyper_to_reqwest_parts(
@@ -52,3 +60,4 @@ pub fn hyper_to_reqwest_parts(
 
   Ok((method, path_and_query, headers))
 }
+

@@ -16,6 +16,7 @@ tracing = []
 bytes = "1.10.1"
 dashmap = "6.1.0"
 faststr = "0.2.31"
+futures = "0.3.31"
 futures-util = "0.3.31"
 h3 = "0.0.8"
 http = "1.3.1"

@@ -105,8 +105,8 @@ async fn handle_request(
     // 转发请求到上游服务器
     let res = proxy::proxy(method, &path_and_query, headers, body, &site_conf.upstream).await?;
     // 转换响应
-    let hyper_res = util::reqwest_to_hyper(res).await?;
-    Ok(hyper_res.map(|full| full.map_err(|e| -> Error { match e {} }).boxed()))
+    let hyper_res = util::reqwest_to_hyper(res);
+    Ok(hyper_res.map(|body| body.boxed()))
   } else {
     Ok(util::not_found_response().map(|full| full.map_err(|e| -> Error { match e {} }).boxed()))
   }
