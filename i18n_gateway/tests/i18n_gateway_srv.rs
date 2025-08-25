@@ -14,7 +14,7 @@ use static_init::constructor;
 pub const TEST_HOST: &str = "018007.xyz";
 pub const H1_ADDR: &str = "127.0.0.1:9081";
 pub const H2_ADDR: &str = "127.0.0.1:9082";
-pub const H3_ADDR: &str = "127.0.0.1:9083";
+pub const H3_ADDR: &str = "127.0.0.1:9082";
 pub const UPSTREAM_ADDR: &str = "127.0.0.1:9080";
 pub const TEST_RESPONSE_BODY: &[u8] = b"Hello, from upstream!";
 
