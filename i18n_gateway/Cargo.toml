@@ -26,9 +26,10 @@ openssl = "0.10.73"
 parking_lot = "0.12.4"
 pingora = { version = "0.6.0", features = ["rustls"] }
 pingora-core = "0.6.0"
+pingora-error = "0.6.0"
 pingora-load-balancing = "0.6.0"
 pingora-proxy = "0.6.0"
-rustls = "0.23.31"
+rustls = { version = "0.23.31", features = ["ring"] }
 rustls-pemfile = "2.2.0"
 rustls-pki-types = "1.12.0"
 thiserror = "2.0.16"

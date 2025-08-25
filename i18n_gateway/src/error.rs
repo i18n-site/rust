@@ -34,14 +34,11 @@ pub enum Error {
   #[error("TokioJoin: {0}")]
   TokioJoin(#[from] tokio::task::JoinError),
 
-  #[error("BodyCollect: {0}")]
-  BodyCollect(String),
-}
+  #[error("pingora: {0}")]
+  Pingora(#[from] Box<pingora_core::Error>),
 
-impl From<std::convert::Infallible> for Error {
-  fn from(_: std::convert::Infallible) -> Self {
-    unreachable!()
-  }
+  #[error("Infallible: {0}")]
+  Infallible(#[from] std::convert::Infallible),
 }
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;
