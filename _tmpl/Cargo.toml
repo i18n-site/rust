@@ -1,0 +1,29 @@
+[package]
+name = "_tmpl"
+version = "0.1.0"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/_tmpl"
+description = "_tmpl"
+keywords = []
+
+[features]
+default = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+aok = "0.1.17"
+
+[dev-dependencies]
+aok = "0.1.17"
+log = "0.4.27"
+log_init = { path = "../log_init" }
+static_init = "1.0.4"
+
+[dev-dependencies.tokio]
+version = "1.47.1"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

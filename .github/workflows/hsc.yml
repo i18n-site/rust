@@ -1,0 +1,14 @@
+name: hsc
+
+on:
+  push:
+    tags:
+      - hsc/[0-9]+.[0-9]+.[0-9]+
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      name: hsc
+    secrets: inherit

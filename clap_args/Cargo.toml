@@ -1,0 +1,34 @@
+[package]
+name = "clap_args"
+version = "0.1.7"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/clap_args"
+description = "clap_args"
+keywords = []
+
+[features]
+default = []
+macro = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+aok = "0.1.17"
+clap = { version = "4.5.46", features = ["string"] }
+const-str = "0.6.4"
+current_platform = "0.2.0"
+xerr = { version = "0.1.15", path = "../xerr" }
+
+[dev-dependencies]
+aok = "0.1.17"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.47.1"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
