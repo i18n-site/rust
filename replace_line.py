@@ -1,14 +1,18 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
-from os.path import abspath, dirname, basename, join, exists
+from os.path import abspath, dirname
 from tzutil.dirreplace import dirreplace
 
 FROM_STRING = """
-0.23.30
+tracing = "0.1.41"
+tracing
+loginit
 """
 
 TO_STRING = """
-0.23.29
+log = "0.4.27"
+log
+log_init
 """
 
 dirreplace(
