@@ -10,7 +10,7 @@ pub enum Error {
   #[error("json: {0}")]
   Json(#[from] sonic_rs::Error),
 
-  #[error("reqwest: {0:?}")]
+  #[error("{0:?}")]
   Reqwest(#[from] reqwest::Error),
 
   #[error("{status}\n{text}")]
@@ -33,7 +33,7 @@ pub enum Error {
     text: String,
   },
 
-  #[error("gemini error : {0:?}")]
+  #[error("{0:?}")]
   Gemini(gemini::GeminiError),
 
   #[error("EmptyResponse: {text}")]
