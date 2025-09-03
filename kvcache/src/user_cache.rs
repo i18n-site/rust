@@ -1,0 +1,111 @@
+use fred::{
+  interfaces::KeysInterface,
+  prelude::{Client, FredResult},
+  types::{Map, MultipleKeys, Value, Value::Bytes},
+};
+use xbin::concat;
+
+use crate::{Cache, Vov};
+
+pub struct PosMerge {
+  pub li: Vov,
+  pub pos_li: Vec<usize>,
+}
+
+impl PosMerge {
+  fn new<T: Clone>(key_li: &[T], li: Vov) -> (Vec<T>, Self) {
+    let mut pos_li = Vec::new();
+    let mut next_key_li = Vec::new();
+    for (pos, i) in li.iter().enumerate() {
+      if i.is_none() {
+        next_key_li.push(key_li[pos].clone());
+        pos_li.push(pos);
+      }
+    }
+    (next_key_li, Self { li, pos_li })
+  }
+
+  fn merge(self, li: impl IntoIterator<Item = Option<Vec<u8>>>) -> Vov {
+    let mut r = self.li;
+    let pos_li = self.pos_li;
+    for (pos, i) in li.into_iter().enumerate() {
+      if i.is_some() {
+        r[pos_li[pos]] = i;
+      }
+    }
+    r
+  }
+}
+
+#[derive(Clone)]
+pub struct UserCache<'a> {
+  pub global: Box<[u8]>,
+  pub user: Box<[u8]>,
+  pub kv: &'a Client,
+}
+
+pub fn kvli(prefix: &[u8], map: Map) -> Vec<(Box<[u8]>, Value)> {
+  map
+    .inner()
+    .into_iter()
+    .map(|(k, v)| (concat!(prefix, k.as_bytes()).into(), v))
+    .collect()
+}
+
+pub fn prefix_key(prefix: &[u8], keys: &[&[u8]]) -> Vec<Box<[u8]>> {
+  keys.iter().map(|k| concat!(prefix, k).into()).collect()
+}
+
+pub const SPLIT: &[u8] = b":";
+
+impl<'a> UserCache<'a> {
+  pub fn new(
+    kv: &'a Client,
+    global_prefix: impl AsRef<[u8]>,
+    global_key: impl AsRef<[u8]>,
+    user_prefix: impl AsRef<[u8]>,
+    user_id: u64,
+  ) -> Self {
+    let global_key = b255::encode(global_key.as_ref());
+    let global: Box<[u8]> = concat!(global_prefix.as_ref(), global_key, SPLIT).into();
+
+    let user: Box<[u8]> = concat!(
+      user_prefix.as_ref(),
+      b255::encode(intbin::to_bin(user_id)),
+      SPLIT,
+      global_prefix,
+      SPLIT
+    )
+    .into();
+    Self { global, user, kv }
+  }
+
+  pub fn global_kvli(&self, map: Map) -> Vec<(Box<[u8]>, Value)> {
+    kvli(&self.global, map)
+  }
+}
+
+impl Cache for UserCache<'_> {
+  async fn _get_li(&self, key_li: MultipleKeys) -> FredResult<Vov> {
+    use fred::prelude::Value::String;
+    let kv = &self.kv;
+    let key_li = key_li.into_values();
+    let mut keys = Vec::with_capacity(key_li.len());
+    for i in key_li.iter() {
+      match i {
+        String(i) => keys.push(i.as_bytes()),
+        Bytes(i) => keys.push(i),
+        _ => {}
+      }
+    }
+
+    let li: Vov = kv.mget(prefix_key(&self.user, &keys)).await?;
+    let (key_li, pm) = PosMerge::new(&keys, li);
+    let cached: Vov = kv.mget(prefix_key(&self.global, &key_li)).await?;
+    Ok(pm.merge(cached))
+  }
+
+  async fn _set_li(&self, map: Map) -> FredResult<()> {
+    self.kv.mset(self.global_kvli(map)).await
+  }
+}
