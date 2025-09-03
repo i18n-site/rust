@@ -1,6 +1,6 @@
 [package]
 name = "kvcache"
-version = "0.1.51"
+version = "0.1.52"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"

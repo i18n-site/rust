@@ -10,25 +10,33 @@ use fred::{
 pub type Vov = Vec<Option<Vec<u8>>>;
 
 pub trait Cache {
-  fn get_li<K>(&self, hash_li: K) -> impl Future<Output = FredResult<Vov>>
+  async fn get_li<K>(&self, hash_li: K) -> FredResult<Vov>
   where
     K: Into<MultipleKeys> + Send,
   {
-    self._get_li(hash_li.into())
+    let hash_li = hash_li.into();
+    if hash_li.len() == 0 {
+      return Ok(Vec::new());
+    }
+    self._get_li(hash_li).await
   }
 
   fn _get_li(&self, hash_li: MultipleKeys) -> impl Future<Output = FredResult<Vov>>;
 
-  fn set_li<V>(&self, map: V) -> impl Future<Output = FredResult<()>>
+  async fn set_li<V>(&self, map: V) -> FredResult<()>
   where
     V: TryInto<Map> + Send,
     V::Error: Into<Error> + Send,
   {
-    async move {
-      match map.try_into() {
-        Ok(map) => self._set_li(map).await,
-        Err(err) => Err(err.into()),
+    match map.try_into() {
+      Ok(map) => {
+        if map.is_empty() {
+          Ok(())
+        } else {
+          self._set_li(map).await
+        }
       }
+      Err(err) => Err(err.into()),
     }
   }
 
