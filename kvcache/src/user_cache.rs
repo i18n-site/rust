@@ -61,22 +61,16 @@ pub const SPLIT: &[u8] = b":";
 impl<'a> UserCache<'a> {
   pub fn new(
     kv: &'a Client,
-    global_prefix: impl AsRef<[u8]>,
-    global_key: impl AsRef<[u8]>,
-    user_prefix: impl AsRef<[u8]>,
+    prefix: impl AsRef<[u8]>,
+    kind: impl AsRef<[u8]>,
     user_id: u64,
   ) -> Self {
-    let global_key = b255::encode(global_key.as_ref());
-    let global: Box<[u8]> = concat!(global_prefix.as_ref(), global_key, SPLIT).into();
+    let kind = b255::encode(kind.as_ref());
+    let prefix = prefix.as_ref();
+    let global: Box<[u8]> = concat!(prefix, kind, SPLIT).into();
 
-    let user: Box<[u8]> = concat!(
-      user_prefix.as_ref(),
-      b255::encode(intbin::to_bin(user_id)),
-      SPLIT,
-      global_prefix,
-      SPLIT
-    )
-    .into();
+    let user: Box<[u8]> =
+      concat!(prefix, b255::encode(vb::e([user_id])), SPLIT, kind, SPLIT).into();
     Self { global, user, kv }
   }
 
