@@ -3,78 +3,82 @@
 * [English](#english)
 * [中文](#中文)
 
-`zset` is a thread-safe sorted set data structure inspired by Redis's zset. It allows for efficient storage and retrieval of unique members, each associated with a score. Members are sorted based on their scores, enabling fast rank and range queries.
-
-This implementation is designed for high-concurrency scenarios, utilizing lock-free and fine-grained locking techniques to minimize contention and maximize performance in multi-threaded applications.
-
-`zset` 是一个受 Redis zset 启发的线程安全排序集数据结构。它允许高效地存储和检索唯一的成员，每个成员都与一个分数相关联。成员根据其分数进行排序，从而实现快速的排名和范围查询。
-
-此实现专为高并发场景设计，利用无锁和细粒度锁定技术，最大限度地减少多线程应用中的竞争并提升性能。
-
 ---
 
 ## English
 
 * [Overview](#overview)
 * [Features](#features)
+* [When to Use `zset`?](#when-to-use-zset)
 * [Design and Tech Stack](#design-and-tech-stack)
 * [Usage](#usage)
 * [File Structure](#file-structure)
-* [A Little Story](#a-little-story)
+* [A Little Story: The Power of Hybrid Data Structures](#a-little-story-the-power-of-hybrid-data-structures)
 
 ### Overview
 
-A sorted set is a hybrid data structure that combines the features of a hash map and a sorted list. It maps members to scores, ensuring that each member is unique, while also maintaining a sorted order of members based on their scores. This makes it an ideal choice for applications that require both fast lookups (by member) and ordered traversal (by score), such as leaderboards, real-time analytics, and priority queues.
+`zset` is a high-performance, thread-safe sorted set data structure for Rust, inspired by Redis's popular `ZSET`. It combines the features of a hash map and a sorted list, mapping unique members to scores while maintaining a sorted order based on these scores.
 
-This `zset` library provides a generic, thread-safe implementation that can be used with any data types for members and scores that satisfy the required traits.
+This makes it an ideal choice for applications that require both fast O(1) lookups by member and efficient ordered traversal by score, such as leaderboards, real-time analytics, and priority queues. This implementation is generic and can be used with any data types for members and scores that satisfy the required traits.
 
 ### Features
 
-*   **Thread-Safe**: Designed for concurrent use across multiple threads with minimal contention.
-*   **High Performance**: Utilizes efficient data structures to provide fast operations.
-*   **Generic**: Works with any member and score types that implement `Ord`, `Hash`, `Send`, `Sync`, etc.
-*   **Rich API**: Offers a comprehensive set of operations, including adding, removing, querying scores and ranks, and retrieving ranges.
+*   **Thread-Safe**: Designed for high-concurrency scenarios, using fine-grained locking to minimize contention.
+*   **High Performance**: Leverages `DashMap` for O(1) member lookups and `SortedVec` for efficient O(log N) rank queries.
+*   **Generic**: Works with any member and score types that implement `Ord`, `Hash`, `Send`, `Sync`, and other necessary traits.
+*   **Rich API**: Offers a comprehensive set of operations, including adding, removing, querying scores and ranks, retrieving ranges, and performing set operations like union and intersection.
+
+### When to Use `zset`?
+
+`zset` is particularly useful in scenarios where you need to maintain an ordered collection of unique items and frequently query them by score or rank.
+
+*   **Leaderboards**: Easily manage player scores and retrieve top rankings.
+*   **Real-time Analytics**: Track and sort events by timestamp or priority, like displaying the most recent unique visitors.
+*   **Rate Limiting**: Keep track of request timestamps in a sliding window to enforce rate limits.
+*   **Priority Queues**: Implement job schedulers where jobs are prioritized by a score and can be dynamically added or removed.
 
 ### Design and Tech Stack
 
-The design of `zset` revolves around two core data structures to achieve both fast lookups and efficient sorting:
+The design of `zset` revolves around a hybrid approach, using two core data structures to achieve both fast lookups and efficient sorting:
 
-1.  **`DashMap<Arc<M>, S>`**: A concurrent hash map used for O(1) average-time complexity lookups of a member's score. `DashMap` is chosen for its excellent performance in highly contended, multi-threaded environments. It shards the map internally, allowing different threads to access different shards concurrently without blocking each other.
+1.  **`DashMap<Arc<M>, S>`**: A concurrent hash map that provides O(1) average-time complexity for looking up a member's score. `DashMap` is chosen for its excellent performance in highly contended, multi-threaded environments, as it shards the map internally to allow concurrent access. `Arc<M>` is used to allow members to be shared between the map and the sorted list without duplicating the data.
 
-2.  **`RwLock<SortedVec<ScoreMember<M, S>>>`**: A `SortedVec` protected by a `RwLock` is used to maintain the sorted order of members. `SortedVec` is a vector-based data structure that keeps its elements sorted, offering a compromise between fast random access and efficient insertions/deletions with O(sqrt(N)) complexity. The `RwLock` allows multiple threads to read the sorted data concurrently, while ensuring exclusive access for write operations.
+2.  **`parking_lot::RwLock<SortedVec<ScoreMember<M, S>>>`**: A `SortedVec` protected by a `parking_lot::RwLock`. `SortedVec` is a vector-based data structure that keeps its elements sorted, offering O(log N) searches and O(N) insertions/deletions. The `parking_lot::RwLock` is used for its high performance, especially in scenarios with many readers, providing faster and more lightweight locking than `std::sync::RwLock`.
 
 This dual-structure approach provides a balanced performance profile:
-
-*   **Score & Member Lookup**: O(1) on average, thanks to `DashMap`.
-*   **Rank Lookup**: O(log N), by performing a binary search on the `SortedVec`.
-*   **Add/Remove Operations**: O(sqrt(N)), dominated by the `SortedVec`'s insertion/deletion time.
-*   **Range Queries**: O(K) where K is the size of the range, as it involves iterating over a slice of the `SortedVec`.
+*   **Score & Member Lookup**: O(1) on average.
+*   **Rank Lookup**: O(log N).
+*   **Add/Remove Operations**: O(N). This complexity is a result of O(log N) for the search plus O(N) for shifting elements in the sorted vector. This is different from the O(log N) complexity of implementations based on skip lists (like Redis's) or balanced trees.
+*   **Range Queries**: O(log N + K), where K is the size of the range.
 
 ### Usage
 
-Here are some basic usage examples:
+Here are some examples based on the integration tests:
 
-**Adding members and getting cardinality:**
-
+**1. Basic Operations (Add, Remove, Cardinality)**
 ```rust
 use zset::{Api, Zset};
 
 let zset = Zset::<&str, i32>::new();
-// Add a new member, returns false as it's a new element
+// Add a new member. Returns `false` as it's a new element.
 assert!(!zset.add("one", 1));
 assert_eq!(zset.card(), 1);
 
-// Add another new member
+// Add another new member.
 assert!(!zset.add("two", 2));
 assert_eq!(zset.card(), 2);
 
-// Update the score of an existing member, returns true
+// Update the score of an existing member. Returns `true`.
 assert!(zset.add("one", 10));
 assert_eq!(zset.card(), 2);
+
+// Remove a member.
+assert!(zset.remove(&"one"));
+assert_eq!(zset.card(), 1);
 ```
 
-**Querying score and rank:**
-
+**2. Querying Score and Rank**
+The rank is 0-based, with the lowest score having rank 0.
 ```rust
 use zset::{Api, Zset};
 
@@ -83,13 +87,62 @@ zset.add("one", 10);
 zset.add("two", 20);
 zset.add("three", 30);
 
-// Get the score of a member
+// Get the score of a member.
 assert_eq!(zset.score(&"two"), Some(20));
 
-// Get the 0-based rank of a member (sorted from low to high score)
+// Get the 0-based rank of a member.
 assert_eq!(zset.rank(&"one"), Some(0));
 assert_eq!(zset.rank(&"two"), Some(1));
 assert_eq!(zset.rank(&"three"), Some(2));
+```
+
+**3. Working with Ranges**
+You can retrieve ranges of members, with or without their scores.
+```rust
+use zset::{Api, Zset};
+
+let zset = Zset::new();
+zset.add("a", 1);
+zset.add("b", 2);
+zset.add("c", 3);
+zset.add("d", 4);
+zset.add("e", 5);
+
+// Get members in rank range 0..3
+let r: Vec<&str> = zset.range(0..3).iter().map(|v| **v).collect();
+assert_eq!(r, vec!["a", "b", "c"]);
+
+// Get members and scores in rank range 1..3
+let r_with_scores: Vec<(&str, i32)> = zset
+    .range_with_scores(1..3)
+    .iter()
+    .map(|(m, s)| (**m, *s))
+    .collect();
+assert_eq!(r_with_scores, vec![("b", 2), ("c", 3)]);
+```
+
+**4. Set Operations (Union & Intersection)**
+The library supports `|` (union) and `&` (intersection) operators. When members conflict, scores are summed.
+```rust
+use zset::{Api, Zset};
+
+let zset1 = Zset::new();
+zset1.add("a".to_string(), 1);
+zset1.add("b".to_string(), 2);
+
+let zset2 = Zset::new();
+zset2.add("b".to_string(), 3);
+zset2.add("c".to_string(), 4);
+
+// Union: combines members, sums scores for common members.
+let zset_union = &zset1 | &zset2;
+assert_eq!(zset_union.card(), 3);
+assert_eq!(zset_union.score(&"b".to_string()), Some(5)); // 2 + 3
+
+// Intersection: keeps only common members, sums their scores.
+let zset_intersection = &zset1 & &zset2;
+assert_eq!(zset_intersection.card(), 1);
+assert_eq!(zset_intersection.score(&"b".to_string()), Some(5));
 ```
 
 ### File Structure
@@ -99,18 +152,18 @@ assert_eq!(zset.rank(&"three"), Some(2));
 ├── Cargo.toml       # Package manifest
 ├── README.mdt       # Readme template file
 ├── src
-│   ├── lib.rs         # Main library file, defines the Api trait
+│   ├── lib.rs         # Main library file, defines the Api trait and Zset struct
 │   ├── score_member.rs # Defines the internal ScoreMember struct
-│   └── zset_impl.rs   # The core implementation of the Zset
+│   └── zset_impl.rs   # The core implementation of the Zset logic
 └── tests
     └── main.rs        # Integration tests
 ```
 
-### A Little Story
+### A Little Story: The Power of Hybrid Data Structures
 
-The concept of the sorted set was popularized by Redis, an in-memory data structure store created by Salvatore Sanfilippo. The story goes that Salvatore, nicknamed "antirez," needed a fast way to handle real-time analytics for a web startup. He found that existing databases were too slow for the kind of operations he needed, like finding the top N items in a list that was constantly changing. This led him to create Redis and, within it, the versatile `zset` data structure.
+The concept of the sorted set was popularized by Redis, an in-memory data structure store created by Salvatore Sanfilippo (antirez). The story goes that Salvatore needed a faster way to handle real-time analytics for a web startup. Existing databases were too slow for operations like finding the top N items in a list that was constantly changing. This led him to create Redis and, within it, the versatile `zset`.
 
-The beauty of the `zset` lies in its dual nature. In Redis, it's implemented using a combination of a hash table and a skip list. The hash table provides fast access to scores, while the skip list keeps the members sorted. This allows Redis to perform complex operations like range queries by score or rank with remarkable speed. Our Rust `zset` follows this inspiration, using modern, concurrent Rust data structures to achieve a similar blend of performance and functionality, making it a powerful tool for building responsive, data-intensive applications.
+The brilliance of the `zset` lies in its hybrid nature. In Redis, it's implemented using a hash table and a skip list. The hash table provides O(1) access to scores, while the skip list keeps the members sorted, allowing for fast range queries. This combination solves a fundamental trade-off in computer science: fast lookups vs. maintaining order. Our Rust `zset` follows this same philosophy, pairing a modern concurrent hash map (`DashMap`) with a sorted vector structure (`SortedVec`) to achieve a similar blend of high performance and powerful functionality, making it a potent tool for building responsive, data-intensive applications in Rust.
 
 ---
 
@@ -118,64 +171,76 @@ The beauty of the `zset` lies in its dual nature. In Redis, it's implemented usi
 
 * [概览](#概览)
 * [特性](#特性)
-* [设计与技术栈](#设计与技术栈)
+* [何时使用 `zset`？](#何时使用-zset)
+* [设计与技术栈](#设计与技术栈-1)
 * [使用示例](#使用示例)
 * [文件结构](#文件结构-1)
-* [一个小故事](#一个小故事)
+* [一个小故事：混合数据结构的力量](#一个小故事混合数据结构的力量)
 
 ### 概览
 
-排序集（Sorted Set）是一种混合数据结构，它结合了哈希映射和有序列表的特性。它将成员映射到分数，确保每个成员的唯一性，同时根据分数维护成员的有序排列。这使得它成为需要快速查找（按成员）和有序遍历（按分数）的应用的理想选择，例如排行榜、实时分析和优先级队列。
+`zset` 是一个为 Rust 设计的高性能、线程安全的排序集数据结构，其灵感来源于 Redis 中广受欢迎的 `ZSET`。它结合了哈希映射和有序列表的特性，将唯一的成员映射到分数，同时根据这些分数维护一个有序的排列。
 
-本 `zset` 库提供了一个通用的、线程安全的实现，可用于任何满足所需 trait 的成员和分数数据类型。
+这使得它成为需要 O(1) 成员快速查找和高效有序遍历的应用的理想选择，例如排行榜、实时分析和优先级队列。此实现是通用的，可用于任何满足所需 trait 的成员和分数数据类型。
 
 ### 特性
 
-*   **线程安全**：专为多线程并发使用而设计，竞争开销极小。
-*   **高性能**：利用高效的数据结构提供快速的操作。
-*   **通用性**：适用于任何实现了 `Ord`、`Hash`、`Send`、`Sync` 等 trait 的成员和分数类型。
-*   **丰富的 API**：提供全面的操作集，包括添加、删除、查询分数和排名以及检索范围。
+*   **线程安全**：专为高并发场景设计，使用细粒度锁来最小化竞争。
+*   **高性能**：利用 `DashMap` 实现 O(1) 的成员查找，以及 `SortedVec` 实现高效的 O(log N) 排名查询。
+*   **通用性**：适用于任何实现了 `Ord`、`Hash`、`Send`、`Sync` 等必要 trait 的成员和分数类型。
+*   **丰富的 API**：提供全面的操作集，包括添加、删除、查询分数和排名、检索范围以及执行并集和交集等集合操作。
+
+### 何时使用 `zset`？
+
+`zset` 在需要维护唯一项的有序集合，并频繁按分数或排名进行查询的场景中特别有用。
+
+*   **排行榜**：轻松管理玩家分数并检索最高排名。
+*   **实时分析**：按时间戳或优先级跟踪和排序事件，例如显示最近的独立访客。
+*   **速率限制**：在滑动窗口中跟踪请求时间戳以实施速率限制。
+*   **优先级队列**：实现作业调度器，其中作业按分数确定优先级，并且可以动态添加或删除。
 
 ### 设计与技术栈
 
-`zset` 的设计围绕两个核心数据结构，以实现快速查找和高效排序：
+`zset` 的设计围绕一种混合方法，使用两个核心数据结构来实现快速查找和高效排序：
 
-1.  **`DashMap<Arc<M>, S>`**：一个并发哈希映射，用于以 O(1) 的平均时间复杂度查找成员的分数。选择 `DashMap` 是因为它在高度竞争的多线程环境中表现出色。它在内部分片，允许不同线程并发访问不同分片而不会相互阻塞。
+1.  **`DashMap<Arc<M>, S>`**：一个并发哈希映射，为查找成员分数提供 O(1) 的平均时间复杂度。选择 `DashMap` 是因为它在高度竞争的多线程环境中表现出色，它在内部分片以允许并发访问。`Arc<M>` 用于在映射和排序列表之间共享成员，而无需复制数据。
 
-2.  **`RwLock<SortedVec<ScoreMember<M, S>>>`**：一个由 `RwLock` 保护的 `SortedVec`，用于维护成员的有序排列。`SortedVec` 是一个基于向量的数据结构，它使其元素保持排序，通过 O(sqrt(N)) 复杂度的插入/删除操作，在快速随机访问和高效修改之间取得了平衡。`RwLock` 允许多个线程并发读取排序后的数据，同时确保写操作的独占访问。
+2.  **`parking_lot::RwLock<SortedVec<ScoreMember<M, S>>>`**：一个由 `parking_lot::RwLock` 保护的 `SortedVec`。`SortedVec` 是一个基于向量的数据结构，它使其元素保持排序，提供 O(log N) 的搜索和 O(N) 的插入/删除。`parking_lot::RwLock` 因其高性能而被使用，尤其是在有许多读者的场景中，它提供了比 `std::sync::RwLock` 更快、更轻量级的锁定。
 
 这种双重结构的方法提供了均衡的性能特征：
-
-*   **分数和成员查找**：平均 O(1)，得益于 `DashMap`。
-*   **排名查找**：O(log N)，通过在 `SortedVec` 上执行二分搜索实现。
-*   **添加/删除操作**：O(sqrt(N))，主要开销在于 `SortedVec` 的插入/删除时间。
-*   **范围查询**：O(K)，其中 K 是范围的大小，因为它涉及遍历 `SortedVec` 的一个切片。
+*   **分数和成员查找**：平均 O(1)。
+*   **排名查找**：O(log N)。
+*   **添加/删除操作**：O(N)。该复杂度源于 O(log N) 的搜索加上 O(N) 的元素移动。需要注意的是，这与基于跳表（如 Redis）或平衡树的实现的 O(log N) 复杂度不同。
+*   **范围查询**：O(log N + K)，其中 K 是范围的大小。
 
 ### 使用示例
 
-以下是一些基本的使用示例：
+以下是一些基于集成测试的示例：
 
-**添加成员和获取基数：**
-
+**1. 基本操作（添加、删除、基数）**
 ```rust
 use zset::{Api, Zset};
 
 let zset = Zset::<&str, i32>::new();
-// 添加一个新成员，返回 false 因为它是一个新元素
+// 添加一个新成员。返回 `false` 因为它是一个新元素。
 assert!(!zset.add("one", 1));
 assert_eq!(zset.card(), 1);
 
-// 添加另一个新成员
+// 添加另一个新成员。
 assert!(!zset.add("two", 2));
 assert_eq!(zset.card(), 2);
 
-// 更新一个已存在成员的分数，返回 true
+// 更新一个已存在成员的分数。返回 `true`。
 assert!(zset.add("one", 10));
 assert_eq!(zset.card(), 2);
+
+// 删除一个成员。
+assert!(zset.remove(&"one"));
+assert_eq!(zset.card(), 1);
 ```
 
-**查询分数和排名：**
-
+**2. 查询分数和排名**
+排名是 0-based 的，分数最低的成员排名为 0。
 ```rust
 use zset::{Api, Zset};
 
@@ -184,13 +249,62 @@ zset.add("one", 10);
 zset.add("two", 20);
 zset.add("three", 30);
 
-// 获取成员的分数
+// 获取成员的分数。
 assert_eq!(zset.score(&"two"), Some(20));
 
-// 获取成员的排名（0-based），按分数从低到高排序
+// 获取成员的 0-based 排名。
 assert_eq!(zset.rank(&"one"), Some(0));
 assert_eq!(zset.rank(&"two"), Some(1));
 assert_eq!(zset.rank(&"three"), Some(2));
+```
+
+**3. 处理范围**
+您可以检索成员的范围，无论是否带有分数。
+```rust
+use zset::{Api, Zset};
+
+let zset = Zset::new();
+zset.add("a", 1);
+zset.add("b", 2);
+zset.add("c", 3);
+zset.add("d", 4);
+zset.add("e", 5);
+
+// 获取排名范围 0..3 内的成员
+let r: Vec<&str> = zset.range(0..3).iter().map(|v| **v).collect();
+assert_eq!(r, vec!["a", "b", "c"]);
+
+// 获取排名范围 1..3 内的成员及其分数
+let r_with_scores: Vec<(&str, i32)> = zset
+    .range_with_scores(1..3)
+    .iter()
+    .map(|(m, s)| (**m, *s))
+    .collect();
+assert_eq!(r_with_scores, vec![("b", 2), ("c", 3)]);
+```
+
+**4. 集合操作（并集与交集）**
+该库支持 `|` (并集) 和 `&` (交集) 操作符。当成员冲突时，分数会相加。
+```rust
+use zset::{Api, Zset};
+
+let zset1 = Zset::new();
+zset1.add("a".to_string(), 1);
+zset1.add("b".to_string(), 2);
+
+let zset2 = Zset::new();
+zset2.add("b".to_string(), 3);
+zset2.add("c".to_string(), 4);
+
+// 并集：合并成员，对共同成员的分数求和。
+let zset_union = &zset1 | &zset2;
+assert_eq!(zset_union.card(), 3);
+assert_eq!(zset_union.score(&"b".to_string()), Some(5)); // 2 + 3
+
+// 交集：仅保留共同成员，并对它们的分数求和。
+let zset_intersection = &zset1 & &zset2;
+assert_eq!(zset_intersection.card(), 1);
+assert_eq!(zset_intersection.score(&"b".to_string()), Some(5));
 ```
 
 ### 文件结构
@@ -200,18 +314,18 @@ assert_eq!(zset.rank(&"three"), Some(2));
 ├── Cargo.toml       # 包清单文件
 ├── README.mdt       # Readme 模板文件
 ├── src
-│   ├── lib.rs         # 主库文件，定义了 Api trait
+│   ├── lib.rs         # 主库文件，定义了 Api trait 和 Zset 结构体
 │   ├── score_member.rs # 定义了内部的 ScoreMember 结构体
-│   └── zset_impl.rs   # Zset 的核心实现
+│   └── zset_impl.rs   # Zset 逻辑的核心实现
 └── tests
     └── main.rs        # 集成测试
 ```
 
-### 一个小故事
+### 一个小故事：混合数据结构的力量
 
-排序集（Sorted Set）的概念由内存数据结构存储 Redis 的创始人 Salvatore Sanfilippo 推广开来。据说，Salvatore（昵称 "antirez"）当时需要一种快速的方法来为一家网络创业公司处理实时分析。他发现现有的数据库对于他需要的操作来说太慢了，比如在一个不断变化的列表中查找前 N 个项目。这促使他创建了 Redis，并在其中设计了功能多样的 `zset` 数据结构。
+排序集（Sorted Set）的概念由内存数据结构存储 Redis 的创始人 Salvatore Sanfilippo (antirez) 推广开来。据说，Salvatore 当时需要一种更快的方法来为一家网络创业公司处理实时分析。他发现现有的数据库对于他需要的操作来说太慢了，比如在一个不断变化的列表中查找前 N 个项目。这促使他创建了 Redis，并在其中设计了功能多样的 `zset`。
 
-`zset` 的精妙之处在于其双重性。在 Redis 中，它由哈希表和跳表（Skip List）结合实现。哈希表提供对分数的快速访问，而跳表则保持成员的有序性。这使得 Redis 能够以惊人的速度执行复杂的操作，如按分数或排名进行范围查询。我们的 Rust `zset` 遵循了这一灵感，使用现代的、并发的 Rust 数据结构来实现类似的性能和功能融合，使其成为构建响应迅速、数据密集型应用的强大工具。
+`zset` 的精妙之处在于其混合性质。在 Redis 中，它由哈希表和跳表（Skip List）结合实现。哈希表提供 O(1) 的分数访问，而跳表则保持成员的有序性，从而实现快速的范围查询。这种组合解决了计算机科学中的一个基本权衡：快速查找与维护顺序。我们的 Rust `zset` 遵循同样的理念，将现代的并发哈希映射（`DashMap`）与排序向量结构（`SortedVec`）配对，以实现高性能和强大功能的类似融合，使其成为在 Rust 中构建响应迅速、数据密集型应用的有力工具。
 
 ## About
 

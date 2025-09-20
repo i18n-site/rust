@@ -92,8 +92,8 @@ where
   /// 如果成员已存在，则更新其分数。
   ///
   /// # Time Complexity 时间复杂度
-  /// - O(N) where N is the number of elements. This is because after finding the position in O(log N), it may take O(N) to shift elements for insertion.
-  /// - O(N)，其中 N 是元素的数量。这是因为在 O(log N) 时间内找到位置后，可能需要 O(N) 的时间来移动元素以进行插入。
+  /// - The complexity is O(log N) for the search and O(N) for the element shifting, resulting in a total of O(N).
+  /// - 搜索的时间复杂度为 O(log N)，元素移动的时间复杂度为 O(N)，因此总时间复杂度为 O(N)。
   fn add(&self, member: M, score: S) -> bool {
     let member_arc = Arc::new(member);
     match self.map.entry(member_arc) {
@@ -130,8 +130,8 @@ where
 
   /// Removes a member.
   /// # Time Complexity 时间复杂度
-  /// - O(N) where N is the number of elements. This is because after finding the element, it may take O(N) to shift elements to fill the gap.
-  /// - O(N)，其中 N 是集合中的元素数量。这是因为找到元素后，可能需要 O(N) 的时间来移动元素以填补空缺。
+  /// - The complexity is O(log N) for the search and O(N) for the element shifting, resulting in a total of O(N).
+  /// - 搜索的时间复杂度为 O(log N)，元素移动的时间复杂度为 O(N)，因此总时间复杂度为 O(N)。
   fn remove(&self, member: &M) -> bool {
     if let Some((member, score)) = self.map.remove(member) {
       self.vec.write().remove_item(&ScoreMember { score, member });

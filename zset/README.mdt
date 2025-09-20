@@ -43,12 +43,12 @@ The design of `zset` revolves around a hybrid approach, using two core data stru
 
 1.  **`DashMap<Arc<M>, S>`**: A concurrent hash map that provides O(1) average-time complexity for looking up a member's score. `DashMap` is chosen for its excellent performance in highly contended, multi-threaded environments, as it shards the map internally to allow concurrent access. `Arc<M>` is used to allow members to be shared between the map and the sorted list without duplicating the data.
 
-2.  **`parking_lot::RwLock<SortedVec<ScoreMember<M, S>>>`**: A `SortedVec` protected by a `parking_lot::RwLock`. `SortedVec` is a vector-based data structure that keeps its elements sorted, offering O(log N) searches and O(sqrt(N)) insertions/deletions. The `parking_lot::RwLock` is used for its high performance, especially in scenarios with many readers, providing faster and more lightweight locking than `std::sync::RwLock`.
+2.  **`parking_lot::RwLock<SortedVec<ScoreMember<M, S>>>`**: A `SortedVec` protected by a `parking_lot::RwLock`. `SortedVec` is a vector-based data structure that keeps its elements sorted, offering O(log N) searches and O(N) insertions/deletions. The `parking_lot::RwLock` is used for its high performance, especially in scenarios with many readers, providing faster and more lightweight locking than `std::sync::RwLock`.
 
 This dual-structure approach provides a balanced performance profile:
 *   **Score & Member Lookup**: O(1) on average.
 *   **Rank Lookup**: O(log N).
-*   **Add/Remove Operations**: O(sqrt(N)). This complexity is determined by the underlying `sorted-vec` data structure. It's worth noting that this is different from the O(log N) complexity of implementations based on skip lists (like Redis's) or balanced trees.
+*   **Add/Remove Operations**: O(N). This complexity is a result of O(log N) for the search plus O(N) for shifting elements in the sorted vector. This is different from the O(log N) complexity of implementations based on skip lists (like Redis's) or balanced trees.
 *   **Range Queries**: O(log N + K), where K is the size of the range.
 
 ### Usage
@@ -205,12 +205,12 @@ The brilliance of the `zset` lies in its hybrid nature. In Redis, it's implement
 
 1.  **`DashMap<Arc<M>, S>`**：一个并发哈希映射，为查找成员分数提供 O(1) 的平均时间复杂度。选择 `DashMap` 是因为它在高度竞争的多线程环境中表现出色，它在内部分片以允许并发访问。`Arc<M>` 用于在映射和排序列表之间共享成员，而无需复制数据。
 
-2.  **`parking_lot::RwLock<SortedVec<ScoreMember<M, S>>>`**：一个由 `parking_lot::RwLock` 保护的 `SortedVec`。`SortedVec` 是一个基于向量的数据结构，它使其元素保持排序，提供 O(log N) 的搜索和 O(sqrt(N)) 的插入/删除。`parking_lot::RwLock` 因其高性能而被使用，尤其是在有许多读者的场景中，它提供了比 `std::sync::RwLock` 更快、更轻量级的锁定。
+2.  **`parking_lot::RwLock<SortedVec<ScoreMember<M, S>>>`**：一个由 `parking_lot::RwLock` 保护的 `SortedVec`。`SortedVec` 是一个基于向量的数据结构，它使其元素保持排序，提供 O(log N) 的搜索和 O(N) 的插入/删除。`parking_lot::RwLock` 因其高性能而被使用，尤其是在有许多读者的场景中，它提供了比 `std::sync::RwLock` 更快、更轻量级的锁定。
 
 这种双重结构的方法提供了均衡的性能特征：
 *   **分数和成员查找**：平均 O(1)。
 *   **排名查找**：O(log N)。
-*   **添加/删除操作**：O(sqrt(N))。该复杂度由底层的 `sorted-vec` 数据结构决定。需要注意的是，这与基于跳表（如 Redis）或平衡树的实现的 O(log N) 复杂度不同。
+*   **添加/删除操作**：O(N)。该复杂度源于 O(log N) 的搜索加上 O(N) 的元素移动。需要注意的是，这与基于跳表（如 Redis）或平衡树的实现的 O(log N) 复杂度不同。
 *   **范围查询**：O(log N + K)，其中 K 是范围的大小。
 
 ### 使用示例
