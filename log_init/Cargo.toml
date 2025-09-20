@@ -1,0 +1,42 @@
+[package]
+name = "log_init"
+version = "0.1.25"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/log_init"
+description = "log_init"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ "stdout" ]
+stdout = [ ]
+
+[dependencies]
+anyhow = "1.0.100"
+coarsetime = "0.1.36"
+colored = "3.0.0"
+dirs = "6.0.0"
+jiff = "0.2.15"
+log = "0.4.28"
+logforth = "0.27.0"
+static_init = "1.0.4"
+workspace_root = "0.2.0"
+
+[dependencies.path_end]
+version = "0.1.1"
+path = "../path_end"
+
+[dev-dependencies]
+aok = "0.1.17"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.47.1"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

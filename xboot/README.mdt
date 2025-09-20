@@ -1,0 +1,37 @@
+# xboot
+
+## English Readme
+
+With the help of [linkme](https://github.com/dtolnay/linkme), call an asynchronous function to initialize static variables.
+
+You can connect to the database before the program starts and set it as a module-level variable, refer to [xkv: redis global connector](https://crates.io/crates/xkv).
+
+linkme will report an error when linking with `rust-lld` on Linux [Missing symbol on Linux](https://github.com/dtolnay/linkme/issues/107).
+
+Please use [mold](https://github.com/rui314/mold) instead, and configure the environment variables as follows:
+
+```
+export RUSTFLAGS="$RUSTFLAGS -C linker=clang -C link-arg=-fuse-ld=/usr/bin/mold"
+```
+
+## 中文说明
+
+借助 [linkme](https://github.com/dtolnay/linkme)，调用异步函数初始化静态变量。
+
+可在程序启动之前连上数据库，并设置为一个模块级别的变量，参考  [xkv: redis 全局连接器](https://crates.io/crates/xkv) 。
+
+linkme 在 Linux 上用 `rust-lld` 链接会报错 [Missing symbol on Linux](https://github.com/dtolnay/linkme/issues/107)
+
+请改用 [mold](https://github.com/rui314/mold) ，配置环境变量如下:
+
+```
+export RUSTFLAGS="$RUSTFLAGS -C linker=clang -C link-arg=-fuse-ld=/usr/bin/mold"
+```
+
+## 演示代码
+
+```rust
+<+ ./demo/src/main.rs>
+```
+
+<+ ../about.md >
