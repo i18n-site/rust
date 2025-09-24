@@ -1,0 +1,9 @@
+# bce
+
+bincode encode
+
+```rust
+<+ ./tests/main.rs>
+```
+
+<+ ../about.md >

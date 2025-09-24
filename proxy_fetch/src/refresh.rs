@@ -1,0 +1,57 @@
+use std::{sync::Arc, time::Duration};
+
+use base64::{Engine as _, engine::general_purpose::STANDARD};
+use futures::future;
+use log::{info, warn};
+use reqwest::Url;
+use url_fmt::url_fmt;
+use zset::{Api, Zset};
+
+use crate::{error::Result, proxy::Proxy};
+
+pub async fn refresh(
+  subscription_url: Url,
+  proxy_zset: Arc<Zset<String, Proxy, i64>>,
+) -> Result<()> {
+  let client = reqwest::Client::builder()
+    .redirect(reqwest::redirect::Policy::limited(10))
+    .danger_accept_invalid_certs(true)
+    .build()?;
+  if let Ok(resp) = xerr::ok!(client.get(subscription_url).send().await) {
+    if let Ok(body) = resp.text().await {
+      let decoded = STANDARD.decode(body)?;
+      let decoded = String::from_utf8_lossy(&decoded);
+      for ss_url in decoded.lines() {
+        let name = url_fmt(ss_url);
+        if !proxy_zset.contains(&name) {
+          if let Ok(proxy) = Proxy::new(&name, ss_url) {
+            info!("+ {}", name);
+            proxy_zset.add(proxy, 0);
+          }
+        }
+      }
+    }
+  }
+  Ok(())
+}
+
+pub async fn refresh_li(
+  subscription_ss_li: &[Url],
+  proxy_zset: Arc<Zset<String, Proxy, i64>>,
+) -> Result<()> {
+  loop {
+    future::join_all(subscription_ss_li.iter().map(|url| {
+      let proxy_zset = Arc::clone(&proxy_zset);
+      async move { xerr::log!(refresh(url.clone(), proxy_zset).await) }
+    }))
+    .await;
+
+    if proxy_zset.is_empty() {
+      warn!("ss subscription is empty");
+      tokio::time::sleep(Duration::from_secs(1)).await;
+    } else {
+      break;
+    }
+  }
+  Ok(())
+}

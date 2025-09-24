@@ -1,0 +1,9 @@
+# tran_fmt
+
+抽取需要翻译的非空行
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >
