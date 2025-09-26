@@ -118,7 +118,11 @@ impl Fetch {
               } else {
                 let total_cost = TOTAL_COST.fetch_add(cost, Ordering::Relaxed);
                 let total_req = TOTAL_REQ.fetch_add(1, Ordering::Relaxed);
-                let avg_cost = (total_cost / max(total_req, 1)) as i64;
+                if total_req > u64::MAX / 2 {
+                  TOTAL_COST.store(total_cost / 2, Ordering::Relaxed);
+                  TOTAL_REQ.store(total_req / 2, Ordering::Relaxed);
+                }
+                let avg_cost = (total_cost / total_req) as i64;
                 let cost = cost as i64;
                 let 超时 = cost - 1 - avg_cost;
                 // 加分就是降权
