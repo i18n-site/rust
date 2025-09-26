@@ -1,6 +1,6 @@
 use std::{sync::Arc, time::Duration};
 
-use base64::{Engine as _, engine::general_purpose::STANDARD};
+use base64::{engine::general_purpose::STANDARD, Engine as _};
 use futures::future;
 use log::{info, warn};
 use reqwest::Url;
@@ -17,19 +17,25 @@ pub async fn refresh(
     .redirect(reqwest::redirect::Policy::limited(10))
     .danger_accept_invalid_certs(true)
     .build()?;
-  if let Ok(resp) = xerr::ok!(client.get(subscription_url).send().await) {
-    if let Ok(body) = resp.text().await {
-      let decoded = STANDARD.decode(body)?;
-      let decoded = String::from_utf8_lossy(&decoded);
-      for ss_url in decoded.lines() {
-        let name = url_fmt(ss_url);
-        if !proxy_zset.contains(&name) {
-          if let Ok(proxy) = Proxy::new(&name, ss_url) {
-            info!("+ {}", name);
-            proxy_zset.add(proxy, 0);
+
+  match client.get(subscription_url.clone()).send().await {
+    Ok(resp) => {
+      if let Ok(body) = resp.text().await {
+        let decoded = STANDARD.decode(body)?;
+        let decoded = String::from_utf8_lossy(&decoded);
+        for ss_url in decoded.lines() {
+          let name = url_fmt(ss_url);
+          if !proxy_zset.contains(&name) {
+            if let Ok(proxy) = Proxy::new(&name, ss_url) {
+              info!("+ {}", name);
+              proxy_zset.add(proxy, 0);
+            }
           }
         }
       }
+    }
+    Err(err) => {
+      warn!("{subscription_url} : {}", err);
     }
   }
   Ok(())

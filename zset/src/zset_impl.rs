@@ -102,28 +102,27 @@ where
     let member = member.into();
     let key: &Self::K = (*member).borrow();
     let key = key.clone();
-    if let Some(mut item) = self.map.get_mut(&key) {
-      if item.score == score {
-        return false; // Score is the same, no update needed
+    let mut list = self.list.write();
+    {
+      if let Some(mut item) = self.map.get_mut(&key) {
+        if item.score == score {
+          return false; // Score is the same, no update needed
+        }
+        // O(log N) removal
+        list.remove(&*item);
+        // Now update the score in the map and insert the new ScoreMember
+        item.score = score.clone();
+        let new_item = item.clone();
+        // O(log N) insertion
+        list.insert(new_item);
+        return true;
       }
-      let mut list = self.list.write();
-      // O(log N) removal
-      list.remove(&*item);
-
-      // Now update the score in the map and insert the new ScoreMember
-      item.score = score.clone();
-      let new_item = item.clone();
-      // O(log N) insertion
-      list.insert(new_item);
-      true
-    } else {
-      let sm = ScoreMember { score, member };
-      self.map.insert(key.clone(), sm.clone());
-      let mut list = self.list.write();
-      // O(log N) insertion
-      list.insert(sm);
-      false
     }
+    let sm = ScoreMember { score, member };
+    self.map.insert(key.clone(), sm.clone());
+    // O(log N) insertion
+    list.insert(sm);
+    false
   }
 
   /// Removes a member.

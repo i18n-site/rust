@@ -1,11 +1,11 @@
 use std::{cmp::max, fmt, sync::Arc, time::Duration};
 
-use reqwest::{Body, IntoUrl, Method, StatusCode, header::HeaderMap};
+use reqwest::{header::HeaderMap, Body, IntoUrl, Method, StatusCode};
 use reqwest_client::CLIENT;
 use tokio::{task::JoinHandle, time::sleep};
 use zset::{Api, Zset};
 
-use crate::{Response, Result, proxy::Proxy};
+use crate::{proxy::Proxy, Response, Result};
 
 pub struct Fetch {
   pub proxy_zset: Arc<Zset<String, Proxy, i64>>,
@@ -28,7 +28,11 @@ impl fmt::Debug for Fetch {
 }
 
 pub fn score_err(score: i64) -> i64 {
-  if score < 0 { score / 2 } else { score + 1 }
+  if score < 0 {
+    score / 2
+  } else {
+    score + 1
+  }
 }
 
 impl Fetch {
