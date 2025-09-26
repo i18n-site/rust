@@ -1,4 +1,12 @@
-use std::{cmp::max, fmt, sync::Arc, time::Duration};
+use std::{
+  cmp::max,
+  fmt,
+  sync::{
+    atomic::{AtomicU64, Ordering},
+    Arc,
+  },
+  time::{Duration, Instant},
+};
 
 use reqwest::{header::HeaderMap, Body, IntoUrl, Method, StatusCode};
 use reqwest_client::CLIENT;
@@ -31,9 +39,12 @@ pub fn score_err(score: i64) -> i64 {
   if score < 0 {
     score / 2
   } else {
-    score + 1
+    score + 600
   }
 }
+
+pub static TOTAL_COST: AtomicU64 = AtomicU64::new(0);
+pub static TOTAL_REQ: AtomicU64 = AtomicU64::new(0);
 
 impl Fetch {
   pub fn next(&self) -> Option<(Arc<Proxy>, i64)> {
@@ -87,6 +98,7 @@ impl Fetch {
     }
 
     if let Some((proxy, mut score)) = self.rand().await {
+      let start = Instant::now();
       match proxy!(&proxy) {
         Err(err) => {
           score = score_err(score);
@@ -96,13 +108,21 @@ impl Fetch {
         }
         Ok(response) => {
           let status = response.status;
-          println!("{status} score {} {}", -score, &proxy.name);
+
           'out: {
             if matches!(status, StatusCode::OK) {
+              let cost = start.elapsed().as_secs();
+              println!("{status} score {} cost {cost}s {}", -score, &proxy.name);
               if score > 0 {
                 score /= 2;
               } else {
-                score -= 1;
+                let total_cost = TOTAL_COST.fetch_add(cost, Ordering::Relaxed);
+                let total_req = TOTAL_REQ.fetch_add(1, Ordering::Relaxed);
+                let avg_cost = (total_cost / max(total_req, 1)) as i64;
+                let cost = cost as i64;
+                let 超时 = cost - 1 - avg_cost;
+                // 加分就是降权
+                score += 超时;
               }
             } else if matches!(response.status, StatusCode::NOT_FOUND) {
               break 'out;

@@ -1,7 +1,6 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-
 use aok::{OK, Void};
 use clap_args::arg;
 use proxy_fetch::load;
