@@ -18,24 +18,18 @@ pub async fn refresh(
     .danger_accept_invalid_certs(true)
     .build()?;
 
-  match client.get(subscription_url.clone()).send().await {
-    Ok(resp) => {
-      if let Ok(body) = resp.text().await {
-        let decoded = STANDARD.decode(body)?;
-        let decoded = String::from_utf8_lossy(&decoded);
-        for ss_url in decoded.lines() {
-          let name = url_fmt(ss_url);
-          if !proxy_zset.contains(&name) {
-            if let Ok(proxy) = Proxy::new(&name, ss_url) {
-              info!("+ {}", name);
-              proxy_zset.add(proxy, 0);
-            }
-          }
-        }
+  let resp = client.get(subscription_url.clone()).send().await?;
+  let body = resp.text().await?;
+
+  let decoded = STANDARD.decode(body)?;
+  let decoded = String::from_utf8_lossy(&decoded);
+  for ss_url in decoded.lines() {
+    let name = url_fmt(ss_url);
+    if !proxy_zset.contains(&name) {
+      if let Ok(proxy) = Proxy::new(&name, ss_url) {
+        info!("+ {}", name);
+        proxy_zset.add(proxy, 0);
       }
-    }
-    Err(err) => {
-      warn!("{subscription_url} : {}", err);
     }
   }
   Ok(())
