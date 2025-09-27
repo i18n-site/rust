@@ -2,18 +2,18 @@ use std::{
   cmp::max,
   fmt,
   sync::{
-    atomic::{AtomicU64, Ordering},
     Arc,
+    atomic::{AtomicU64, Ordering},
   },
   time::{Duration, Instant},
 };
 
-use reqwest::{header::HeaderMap, Body, IntoUrl, Method, StatusCode};
+use reqwest::{Body, IntoUrl, Method, StatusCode, header::HeaderMap};
 use reqwest_client::CLIENT;
 use tokio::{task::JoinHandle, time::sleep};
 use zset::{Api, Zset};
 
-use crate::{proxy::Proxy, Response, Result};
+use crate::{Response, Result, proxy::Proxy};
 
 pub struct Fetch {
   pub proxy_zset: Arc<Zset<String, Proxy, i64>>,
@@ -36,11 +36,7 @@ impl fmt::Debug for Fetch {
 }
 
 pub fn score_err(score: i64) -> i64 {
-  if score < 0 {
-    score / 2
-  } else {
-    score + 600
-  }
+  if score < 0 { score / 2 } else { score + 600 }
 }
 
 pub static TOTAL_COST: AtomicU64 = AtomicU64::new(0);
@@ -117,7 +113,7 @@ impl Fetch {
                 score /= 2;
               } else {
                 let total_cost = TOTAL_COST.fetch_add(cost, Ordering::Relaxed);
-                let total_req = TOTAL_REQ.fetch_add(1, Ordering::Relaxed);
+                let total_req = TOTAL_REQ.fetch_add(1, Ordering::Relaxed) + 1;
                 if total_req > u64::MAX / 2 {
                   TOTAL_COST.store(total_cost / 2, Ordering::Relaxed);
                   TOTAL_REQ.store(total_req / 2, Ordering::Relaxed);
