@@ -42,7 +42,11 @@ pub async fn refresh_li(
   loop {
     future::join_all(subscription_ss_li.iter().map(|url| {
       let proxy_zset = Arc::clone(&proxy_zset);
-      async move { xerr::log!(refresh(url.clone(), proxy_zset).await) }
+      async move {
+        if let Err(err) = refresh(url.clone(), proxy_zset).await {
+          warn!("refresh {} failed: {}", url, err);
+        }
+      }
     }))
     .await;
 
