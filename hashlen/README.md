@@ -2,7 +2,6 @@
 
 ```rust
 #![cfg_attr(docsrs, feature(doc_cfg))]
-#![feature(doc_cfg)]
 
 pub fn hashlen(input: impl AsRef<[u8]>) -> Vec<u8> {
   let input = input.as_ref();
