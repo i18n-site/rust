@@ -27,7 +27,7 @@ static_init = "1.0.4"
 log = "0.4.28"
 
 [dependencies.reqwest_proxy]
-version = "0.1.6"
+version = "0.1.7"
 path = "../reqwest_proxy"
 features = [ "hysteria2", "shadowsocks" ]
 
