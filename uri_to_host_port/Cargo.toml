@@ -26,4 +26,4 @@ version = "0.1.25"
 
 [dependencies]
 hyper = "1.7.0"
-thiserror = "2.0.16"
+thiserror = "2.0.17"

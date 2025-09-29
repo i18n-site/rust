@@ -20,7 +20,7 @@ yml = [ "dep:saphyr", "dep:lang" ]
 aok = "0.1.17"
 daachorse = "1.0.0"
 static_init = "1.0.4"
-thiserror = "2.0.16"
+thiserror = "2.0.17"
 unicode-segmentation = "1.12.0"
 unicode_categories = "0.1.1"
 

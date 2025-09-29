@@ -30,7 +30,7 @@ base64 = "0.22.1"
 log = "0.4.28"
 mimalloc = "0.1.48"
 static_init = "1.0.4"
-thiserror = "2.0.16"
+thiserror = "2.0.17"
 
 [dependencies.clap_args]
 version = "0.1.7"

@@ -2,7 +2,7 @@
 aok = "0.1.17"
 boa_engine = "0.20.0"
 boa_runtime = "0.20.0"
-thiserror = "2.0.16"
+thiserror = "2.0.17"
 tracing = "0.1.41"
 
 [package]

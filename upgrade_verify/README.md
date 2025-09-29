@@ -1,7 +1,7 @@
 # upgrade_verify
 
 ```rust
-#![feature(doc_auto_cfg)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 #![feature(doc_cfg)]
 
 use std::{

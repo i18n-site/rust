@@ -26,7 +26,7 @@ install_default = [ ]
 aok = "0.1.17"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tokio-postgres = "0.7.13"
+tokio-postgres = "0.7.14"
 tokio-postgres-tls = "0.12.0"
 tracing = "0.1.41"
 

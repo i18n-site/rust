@@ -16,7 +16,7 @@ rustdoc-args = [ "--cfg", "docsrs" ]
 default = [ ]
 
 [dependencies]
-sonic-rs = "0.5.4"
+sonic-rs = "0.5.5"
 
 [dependencies.s_]
 version = "0.1.6"
@@ -31,7 +31,7 @@ version = "0.1.1"
 path = "../api_token"
 
 [dependencies.axum]
-version = "0.8.4"
+version = "0.8.5"
 features = [ "tracing", "macros" ]
 
 [dependencies.hi]

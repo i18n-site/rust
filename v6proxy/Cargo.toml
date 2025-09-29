@@ -19,7 +19,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 aok = "0.1.17"
 genv = { version = "0.1.16", path = "../genv" }
 reqwest = { version = "0.12.23", features = ["zstd"] }
-sonic-rs = "0.5.4"
+sonic-rs = "0.5.5"
 static_init = "1.0.4"
 
 [dev-dependencies]

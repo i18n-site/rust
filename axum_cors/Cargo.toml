@@ -1,6 +1,6 @@
 [dependencies]
 aok = "0.1.17"
-axum = "0.8.4"
+axum = "0.8.5"
 
 [package]
 name = "axum_cors"

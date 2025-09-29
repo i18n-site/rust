@@ -20,14 +20,14 @@ tracing = "0.1.41"
 aok = "0.1.17"
 kanal = "0.1.1"
 defer-lite = "1.0.0"
-sonic-rs = "0.5.4"
+sonic-rs = "0.5.5"
 
 [dependencies.riter]
 version = "0.1.1"
 path = "../riter"
 
 [dependencies.serde]
-version = "1.0.226"
+version = "1.0.228"
 features = [ "derive" ]
 
 [dependencies.ireq]

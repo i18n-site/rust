@@ -22,7 +22,7 @@ version = "0.1.13"
 path = "../pc"
 
 [dependencies.serde]
-version = "1.0.226"
+version = "1.0.228"
 features = ["derive"]
 
 [dependencies.burl]

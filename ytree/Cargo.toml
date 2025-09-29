@@ -63,7 +63,7 @@ features = [ "simd" ]
 optional = true
 
 [dependencies.serde]
-version = "1.0.226"
+version = "1.0.228"
 features = [ "derive" ]
 
 [dependencies.vb]

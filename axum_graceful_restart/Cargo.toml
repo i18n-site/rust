@@ -17,7 +17,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 aok = "0.1.17"
-axum = "0.8.4"
+axum = "0.8.5"
 listeners = "0.3.0"
 nix = { version = "0.30.1", features = ["signal", "process"] }
 socket2 = { version = "0.6.0", features = ["all"] }

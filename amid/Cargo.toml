@@ -9,5 +9,5 @@ description = "amid"
 
 [dependencies]
 anyhow = "1.0.100"
-axum = "0.8.4"
+axum = "0.8.5"
 tracing = "0.1.41"

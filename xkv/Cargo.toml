@@ -17,7 +17,7 @@ macro = ["dep:log", "dep:static_"]
 
 [dependencies]
 aok = "0.1.17"
-linkme = "0.3.33"
+linkme = "0.3.35"
 
 [dependencies.static_]
 version = "0.1.14"

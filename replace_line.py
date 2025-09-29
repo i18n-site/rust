@@ -4,15 +4,12 @@ from os.path import abspath, dirname
 from tzutil.dirreplace import dirreplace
 
 FROM_STRING = """
-tracing = "0.1.41"
-tracing
-loginit
+#![feature(doc_auto_cfg)]
+#![feature(doc_cfg)]
 """
 
 TO_STRING = """
-log = "0.4.27"
-log
-log_init
+#![cfg_attr(docsrs, feature(doc_cfg))]
 """
 
 dirreplace(

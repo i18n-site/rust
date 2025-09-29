@@ -18,7 +18,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 [dependencies]
 anyhow = "1.0.100"
 aok = "0.1.17"
-axum = "0.8.4"
+axum = "0.8.5"
 tracing = "0.1.41"
 
 [dev-dependencies]

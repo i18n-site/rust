@@ -17,7 +17,7 @@ default = [ ]
 
 [dependencies]
 aok = "0.1.17"
-sonic-rs = "0.5.4"
+sonic-rs = "0.5.5"
 static_init = "1.0.4"
 tracing = "0.1.41"
 

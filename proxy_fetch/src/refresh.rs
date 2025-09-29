@@ -18,24 +18,18 @@ pub async fn refresh(
     .danger_accept_invalid_certs(true)
     .build()?;
 
-  match client.get(subscription_url.clone()).send().await {
-    Ok(resp) => {
-      if let Ok(body) = resp.text().await {
-        let decoded = STANDARD.decode(body)?;
-        let decoded = String::from_utf8_lossy(&decoded);
-        for ss_url in decoded.lines() {
-          let name = url_fmt(ss_url);
-          if !proxy_zset.contains(&name) {
-            if let Ok(proxy) = Proxy::new(&name, ss_url) {
-              info!("+ {}", name);
-              proxy_zset.add(proxy, 0);
-            }
-          }
-        }
+  let resp = client.get(subscription_url.clone()).send().await?;
+  let body = resp.text().await?;
+
+  let decoded = STANDARD.decode(body)?;
+  let decoded = String::from_utf8_lossy(&decoded);
+  for ss_url in decoded.lines() {
+    let name = url_fmt(ss_url);
+    if !proxy_zset.contains(&name) {
+      if let Ok(proxy) = Proxy::new(&name, ss_url) {
+        info!("+ {}", name);
+        proxy_zset.add(proxy, 0);
       }
-    }
-    Err(err) => {
-      warn!("{subscription_url} : {}", err);
     }
   }
   Ok(())
@@ -48,7 +42,11 @@ pub async fn refresh_li(
   loop {
     future::join_all(subscription_ss_li.iter().map(|url| {
       let proxy_zset = Arc::clone(&proxy_zset);
-      async move { xerr::log!(refresh(url.clone(), proxy_zset).await) }
+      async move {
+        if let Err(err) = refresh(url.clone(), proxy_zset).await {
+          warn!("refresh {} failed: {}", url, err);
+        }
+      }
     }))
     .await;
 

@@ -15,7 +15,7 @@ global = ["dep:static_init"]
 futures = "0.3.31"
 ring = "0.17.14"
 rustls = "0.23.32"
-tokio-rustls = "0.26.3"
+tokio-rustls = "0.26.4"
 tracing = "0.1.41"
 x509-certificate = "0.25.0"
 

@@ -17,8 +17,8 @@ default = [ ]
 aok = "0.1.17"
 dashmap = "6.1.0"
 futures = "0.3.31"
-serde = "1.0.226"
-sonic-rs = "0.5.4"
+serde = "1.0.228"
+sonic-rs = "0.5.5"
 tracing = "0.1.41"
 
 [dependencies.sver]
