@@ -77,5 +77,5 @@ version = "0.1.16"
 path = "../xerr"
 
 [dependencies.proxy_fetch]
-version = "0.1.12"
+version = "0.1.13"
 path = "../proxy_fetch"
