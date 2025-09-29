@@ -29,7 +29,7 @@ version = "1.0.6"
 features = [ "unescape" ]
 
 [dependencies.lang]
-version = "0.2.25"
+version = "0.2.26"
 optional = true
 
 [dependencies.saphyr]
