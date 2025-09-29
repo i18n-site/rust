@@ -5,15 +5,17 @@ edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/dev/biased"
-description = "A flexible Rust library for generating biased random numbers over a given integer range.\n一个用于在给定整数范围内生成偏向性随机数的灵活 Rust 库。"
-keywords = ["random", "biased", "simulation", "weighted", "rust"]
+description = """
+A flexible Rust library for generating biased random numbers over a given integer range.
+一个用于在给定整数范围内生成偏向性随机数的灵活 Rust 库。"""
+keywords = [ "random", "biased", "simulation", "weighted", "rust" ]
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = ["--cfg", "docsrs"]
+rustdoc-args = [ "--cfg", "docsrs" ]
 
 [features]
-default = []
+default = [ ]
 
 [dev-dependencies]
 anyhow = "1.0.100"
@@ -22,7 +24,7 @@ static_init = "1.0.4"
 
 [dev-dependencies.log_init]
 path = "../log_init"
-version = "0.1.25"
+version = "0.1.26"
 
 [dependencies]
 num-traits = "0.2.19"

@@ -37,7 +37,7 @@ version = "0.1.16"
 
 [dependencies.log_init]
 path = "../log_init"
-version = "0.1.25"
+version = "0.1.26"
 
 [dependencies.reqwest_client]
 version = "0.1.13"
