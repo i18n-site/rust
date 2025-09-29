@@ -1,5 +1,4 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
-#![feature(doc_cfg)]
 
 // 导入必要的 trait 和模块。
 // Import necessary traits and modules.

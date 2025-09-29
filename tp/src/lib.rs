@@ -1,4 +1,3 @@
-#![feature(doc_cfg)]
 
 use roaring::RoaringTreemap;
 

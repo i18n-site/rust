@@ -1,5 +1,4 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
-#![feature(doc_cfg)]
 #![feature(macro_metavar_expr)]
 
 use std::{collections::BTreeMap, env, path::PathBuf, str::FromStr};

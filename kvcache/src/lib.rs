@@ -1,4 +1,3 @@
-#![feature(doc_cfg)]
 #![allow(async_fn_in_trait)]
 
 use fred::{

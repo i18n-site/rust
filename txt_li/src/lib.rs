@@ -1,5 +1,4 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
-#![feature(doc_cfg)]
 
 #[derive(Default, Debug)]
 pub struct TxtLi {

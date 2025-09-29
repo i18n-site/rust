@@ -1,4 +1,3 @@
-#![feature(doc_cfg)]
 
 use xxhash_rust::xxh3::{Xxh3, Xxh3Builder};
 
