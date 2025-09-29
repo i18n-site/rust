@@ -40,7 +40,7 @@ path = "../log_init"
 version = "0.1.25"
 
 [dependencies.reqwest_client]
-version = "0.1.12"
+version = "0.1.13"
 path = "../reqwest_client"
 features = [ "client" ]
 
