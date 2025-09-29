@@ -1,6 +1,6 @@
 [package]
 name = "tran_trait"
-version = "0.3.1"
+version = "0.3.2"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
