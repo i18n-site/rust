@@ -19,7 +19,7 @@ version = "1.47.1"
 features = [ "macros", "rt", "rt-multi-thread", "time" ]
 
 [dependencies.xkv]
-version = "0.1.48"
+version = "0.1.49"
 path = ".."
 features = [ "r" ]
 
