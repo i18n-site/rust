@@ -16,7 +16,7 @@ path = "../trait_len"
 version = "2.11.2"
 
 [dependencies.ifs]
-version = "0.1.46"
+version = "0.1.47"
 path = "../ifs"
 default-features = false
 features = [ "fs" ]

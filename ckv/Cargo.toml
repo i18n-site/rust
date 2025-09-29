@@ -24,7 +24,7 @@ version = "1.106.0"
 features = [ "behavior-version-latest" ]
 
 [dependencies.ifs]
-version = "0.1.46"
+version = "0.1.47"
 path = "../ifs"
 features = [ "fs" ]
 

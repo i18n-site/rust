@@ -11,7 +11,7 @@ description = "scan dir find changed files, ignore files in .gitignore"
 all-features = true
 
 [features]
-default = []
+default = [ ]
 
 [dependencies]
 aok = "0.1.17"
@@ -23,16 +23,16 @@ path = "../pc"
 
 [dependencies.serde]
 version = "1.0.228"
-features = ["derive"]
+features = [ "derive" ]
 
 [dependencies.burl]
 version = "0.1.5"
 path = "../burl"
 
 [dependencies.ifs]
-version = "0.1.46"
+version = "0.1.47"
 path = "../ifs"
-features = ["fs", "unix_path"]
+features = [ "fs", "unix_path" ]
 
 [dependencies.set_mtime]
 version = "0.1.8"
@@ -40,7 +40,7 @@ path = "../set_mtime"
 
 [dependencies.xxhash-rust]
 version = "0.8.15"
-features = ["xxh3"]
+features = [ "xxh3" ]
 
 [dev-dependencies]
 aok = "0.1.17"

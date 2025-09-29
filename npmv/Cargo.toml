@@ -23,7 +23,7 @@ tar = "0.4.44"
 tracing = "0.1.41"
 
 [dependencies.ifs]
-version = "0.1.46"
+version = "0.1.47"
 path = "../ifs"
 features = [ "fs" ]
 optional = true
