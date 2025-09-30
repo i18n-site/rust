@@ -1,6 +1,6 @@
 [package]
 name = "restart_signal"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -10,24 +10,13 @@ keywords = ["signal", "shutdown", "graceful", "termination", "process"]
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = [ "--cfg", "docsrs" ]
+rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
-default = [ ]
+default = []
 
-[dev-dependencies]
-anyhow = "1.0.100"
-log = "0.4.28"
-nix = { version = "0.30.1", features = ["signal"] }
-static_init = "1.0.4"
-tokio = { version = "1.47.1", features = ["time", "macros", "rt-multi-thread"] }
-
-[dev-dependencies.log_init]
-path = "../log_init"
-version = "0.1.26"
 
 [dependencies]
 crossfire = "2.1.3"
-log = "0.4.28"
 signal-hook = "0.3.18"
 xerr = { version = "0.1.16", path = "../xerr" }
