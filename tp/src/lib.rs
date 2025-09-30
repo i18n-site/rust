@@ -1,4 +1,3 @@
-
 use roaring::RoaringTreemap;
 
 #[derive(Debug, Clone, Default)]

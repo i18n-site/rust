@@ -2,18 +2,18 @@ use std::{
   cmp::max,
   fmt,
   sync::{
-    Arc,
     atomic::{AtomicU64, Ordering},
+    Arc,
   },
   time::{Duration, Instant},
 };
 
-use reqwest::{Body, IntoUrl, Method, StatusCode, header::HeaderMap};
+use reqwest::{header::HeaderMap, Body, IntoUrl, Method, StatusCode};
 use reqwest_client::CLIENT;
 use tokio::{task::JoinHandle, time::sleep};
 use zset::{Api, Zset};
 
-use crate::{Response, Result, proxy::Proxy};
+use crate::{proxy::Proxy, Response, Result};
 
 pub struct Fetch {
   pub proxy_zset: Arc<Zset<String, Proxy, i64>>,
@@ -36,7 +36,11 @@ impl fmt::Debug for Fetch {
 }
 
 pub fn score_err(score: i64) -> i64 {
-  if score < 0 { score / 2 } else { score + 600 }
+  if score < 0 {
+    score / 2
+  } else {
+    score + 600
+  }
 }
 
 pub static TOTAL_COST: AtomicU64 = AtomicU64::new(0);

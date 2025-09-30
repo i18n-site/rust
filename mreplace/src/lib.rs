@@ -37,7 +37,6 @@ impl Mreplace {
 pub use const_str;
 
 #[cfg(feature = "macro")]
-#[doc(cfg(feature = "macro"))]
 #[macro_export]
 macro_rules! mreplace {
   ($($var:ident : $($k:ident)+);*) => {

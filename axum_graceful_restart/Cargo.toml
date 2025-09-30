@@ -1,6 +1,6 @@
 [package]
 name = "axum_graceful_restart"
-version = "0.1.2"
+version = "0.1.4"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -18,16 +18,8 @@ default = [ ]
 [dependencies]
 aok = "0.1.17"
 axum = "0.8.5"
-listeners = "0.3.0"
+kill_port = { version = "0.1.2", path = "../kill_port" }
 tracing = "0.1.41"
-
-[dependencies.kill_port]
-version = "0.1.2"
-path = "../kill_port"
-
-[dependencies.nix]
-version = "0.30.1"
-features = [ "signal", "process" ]
 
 [dependencies.socket2]
 version = "0.6.0"

@@ -11,7 +11,7 @@ version = "0.1.17"
 path = "../../aok"
 
 [dependencies.axum_graceful_restart]
-version = "0.1.2"
+version = "0.1.4"
 path = ".."
 
 [dependencies.loginit]

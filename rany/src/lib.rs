@@ -1,4 +1,3 @@
-
 use num_traits::cast::AsPrimitive;
 
 pub trait Rany {

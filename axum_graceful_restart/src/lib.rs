@@ -4,13 +4,10 @@ use std::net::SocketAddr;
 
 use aok::Result;
 use axum::Router;
-use nix::{
-  sys::signal::{Signal, kill},
-  unistd::Pid,
-};
 use socket2::{Domain, Socket, Type};
 use tokio::signal::unix::{SignalKind, signal};
 use tracing::info;
+use kill_port::kill_port;
 
 fn listen(addr: SocketAddr) -> Result<tokio::net::TcpListener> {
   let socket = Socket::new(Domain::for_address(addr), Type::STREAM, None)?;
@@ -28,8 +25,15 @@ pub async fn serve(addr: SocketAddr, app: Router) -> Result<()> {
 
   let shutdown = async {
     let mut sigterm = signal(SignalKind::terminate()).expect("create SIGTERM failed");
-    sigterm.recv().await;
-    info!("{} | SIGTERM recv", std::process::id());
+    let mut sigint = signal(SignalKind::interrupt()).expect("create SIGINT failed");
+    tokio::select! {
+        _ = sigterm.recv() => {
+            info!("{} | SIGTERM recv", std::process::id());
+        }
+        _ = sigint.recv() => {
+            info!("{} | SIGINT (Ctrl+C) recv", std::process::id());
+        }
+    }
   };
 
   let app = app.into_make_service();

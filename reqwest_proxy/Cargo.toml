@@ -27,10 +27,6 @@ path = "../uri_to_host_port"
 version = "0.1"
 optional = true
 
-[dependencies.tokio-util]
-version = "0.7.16"
-features = [ "compat" ]
-
 [dependencies.hyper-util]
 version = "0.1.17"
 features = [ "client-legacy", "tokio" ]
