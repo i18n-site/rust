@@ -4,7 +4,7 @@
 
 ---
 
-<a name="english"></a>
+<a id="english"></a>
 
 ## English
 
@@ -75,7 +75,7 @@ Process signals are a foundational feature of Unix-like operating systems, datin
 
 ---
 
-<a name="chinese"></a>
+<a id="chinese"></a>
 
 ## 中文
 

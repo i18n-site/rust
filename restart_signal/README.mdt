@@ -4,7 +4,7 @@
 
 ---
 
-<a name="english"></a>
+<a id="english"></a>
 
 ## English
 
@@ -30,13 +30,13 @@ To integrate `restart_signal`, add it to your dependencies and use the `restart_
 #[tokio::main]
 async fn main() {
     println!("Application started. Waiting for termination signal...");
-    
+
     // Get the shutdown signal receiver
     let shutdown_receiver = restart_signal::restart_signal();
-    
+
     // Await the signal
     shutdown_receiver.recv().await;
-    
+
     println!("Termination signal received. Shutting down gracefully.");
     // Add your cleanup logic here
 }
@@ -75,7 +75,7 @@ Process signals are a foundational feature of Unix-like operating systems, datin
 
 ---
 
-<a name="chinese"></a>
+<a id="chinese"></a>
 
 ## 中文
 
@@ -101,13 +101,13 @@ Process signals are a foundational feature of Unix-like operating systems, datin
 #[tokio::main]
 async fn main() {
     println!("应用已启动。正在等待终止信号...");
-    
+
     // 获取关闭信号接收器
     let shutdown_receiver = restart_signal::restart_signal();
-    
+
     // 等待信号
     shutdown_receiver.recv().await;
-    
+
     println!("收到终止信号。正在优雅地关闭。");
     // 在此添加清理逻辑
 }
