@@ -1,4 +1,5 @@
 #![allow(async_fn_in_trait)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 use fred::{
   error::Error,

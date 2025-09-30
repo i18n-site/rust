@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
 use num_traits::cast::AsPrimitive;
 
 pub trait Rany {
@@ -47,12 +49,10 @@ pub mod b255;
 mod strany;
 
 #[cfg(feature = "strany")]
-#[doc(cfg(feature = "strany"))]
 pub use strany::StrAny;
 
 #[cfg(feature = "url")]
 mod url;
 
 #[cfg(feature = "url")]
-#[doc(cfg(feature = "url"))]
 pub use url::{URL, URL_BIN};
