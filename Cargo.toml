@@ -201,7 +201,7 @@ members = [
   "proxy_http",
   "hysteria2",
   "reqwest_proxy",
-  "uri_to_host_port",
+  "uri_to_host_port", "kill_port",
   # "bgu",
   # "cli_tmpl",
   # "hsc",
