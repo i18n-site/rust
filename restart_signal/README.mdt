@@ -1,0 +1,171 @@
+# restart_signal
+
+[English](#english) | [中文](#chinese)
+
+---
+<a id="english"></a>
+
+## English
+
+### Table of Contents
+- [Significance](#significance)
+- [Usage](#usage)
+- [Design](#design)
+- [Technology Stack](#technology-stack)
+- [File Structure](#file-structure)
+- [A Little History](#a-little-history)
+
+### Significance
+
+This library provides a unified, cross-platform interface to listen for common process termination signals (`SIGHUP`, `SIGTERM`, `SIGINT`, `SIGQUIT`). It allows an application to capture these signals and perform a graceful shutdown, ensuring that resources are released correctly and state is saved if necessary.
+
+### Usage
+
+To use the library, call the `restart_signal()` function, which returns an asynchronous receiver. You can `await` this receiver to block until a termination signal is received.
+
+**Example:**
+'''rust
+use std::time::Duration;
+use anyhow::Result;
+use nix::{
+  sys::signal::{Signal, kill},
+  unistd::Pid,
+};
+use tokio::time::timeout;
+
+#[tokio::test]
+async fn test_restart_signal() -> Result<()> {
+  // Get the signal receiver
+  let rx = restart_signal::restart_signal();
+
+  // Send a signal to the current process for demonstration
+  let pid = Pid::from_raw(std::process::id() as i32);
+  kill(pid, Signal::SIGQUIT)?;
+
+  // Wait for the signal, with a timeout
+  let result = timeout(Duration::from_secs(1), rx.recv()).await;
+
+  assert!(result.is_ok());
+  Ok(())
+}
+'''
+
+### Design
+
+The design is straightforward and focuses on minimalism and reliability.
+
+1.  **Channel Creation**: A `crossfire` multi-producer, multi-consumer (MPMC) channel is created to communicate the shutdown event.
+2.  **Signal Handling Thread**: A new thread is spawned to handle signals without blocking the main application.
+3.  **Signal Registration**: Inside the thread, the `signal-hook` crate registers listeners for `SIGHUP`, `SIGTERM`, `SIGINT`, and `SIGQUIT`.
+4.  **Event Firing**: Upon receiving any of these signals, the thread sends a simple unit `()` message into the `crossfire` channel.
+5.  **Receiver Return**: The function immediately returns the asynchronous receiving end of the channel (`MAsyncRx<()>`). The application can then integrate this receiver into its main event loop (e.g., using `tokio::select!`).
+
+This decouples signal detection from the application's primary logic, providing a clean and reusable shutdown mechanism.
+
+### Technology Stack
+
+- **Language**: [Rust](https://www.rust-lang.org/)
+- **Signal Handling**: [signal-hook](https://crates.io/crates/signal-hook)
+- **Concurrent Communication**: [crossfire](https://crates.io/crates/crossfire)
+
+### File Structure
+
+```
+.
+├── Cargo.toml      # Package metadata and dependencies
+├── README.mdt      # This documentation file
+├── src
+│   └── lib.rs      # Core library implementation
+└── tests
+    └── main.rs     # Integration tests
+```
+
+### A Little History
+
+The `SIGHUP` (Hangup) signal has a fascinating origin tied to the early days of Unix and computing with physical terminals. In that era, users connected to a central computer via serial lines and modems. If the connection was lost—for instance, if the user physically hung up their phone—the modem would drop the data carrier line. The operating system's terminal driver would detect this event and send the `SIGHUP` signal to the user's session leader process. This would, in turn, signal all processes in the session to terminate, preventing them from becoming orphaned and consuming resources indefinitely. Today, while physical modems are rare, `SIGHUP` is still used for a similar purpose: to notify a process that its controlling terminal has closed.
+
+---
+<a id="chinese"></a>
+
+## 中文
+
+### 目录
+- [项目意义](#项目意义)
+- [项目使用](#项目使用)
+- [设计思路](#设计思路)
+- [技术堆栈](#技术堆栈)
+- [文件结构](#文件结构)
+- [相关历史](#相关历史)
+
+### 项目意义
+
+该库提供了一个统一的、跨平台的接口，用于监听常见的进程终止信号 (`SIGHUP`, `SIGTERM`, `SIGINT`, `SIGQUIT`)。它允许应用程序捕获这些信号并执行优雅的关闭操作，从而确保资源被正确释放，并在必要时保存状态。
+
+### 项目使用
+
+使用时，调用 `restart_signal()` 函数，它会返回一个异步接收器。您可以 `await` 这个接收器，程序会在此阻塞，直到接收到终止信号。
+
+**示例:**
+'''rust
+use std::time::Duration;
+use anyhow::Result;
+use nix::{
+  sys::signal::{Signal, kill},
+  unistd::Pid,
+};
+use tokio::time::timeout;
+
+#[tokio::test]
+async fn test_restart_signal() -> Result<()> {
+  // 获取信号接收器
+  let rx = restart_signal::restart_signal();
+
+  // 为演示目的，向当前进程发送一个信号
+  let pid = Pid::from_raw(std::process::id() as i32);
+  kill(pid, Signal::SIGQUIT)?;
+
+  // 带超时地等待信号
+  let result = timeout(Duration::from_secs(1), rx.recv()).await;
+
+  assert!(result.is_ok());
+  Ok(())
+}
+'''
+
+### 设计思路
+
+设计思路清晰直接，注重简约与可靠性。
+
+1.  **创建通道**: 创建一个 `crossfire` 多生产者多消费者 (MPMC) 通道，用于传达关闭事件。
+2.  **信号处理线程**: 派生一个新线程来处理信号，避免阻塞主应用程序。
+3.  **注册信号**: 在该线程内部，`signal-hook` 包为 `SIGHUP`, `SIGTERM`, `SIGINT`, 和 `SIGQUIT` 注册监听器。
+4.  **触发事件**: 一旦收到任何一个信号，该线程就向 `crossfire` 通道发送一个单元类型 `()` 消息。
+5.  **返回接收器**: 函数立即返回通道的异步接收端 (`MAsyncRx<()>`)。应用程序可将此接收器整合到其主事件循环中 (例如，使用 `tokio::select!`)。
+
+这种设计将信号检测与应用程序的主逻辑解耦，提供了一个干净、可复用的关闭机制。
+
+### 技术堆栈
+
+- **语言**: [Rust](https://www.rust-lang.org/)
+- **信号处理**: [signal-hook](https://crates.io/crates/signal-hook)
+- **并发通信**: [crossfire](https://crates.io/crates/crossfire)
+
+### 文件结构
+
+```
+.
+├── Cargo.toml      # 包元数据与依赖项
+├── README.mdt      # 本文档文件
+├── src
+│   └── lib.rs      # 核心库实现
+└── tests
+    └── main.rs     # 集成测试
+```
+
+### 相关历史
+
+`SIGHUP` (挂断) 信号的起源非常有趣，它与 Unix 早期和物理终端的计算时代紧密相连。在那个年代，用户通过串行线和调制解调器连接到中央计算机。如果连接断开——例如，用户物理挂断了电话——调制解调器会断开数据载波线路。操作系统的终端驱动程序会检测到此事件，并向用户的会话领导进程发送 `SIGHUP` 信号。接着，该信号会通知会话中的所有进程终止，防止它们成为孤儿进程并无限期地消耗资源。如今，虽然物理调制解调器已不多见，但 `SIGHUP` 仍用于类似的目的：通知进程其控制终端已经关闭。
+
+---
+
+<+ ../about.md >

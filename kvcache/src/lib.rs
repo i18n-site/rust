@@ -46,12 +46,10 @@ pub trait Cache {
 mod hset_cache;
 
 #[cfg(feature = "hset_cache")]
-#[doc(cfg(feature = "hset_cache"))]
 pub use hset_cache::HsetCache;
 
 #[cfg(feature = "user_cache")]
 mod user_cache;
 
 #[cfg(feature = "user_cache")]
-#[doc(cfg(feature = "user_cache"))]
 pub use user_cache::{UserCache, kvli, prefix_key, user_prefix};

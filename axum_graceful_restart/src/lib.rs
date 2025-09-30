@@ -4,10 +4,10 @@ use std::net::SocketAddr;
 
 use aok::Result;
 use axum::Router;
+use kill_port::kill_port;
 use socket2::{Domain, Socket, Type};
 use tokio::signal::unix::{SignalKind, signal};
 use tracing::info;
-use kill_port::kill_port;
 
 fn listen(addr: SocketAddr) -> Result<tokio::net::TcpListener> {
   let socket = Socket::new(Domain::for_address(addr), Type::STREAM, None)?;
