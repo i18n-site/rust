@@ -12,11 +12,11 @@ pub fn kill_port(port: u16) {
     for process in processes {
       if process.pid != my_pid {
         info!(
-          "{} | SIGTERM → {} {} on port {}",
+          "{} | SIGINT → {} {} on port {}",
           my_pid, process.pid, process.name, port
         );
 
-        kill(Pid::from_raw(process.pid as i32), Signal::SIGTERM).ok();
+        kill(Pid::from_raw(process.pid as i32), Signal::SIGINT).ok();
       }
     }
   }

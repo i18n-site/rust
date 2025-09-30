@@ -35,7 +35,7 @@ pub async fn serve(addr: SocketAddr, app: Router) -> Result<()> {
   let app = app.into_make_service();
 
   let pid = std::process::id();
-  kill_old(pid, addr.port()).await?;
+  kill_port(addr.port());
 
   info!("{pid} | listen {addr}");
 
@@ -44,22 +44,5 @@ pub async fn serve(addr: SocketAddr, app: Router) -> Result<()> {
     .await?;
 
   info!("{pid} | shutdown");
-  Ok(())
-}
-
-async fn kill_old(my_pid: u32, port: u16) -> Result<()> {
-  if let Ok(processes) = listeners::get_processes_by_port(port) {
-    for process in processes {
-      if process.pid != my_pid {
-        info!(
-          "{} | SIGTERM → {} {} on port {}",
-          my_pid, process.pid, process.name, port
-        );
-
-        kill(Pid::from_raw(process.pid as i32), Signal::SIGTERM).ok();
-      }
-    }
-  }
-
   Ok(())
 }

@@ -6,28 +6,36 @@ license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/dev/axum_graceful_restart"
 description = "axum_graceful_restart"
-keywords = []
-
-[features]
-default = []
+keywords = [ ]
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = ["--cfg", "docsrs"]
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
 
 [dependencies]
 aok = "0.1.17"
 axum = "0.8.5"
 listeners = "0.3.0"
-nix = { version = "0.30.1", features = ["signal", "process"] }
-socket2 = { version = "0.6.0", features = ["all"] }
-tokio = { version = "1.47.1", features = [
-  "macros",
-  "rt",
-  "rt-multi-thread",
-  "signal",
-] }
 tracing = "0.1.41"
+
+[dependencies.kill_port]
+version = "0.1.2"
+path = "../kill_port"
+
+[dependencies.nix]
+version = "0.30.1"
+features = [ "signal", "process" ]
+
+[dependencies.socket2]
+version = "0.6.0"
+features = [ "all" ]
+
+[dependencies.tokio]
+version = "1.47.1"
+features = [ "macros", "rt", "rt-multi-thread", "signal" ]
 
 [dev-dependencies]
 aok = "0.1.17"
@@ -37,4 +45,4 @@ tracing = "0.1.41"
 
 [dev-dependencies.tokio]
 version = "1.47.1"
-features = ["macros", "rt", "rt-multi-thread", "sync"]
+features = [ "macros", "rt", "rt-multi-thread", "sync" ]

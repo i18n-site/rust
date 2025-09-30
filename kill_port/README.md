@@ -73,7 +73,7 @@ The process flow is as follows:
 2.  It retrieves its own process ID to prevent self-termination.
 3.  It uses the `listeners::get_processes_by_port` function to identify all processes currently listening on the specified port.
 4.  It iterates through the list of found processes.
-5.  For each process that is not the program itself, it uses `nix::sys::signal::kill` to send a `SIGTERM` signal, requesting a graceful shutdown.
+5.  For each process that is not the program itself, it uses `nix::sys::signal::kill` to send a `SIGINT` signal (the equivalent of a `Ctrl+C` interrupt), requesting a graceful shutdown.
 
 This approach ensures that only the target processes are terminated, leaving the calling process unaffected.
 
@@ -183,7 +183,7 @@ fn test_kill_port() {
 2.  获取当前进程ID，以避免自我终止。
 3.  使用 `listeners::get_processes_by_port` 函数识别所有正在监听指定端口的进程。
 4.  遍历找到的进程列表。
-5.  对于每个非自身的进程，使用 `nix::sys::signal::kill` 发送 `SIGTERM` 信号，请求其优雅关闭。
+5.  对于每个非自身的进程，使用 `nix::sys::signal::kill` 发送 `SIGINT` 信号（相当于 `Ctrl+C` 中断），请求其优雅关闭。
 
 这种方法确保只终止目标进程，而不影响调用进程本身。
 
