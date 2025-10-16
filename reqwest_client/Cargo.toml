@@ -1,0 +1,35 @@
+[package]
+name = "reqwest_client"
+version = "0.1.13"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/reqwest_client"
+description = "A helper crate for creating reqwest::Client with rotating proxy support from environment variables. | 一个辅助 crate，用于通过环境变量创建支持轮换代理的 reqwest::Client。"
+keywords = ["reqwest", "proxy", "http-client", "fetch", "scraper"]
+
+[features]
+default = []
+client = []
+proxy = []
+proxy_from_env = ["proxy"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+genv = { version = "0.1.16", path = "../genv" }
+pos_next = { version = "0.1.7", path = "../pos_next" }
+reqwest = { version = "0.12.23", features = ["zstd", "gzip", "brotli"] }
+static_init = { version = "1.0.4" }
+
+[dev-dependencies]
+aok = "0.1.17"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.47.1"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

@@ -1,0 +1,24 @@
+[package]
+name = "getc"
+version = "0.1.17"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/getc"
+description = "get comment from source code"
+
+[dependencies]
+daachorse = "1.0.0"
+
+[dependencies.txt_li]
+version = "0.1.45"
+path = "../txt_li"
+features = [ "push_md_line" ]
+
+[dependencies.upn]
+version = "0.1.9"
+path = "../upn"
+
+[dependencies.phf]
+version = "0.13.1"
+features = [ "macros" ]

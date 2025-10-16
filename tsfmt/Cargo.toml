@@ -1,0 +1,24 @@
+[package]
+name = "tsfmt"
+version = "0.1.10"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/tsfmt"
+description = "tsfmt"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = [ ]
+
+[dev-dependencies]
+chrono = "0.4.42"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.sts]
+path = "../sts"
+version = "0.1.23"

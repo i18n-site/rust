@@ -1,0 +1,275 @@
+# hysteria2
+
+[English](#english) | [中文](#chinese)
+
+<a id="english"></a>
+
+## English
+
+- [About The Project](#about-the-project)
+- [Getting Started](#getting-started)
+- [Design Philosophy](#design-philosophy)
+- [Technology Stack](#technology-stack)
+- [File Structure](#file-structure)
+- [A Little Story](#a-little-story)
+
+<a id="about-the-project"></a>
+### About The Project
+
+`hysteria2` is a client library for Hysteria 2, a feature-rich proxy and relay protocol built on top of a modified QUIC implementation. This project provides a clean, asynchronous, and efficient Rust implementation for building Hysteria 2 clients. It aims to offer a robust and easy-to-use API for developers who need to integrate Hysteria 2's capabilities into their Rust applications.
+
+<a id="getting-started"></a>
+### Getting Started
+
+Here is a basic example of how to use the `hysteria2` library to connect to a server and establish a proxied TCP connection. This code is inspired by the integration tests in `tests/main.rs`.
+
+```rust
+use hysteria2::{config::Config, connect};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // 1. Parse the server URL to create a configuration
+    let url = "hysteria2://auth_password@example.com:4433/?sni=server.com&mport=35000-39000";
+    let config = Config::from_url(url)?;
+
+    // 2. Connect to the server and perform the handshake
+    let client = connect(&config).await?;
+
+    // 3. Establish a proxied TCP connection to a target
+    let mut stream = client.tcp_connect("ifconfig.me:80").await?;
+
+    // 4. Use the stream like any other TCP stream
+    stream.write_all(b"GET / HTTP/1.1
+Host: ifconfig.me
+
+").await?;
+
+    let mut buffer = Vec::new();
+    stream.read_to_end(&mut buffer).await?;
+
+    println!("{}", String::from_utf8_lossy(&buffer));
+
+    Ok(())
+}
+```
+
+The library also supports **Port Hopping**, a technique used to evade network censorship. By rapidly switching between a range of UDP ports for communication, it makes it difficult for firewalls to block the connection based on a single port. You can enable it by providing a port range in the URL:
+- `mport=35000-39000`: Specifies a range of ports for the client to randomly select from for connection attempts.
+
+<a id="design-philosophy"></a>
+### Design Philosophy
+
+The library is designed with modularity and clarity in mind, separating concerns into distinct modules. The core connection logic flows as follows:
+
+1.  **Configuration (`config` module):** The process starts with parsing a Hysteria 2 URL. The `Config::from_url` function takes the URL string and translates it into a structured `Config` object containing all necessary connection parameters like authentication, server address, SNI, and port hopping settings.
+
+2.  **Connection (`network` module):** The `connect` function is the main entry point for establishing a connection. It orchestrates the entire setup process:
+    *   Resolves the server's IP address.
+    *   Creates a secure TLS configuration (supporting both standard and insecure verification).
+    *   Establishes a QUIC endpoint.
+    *   Attempts a connection using **Port Hopping** if a port range is configured.
+    *   Performs the Hysteria 2 authentication handshake over HTTP/3.
+
+3.  **Client Interaction (`HysteriaClient`):** Once `connect` succeeds, it returns a `HysteriaClient` instance. This client is the primary interface for interacting with the proxy. You can use methods like `tcp_connect` to create proxied streams to your desired target destinations.
+
+4.  **Protocol Implementation (`protocol` module):** This module handles the low-level details of the Hysteria 2 protocol, such as encoding/decoding variable-length integers (`varint`) and parsing protocol-specific messages. This abstraction keeps the high-level networking logic clean and focused.
+
+<a id="technology-stack"></a>
+### Technology Stack
+
+This library is built upon a modern, high-performance asynchronous Rust ecosystem:
+- **`tokio`**: The asynchronous runtime for all network operations.
+- **`quinn`**: A pure Rust, high-performance implementation of the QUIC protocol.
+- **`h3`**: An implementation of the HTTP/3 protocol, used for the authentication handshake.
+- **`rustls`**: A modern, memory-safe TLS library for securing the QUIC connection.
+- **`thiserror`**: A library for ergonomic and descriptive error handling.
+
+<a id="file-structure"></a>
+### File Structure
+
+The project's source code is organized as follows:
+```
+src/
+├── config.rs      # Connection configuration parsing
+├── error.rs       # Custom error types for the library
+├── lib.rs         # Main library entry point and module exports
+├── network/       # Core networking logic (QUIC, TLS, Handshake)
+│   ├── authenticate_connection.rs # Authenticates the QUIC connection with the server
+│   ├── build_auth_request.rs      # Builds the authentication request to be sent to the server
+│   ├── connect.rs                 # High-level connection function
+│   ├── create_quic_endpoint.rs    # Creates a QUIC endpoint for communication
+│   ├── create_tls_config.rs       # Creates the TLS configuration for a secure connection
+│   ├── duplex_stream.rs           # Defines a duplex stream for bidirectional communication
+│   ├── generate_padding.rs        # Generates padding for obfuscation
+│   ├── hysteria_client.rs         # The main client structure for interacting with the server
+│   ├── insecure_verifier.rs       # A verifier for insecure TLS connections (skips certificate validation)
+│   ├── mod.rs                     # Module declaration for the network module
+│   ├── port_hopping.rs            # Implements port hopping functionality
+│   ├── resolve_server_address.rs  # Resolves the server's address to an IP address
+│   └── validate_auth_response.rs  # Validates the authentication response from the server
+└── protocol/      # Low-level Hysteria 2 protocol implementation
+    ├── get_varint.rs              # Varint decoding
+    ├── mod.rs                     # Module declaration for the protocol module
+    ├── put_varint.rs              # Varint encoding
+    ├── read_tcp_response.rs       # Reads and parses the TCP response from the server
+    ├── tcp_request.rs             # Handles the creation of a TCP request
+    └── tcp_response_status.rs     # Defines the status of a TCP response
+```
+
+<a id="a-little-story"></a>
+### A Little Story: The Genesis of QUIC
+
+QUIC (Quick UDP Internet Connections), the protocol that powers Hysteria 2 and HTTP/3, has an interesting origin story. It was born inside Google in the early 2010s out of frustration with the limitations of TCP. TCP's head-of-line blocking, where a single lost packet can hold up all other data streams, was a major bottleneck for web performance. Furthermore, the lengthy handshake process of TCP and TLS combined could significantly slow down connection setup.
+
+Google's engineers decided to build a new transport protocol on top of UDP, which doesn't have TCP's rigid ordering guarantees. This allowed them to implement multiple, independent streams within a single connection, completely eliminating head-of-line blocking. They also integrated the cryptographic and transport handshakes into a single round-trip, drastically speeding up connection establishment. After years of internal use and refinement, Google brought QUIC to the IETF (Internet Engineering Task Force) for standardization. This collaborative effort resulted in the official, standardized versions of QUIC and HTTP/3 that are now being adopted across the web, forming the foundation for modern, high-performance protocols like Hysteria 2.
+
+<a id="chinese"></a>
+
+## 中文
+
+- [关于项目](#about-the-project-cn)
+- [快速上手](#getting-started-cn)
+- [设计思路](#design-philosophy-cn)
+- [技术栈](#technology-stack-cn)
+- [文件结构](#file-structure-cn)
+- [相关历史](#a-little-story-cn)
+
+<a id="about-the-project-cn"></a>
+### 关于项目
+
+`hysteria2` 是一个 Hysteria 2 的客户端库。Hysteria 2 是一个功能丰富的代理和中继协议，构建于一个修改版的 QUIC 实现之上。本项目提供了一个清晰、异步且高效的 Rust 实现，用于构建 Hysteria 2 客户端。它旨在为需要在其 Rust 应用程序中集成 Hysteria 2 功能的开发人员提供一个健壮且易于使用的 API。
+
+<a id="getting-started-cn"></a>
+### 快速上手
+
+以下是一个如何使用 `hysteria2` 库连接到服务器并建立代理 TCP 连接的基本示例。此代码的灵感来源于 `tests/main.rs` 中的集成测试。
+
+```rust
+use hysteria2::{config::Config, connect};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // 1. 解析服务器 URL 以创建配置
+    let url = "hysteria2://auth_password@example.com:4433/?sni=server.com&mport=35000-39000";
+    let config = Config::from_url(url)?;
+
+    // 2. 连接到服务器并执行握手
+    let client = connect(&config).await?;
+
+    // 3. 与目标地址建立代理 TCP 连接
+    let mut stream = client.tcp_connect("ifconfig.me:80").await?;
+
+    // 4. 像使用普通 TCP 流一样使用该流
+    stream.write_all(b"GET / HTTP/1.1
+Host: ifconfig.me
+
+").await?;
+
+    let mut buffer = Vec::new();
+    stream.read_to_end(&mut buffer).await?;
+
+    println!("{}", String::from_utf8_lossy(&buffer));
+
+    Ok(())
+}
+```
+
+该库还支持 **端口跳跃 (Port Hopping)**，这是一种用于规避网络审查的技术。通过在指定范围内快速切换 UDP 端口进行通信，它使防火墙难以基于单个端口来阻止连接。您可以通过在 URL 中提供端口范围来启用它：
+- `mport=35000-39000`: 指定一个端口范围，客户端将从中随机选择端口进行连接尝试。
+
+<a id="design-philosophy-cn"></a>
+### 设计思路
+
+该库的设计注重模块化和清晰性，将不同的关注点分离到独立的模块中。核心连接逻辑流程如下：
+
+1.  **配置 (`config` 模块):** 整个过程始于解析一个 Hysteria 2 URL。`Config::from_url` 函数接收 URL 字符串，并将其转换为一个结构化的 `Config` 对象，其中包含所有必需的连接参数，如身份验证、服务器地址、SNI 和端口跳跃设置。
+
+2.  **连接 (`network` 模块):** `connect` 函数是建立连接的主要入口点。它负责协调整个设置过程：
+    *   解析服务器的 IP 地址。
+    *   创建一个安全的 TLS 配置（支持标准验证和跳过证书验证）。
+    *   建立 QUIC 端点。
+    *   如果配置了端口范围，则尝试使用 **端口跳跃** 进行连接。
+    *   通过 HTTP/3 执行 Hysteria 2 的身份验证握手。
+
+3.  **客户端交互 (`HysteriaClient`):** 一旦 `connect` 成功，它将返回一个 `HysteriaClient` 实例。该客户端是与代理进行交互的主要接口。您可以使用 `tcp_connect` 等方法来创建到您期望的目标地址的代理流。
+
+4.  **协议实现 (`protocol` 模块):** 此模块处理 Hysteria 2 协议的底层细节，例如变长整数 (`varint`) 的编解码和解析协议特定的消息。这种抽象使高层网络逻辑保持整洁和专注。
+
+<a id="technology-stack-cn"></a>
+### 技术栈
+
+该库构建于一个现代、高性能的异步 Rust 生态系统之上：
+- **`tokio`**: 用于所有网络操作的异步运行时。
+- **`quinn`**: 一个纯 Rust 实现的高性能 QUIC 协议库。
+- **`h3`**: HTTP/3 协议的实现，用于身份验证握手。
+- **`rustls`**: 一个现代、内存安全的 TLS 库，用于保护 QUIC 连接。
+- **`thiserror`**: 一个用于符合人体工程学和描述性错误处理的库。
+
+<a id="file-structure-cn"></a>
+### 文件结构
+
+项目的源代码结构组织如下：
+```
+src/
+├── config.rs      # 连接配置解析
+├── error.rs       # 库的自定义错误类型
+├── lib.rs         # 主库入口点和模块导出
+├── network/       # 核心网络逻辑 (QUIC, TLS, 握手)
+│   ├── authenticate_connection.rs # 与服务器验证 QUIC 连接
+│   ├── build_auth_request.rs      # 构建要发送到服务器的身份验证请求
+│   ├── connect.rs                 # 高层连接函数
+│   ├── create_quic_endpoint.rs    # 创建用于通信的 QUIC 端点
+│   ├── create_tls_config.rs       # 创建用于安全连接的 TLS 配置
+│   ├── duplex_stream.rs           # 定义用于双向通信的双工流
+│   ├── generate_padding.rs        # 生成用于混淆的填充数据
+│   ├── hysteria_client.rs         # 与服务器交互的主要客户端结构
+│   ├── insecure_verifier.rs       # 用于不安全 TLS 连接的验证器（跳过证书验证）
+│   ├── mod.rs                     # network 模块的模块声明
+│   ├── port_hopping.rs            # 实现端口跳跃功能
+│   ├── resolve_server_address.rs  # 将服务器地址解析为 IP 地址
+│   └── validate_auth_response.rs  # 验证来自服务器的身份验证响应
+└── protocol/      # 底层 Hysteria 2 协议实现
+    ├── get_varint.rs              # Varint 解码
+    ├── mod.rs                     # protocol 模块的模块声明
+    ├── put_varint.rs              # Varint 编码
+    ├── read_tcp_response.rs       # 读取并解析来自服务器的 TCP 响应
+    ├── tcp_request.rs             # 处理 TCP 请求的创建
+    └── tcp_response_status.rs     # 定义 TCP 响应的状态
+```
+
+<a id="a-little-story-cn"></a>
+### 相关历史：QUIC 的起源
+
+QUIC（快速 UDP 互联网连接）是驱动 Hysteria 2 和 HTTP/3 的协议，它的起源颇为有趣。它于 2010 年代初诞生于谷歌，源于对 TCP 局限性的不满。TCP 的队头阻塞问题——即单个丢包就可能阻塞所有其他数据流——是网络性能的一大瓶颈。此外，TCP 和 TLS 结合起来的冗长握手过程也可能显著减慢连接建立的速度。
+
+谷歌的工程师们决定在 UDP 之上构建一个新的传输协议，因为 UDP 没有 TCP 那样严格的顺序保证。这使得他们可以在单个连接内实现多个独立的流，从而彻底消除了队头阻塞。他们还将加密和传输握手集成到单次往返中，极大地加快了连接建立的速度。经过多年的内部使用和完善，谷歌将 QUIC 提交给 IETF（互联网工程任务组）进行标准化。这项合作最终促成了 QUIC 和 HTTP/3 的官方标准化版本，这些标准如今正在整个网络中被广泛采用，并为像 Hysteria 2 这样的现代高性能协议奠定了基础。
+
+## About
+
+This project is an open-source component of [i18n.site ⋅ Internationalization Solution](https://i18n.site).
+
+* [i18 : MarkDown Command Line Translation Tool](https://i18n.site/i18)
+
+  The translation perfectly maintains the Markdown format.
+
+  It recognizes file changes and only translates the modified files.
+
+  The translated Markdown content is editable; if you modify the original text and translate it again, manually edited translations will not be overwritten (as long as the original text has not been changed).
+
+* [i18n.site : MarkDown Multi-language Static Site Generator](https://i18n.site/i18n.site)
+
+  Optimized for a better reading experience
+
+## 关于
+
+本项目为 [i18n.site ⋅ 国际化解决方案](https://i18n.site) 的开源组件。
+
+* [i18 : MarkDown 命令行翻译工具](https://i18n.site/i18)
+
+  翻译能够完美保持 Markdown 的格式。能识别文件的修改，仅翻译有变动的文件。
+
+  Markdown 翻译内容可编辑；如果你修改原文并再次机器翻译，手动修改过的翻译不会被覆盖 （ 如果这段原文没有被修改 ）。
+
+* [i18n.site : MarkDown 多语言静态站点生成器](https://i18n.site/i18n.site) 为阅读体验而优化。

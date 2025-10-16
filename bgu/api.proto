@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package api;
+
+message Ts
+{
+  uint64 v = 1;
+}
+
+message Ver
+{
+  // 不兼容的 API 修改
+  uint32 major = 1;
+  // 向下兼容的功能性新增
+  uint32 minor = 2;
+  // 向下兼容的问题修正
+  uint32 patch = 3;
+}

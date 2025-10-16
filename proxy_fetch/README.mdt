@@ -1,0 +1,169 @@
+# proxy_fetch
+
+[English](#proxy_fetch-en) | [中文](#proxy_fetch-cn)
+
+---
+
+<a id="proxy_fetch-en"></a>
+
+## `proxy_fetch` (English)
+
+### Table of Contents
+
+- [Project Significance](#project-significance)
+- [Usage](#usage)
+- [Design Philosophy](#design-philosophy)
+- [Technology Stack](#technology-stack)
+- [File Structure](#file-structure)
+- [A Little Story: The Origins of Shadowsocks](#a-little-story-the-origins-of-shadowsocks)
+
+### Project Significance
+
+`proxy_fetch` is a smart proxy management library for Rust, engineered for high-availability and fault-tolerant network requests. It dynamically fetches, manages, and scores a pool of proxies from subscription links. By intelligently selecting the best-performing proxies, it ensures that your network-dependent applications remain robust and resilient, automatically bypassing failing nodes and optimizing for success rate.
+
+### Usage
+
+Here is a basic example of how to use `proxy_fetch` to make requests through a managed proxy pool.
+
+First, ensure you have your proxy subscription URLs available, for instance, in environment variables.
+
+```rust
+<+ ./tests/main.rs>
+```
+
+In this example, `load` initializes the proxy pool from the given subscription URLs. It automatically starts a background task to periodically refresh the list. The returned `fetch` object can then be used to run requests. The library handles the selection of a proxy and updates its score based on the outcome of the request.
+
+### Design Philosophy
+
+The core design of `proxy_fetch` revolves around a few key principles to create a self-healing and efficient proxy system.
+
+-   **Dynamic Proxy Pool**: Proxies are not hardcoded. They are dynamically loaded from one or more subscription URLs at startup and refreshed periodically in the background to ensure the list is always up-to-date.
+
+-   **Performance-Based Scoring**: Each proxy is stored in a `Zset` (a sorted set) with an associated score. When a request succeeds, the proxy's score is increased. When it fails (e.g., timeout, network error), its score is significantly reduced. This allows the system to learn and prioritize proxies that are currently reliable.
+
+-   **Biased Random Selection**: When choosing a proxy for a request, the library uses a biased random selection algorithm. This approach favors proxies with higher scores but still gives lower-scoring proxies a chance to be used. This prevents proxies from being permanently abandoned after a temporary failure and allows them to prove their reliability again.
+
+-   **Seamless Middleware Integration**: The library is built on `reqwest` and `reqwest-middleware`, allowing it to integrate cleanly into existing `reqwest`-based applications. For specific proxy protocols like Shadowsocks, it uses dedicated middleware (`reqwest_ss_proxy`) to handle the connection details.
+
+-   **Resilience and Fallback**: If no proxies are available or all attempts fail, it can fall back to making a direct, non-proxied request, ensuring maximum availability.
+
+### Technology Stack
+
+-   **[Tokio](https://tokio.rs/)**: The asynchronous runtime for all network operations and background tasks.
+-   **[Reqwest](https://github.com/seanmonstar/reqwest)**: The foundation for making HTTP requests.
+-   **[Reqwest-Middleware](https://github.com/TrueLayer/reqwest-middleware)**: Used for building a client with custom middleware, in this case, for handling proxy logic.
+-   **[reqwest_proxy](https://crates.io/crates/reqwest_proxy)**: Requests are sent through it, and it supports Shadowsocks and Hysteria2 protocols.
+-   **[Zset](https://github.com/i18n-site/rust/tree/dev/zset)**: A custom sorted set data structure used to store proxies and their performance scores.
+-   **[Biased](https://github.com/i18n-site/rust/tree/dev/biased)**: A small utility for performing biased random selection on the proxy set.
+
+### File Structure
+
+```
+src/
+├── error.rs      # Defines custom error types for the library.
+│                 # 定义库的自定义错误类型。
+├── fetch.rs      # Contains the main `Fetch` struct and the core request-running logic.
+│                 # 包含主要的 `Fetch` 结构体和核心的请求执行逻辑。
+├── lib.rs        # The main library crate file, exporting public modules.
+│                 # 主库文件，导出公共模块。
+├── load.rs       # Handles loading proxies from subscription URLs and initializing the `Fetch` struct.
+│                 # 处理从订阅 URL 加载代理并初始化 `Fetch` 结构体。
+├── proxy.rs      # Defines the `Proxy` struct, which encapsulates a reqwest client configured for a specific proxy.
+│                 # 定义 `Proxy` 结构体，它封装了为特定代理配置的 reqwest 客户端。
+├── refresh.rs    # Logic for refreshing the proxy list from subscription URLs.
+│                 # 从订阅 URL 刷新代理列表的逻辑。
+└── response.rs   # Defines the `Response` struct for returned data.
+                  # 为返回的数据定义 `Response` 结构体。
+```
+
+### A Little Story: The Origins of Shadowsocks
+
+This library heavily utilizes the Shadowsocks protocol, which has an interesting history. Shadowsocks was created in 2012 by a Chinese programmer known only as "clowwindy". Its primary purpose was to bypass widespread internet censorship and surveillance, colloquially known as the Great Firewall of China.
+
+Unlike a traditional VPN, which creates a full network tunnel, Shadowsocks operates as an encrypted SOCKS5 proxy. It's lightweight and designed to look like normal HTTPS traffic, making it much harder for automated censorship systems to detect and block. This clever design made it incredibly popular.
+
+In 2015, under pressure from authorities, "clowwindy" ceased work on the project and removed the code from GitHub. However, because the project was open-source, the community quickly picked it up. Developers from around the world continue to maintain and improve Shadowsocks, making it a lasting symbol of the ongoing global conversation about internet freedom.
+
+---
+
+<a id="proxy_fetch-cn"></a>
+
+## `proxy_fetch` (中文)
+
+### 目录
+
+- [项目意义](#项目意义-cn)
+- [使用演示](#使用演示-cn)
+- [设计思路](#设计思路-cn)
+- [技术堆栈](#技术堆栈-cn)
+- [文件结构](#文件结构-cn)
+- [相关故事：Shadowsocks的起源](#相关故事shadowsocks的起源)
+
+### <a id="项目意义-cn"></a>项目意义
+
+`proxy_fetch` 是一个为 Rust 设计的智能代理管理库，专为高可用和容错的网络请求而构建。它从订阅链接中动态获取、管理代理池，并为其评分。通过智能选择表现最佳的代理，它能确保您的网络应用保持健壮和弹性，自动绕过故障节点并优化成功率。
+
+### <a id="使用演示-cn"></a>使用演示
+
+这是一个基本示例，展示了如何使用 `proxy_fetch` 通过托管的代理池发出请求。
+
+首先，请确保您的代理订阅 URL 可用，例如，存放在环境变量中。
+
+```rust
+<+ ./tests/main.rs>
+```
+
+在此示例中，`load` 函数从给定的订阅 URL 初始化代理池。它会自动启动一个后台任务来定期刷新列表。返回的 `fetch` 对象可用于执行请求。该库会处理代理的选择，并根据请求结果更新其分数。
+
+### <a id="设计思路-cn"></a>设计思路
+
+`proxy_fetch` 的核心设计围绕几个关键原则，以创建一个能够自我修复的高效代理系统。
+
+-   **动态代理池**：代理不是硬编码的。它们在启动时从一个或多个订阅 URL 动态加载，并在后台定期刷新，以确保代理列表始终是新的。
+
+-   **基于性能的评分**：每个代理都存储在一个 `Zset`（一个有序集合）中，并关联一个分数。当请求成功时，代理的分数会增加。当请求失败（例如超时、网络错误）时，其分数会显著降低。这使系统能够学习并优先使用当前可靠的代理。
+
+-   **带偏向的随机选择**：在为请求选择代理时，该库使用带偏向的随机选择算法。这种方法倾向于选择得分较高的代理，但仍给得分较低的代理被使用的机会。这可以防止代理在暂时性故障后被永久弃用，并允许它们重新证明自己的可靠性。
+
+-   **无缝的中间件集成**：该库构建在 `reqwest` 和 `reqwest-middleware` 之上，使其能够干净地集成到现有的基于 `reqwest` 的应用中。对于像 Shadowsocks 这样的特定代理协议，它使用专用的中间件（`reqwest_ss_proxy`）来处理连接细节。
+
+-   **弹性和回退**：如果没有可用的代理或所有尝试都失败了，它可以回退到直接发出非代理请求，以确保最大程度的可用性。
+
+### <a id="技术堆栈-cn"></a>技术堆栈
+
+-   **[Tokio](https://tokio.rs/)**: 用于所有网络操作和后台任务的异步运行时。
+-   **[Reqwest](https://github.com/seanmonstar/reqwest)**: 用于发出 HTTP 请求的基础。
+-   **[Reqwest-Middleware](https://github.com/TrueLayer/reqwest-middleware)**: 用于构建带有自定义中间件的客户端，此处用于处理代理逻辑。
+-   **[reqwest_proxy](https://crates.io/crates/reqwest_proxy)**: 请求通过它发送，代理支持Shadowsocks, Hysteria2协议。
+-   **[Zset](https://github.com/i18n-site/rust/tree/dev/zset)**: 一个自定义的有序集数据结构，用于存储代理及其性能分数。
+-   **[Biased](https://github.com/i18n-site/rust/tree/dev/biased)**: 一个用于在代理集上执行带偏向随机选择的小工具。
+
+### <a id="文件结构-cn"></a>文件结构
+
+```
+src/
+├── error.rs      # 定义库的自定义错误类型。
+│                 # Defines custom error types for the library.
+├── fetch.rs      # 包含主要的 `Fetch` 结构体和核心的请求执行逻辑。
+│                 # Contains the main `Fetch` struct and the core request-running logic.
+├── lib.rs        # 主库文件，导出公共模块。
+│                 # The main library crate file, exporting public modules.
+├── load.rs       # 处理从订阅 URL 加载代理并初始化 `Fetch` 结构体。
+│                 # Handles loading proxies from subscription URLs and initializing the `Fetch` struct.
+├── proxy.rs      # 定义 `Proxy` 结构体，它封装了为特定代理配置的 reqwest 客户端。
+│                 # Defines the `Proxy` struct, which encapsulates a reqwest client configured for a specific proxy.
+├── refresh.rs    # 从订阅 URL 刷新代理列表的逻辑。
+│                 # Logic for refreshing the proxy list from subscription URLs.
+└── response.rs   # 为返回的数据定义 `Response` 结构体。
+                  # Defines the `Response` struct for returned data.
+```
+
+### <a id="相关故事shadowsocks的起源"></a>相关故事：Shadowsocks的起源
+
+该库大量使用了 Shadowsocks 协议，它背后有一段有趣的历史。Shadowsocks 由一位仅以 "clowwindy" 为人所知的中国程序员于2012年创建。其主要目的是绕过广泛存在的互联网审查和监视，也就是俗称的“防火长城”。
+
+与创建完整网络隧道的传统 VPN 不同，Shadowsocks 作为一个加密的 SOCKS5 代理运行。它非常轻量，并被设计成看起来像普通的 HTTPS 流量，这使得自动化审查系统更难检测和阻止它。这种巧妙的设计使其广受欢迎。
+
+2015年，迫于当局的压力，"clowwindy" 停止了该项目的工作，并从 GitHub 上删除了代码。然而，由于该项目是开源的，社区迅速接手了它。来自世界各地的开发者们继续维护和改进 Shadowsocks，使其成为全球范围内关于互联网自由持续对话的一个不朽象征。
+
+<+ ../about.md >

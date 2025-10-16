@@ -1,0 +1,175 @@
+# axum_graceful_restart
+
+[English](#english) | [中文](#中文)
+
+---
+
+## <a name="english"></a>English
+
+- [Introduction](#introduction)
+- [Key Features](#key-features)
+- [Usage](#usage)
+- [Design Philosophy](#design-philosophy)
+- [Technology Stack](#technology-stack)
+- [File Structure](#file-structure)
+- [A Little History: The Story of SO_REUSEPORT](#a-little-history-the-story-of-so_reuseport)
+
+### <a name="introduction"></a>Introduction
+`axum_graceful_restart` is a utility library for the Axum web framework that enables graceful shutdowns and zero-downtime restarts. In modern web service deployment, it is crucial to update and restart services without interrupting live traffic. This library addresses that need by providing a simple `serve` function that enhances Axum's default server with critical features for high-availability systems.
+
+### <a name="key-features"></a>Key Features
+- **Graceful Shutdown**: Listens for `SIGTERM` and `SIGINT` (Ctrl+C) signals to allow the server to shut down gracefully, finishing in-flight requests.
+- **Zero-Downtime Restarts**: Utilizes the `SO_REUSEPORT` socket option, allowing multiple server instances to bind to the same port. This is the foundation for blue-green deployment and rolling restart strategies, where a new version of the service can start and take over traffic before the old one shuts down.
+- **Port Pre-cleaning**: Automatically kills any process occupying the target port before starting the server, streamlining development workflows.
+
+### <a name="usage"></a>Usage
+Here is a basic example of how to use `axum_graceful_restart`:
+
+```rust
+use std::time::Duration;
+
+use aok::Result;
+use axum::{Router, routing::get};
+use axum_graceful_restart::serve;
+
+#[tokio::main]
+async fn main() -> Result<()> {
+  loginit::init();
+  let app = Router::new().route("/", get(handler));
+
+  serve("0.0.0.0:8899".parse()?, app).await
+}
+
+async fn handler() -> String {
+  let pid = std::process::id();
+  println!("new conn");
+  tokio::time::sleep(Duration::from_secs(10)).await;
+  format!("PID: {pid}")
+}
+```
+
+To perform a zero-downtime restart, you can use a script that starts the new version of the application and then sends a `SIGTERM` signal to the old process.
+
+### <a name="design-philosophy"></a>Design Philosophy
+The core idea is to separate the socket binding/listening logic from Axum's serving logic.
+1.  **Socket Creation**: A `socket2::Socket` is created with the `SO_REUSEPORT` option enabled. This is the key to allowing multiple processes to listen on the same address.
+2.  **Binding and Listening**: The socket is bound to the specified address and begins listening for incoming connections.
+3.  **Signal Handling**: A separate asynchronous task is spawned to listen for `SIGTERM` and `SIGINT` signals. When a signal is received, it triggers Axum's `with_graceful_shutdown` mechanism.
+4.  **Handing Off to Axum**: The standard library TCP listener is converted to a `tokio::net::TcpListener` and passed to `axum::serve`, along with the shutdown signal future.
+
+This design provides robust server lifecycle management with minimal changes to the standard Axum application structure.
+
+### <a name="technology-stack"></a>Technology Stack
+- [Axum](https://github.com/tokio-rs/axum): The web application framework.
+- [Tokio](https://tokio.rs/): The asynchronous runtime.
+- [socket2](https://crates.io/crates/socket2): Used for creating sockets with advanced options like `SO_REUSEPORT`.
+- [kill-port](https://crates.io/crates/kill-port): Used to clear the port before the server starts.
+- [tracing](https://crates.io/crates/tracing): For logging and diagnostics.
+
+### <a name="file-structure"></a>File Structure
+- `src/lib.rs`: The main library file containing the core `serve` and `listen` functions. It orchestrates socket creation, signal handling, and the graceful server lifecycle.
+
+### <a name="a-little-history-the-story-of-so_reuseport"></a>A Little History: The Story of SO_REUSEPORT
+The `SO_REUSEPORT` socket option is a relatively modern addition to the world of networking, though the problem it solves is as old as server development itself. Before `SO_REUSEPORT`, achieving zero-downtime updates was a complex dance. Developers relied on intricate proxy setups or complicated file descriptor passing mechanisms between processes.
+
+`SO_REUSEPORT` was introduced in Linux kernel 3.9 (released in 2013) and has since been adopted by other BSD-derived systems like macOS and FreeBSD. It was a game-changer. It allows multiple sockets to bind to the exact same IP address and port combination, as long as all of them set this option. The kernel then takes on the responsibility of load-balancing incoming connections across the listening sockets. This simple-sounding feature unlocked a much cleaner and more reliable pattern for high-availability services, enabling the elegant rolling restart strategies we see in many modern systems, including this library. It's a great example of how kernel-level improvements can profoundly simplify application-level architecture.
+
+---
+
+## <a name="中文"></a>中文
+
+- [简介](#简介-1)
+- [核心功能](#核心功能-1)
+- [使用示例](#使用示例-1)
+- [设计思路](#设计思路-1)
+- [技术栈](#技术栈-1)
+- [文件结构](#文件结构-1)
+- [技术拾遗：SO_REUSEPORT 的故事](#技术拾遗so_reuseport-的故事)
+
+### <a name="简介-1"></a>简介
+`axum_graceful_restart` 是一个为 Axum web 框架设计的工具库，旨在实现服务的优雅停机与零停机重启。在现代 Web 服务部署中，如何在不中断实时流量的情况下更新和重启服务至关重要。该库通过提供一个简单的 `serve` 函数来解决这一需求，它在 Axum 默认服务器的基础上，为高可用性系统增加了关键特性。
+
+### <a name="核心功能-1"></a>核心功能
+- **优雅停机**: 监听 `SIGTERM` 和 `SIGINT` (Ctrl+C) 信号，使服务器能够平滑关闭，并处理完所有进行中的请求。
+- **零停机重启**: 利用 `SO_REUSEPORT` 套接字选项，允许多个服务实例绑定到同一端口。这是实现蓝绿部署和滚动重启策略的基础，即新版本的服务可以在旧版本关闭之前启动并接管流量。
+- **端口预清理**: 在启动服务器之前，自动终止任何占用目标端口的进程，从而简化开发流程。
+
+### <a name="使用示例-1"></a>使用示例
+以下是 `axum_graceful_restart` 的基本使用方法：
+
+```rust
+use std::time::Duration;
+
+use aok::Result;
+use axum::{Router, routing::get};
+use axum_graceful_restart::serve;
+
+#[tokio::main]
+async fn main() -> Result<()> {
+  loginit::init();
+  let app = Router::new().route("/", get(handler));
+
+  serve("0.0.0.0:8899".parse()?, app).await
+}
+
+async fn handler() -> String {
+  let pid = std::process::id();
+  println!("new conn");
+  tokio::time::sleep(Duration::from_secs(10)).await;
+  format!("PID: {pid}")
+}
+```
+
+要执行零停机重启，您可以使用一个脚本，该脚本首先启动新版本的应用程序，然后向旧进程发送 `SIGTERM` 信号。
+
+### <a name="设计思路-1"></a>设计思路
+其核心思想是将套接字的绑定/监听逻辑与 Axum 的服务逻辑分离开来。
+1.  **创建套接字**: 使用 `socket2::Socket` 创建一个启用了 `SO_REUSEPORT` 选项的套接字。这是允许多个进程监听同一地址的关键。
+2.  **绑定与监听**: 将套接字绑定到指定地址，并开始监听传入的连接。
+3.  **信号处理**: 启动一个独立的异步任务来监听 `SIGTERM` 和 `SIGINT` 信号。当接收到信号时，它会触发 Axum 的 `with_graceful_shutdown` 机制。
+4.  **交由 Axum 处理**: 将标准库的 TCP 监听器转换为 `tokio::net::TcpListener`，并与关闭信号的 future 一同传递给 `axum::serve`。
+
+这种设计以最小的改动，在标准 Axum 应用结构之上提供了强大的服务生命周期管理功能。
+
+### <a name="技术栈-1"></a>技术栈
+- [Axum](https://github.com/tokio-rs/axum): Web 应用框架。
+- [Tokio](https://tokio.rs/): 异步运行时。
+- [socket2](https://crates.io/crates/socket2): 用于创建具有 `SO_REUSEPORT` 等高级选项的套接字。
+- [kill-port](https://crates.io/crates/kill-port): 用于在服务器启动前清理端口。
+- [tracing](https://crates.io/crates/tracing): 用于日志记录和诊断。
+
+### <a name="文件结构-1"></a>文件结构
+- `src/lib.rs`: 核心库文件，包含 `serve` 和 `listen` 函数。它负责统筹套接字创建、信号处理以及优雅的服务生命周期。
+
+### <a name="技术拾遗so_reuseport-的故事"></a>技术拾遗：SO_REUSEPORT 的故事
+`SO_REUSEPORT` 套接字选项在网络编程领域是一个相对现代的补充，但它解决的问题与服务器开发本身一样古老。在 `SO_REUSEPORT` 出现之前，实现零停机更新是一项复杂的任务。开发者们依赖于复杂的代理设置或进程间传递文件描述符的繁琐机制。
+
+`SO_REUSEPORT` 于 2013 年在 Linux 内核 3.9 版本中被引入，并此后被其他 BSD 衍生系统（如 macOS 和 FreeBSD）所采用。它的出现改变了游戏规则。它允许多个套接字绑定到完全相同的 IP 地址和端口组合，只要所有套接字都设置了此选项即可。然后，内核会负责在这些监听套接字之间对传入的连接进行负载均衡。这个听起来简单的功能，为高可用性服务解锁了一种更清晰、更可靠的模式，使得我们能在许多现代系统中（包括本库）看到这种优雅的滚动重启策略。这是内核级改进如何深刻简化应用层架构的一个绝佳范例。
+
+## About
+
+This project is an open-source component of [i18n.site ⋅ Internationalization Solution](https://i18n.site).
+
+* [i18 : MarkDown Command Line Translation Tool](https://i18n.site/i18)
+
+  The translation perfectly maintains the Markdown format.
+
+  It recognizes file changes and only translates the modified files.
+
+  The translated Markdown content is editable; if you modify the original text and translate it again, manually edited translations will not be overwritten (as long as the original text has not been changed).
+
+* [i18n.site : MarkDown Multi-language Static Site Generator](https://i18n.site/i18n.site)
+
+  Optimized for a better reading experience
+
+## 关于
+
+本项目为 [i18n.site ⋅ 国际化解决方案](https://i18n.site) 的开源组件。
+
+* [i18 : MarkDown 命令行翻译工具](https://i18n.site/i18)
+
+  翻译能够完美保持 Markdown 的格式。能识别文件的修改，仅翻译有变动的文件。
+
+  Markdown 翻译内容可编辑；如果你修改原文并再次机器翻译，手动修改过的翻译不会被覆盖 （ 如果这段原文没有被修改 ）。
+
+* [i18n.site : MarkDown 多语言静态站点生成器](https://i18n.site/i18n.site) 为阅读体验而优化。

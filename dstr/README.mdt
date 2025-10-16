@@ -1,0 +1,7 @@
+# dstr: get string from Debug trait
+
+```rust
+<+ ./tests/main.rs>
+```
+
+<+ ../about.md >
