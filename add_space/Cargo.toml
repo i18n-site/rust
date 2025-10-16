@@ -1,12 +1,12 @@
 [package]
 name = "add_space"
-version = "0.1.16"
+version = "0.1.17"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/dev/add_space"
-description = "Command-line tool for adding spaces between Chinese and English characters to improve readability. / 一个给中文和英文之间加空格，优化阅读体验的排版命令行工具."
-keywords = ["cli", "formatter", "typography", "cjk", "spacing"]
+description = "Adds spacing between Chinese and English characters to improve readability. / 在中英文之间添加空格，优化阅读体验。"
+keywords = ["cli", "formatter", "cjk", "spacing", "typography"]
 
 [features]
 default = ["cli"]

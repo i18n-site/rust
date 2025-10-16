@@ -4,12 +4,15 @@
 
 # add_space
 
-A command-line tool for adding spaces between Chinese and English characters to improve readability.
+A command-line tool to improve readability by adding spaces between Chinese and English characters.
 
 ## Table of Contents
 
 - [Significance](#significance)
-- [Usage Demo](#usage-demo)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Command Line](#command-line)
+  - [LazyVim Configuration](#lazyvim-configuration)
 - [Design Philosophy](#design-philosophy)
 - [Technology Stack](#technology-stack)
 - [File Structure](#file-structure)
@@ -17,9 +20,15 @@ A command-line tool for adding spaces between Chinese and English characters to 
 
 ## Significance
 
-In mixed Chinese and English text, adding spaces between Chinese and English words can significantly enhance readability. This tool automates this process, saving time and improving the reading experience.
+In mixed Chinese and English text, adding spaces between Chinese and English words significantly enhances readability. This tool automates the process, saving time and improving the reading experience.
 
-## Usage Demo
+## Installation
+
+```bash
+cargo install add_space
+```
+
+## Usage
 
 ### Command Line
 
@@ -41,6 +50,23 @@ Use with standard input/output streams:
 echo "Hello世界" | add_space
 ```
 
+### LazyVim Configuration
+
+If you use [lazyvim](https://github.com/LazyVim/LazyVim), you can edit `~/.config/nvim/lua/config/autocmds.lua` and add the following configuration to automatically add spaces on file save:
+
+```lua
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = vim.api.nvim_create_augroup("add_space_on_save", { clear = true }),
+  pattern = { "*.txt", "*.md", "*.mdt" },
+  callback = function()
+    local file_path = vim.fn.expand("%:p")
+    local command = "add_space -w " .. vim.fn.shellescape(file_path)
+    vim.fn.system(command)
+    vim.cmd("edit")
+  end,
+})
+```
+
 ### Examples
 
 | Original Text | Processed Text |
@@ -52,16 +78,9 @@ echo "Hello世界" | add_space
 
 ## Design Philosophy
 
-The core logic of this project is a state machine that determines whether to add a space based on the character type of the current and previous characters.
+The program's entry point is in `main.rs`, which handles command-line argument parsing and file I/O. The core logic resides in `lib.rs`.
 
-The `state` function categorizes each character into one of the following states:
-
-- `Char`: Chinese characters, Japanese characters, etc.
-- `Letter`: English letters, numbers, etc.
-- `Space`: Whitespace characters.
-- `Punctuation`: Punctuation marks.
-
-The `add_space` function iterates through the text, comparing the state of the current character with the previous one. A space is inserted between `Char` and `Letter` types to ensure proper spacing.
+The `add_space` function iterates through the text, using a state machine to determine whether a space is needed. It calls the `state` function to classify each character into one of four types: `Char` (Chinese, Japanese, etc.), `Letter` (English, numbers), `Space`, or `Punctuation`. A space is inserted when a `Char` type is followed by a `Letter` type or vice versa, ensuring proper spacing.
 
 ## Technology Stack
 
@@ -74,7 +93,7 @@ The `add_space` function iterates through the text, comparing the state of the c
 ```
 .
 ├── Cargo.toml      # Project configuration file
-├── README.md       # Project README
+├── README.mdt      # Project README
 ├── src
 │   ├── lib.rs      # Core logic for adding spaces
 │   └── main.rs     # Command-line interface
@@ -97,17 +116,26 @@ The practice of adding spaces between Chinese and English text, often called "pa
 ## 目录
 
 - [项目意义](#项目意义)
-- [项目使用的演示](#项目使用的演示)
-- [项目的设计思路](#项目的设计思路)
-- [用到的技术堆栈](#用到的技术堆栈)
-- [项目的文件结构](#项目的文件结构)
-- [相关历史小故事](#相关历史小故事)
+- [安装](#安装)
+- [使用演示](#使用演示)
+  - [命令行](#命令行)
+  - [lazyvim 配置](#lazyvim-配置)
+- [设计思路](#设计思路)
+- [技术堆栈](#技术堆栈)
+- [文件结构](#文件结构)
+- [历史小故事](#历史小故事)
 
 ## 项目意义
 
-在中文和英文混合的文本中，在中文和英文单词之间添加空格可以显著提高可读性。此工具可自动执行此过程，节省时间并改善阅读体验。
+在混合中英文的文本中，中英文之间添加空格能显著提升阅读体验。此工具可自动化该过程，节省时间。
 
-## 项目使用的演示
+## 安装
+
+```bash
+cargo install add_space
+```
+
+## 使用演示
 
 ### 命令行
 
@@ -129,6 +157,25 @@ add_space <file_path> --write
 echo "Hello世界" | add_space
 ```
 
+### lazyvim 配置
+
+如果你使用 [lazyvim](https://github.com/LazyVim/LazyVim) 的话，可以编辑 `~/.config/nvim/lua/config/autocmds.lua`
+
+加入如下的配置，让文件在保存的时候自动添加空格:
+
+```lua
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = vim.api.nvim_create_augroup("add_space_on_save", { clear = true }),
+  pattern = { "*.txt", "*.md", "*.mdt" },
+  callback = function()
+    local file_path = vim.fn.expand("%:p")
+    local command = "add_space -w " .. vim.fn.shellescape(file_path)
+    vim.fn.system(command)
+    vim.cmd("edit")
+  end,
+})
+```
+
 ### 示例
 
 | 原始文本 | 处理后文本 |
@@ -138,31 +185,24 @@ echo "Hello世界" | add_space
 | `中文English中文` | `中文 English 中文` |
 | `使用了Python的print()函数打印"你好,世界"` | `使用了 Python 的 print() 函数打印"你好,世界"` |
 
-## 项目的设计思路
+## 设计思路
 
-该项目的核心逻辑是状态机，它根据当前和前一个字符的字符类型确定是否添加空格。
+程序入口位于 `main.rs`，负责处理命令行参数解析和文件 I/O。核心逻辑位于 `lib.rs`。
 
-`state` 函数将每个字符分类为以下状态之一：
+`add_space` 函数遍历文本，通过状态机确定是否需要添加空格。它调用 `state` 函数将每个字符分为四种类型之一：`Char`（中文、日文等）、`Letter`（英文、数字）、`Space` 或 `Punctuation`。当 `Char` 类型后跟 `Letter` 类型或反之时，会插入空格，以确保适当的间距。
 
-- `Char`: 中文字符、日文字符等。
-- `Letter`: 英文字母、数字等。
-- `Space`: 空白字符。
-- `Punctuation`: 标点符号。
+## 技术堆栈
 
-`add_space` 函数遍历文本，将当前字符的状态与前一个字符的状态进行比较。在 `Char` 和 `Letter` 类型之间插入空格以确保适当的间距。
+- **Rust**: 项目使用的编程语言。
+- **clap**: 解析命令行参数的库。
+- **unicode-script**: 确定 Unicode 字符脚本的库。
 
-## 用到的技术堆栈
-
-- **Rust**: 用于此项目的编程语言。
-- **clap**: 用于解析命令行参数的库。
-- **unicode-script**: 用于确定 Unicode 字符脚本的库。
-
-## 项目的文件结构
+## 文件结构
 
 ```
 .
 ├── Cargo.toml      # 项目配置文件
-├── README.md       # 项目 README
+├── README.mdt      # 项目 README
 ├── src
 │   ├── lib.rs      # 添加空格的核心逻辑
 │   └── main.rs     # 命令行界面
@@ -170,8 +210,8 @@ echo "Hello世界" | add_space
     └── main.rs     # 测试用例
 ```
 
-## 相关历史小故事
+## 历史小故事
 
-在中英文之间添加空格的做法，通常被称为“盘古之白”，是随着数字排版的兴起而出现的一种惯例。虽然传统中文文本没有空格，但英文单词和字母的加入需要一种新的方法来保持可读性。早期的数字系统和搜索引擎在没有明确分隔符的情况下难以解析混合脚本的文本。尽管现代技术在很大程度上克服了这些限制，但出于美学原因和改善阅读体验，这种惯例仍然存在。这导致了许多工具和脚本的开发，如此项目，致力于自动化该过程。
+在中英文之间添加空格的做法，常被称为“盘古之白”，是随着数字排版的兴起而出现的惯例。传统中文文本没有空格，但英文单词和字母的加入需要新方法来保持可读性。早期数字系统和搜索引擎在没有明确分隔符的情况下难以解析混合脚本的文本。尽管现代技术已在很大程度上克服这些限制，但出于美学原因和改善阅读体验，这种惯例仍然存在。这催生了许多自动化此过程的工具和脚本，如此项目。
 
 <+ ../about.md >
