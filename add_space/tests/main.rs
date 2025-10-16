@@ -96,7 +96,7 @@ fn test() -> Void {
     ),
     (
       "命令是`ls -la`，注意不要用''",
-      "命令是`ls -la`，注意不要用''",
+      "命令是 `ls -la`，注意不要用''",
     ),
     (r#"\t"#, r#"\t"#),
     // from: test_string_with_escapes
@@ -114,6 +114,10 @@ fn test() -> Void {
     (
       r#"翻译能够完美保持Markdown的格式。"#,
       r#"翻译能够完美保持 Markdown 的格式。"#,
+    ),
+    (
+      r#"翻译能够完美保持`Markdown`的格式。"#,
+      r#"翻译能够完美保持 `Markdown` 的格式。"#,
     ),
   ] {
     let add = add_space(txt);

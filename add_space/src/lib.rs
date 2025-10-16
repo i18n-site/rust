@@ -18,7 +18,12 @@ pub fn state(c: char) -> State {
   {
     return State::Char;
   }
-  if r##"!"#%\'*+,-.:<=>?@^`·—‘’“”…、。「」『』！，：？；（）"##.contains(c)
+
+  if c == '`'{
+    return State::Letter;
+  }
+
+  if r##"!"#%\'*+,-.:<=>?@^·—‘’“”…、。「」『』！，：？；（）"##.contains(c)
     || (c.len_utf8() > 1 && unic_emoji_char::is_emoji(c))
   {
     return State::Punctuation;
