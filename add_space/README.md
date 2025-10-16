@@ -1,105 +1,178 @@
+[English](#en) / [中文](#cn)
+
+<a id="en"></a>
+
 # add_space
 
-```rust
-use unicode_script::{Script, UnicodeScript};
+A command-line tool for adding spaces between Chinese and English characters to improve readability.
 
-pub fn state(c: char) -> State {
-  if c.is_whitespace() {
-    return State::Space;
-  }
-  if matches!(
-    c.script(),
-    Script::Han
-      | Script::Hiragana
-      | Script::Katakana
-      | Script::Thai
-      | Script::Lao
-      | Script::Khmer
-      | Script::Myanmar
-      | Script::Tibetan
-  ) || ('０'..='９').contains(&c)
-  {
-    return State::Char;
-  }
+## Table of Contents
 
-  if c == '`'{
-    return State::Letter;
-  }
+- [Significance](#significance)
+- [Usage Demo](#usage-demo)
+- [Design Philosophy](#design-philosophy)
+- [Technology Stack](#technology-stack)
+- [File Structure](#file-structure)
+- [Historical Anecdote](#historical-anecdote)
 
-  if r##"!"#%\'*+,-.:<=>?@^·—‘’“”…、。「」『』！，：？；（）"##.contains(c)
-    || (c.len_utf8() > 1 && unic_emoji_char::is_emoji(c))
-  {
-    return State::Punctuation;
-  }
+## Significance
 
-  State::Letter
-}
+In mixed Chinese and English text, adding spaces between Chinese and English words can significantly enhance readability. This tool automates this process, saving time and improving the reading experience.
 
-fn push_stack(c: char, stack: &mut Vec<char>) {
-  if "[({".contains(c) {
-    stack.push(c);
-  }
-}
+## Usage Demo
 
-#[derive(PartialEq, Debug, Copy, Clone)]
-pub enum State {
-  Space,
-  Char,
-  Letter,
-  Punctuation,
-}
+### Command Line
 
-pub fn add_space(txt: impl AsRef<str>) -> String {
-  let txt = txt.as_ref();
-  let mut r = String::new();
-  let mut iter = txt.chars();
+Process a file and print the result to standard output:
 
-  if let Some(c) = iter.next() {
-    r.push(c);
-    let mut is_escape = c == '\\';
-    let mut pre = state(c);
-    let mut pre_c = c;
-    let mut stack = Vec::new();
-
-    push_stack(c, &mut stack);
-    for c in iter {
-      if is_escape {
-        is_escape = false;
-        r.push(c);
-        continue;
-      }
-      let s = state(c);
-      push_stack(c, &mut stack);
-      match s {
-        State::Char => {
-          if pre == State::Letter && !"[({".contains(pre_c) {
-            r.push(' ');
-          }
-          r.push(c);
-        }
-        State::Letter => {
-          is_escape = c == '\\';
-          if let Some(stack_last) = stack.last() {
-            if matches!((stack_last, c), ('[', ']') | ('(', ')') | ('{', '}')) {
-              stack.pop();
-            }
-          } else if (!is_escape && pre == State::Char)
-            || (",?!…".contains(pre_c))
-            || (pre_c == '.' && c.is_uppercase())
-          {
-            r.push(' ');
-          }
-          r.push(c);
-        }
-        _ => r.push(c),
-      }
-      pre = s;
-      pre_c = c;
-    }
-  }
-  r
-}
+```bash
+add_space <file_path>
 ```
+
+Process a file and write the changes back to the file:
+
+```bash
+add_space <file_path> --write
+```
+
+Use with standard input/output streams:
+
+```bash
+echo "Hello世界" | add_space
+```
+
+### Examples
+
+| Original Text | Processed Text |
+| --- | --- |
+| `OAuth 2.0鉴权用户只能查询到通过OAuth 2.0鉴权创建的会议` | `OAuth 2.0 鉴权用户只能查询到通过 OAuth 2.0 鉴权创建的会议` |
+| `当你凝视着bug，bug也凝视着你` | `当你凝视着 bug，bug 也凝视着你` |
+| `中文English中文` | `中文 English 中文` |
+| `使用了Python的print()函数打印"你好,世界"` | `使用了 Python 的 print() 函数打印"你好,世界"` |
+
+## Design Philosophy
+
+The core logic of this project is a state machine that determines whether to add a space based on the character type of the current and previous characters.
+
+The `state` function categorizes each character into one of the following states:
+
+- `Char`: Chinese characters, Japanese characters, etc.
+- `Letter`: English letters, numbers, etc.
+- `Space`: Whitespace characters.
+- `Punctuation`: Punctuation marks.
+
+The `add_space` function iterates through the text, comparing the state of the current character with the previous one. A space is inserted between `Char` and `Letter` types to ensure proper spacing.
+
+## Technology Stack
+
+- **Rust**: The programming language used for this project.
+- **clap**: A library for parsing command-line arguments.
+- **unicode-script**: A library for determining the script of a Unicode character.
+
+## File Structure
+
+```
+.
+├── Cargo.toml      # Project configuration file
+├── README.md       # Project README
+├── src
+│   ├── lib.rs      # Core logic for adding spaces
+│   └── main.rs     # Command-line interface
+└── tests
+    └── main.rs     # Test cases
+```
+
+## Historical Anecdote
+
+The practice of adding spaces between Chinese and English text, often called "pangu spacing," is a convention that emerged with the rise of digital typography. While traditional Chinese text has no spaces, the inclusion of English words and letters necessitated a new approach to maintain readability. Early digital systems and search engines struggled to parse mixed-script text without clear separators. Although modern technology has largely overcome these limitations, the convention persists for aesthetic reasons and to improve the reading experience. This has led to the development of numerous tools and scripts, like this one, dedicated to automating the process.
+
+---
+
+<a id="cn"></a>
+
+# add_space
+
+一个给中文和英文之间加空格，优化阅读体验的排版命令行工具。
+
+## 目录
+
+- [项目意义](#项目意义)
+- [项目使用的演示](#项目使用的演示)
+- [项目的设计思路](#项目的设计思路)
+- [用到的技术堆栈](#用到的技术堆栈)
+- [项目的文件结构](#项目的文件结构)
+- [相关历史小故事](#相关历史小故事)
+
+## 项目意义
+
+在中文和英文混合的文本中，在中文和英文单词之间添加空格可以显著提高可读性。此工具可自动执行此过程，节省时间并改善阅读体验。
+
+## 项目使用的演示
+
+### 命令行
+
+处理文件并将结果打印到标准输出：
+
+```bash
+add_space <file_path>
+```
+
+处理文件并将更改写回文件：
+
+```bash
+add_space <file_path> --write
+```
+
+与标准输入/输出流一起使用：
+
+```bash
+echo "Hello世界" | add_space
+```
+
+### 示例
+
+| 原始文本 | 处理后文本 |
+| --- | --- |
+| `OAuth 2.0鉴权用户只能查询到通过OAuth 2.0鉴权创建的会议` | `OAuth 2.0 鉴权用户只能查询到通过 OAuth 2.0 鉴权创建的会议` |
+| `当你凝视着bug，bug也凝视着你` | `当你凝视着 bug，bug 也凝视着你` |
+| `中文English中文` | `中文 English 中文` |
+| `使用了Python的print()函数打印"你好,世界"` | `使用了 Python 的 print() 函数打印"你好,世界"` |
+
+## 项目的设计思路
+
+该项目的核心逻辑是状态机，它根据当前和前一个字符的字符类型确定是否添加空格。
+
+`state` 函数将每个字符分类为以下状态之一：
+
+- `Char`: 中文字符、日文字符等。
+- `Letter`: 英文字母、数字等。
+- `Space`: 空白字符。
+- `Punctuation`: 标点符号。
+
+`add_space` 函数遍历文本，将当前字符的状态与前一个字符的状态进行比较。在 `Char` 和 `Letter` 类型之间插入空格以确保适当的间距。
+
+## 用到的技术堆栈
+
+- **Rust**: 用于此项目的编程语言。
+- **clap**: 用于解析命令行参数的库。
+- **unicode-script**: 用于确定 Unicode 字符脚本的库。
+
+## 项目的文件结构
+
+```
+.
+├── Cargo.toml      # 项目配置文件
+├── README.md       # 项目 README
+├── src
+│   ├── lib.rs      # 添加空格的核心逻辑
+│   └── main.rs     # 命令行界面
+└── tests
+    └── main.rs     # 测试用例
+```
+
+## 相关历史小故事
+
+在中英文之间添加空格的做法，通常被称为“盘古之白”，是随着数字排版的兴起而出现的一种惯例。虽然传统中文文本没有空格，但英文单词和字母的加入需要一种新的方法来保持可读性。早期的数字系统和搜索引擎在没有明确分隔符的情况下难以解析混合脚本的文本。尽管现代技术在很大程度上克服了这些限制，但出于美学原因和改善阅读体验，这种惯例仍然存在。这导致了许多工具和脚本的开发，如此项目，致力于自动化该过程。
 
 ## About
 
