@@ -1,0 +1,22 @@
+[package]
+name = "volo_layer"
+version = "0.1.4"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/volo_layer"
+description = "volo_layer"
+keywords = []
+
+[features]
+default = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+coarsetime = "0.1.36"
+tracing = "0.1.41"
+volo = "0.11.1"
+volo-grpc = "0.11.7"

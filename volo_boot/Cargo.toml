@@ -1,0 +1,49 @@
+[package]
+name = "volo_boot"
+version = "0.1.1"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/volo_boot"
+description = "volo_boot"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+
+[dependencies]
+log = "0.4.28"
+static_init = "1.0.4"
+volo = "0.11.1"
+
+[dependencies.aok]
+version = "0.1.18"
+path = "../aok"
+
+[dependencies.genv]
+version = "0.1.16"
+path = "../genv"
+
+[dependencies.log_init]
+version = "0.1.27"
+path = "../log_init"
+
+[dependencies.static_]
+version = "0.1.15"
+path = "../static_"
+
+[dependencies.volo-grpc]
+version = "0.11.7"
+features = [ "zstd" ]
+
+[dependencies.volo_layer]
+version = "0.1.4"
+path = "../volo_layer"
+
+[dependencies.xerr]
+version = "0.1.16"
+path = "../xerr"

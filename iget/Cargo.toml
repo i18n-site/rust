@@ -1,0 +1,37 @@
+[package]
+name = "iget"
+version = "0.1.17"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/iget"
+description = "iget"
+
+[dependencies]
+bytes = "1.10.1"
+futures-util = "0.3.31"
+static_init = "1.0.4"
+thiserror = "2.0.17"
+
+[dependencies.pbar]
+version = "0.1.8"
+path = "../pbar"
+
+[dependencies.ifs]
+version = "0.1.47"
+path = "../ifs"
+features = [ "fs" ]
+default-features = false
+
+[dependencies.aok]
+version = "0.1.18"
+path = "../aok"
+
+[dependencies.reqwest]
+version = "0.12"
+features = [ "rustls-tls", "rustls-tls-native-roots", "stream" ]
+default-features = false
+
+[dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync", "fs" ]

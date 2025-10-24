@@ -1,0 +1,23 @@
+[package]
+name = "frame_stream"
+version = "0.1.2"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/frame_stream"
+description = "frame_stream"
+keywords = []
+
+[features]
+default = []
+axum = ["dep:axum"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+axum = { version = "0.8.6", optional = true }
+bytes = "1.10.1"
+futures-lite = "2.6.1"
+kanal = "0.1.1"

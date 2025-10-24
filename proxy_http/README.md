@@ -1,0 +1,423 @@
+[English](#english) | [中文](#chinese)
+
+<a id="english"></a>
+
+## English
+
+- [Introduction](#introduction-en)
+- [Tech Stack](#tech-stack-en)
+- [Installation and Configuration](#installation-and-configuration-en)
+- [Library Usage](#library-usage-en)
+- [Design](#design-en)
+- [File Structure](#file-structure-en)
+- [History](#history-en)
+
+<a id="introduction-en"></a>
+### Introduction
+
+`proxy_http` is an asynchronous HTTP proxy server built with Rust. It routes outgoing traffic through upstream proxy servers fetched from subscription links. The design supports IP rotation, user anonymity, and bypassing network restrictions. Access is controlled via authentication. It can be used as a library or a standalone binary.
+
+<a id="tech-stack-en"></a>
+### Tech Stack
+
+- **[Tokio](https://tokio.rs/)**: Asynchronous runtime for network applications.
+- **[Hyper](https://hyper.rs/)**: HTTP implementation for Rust.
+- **[proxy-fetch](https://github.com/i18n-site/rust/tree/dev/proxy_fetch)**: Fetches and manages proxy providers from subscription URLs.
+- **[Reqwest](https://github.com/seanmonstar/reqwest)**: HTTP client for integration testing.
+- **[ThisError](https://github.com/dtolnay/thiserror)**: Library for deriving error types.
+
+<a id="installation-and-configuration-en"></a>
+### Installation and Configuration
+
+This project can be run as a standalone application.
+
+#### Installation
+
+Install the binary using `cargo`:
+
+```bash
+cargo install proxy_http
+```
+
+#### Configuration
+
+The application is configured via environment variables.
+
+- `PROXY_SUBSCRITION_URL`: **Required**. Semicolon-separated list of subscription URLs for fetching upstream proxy servers.
+- `PROXY_USER`: **Required**. Username for client authentication.
+- `PROXY_PASSWORD`: **Required**. Password for client authentication.
+- `PORT`: Optional. Server listening port. Defaults to `15080`.
+
+#### Running
+
+Run the binary after configuration:
+
+```bash
+proxy_http
+```
+
+The server will start and listen on the configured port.
+
+<a id="library-usage-en"></a>
+### Library Usage
+
+Examples are adapted from `tests/main.rs`.
+
+#### Example 1: Standard HTTP Proxy Request
+
+This test initializes the server, verifies authentication, and sends a request.
+
+```rust
+#[tokio::test]
+async fn test_proxy() -> Void {
+  // Load upstream proxies from environment variable
+  let fetch = proxy_fetch::load(PROXY_SUBSCRITION_URL.split(";")).await?;
+
+  let user = "test";
+  let password = "pwd";
+  let port = 32342;
+  let addr = SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::new(127, 0, 0, 1), port));
+
+  // Run proxy server in background task
+  tokio::spawn(async move {
+    xerr::log!(proxy_http::run(fetch, addr, user, &password).await);
+  });
+  tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
+
+  let url = "http://ifconfig.me/ip";
+
+  // 1. Test with incorrect credentials
+  let client_fail = reqwest::Client::builder()
+    .proxy(reqwest::Proxy::http(format!("http://test:err@127.0.0.1:{port}"))?)
+    .build()?;
+  let res_fail = client_fail.get(url).send().await?;
+  assert_eq!(res_fail.status(), reqwest::StatusCode::PROXY_AUTHENTICATION_REQUIRED);
+
+  // 2. Test with correct credentials
+  let client_ok = reqwest::Client::builder()
+    .proxy(reqwest::Proxy::http(format!("http://{{user}}:{{password}}@127.0.0.1:{port}"))?)
+    .build()?;
+  let res_ok = client_ok.get(url).send().await?;
+  let ip = res_ok.text().await?;
+  assert!(!ip.is_empty());
+
+  OK
+}
+```
+
+#### Example 2: HTTP Tunnel (CONNECT)
+
+This test establishes an HTTP tunnel for a `CONNECT` request.
+
+```rust
+#[tokio::test]
+async fn test_tunnel_proxy() -> Void {
+  // Server setup
+  let fetch = proxy_fetch::load(PROXY_SUBSCRITION_URL.split(";")).await?;
+  let user = "test";
+  let password = "pwd";
+  let port = 32343;
+  let addr = SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::new(127, 0, 0, 1), port));
+  tokio::spawn(async move {
+    xerr::log!(proxy_http::run(fetch, addr, user, &password).await);
+  });
+  tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
+
+  let target_host = "ifconfig.me";
+  let target_port = 80;
+
+  // 1. Connect to proxy server
+  let mut stream = TcpStream::connect(format!("127.0.0.1:{}", port)).await?;
+
+  // 2. Send CONNECT request to establish tunnel
+  let connect_request = format!(
+    "CONNECT {{}}:{} HTTP/1.1\r\n\
+     Host: {{}}: {{}}\r\n\
+     Proxy-Authorization: Basic {{}}\r\n\
+     \r\n",
+    target_host, target_port,
+    target_host, target_port,
+    base64::general_purpose::STANDARD.encode(format!("{}:{{}}", user, password))
+  );
+  stream.write_all(connect_request.as_bytes()).await?;
+
+  // 3. Confirm tunnel is established (HTTP/1.1 200)
+  let mut response = vec![0u8; 1024];
+  stream.read(&mut response).await?;
+  assert!(String::from_utf8_lossy(&response).contains("200"));
+
+  // 4. Send HTTP GET request through tunnel
+  let http_request = "GET /ip HTTP/1.1\r\nHost: ifconfig.me\r\n\r\n";
+  stream.write_all(http_request.as_bytes()).await?;
+
+  // 5. Read final response from target server
+  let mut final_response = Vec::new();
+  stream.read_to_end(&mut final_response).await?;
+  assert!(!final_response.is_empty());
+
+  OK
+}
+```
+
+<a id="design-en"></a>
+### Design
+
+The design is asynchronous and modular.
+
+#### Request Flow
+
+1.  **`run.rs`**: The `run` function binds a `TcpListener` and accepts incoming TCP connections, spawning a new asynchronous task for each.
+
+2.  **`handle.rs`**: `hyper` serves the connection. The `handle` function is called for each HTTP request.
+
+3.  **`is_authorized.rs`**: `handle` calls `is_authorized` to check the `Proxy-Authorization` header. Authentication failure returns a `407` status.
+
+4.  **`handle.rs`**: For `CONNECT` requests, the method initiates a protocol upgrade via `hyper::upgrade::on`, passing the stream to `upgrade::upgrade`. For standard HTTP requests, it passes the request to `proxy::proxy`.
+
+5.  **`upgrade.rs` & `proxy.rs`**: `upgrade` serves the tunnel and uses `proxy::proxy` to forward requests. `proxy` is the forwarding engine, sending the request to an upstream proxy and returning the response.
+
+<a id="file-structure-en"></a>
+### File Structure
+
+- `Cargo.toml`: Project metadata and dependencies.
+- `src/main.rs`: Executable entry point.
+- `src/lib.rs`: Library root, exposes modules.
+- `src/error.rs`: Defines error types.
+- `src/handle.rs`: Main request handler, performs authentication and routing.
+- `src/is_authorized.rs`: Implements `Proxy-Authorization` check.
+- `src/proxy.rs`: Core request forwarding logic.
+- `src/run.rs`: Contains the main `run` function for the server loop.
+- `src/upgrade.rs`: Handles `CONNECT` request tunneling.
+- `tests/main.rs`: Integration tests.
+
+<a id="history-en"></a>
+### History
+
+Proxy server concepts originated at CERN in the early 1990s with the World Wide Web. Initial use was as protocol gateways, evolving to caching to reduce network traffic. The intermediary concept is now part of network architecture, enabling security, content filtering, and distributed systems.
+
+---
+
+<a id="chinese"></a>
+
+## 中文
+
+- [项目简介](#项目简介-zh)
+- [技术栈](#技术栈-zh)
+- [安装与配置](#安装与配置-zh)
+- [作为库使用](#作为库使用-zh)
+- [设计思路](#设计思路-zh)
+- [文件结构](#文件结构-zh)
+- [相关历史](#相关历史-zh)
+
+<a id="项目简介-zh"></a>
+### 项目简介
+
+`proxy_http` 是基于 Rust 构建的异步 HTTP 代理服务器。其功能是路由出站流量至从订阅链接获取的上游代理服务器。设计支持 IP 轮换、用户匿名和绕过网络限制。通过身份验证控制访问。项目可作为库或独立二进制文件使用。
+
+<a id="技术栈-zh"></a>
+### 技术栈
+
+- **[Tokio](https://tokio.rs/)**: 用于网络应用的异步运行时。
+- **[Hyper](https://hyper.rs/)**: Rust 的 HTTP 实现。
+- **[proxy-fetch](https://github.com/i18n-site/rust/tree/dev/proxy_fetch)**: 从订阅 URL 获取和管理代理提供程序。
+- **[Reqwest](https://github.com/seanmonstar/reqwest)**: 用于集成测试的 HTTP 客户端。
+- **[ThisError](https://github.com/dtolnay/thiserror)**: 用于派生错误类型的库。
+
+<a id="安装与配置-zh"></a>
+### 安装与配置
+
+此项目可作为独立应用程序运行。
+
+#### 安装
+
+使用 `cargo` 安装二进制文件：
+
+```bash
+cargo install proxy_http
+```
+
+#### 配置
+
+通过环境变量配置应用程序。
+
+- `PROXY_SUBSCRITION_URL`: **必需**。用于获取上游代理服务器的订阅 URL 列表，以分号分隔。
+- `PROXY_USER`: **必需**。用于客户端身份验证的用户名。
+- `PROXY_PASSWORD`: **必需**。用于客户端身份验证的密码。
+- `PORT`: 可选。服务器监听端口，默认为 `15080`。
+
+#### 运行
+
+配置后运行二进制文件：
+
+```bash
+proxy_http
+```
+
+服务器将启动并监听配置的端口。
+
+<a id="作为库使用-zh"></a>
+### 作为库使用
+
+示例改编自 `tests/main.rs`。
+
+#### 示例一：标准 HTTP 代理请求
+
+此测试初始化服务器，验证身份验证，然后发送请求。
+
+```rust
+#[tokio::test]
+async fn test_proxy() -> Void {
+  // 从环境变量加载上游代理
+  let fetch = proxy_fetch::load(PROXY_SUBSCRITION_URL.split(";")).await?;
+
+  let user = "test";
+  let password = "pwd";
+  let port = 32342;
+  let addr = SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::new(127, 0, 0, 1), port));
+
+  // 在后台任务中运行代理服务器
+  tokio::spawn(async move {
+    xerr::log!(proxy_http::run(fetch, addr, user, &password).await);
+  });
+  tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
+
+  let url = "http://ifconfig.me/ip";
+
+  // 1. 使用错误凭据测试
+  let client_fail = reqwest::Client::builder()
+    .proxy(reqwest::Proxy::http(format!("http://test:err@127.0.0.1:{port}"))?)
+    .build()?;
+  let res_fail = client_fail.get(url).send().await?;
+  assert_eq!(res_fail.status(), reqwest::StatusCode::PROXY_AUTHENTICATION_REQUIRED);
+
+  // 2. 使用正确凭据测试
+  let client_ok = reqwest::Client::builder()
+    .proxy(reqwest::Proxy::http(format!("http://{{user}}:{{password}}@127.0.0.1:{port}"))?)
+    .build()?;
+  let res_ok = client_ok.get(url).send().await?;
+  let ip = res_ok.text().await?;
+  assert!(!ip.is_empty());
+
+  OK
+}
+```
+
+#### 示例二：HTTP 隧道 (CONNECT)
+
+此测试为 `CONNECT` 请求建立 HTTP 隧道。
+
+```rust
+#[tokio::test]
+async fn test_tunnel_proxy() -> Void {
+  // 服务器设置
+  let fetch = proxy_fetch::load(PROXY_SUBSCRITION_URL.split(";")).await?;
+  let user = "test";
+  let password = "pwd";
+  let port = 32343;
+  let addr = SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::new(127, 0, 0, 1), port));
+  tokio::spawn(async move {
+    xerr::log!(proxy_http::run(fetch, addr, user, &password).await);
+  });
+  tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
+
+  let target_host = "ifconfig.me";
+  let target_port = 80;
+
+  // 1. 连接到代理服务器
+  let mut stream = TcpStream::connect(format!("127.0.0.1:{}", port)).await?;
+
+  // 2. 发送 CONNECT 请求以建立隧道
+  let connect_request = format!(
+    "CONNECT {{}}:{} HTTP/1.1\r\n\
+     Host: {{}}: {{}}\r\n\
+     Proxy-Authorization: Basic {{}}\r\n\
+     \r\n",
+    target_host, target_port,
+    target_host, target_port,
+    base64::general_purpose::STANDARD.encode(format!("{}:{{}}", user, password))
+  );
+  stream.write_all(connect_request.as_bytes()).await?;
+
+  // 3. 确认隧道已建立 (HTTP/1.1 200)
+  let mut response = vec![0u8; 1024];
+  stream.read(&mut response).await?;
+  assert!(String::from_utf8_lossy(&response).contains("200"));
+
+  // 4. 通过隧道发送 HTTP GET 请求
+  let http_request = "GET /ip HTTP/1.1\r\nHost: ifconfig.me\r\n\r\n";
+  stream.write_all(http_request.as_bytes()).await?;
+
+  // 5. 从目标服务器读取最终响应
+  let mut final_response = Vec::new();
+  stream.read_to_end(&mut final_response).await?;
+  assert!(!final_response.is_empty());
+
+  OK
+}
+```
+
+<a id="设计思路-zh"></a>
+### 设计思路
+
+设计遵循异步和模块化原则。
+
+#### 请求流程
+
+1.  **`run.rs`**: `run` 函数绑定 `TcpListener` 并接受传入的 TCP 连接，为每个连接生成新的异步任务。
+
+2.  **`handle.rs`**: `hyper` 服务于连接。`handle` 函数为每个 HTTP 请求调用。
+
+3.  **`is_authorized.rs`**: `handle` 调用 `is_authorized` 检查 `Proxy-Authorization` 头。身份验证失败返回 `407` 状态码。
+
+4.  **`handle.rs`**: 对于 `CONNECT` 请求，该方法通过 `hyper::upgrade::on` 启动协议升级，将流传递给 `upgrade::upgrade`。对于标准 HTTP 请求，它将请求传递给 `proxy::proxy`。
+
+5.  **`upgrade.rs` & `proxy.rs`**: `upgrade` 服务于隧道，并使用 `proxy::proxy` 转发请求。`proxy` 是转发引擎，将请求发送到上游代理并返回响应。
+
+<a id="文件结构-zh"></a>
+### 文件结构
+
+- `Cargo.toml`: 项目元数据和依赖项。
+- `src/main.rs`: 可执行文件入口点。
+- `src/lib.rs`: 库的根，导出模块。
+- `src/error.rs`: 定义错误类型。
+- `src/handle.rs`: 主请求处理器，执行身份验证和路由。
+- `src/is_authorized.rs`: 实现 `Proxy-Authorization` 检查。
+- `src/proxy.rs`: 核心请求转发逻辑。
+- `src/run.rs`: 包含服务器循环的主 `run` 函数。
+- `src/upgrade.rs`: 处理 `CONNECT` 请求的隧道功能。
+- `tests/main.rs`: 集成测试。
+
+<a id="相关历史-zh"></a>
+### 相关历史
+
+代理服务器概念与万维网同时起源于 1990 年代初的欧洲核子研究中心（CERN）。最初用作协议网关，后演变为缓存以减少网络流量。中介概念现已成为网络架构的一部分，支持安全、内容过滤和分布式系统。
+
+---
+
+## About
+
+This project is an open-source component of [i18n.site ⋅ Internationalization Solution](https://i18n.site).
+
+* [i18 : MarkDown Command Line Translation Tool](https://i18n.site/i18)
+
+  The translation perfectly maintains the Markdown format.
+
+  It recognizes file changes and only translates the modified files.
+
+  The translated Markdown content is editable; if you modify the original text and translate it again, manually edited translations will not be overwritten (as long as the original text has not been changed).
+
+* [i18n.site : MarkDown Multi-language Static Site Generator](https://i18n.site/i18n.site)
+
+  Optimized for a better reading experience
+
+## 关于
+
+本项目为 [i18n.site ⋅ 国际化解决方案](https://i18n.site) 的开源组件。
+
+* [i18 : MarkDown 命令行翻译工具](https://i18n.site/i18)
+
+  翻译能够完美保持 Markdown 的格式。能识别文件的修改，仅翻译有变动的文件。
+
+  Markdown 翻译内容可编辑；如果你修改原文并再次机器翻译，手动修改过的翻译不会被覆盖 （ 如果这段原文没有被修改 ）。
+
+* [i18n.site : MarkDown 多语言静态站点生成器](https://i18n.site/i18n.site) 为阅读体验而优化。

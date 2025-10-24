@@ -1,0 +1,25 @@
+[package]
+name = "loginit"
+version = "0.1.18"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/loginit"
+description = "init log for tracing use tracing_subscriber"
+
+[dependencies]
+atty = { version = "0.2.14", optional = true }
+tracing = "0.1.41"
+
+[dependencies.tracing-stackdriver]
+version = "0.10.0"
+optional = true
+
+[dependencies.tracing-subscriber]
+version = "0.3.20"
+features = ["env-filter"]
+
+[features]
+default = ["stdout"]
+stackdriver = ["dep:tracing-stackdriver"]
+stdout = ["dep:atty"]

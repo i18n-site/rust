@@ -1,0 +1,11 @@
+# pc
+
+[postcard](https://github.com/jamesmunns/postcard) deserializer , support incomple struct deserialize into complete struct
+
+[postcard](https://github.com/jamesmunns/postcard) 序列化解码，支持把不完整类型的序列化解码到完整类型
+
+```rust
+<+ ./tests/incomplete.rs >
+```
+
+<+ ../about.md >

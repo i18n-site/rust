@@ -1,0 +1,249 @@
+# kill_port
+
+[English](#english) | [中文](#chinese)
+
+<a id="english"></a>
+
+## English
+
+- [Introduction](#introduction-en)
+- [Usage](#usage-en)
+- [Design Philosophy](#design-philosophy-en)
+- [Technology Stack](#technology-stack-en)
+- [File Structure](#file-structure-en)
+- [A Little Story](#a-little-story-en)
+
+<a id="introduction-en"></a>
+
+### Introduction
+
+`kill_port` is a utility library for developers. It provides a function to find and terminate processes listening on a specified network port. This is particularly useful in development environments where a port might be unexpectedly occupied, preventing an application from starting.
+
+<a id="usage-en"></a>
+
+### Usage
+
+Add `kill_port` as a dependency in your `Cargo.toml`, then call the function as shown below.
+
+The following example demonstrates how to terminate a process listening on port `8080`.
+
+```rust
+use std::{
+  process::{Command, Stdio},
+  thread,
+  time::Duration,
+};
+
+fn test_kill_port() {
+  let port = 8080;
+
+  // Start a dummy process that listens on the specified port
+  let mut child = Command::new("python")
+    .arg("-c")
+    .arg(format!(
+      "import socket; s = socket.socket(); s.bind(('127.0.0.1', {})); s.listen(1); input()",
+      port
+    ))
+    .stdin(Stdio::piped())
+    .spawn()
+    .expect("Failed to start dummy process");
+
+  // Give it a moment to start up and bind to the port
+  thread::sleep(Duration::from_millis(500));
+
+  // Use the kill_port function to terminate the process
+  kill_port::kill_port(port);
+
+  // Wait for the process to terminate
+  let status = child.wait().expect("Failed to wait for dummy process");
+
+  // Assert that the process was terminated
+  assert!(status.success() == false);
+}
+```
+
+<a id="design-philosophy-en"></a>
+
+### Design Philosophy
+
+The library's design is direct and minimalist, adhering to the principle of doing one thing well.
+
+The process flow is as follows:
+1.  The `kill_port` function accepts a port number (`u16`).
+2.  It retrieves its own process ID to prevent self-termination.
+3.  It uses the `listeners::get_processes_by_port` function to identify all processes currently listening on the specified port.
+4.  It iterates through the list of found processes.
+5.  For each process that is not the program itself, it uses `nix::sys::signal::kill` to send a `SIGINT` signal (the equivalent of a `Ctrl+C` interrupt), requesting a graceful shutdown.
+
+This approach ensures that only the target processes are terminated, leaving the calling process unaffected.
+
+<a id="technology-stack-en"></a>
+
+### Technology Stack
+
+- **Language:** [Rust](https://www.rust-lang.org/)
+- **Core Crates:**
+  - `listeners`: For discovering processes associated with a specific network port.
+  - `nix`: Provides safe, low-level bindings to POSIX APIs, used here for sending termination signals to processes.
+
+<a id="file-structure-en"></a>
+
+### File Structure
+
+The project is organized with a standard Rust library structure.
+
+```
+.
+├── Cargo.toml      # Package manifest and dependencies
+├── README.mdt      # Project documentation template
+├── src
+│   └── lib.rs      # Core library code
+└── tests
+    └── main.rs     # Integration tests
+```
+
+<a id="a-little-story-en"></a>
+
+### A Little Story: The `kill` Command
+
+The `kill` command, a staple for developers and system administrators, was introduced in one of the earliest versions of the Unix operating system. Its name is somewhat misleading; the command does not inherently "kill" processes. Instead, it sends signals.
+
+A signal is a form of inter-process communication. When `kill` is invoked (e.g., `kill <PID>`), it sends the default `SIGTERM` (terminate) signal. This is a polite request asking the process to shut down gracefully, allowing it to save its state and release resources. If a process is stubborn, one might resort to `kill -9 <PID>`, which sends the `SIGKILL` signal. `SIGKILL` cannot be ignored by the process, forcing an immediate and often unclean termination. This distinction between "asking" and "forcing" has been a fundamental concept in process management for decades.
+
+---
+
+<a id="chinese"></a>
+
+## 中文
+
+- [项目简介](#introduction-zh)
+- [项目使用](#usage-zh)
+- [设计思路](#design-philosophy-zh)
+- [技术堆栈](#technology-stack-zh)
+- [文件结构](#file-structure-zh)
+- [相关故事](#a-little-story-zh)
+
+<a id="introduction-zh"></a>
+
+### 项目简介
+
+`kill_port` 是一个面向开发者的工具库。它提供了一个函数，用于查找并终止监听指定网络端口的进程。在开发环境中，端口时常被意外占用，导致应用程序无法启动，此工具可用于解决该问题。
+
+<a id="usage-zh"></a>
+
+### 项目使用
+
+在 `Cargo.toml` 中添加 `kill_port` 作为依赖，然后如下所示调用函数。
+
+以下示例演示了如何终止监听 `8080` 端口的进程。
+
+```rust
+use std::{
+  process::{Command, Stdio},
+  thread,
+  time::Duration,
+};
+
+fn test_kill_port() {
+  let port = 8080;
+
+  // 启动一个监听指定端口的虚拟进程
+  let mut child = Command::new("python")
+    .arg("-c")
+    .arg(format!(
+      "import socket; s = socket.socket(); s.bind(('127.0.0.1', {})); s.listen(1); input()",
+      port
+    ))
+    .stdin(Stdio::piped())
+    .spawn()
+    .expect("未能启动虚拟进程");
+
+  // 等待片刻，确保进程已启动并绑定到端口
+  thread::sleep(Duration::from_millis(500));
+
+  // 使用 kill_port 函数终止该进程
+  kill_port::kill_port(port);
+
+  // 等待进程终止
+  let status = child.wait().expect("未能等待虚拟进程");
+
+  // 断言该进程已被终止
+  assert!(status.success() == false);
+}
+```
+
+<a id="design-philosophy-zh"></a>
+
+### 设计思路
+
+该库的设计直接且简约，遵循“做好一件事”的原则。
+
+其调用流程如下：
+1.  `kill_port` 函数接收一个端口号 (`u16`) 作为参数。
+2.  获取当前进程ID，以避免自我终止。
+3.  使用 `listeners::get_processes_by_port` 函数识别所有正在监听指定端口的进程。
+4.  遍历找到的进程列表。
+5.  对于每个非自身的进程，使用 `nix::sys::signal::kill` 发送 `SIGINT` 信号（相当于 `Ctrl+C` 中断），请求其优雅关闭。
+
+这种方法确保只终止目标进程，而不影响调用进程本身。
+
+<a id="technology-stack-zh"></a>
+
+### 技术堆栈
+
+- **语言:** [Rust](https://www.rust-lang.org/)
+- **核心依赖包:**
+  - `listeners`: 用于发现与特定网络端口关联的进程。
+  - `nix`: 提供对 POSIX API 的安全、底层绑定，此处用于向进程发送终止信号。
+
+<a id="file-structure-zh"></a>
+
+### 文件结构
+
+项目采用标准的 Rust 库结构进行组织。
+
+```
+.
+├── Cargo.toml      # 包清单与依赖项
+├── README.mdt      # 项目文档模板
+├── src
+│   └── lib.rs      # 核心库代码
+└── tests
+    └── main.rs     # 集成测试
+```
+
+<a id="a-little-story-zh"></a>
+
+### 相关故事：`kill` 命令
+
+`kill` 命令是开发者和系统管理员的必备工具，它诞生于最早期的 Unix 操作系统版本之一。它的名字有些误导性；该命令本身并不直接“杀死”进程，而是发送信号。
+
+信号是一种进程间通信的形式。当调用 `kill` (例如 `kill <PID>`) 时，它会发送默认的 `SIGTERM` (终止) 信号。这是一个礼貌的请求，要求进程优雅地关闭，允许其保存状态并释放资源。如果一个进程“顽固不化”，人们可能会使用 `kill -9 <PID>`，它会发送 `SIGKILL` 信号。`SIGKILL` 信号无法被进程忽略，会强制其立即、且通常是不干净地终止。几十年来，这种“请求”与“强制”之间的区别一直是进程管理中的一个基本概念。
+
+## About
+
+This project is an open-source component of [i18n.site ⋅ Internationalization Solution](https://i18n.site).
+
+* [i18 : MarkDown Command Line Translation Tool](https://i18n.site/i18)
+
+  The translation perfectly maintains the Markdown format.
+
+  It recognizes file changes and only translates the modified files.
+
+  The translated Markdown content is editable; if you modify the original text and translate it again, manually edited translations will not be overwritten (as long as the original text has not been changed).
+
+* [i18n.site : MarkDown Multi-language Static Site Generator](https://i18n.site/i18n.site)
+
+  Optimized for a better reading experience
+
+## 关于
+
+本项目为 [i18n.site ⋅ 国际化解决方案](https://i18n.site) 的开源组件。
+
+* [i18 : MarkDown 命令行翻译工具](https://i18n.site/i18)
+
+  翻译能够完美保持 Markdown 的格式。能识别文件的修改，仅翻译有变动的文件。
+
+  Markdown 翻译内容可编辑；如果你修改原文并再次机器翻译，手动修改过的翻译不会被覆盖 （ 如果这段原文没有被修改 ）。
+
+* [i18n.site : MarkDown 多语言静态站点生成器](https://i18n.site/i18n.site) 为阅读体验而优化。

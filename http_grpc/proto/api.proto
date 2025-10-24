@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package http_grpc;
+
+message CallLi {
+  repeated uint64 id_func_id_li = 1;
+  repeated bytes data_li = 2;
+}
+
+message Response {
+  uint64 id = 1;
+  uint32 code = 2;
+  optional bytes body = 3;
+}
+
+service Service
+{
+  rpc _(CallLi) returns (Response);
+}

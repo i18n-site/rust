@@ -1,0 +1,16 @@
+[package]
+name = "xerr"
+version = "0.1.16"
+edition = "2024"
+license = "MulanPSL-2.0"
+homepage = "https://github.com/i18n-site/rust/tree/main/xerr"
+repository = "https://github.com/i18n-site/rust.git"
+description = "log error util"
+
+[dependencies]
+anyhow = "1.0.100"
+log = "0.4.28"
+
+[dev-dependencies.log_init]
+path = "../log_init"
+version = "0.1.27"

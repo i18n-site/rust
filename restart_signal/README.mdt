@@ -1,0 +1,149 @@
+# restart_signal
+
+[English](#english) | [中文](#chinese)
+
+---
+
+<a id="english"></a>
+
+## English
+
+### Table of Contents
+- [About The Project](#about-the-project)
+- [Getting Started](#getting-started)
+- [Design Philosophy](#design-philosophy)
+- [Tech Stack](#tech-stack)
+- [File Structure](#file-structure)
+- [A Little Story](#a-little-story)
+
+### About The Project
+
+`restart_signal` is a minimalist, cross-platform Rust utility designed to handle process termination signals gracefully. In complex applications, an abrupt shutdown can lead to data corruption or resource leaks. This library provides a clean, asynchronous mechanism to listen for common termination signals (`SIGHUP`, `SIGTERM`, `SIGINT`, `SIGQUIT`) and allow the application to perform a structured shutdown.
+
+### Getting Started
+
+To integrate `restart_signal`, add it to your dependencies and use the `restart_signal()` function to obtain a receiver. You can then `await` this receiver at any point in your application's lifecycle. When a termination signal is caught, the receiver will resolve, allowing the program to proceed with its cleanup logic.
+
+**Example:**
+
+```rust
+#[tokio::main]
+async fn main() {
+    println!("Application started. Waiting for termination signal...");
+
+    // Get the shutdown signal receiver
+    let shutdown_receiver = restart_signal::restart_signal();
+
+    // Await the signal
+    shutdown_receiver.recv().await;
+
+    println!("Termination signal received. Shutting down gracefully.");
+    // Add your cleanup logic here
+}
+```
+
+### Design Philosophy
+
+The library's design is centered on simplicity and non-blocking operation.
+
+1.  **Signal Handling in a Dedicated Thread**: It spawns a dedicated background thread to listen for OS signals using the `signal-hook` crate. This avoids interfering with the main application's execution.
+2.  **Asynchronous Notification**: Upon catching a signal, the background thread sends a unit `()` message through a `crossfire` MPMC (multi-producer, multi-consumer) channel.
+3.  **Graceful Shutdown Trigger**: The main application holds the asynchronous receiver end of the channel. By awaiting the receiver, the application can pause its execution until a signal is received, at which point it can proceed with a graceful shutdown sequence.
+
+This approach ensures that signal handling is decoupled from the primary application logic, providing a clear and reliable pattern for managing the application's lifecycle.
+
+### Tech Stack
+
+*   [rust-lang](https://www.rust-lang.org/)
+*   [signal-hook](https://crates.io/crates/signal-hook): A library for handling OS signals.
+*   [crossfire](https://crates.io/crates/crossfire): A crate for MPMC channel communication.
+*   [xerr](https://crates.io/crates/xerr): A utility for error handling.
+
+### File Structure
+
+```
+.
+├── Cargo.toml      # Package manifest
+├── README.mdt      # This documentation file
+└── src
+    └── lib.rs      # Core library code
+```
+
+### A Little Story
+
+Process signals are a foundational feature of Unix-like operating systems, dating back to the early 1970s at Bell Labs. Initially, different system calls handled various interrupts. By Unix Version 4 (1973), these were unified into a single `signal` call. The `kill` command, which we still use today, was introduced in Version 2 (1972). These signals, like `SIGINT` (interrupt from keyboard) and `SIGTERM` (termination request), were designed as a form of asynchronous inter-process communication, allowing the system or users to manage running processes. Their standardization in POSIX ensured they became a reliable and portable mechanism, forming the basis for the graceful process management that this library leverages.
+
+---
+
+<a id="chinese"></a>
+
+## 中文
+
+### 目录
+- [关于项目](#关于项目)
+- [快速开始](#快速开始)
+- [设计思路](#设计思路)
+- [技术栈](#技术栈)
+- [文件结构](#文件结构)
+- [相关故事](#相关故事)
+
+### 关于项目
+
+`restart_signal` 是一个极简的、跨平台的 Rust 工具库，旨在优雅地处理进程终止信号。在复杂的应用中，突然的关闭可能导致数据损坏或资源泄露。该库提供了一个简洁的异步机制，用于监听常见的终止信号（`SIGHUP`, `SIGTERM`, `SIGINT`, `SIGQUIT`），使应用程序能够执行有序的关闭操作。
+
+### 快速开始
+
+要集成 `restart_signal`，请将其添加到项目依赖中，并调用 `restart_signal()` 函数以获取一个接收器。随后，可以在应用程序生命周期的任何地方 `await` 这个接收器。当捕获到终止信号时，接收器将被解析，从而允许程序继续执行其清理逻辑。
+
+**示例:**
+
+```rust
+#[tokio::main]
+async fn main() {
+    println!("应用已启动。正在等待终止信号...");
+
+    // 获取关闭信号接收器
+    let shutdown_receiver = restart_signal::restart_signal();
+
+    // 等待信号
+    shutdown_receiver.recv().await;
+
+    println!("收到终止信号。正在优雅地关闭。");
+    // 在此添加清理逻辑
+}
+```
+
+### 设计思路
+
+该库的设计核心是简洁与非阻塞操作。
+
+1.  **专用线程处理信号**：它会生成一个专用的后台线程，使用 `signal-hook` 库来监听操作系统信号。这避免了对主应用程序执行的干扰。
+2.  **异步通知**：捕获到信号后，后台线程通过一个 `crossfire` MPMC (多生产者多消费者) 通道发送一个单元消息 `()`。
+3.  **优雅关闭触发**：主应用程序持有该通道的异步接收端。通过等待接收器，应用程序可以暂停其执行，直到接收到信号，此时它可以继续执行优雅的关闭序列。
+
+这种方法确保了信号处理与主应用逻辑的解耦，为管理应用程序的生命周期提供了一个清晰可靠的模式。
+
+### 技术栈
+
+*   [rust-lang](https://www.rust-lang.org/)
+*   [signal-hook](https://crates.io/crates/signal-hook): 用于处理操作系统信号的库。
+*   [crossfire](https://crates.io/crates/crossfire): 用于 MPMC 通道通信的库。
+*   [xerr](https://crates.io/crates/xerr): 用于错误处理的工具。
+
+### 文件结构
+
+```
+.
+├── Cargo.toml      # 包清单文件
+├── README.mdt      # 本文档文件
+└── src
+    └── lib.rs      # 核心库代码
+```
+
+### 相关故事
+
+进程信号是类 Unix 操作系统的一项基础功能，其历史可以追溯到 20 世纪 70 年代初的贝尔实验室。最初，不同的系统调用处理各种中断。到了 1973 年的 Unix 第 4 版，这些调用被统一为单一的 `signal` 调用。我们今天仍使用的 `kill` 命令则是在 1972 年的第 2 版中引入的。这些信号，如 `SIGINT`（来自键盘的中断）和 `SIGTERM`（终止请求），被设计为一种异步的进程间通信形式，允许系统或用户管理正在运行的进程。它们在 POSIX 中的标准化确保了其成为一种可靠且可移植的机制，构成了该库所利用的优雅进程管理的基础。
+
+---
+
+<+ ../about.md >
