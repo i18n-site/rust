@@ -4,10 +4,8 @@ mod call;
 mod response;
 mod result;
 
-pub use call::Call;
-// pub use call::{AsyncCall, Call};
+pub use call::{AsyncCall, Call};
 pub use http::Extensions;
-pub use log;
 pub use response::Response;
 pub use result::Result;
 

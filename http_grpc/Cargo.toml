@@ -22,7 +22,7 @@ bytes = "1.10.1"
 pilota = "0.12.3"
 
 [dependencies.xrpc]
-version = "0.1.14"
+version = "0.1.17"
 path = "../xrpc"
 
 [dev-dependencies]
