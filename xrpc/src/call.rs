@@ -12,7 +12,7 @@ macro_rules! call {
     prefix += Self::name();
 
     let start = coarsetime::Instant::now();
-    let result = Self::inner::<Result<Self::Result>>(args)$($await)*.into();
+    let result = Self::inner(args)$($await)*;
     let duration = start.elapsed().as_millis();
     prefix += " ";
     prefix += &duration.to_string();
@@ -42,7 +42,7 @@ pub trait Call {
   type Args: Debug;
   type Result;
 
-  fn inner<T: Into<Result<Self::Result>>>(args: &Self::Args) -> T;
+  fn inner(args: &Self::Args) -> Result<Self::Result>;
 
   fn name() -> &'static str;
 
@@ -55,7 +55,7 @@ pub trait AsyncCall {
   type Args: Debug;
   type Result;
 
-  fn inner<T: Into<Result<Self::Result>>>(args: &Self::Args) -> impl Future<Output = T>;
+  fn inner(args: &Self::Args) -> impl Future<Output = Result<Self::Result>>;
 
   fn name() -> &'static str;
 

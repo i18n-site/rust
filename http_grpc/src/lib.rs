@@ -7,10 +7,9 @@ use pilota::pb::Message;
 
 include!(concat!(env!("OUT_DIR"), "/api.rs"));
 
-pub struct ResData<T> {
+pub struct ResData {
   pub code: u32,
   pub body: Option<Bytes>,
-  _t: PhantomData<T>,
 }
 
 pub struct Res {
@@ -32,21 +31,6 @@ impl Res {
   }
 }
 
-impl<T: Message> From<T> for ResData<T> {
-  fn from(t: T) -> Self {
-    let mut body = Default::default();
-    t.encode(&mut body).unwrap();
-    Self {
-      code: 0,
-      body: if body.is_empty() {
-        None
-      } else {
-        Some(body.into_bytes_mut().into())
-      },
-      _t: PhantomData,
-    }
-  }
-}
 
 impl<T: Message> From<anyhow::Result<T>> for ResData<T> {
   fn from(t: std::result::Result<T, anyhow::Error>) -> Self {
