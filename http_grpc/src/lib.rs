@@ -49,7 +49,7 @@ pub fn async_call<T: xrpc::AsyncCall>(
   args: impl Into<Bytes>,
 ) -> xrpc::Result<<T as xrpc::AsyncCall>::Result>
 where
-  <T as xrpc::Call>::Args: Message + Default,
+  <T as xrpc::AsyncCall>::Args: Message + Default,
 {
   todo!()
 }
