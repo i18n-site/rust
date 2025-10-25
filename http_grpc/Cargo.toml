@@ -6,7 +6,7 @@ keywords = [ ]
 license = "MulanPSL-2.0"
 name = "http_grpc"
 repository = "https://github.com/i18n-site/rust.git"
-version = "0.1.6"
+version = "0.1.7"
 
 [package.metadata.docs.rs]
 all-features = true
