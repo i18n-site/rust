@@ -47,7 +47,10 @@ where
 pub fn async_call<T: xrpc::AsyncCall>(
   prefix: impl Into<String>,
   args: impl Into<Bytes>,
-) -> xrpc::Result<<T as xrpc::AsyncCall>::Result> {
+) -> xrpc::Result<<T as xrpc::AsyncCall>::Result>
+where
+  <T as xrpc::Call>::Args: Message + Default,
+{
   todo!()
 }
 
