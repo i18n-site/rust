@@ -10,7 +10,7 @@ message CallLi {
 message Response {
   uint64 id = 1;
   uint32 code = 2;
-  optional bytes body = 3;
+  bytes body = 3;
 }
 
 service Service

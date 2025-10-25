@@ -1,15 +1,13 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-use std::marker::PhantomData;
-
 use bytes::Bytes;
-use pilota::pb::Message;
+use pilota::{LinkedBytes, pb::Message};
 
 include!(concat!(env!("OUT_DIR"), "/api.rs"));
 
 pub struct ResData {
   pub code: u32,
-  pub body: Option<Bytes>,
+  pub body: Bytes,
 }
 
 pub struct Res {
@@ -17,7 +15,7 @@ pub struct Res {
 }
 
 impl Res {
-  pub fn dump<T>(&self, res: impl Into<ResData<T>>) -> Bytes {
+  pub fn dump(&self, res: impl Into<ResData>) -> Bytes {
     let res = res.into();
     let mut body = Default::default();
     api::http_grpc::Response {
@@ -31,31 +29,31 @@ impl Res {
   }
 }
 
-
-impl<T: Message> From<anyhow::Result<T>> for ResData<T> {
-  fn from(t: std::result::Result<T, anyhow::Error>) -> Self {
+impl<T: Message> From<xrpc::Result<T>> for ResData {
+  fn from(t: xrpc::Result<T>) -> Self {
+    use xrpc::Result;
     match t {
-      Ok(t) => t.into(),
-      Err(err) => {
-        let code;
-        let body;
-        match err.downcast::<xrpc::Status>() {
-          Ok(status) => {
-            code = status.code.as_u16() as _;
-            body = status.body.into();
-          }
-          Err(err) => {
-            code = 500;
-            let err = err.to_string();
-            body = err.into();
-          }
-        }
-        Self {
-          code,
-          body: Some(body),
-          _t: PhantomData,
+      Result::Ok(t) => {
+        let mut body = LinkedBytes::with_capacity(t.encoded_len());
+        match t.encode(&mut body) {
+          Ok(_) => Self {
+            code: 0,
+            body: body.into_bytes_mut().into(),
+          },
+          Err(err) => Self {
+            code: 500,
+            body: err.to_string().into(),
+          },
         }
       }
+      Result::Err(err) => Self {
+        code: 500,
+        body: err.to_string().into(),
+      },
+      Result::Response(r) => Self {
+        code: r.code as _,
+        body: r.body,
+      },
     }
   }
 }
