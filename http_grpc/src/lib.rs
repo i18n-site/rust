@@ -29,11 +29,19 @@ impl Res {
   }
 }
 
-pub fn call<T:xrpc::Call>( args: impl Into<Bytes>) -> xrpc::Result<<T as xrpc::Call>::Result> {
+pub fn call<T: xrpc::Call>(args: impl Into<Bytes>) -> xrpc::Result<<T as xrpc::Call>::Result> {
+  match <T as xrpc::Call>::Args::decode(args.into()) {
+    Ok(args) => T::call(&args),
+    Err(err) => {
+      todo!()
+    }
+  }
 }
 
-pub fn async_call<T:xrpc::AsyncCall>( args: impl Into<Bytes>) -> xrpc::Result<<T as xrpc::AsyncCall>::Result> {
-    todo!()
+pub fn async_call<T: xrpc::AsyncCall>(
+  args: impl Into<Bytes>,
+) -> xrpc::Result<<T as xrpc::AsyncCall>::Result> {
+  todo!()
 }
 
 impl<T: Message> From<xrpc::Result<T>> for ResData {
