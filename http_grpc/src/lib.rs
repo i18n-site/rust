@@ -40,7 +40,8 @@ where
   match <T as xrpc::Call>::Args::decode(args.into()) {
     Ok(args) => T::call(prefix, &args),
     Err(err) => {
-      error!("{prefix} {} decode args error: {err}", T::name());
+      error!("{} {} decode args error: {err}", prefix.into(), T::name());
+      xrpc::Result::Err()
     }
   }
 }
