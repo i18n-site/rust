@@ -34,7 +34,7 @@ pub fn call<T: xrpc::Call>(
   args: impl Into<Bytes>,
 ) -> xrpc::Result<<T as xrpc::Call>::Result>
 where
-  <T as xrpc::Call>::Args: Message,
+  <T as xrpc::Call>::Args: Message + Default,
 {
   match <T as xrpc::Call>::Args::decode(args.into()) {
     Ok(args) => T::call(prefix, &args),
