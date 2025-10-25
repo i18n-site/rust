@@ -1,6 +1,7 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 use bytes::Bytes;
+use log::error;
 use pilota::{LinkedBytes, pb::Message};
 
 include!(concat!(env!("OUT_DIR"), "/api.rs"));
@@ -39,7 +40,7 @@ where
   match <T as xrpc::Call>::Args::decode(args.into()) {
     Ok(args) => T::call(prefix, &args),
     Err(err) => {
-      todo!()
+      error!("{prefix} {} decode args error: {err}", T::name());
     }
   }
 }
