@@ -19,5 +19,6 @@ default = []
 proc-macro = true
 
 [dependencies]
+http_grpc = { version = "0.1.7", path = "../http_grpc" }
 quote = "1.0.41"
 syn = { version = "2.0.107", features = ["full"] }
