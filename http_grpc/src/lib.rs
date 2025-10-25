@@ -32,7 +32,10 @@ impl Res {
 pub fn call<T: xrpc::Call>(
   prefix: impl Into<String>,
   args: impl Into<Bytes>,
-) -> xrpc::Result<<T as xrpc::Call>::Result> {
+) -> xrpc::Result<<T as xrpc::Call>::Result>
+where
+  <T as xrpc::Call>::Args: Message,
+{
   match <T as xrpc::Call>::Args::decode(args.into()) {
     Ok(args) => T::call(prefix, &args),
     Err(err) => {
