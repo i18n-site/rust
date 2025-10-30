@@ -1,0 +1,13 @@
+[package]
+name = "s_"
+version = "0.1.6"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/s_"
+description = "utils for string"
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+tracing = "0.1.41"

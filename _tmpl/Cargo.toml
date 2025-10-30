@@ -1,0 +1,25 @@
+[package]
+name = "_tmpl"
+version = "0.1.0"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/_tmpl"
+description = "_tmpl"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+
+[dev-dependencies]
+anyhow = "1.0.100"
+log = "0.4.28"
+static_init = "1.0.4"
+
+[dev-dependencies.log_init]
+path = "../log_init"
+version = "0.1.27"

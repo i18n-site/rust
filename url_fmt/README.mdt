@@ -1,0 +1,133 @@
+# url_fmt
+
+[English](#english) | [中文](#chinese)
+
+<a name="english"></a>
+## English
+
+- [Project Significance](#project-significance)
+- [Usage](#usage)
+- [Design and Tech Stack](#design-and-tech-stack)
+- [File Structure](#file-structure)
+- [A Little Story](#a-little-story)
+
+### Project Significance
+
+`url_fmt` is a lightweight Rust utility designed to format URLs for display or logging. Its primary function is to anonymize URLs by replacing user credentials with an asterisk (`*`), enhancing privacy and security when sharing or storing URLs that may contain sensitive information. It also decodes URL-encoded fragments to improve readability.
+
+### Usage
+
+The library provides a single function, `url_fmt`, which takes a URL string and returns the formatted version.
+
+```rust
+// Example from tests
+use url_fmt::url_fmt;
+
+// Hides user credentials
+let url1 = "trojan://YWVzLTI1Ni1nY206cGFzc3dvcmQ@example.com:8388#Node1";
+let formatted1 = url_fmt(url1);
+// -> "trojan://*@example.com:8388#Node1"
+
+// Decodes URL-encoded fragment
+let url2 = "vless://user@host:port/path#%E4%B8%AD%E6%96%87";
+let formatted2 = url_fmt(url2);
+// -> "vless://*@host:port/path#中文"
+
+// Handles URLs without credentials
+let url3 = "http://example.com";
+let formatted3 = url_fmt(url3);
+// -> "http://example.com"
+```
+
+### Design and Tech Stack
+
+**Design Philosophy**: The core design is simplicity and efficiency. Instead of pulling in a heavy-duty URL parsing library, it uses simple string manipulation (`split_once`, `rfind`) to achieve its goal. This makes the library lightweight and fast for its specific purpose. The logic is straightforward:
+1.  Split the URL at the `://` separator.
+2.  In the part after the separator, find the last occurrence of `@`.
+3.  If `@` is found, replace everything before it with `*`.
+4.  Separately, check for a `#` fragment and decode any percent-encoded characters in it.
+
+**Tech Stack**:
+- **Rust**: The library is written in Rust, ensuring memory safety and performance.
+- **`percent-encoding`**: This crate is used for decoding the URL fragment.
+
+### File Structure
+
+```
+.
+├── Cargo.toml   # Project manifest
+├── src
+│   └── lib.rs   # Core library code
+└── tests
+    └── main.rs  # Integration tests
+```
+
+### A Little Story
+
+Have you ever wondered why the `@` symbol is used in URLs and email addresses? Its journey into the digital world started in 1971 with Ray Tomlinson, the inventor of email. He needed a way to separate a user's name from their host machine's name. He chose `@` because it was an uncommon character in names and programming languages at the time, and it nicely represented the word "at". This convention was later adopted by other network protocols, including the URL syntax for including user information, as seen in FTP or HTTP authentication (`ftp://user:password@host`). So, the little symbol this library helps to hide has a history stretching back to the very dawn of networked communication.
+
+<a name="chinese"></a>
+## 中文
+
+- [项目意义](#项目意义)
+- [使用演示](#使用演示)
+- [设计思路与技术栈](#设计思路与技术栈)
+- [文件结构](#文件结构)
+- [相关历史](#相关历史)
+
+### 项目意义
+
+`url_fmt` 是一个轻量级的 Rust 工具库，用于格式化 URL 以便显示或记录。其主要功能是通过将用户凭据替换为星号 (`*`) 来匿名化 URL，从而在共享或存储可能包含敏感信息的 URL 时增强隐私和安全性。它还会对 URL 编码的片段进行解码以提高可读性。
+
+### 使用演示
+
+该库提供单一函数 `url_fmt`，它接收一个 URL 字符串并返回格式化后的版本。
+
+```rust
+// 测试代码中的示例
+use url_fmt::url_fmt;
+
+// 隐藏用户凭据
+let url1 = "trojan://YWVzLTI1Ni1nY206cGFzc3dvcmQ@example.com:8388#Node1";
+let formatted1 = url_fmt(url1);
+// -> "trojan://*@example.com:8388#Node1"
+
+// 解码 URL 编码的片段
+let url2 = "vless://user@host:port/path#%E4%B8%AD%E6%96%87";
+let formatted2 = url_fmt(url2);
+// -> "vless://*@host:port/path#中文"
+
+// 处理不含用户凭据的 URL
+let url3 = "http://example.com";
+let formatted3 = url_fmt(url3);
+// -> "http://example.com"
+```
+
+### 设计思路与技术栈
+
+**设计哲学**: 核心设计理念是简洁和高效。它没有引入重型的 URL 解析库，而是使用简单的字符串操作（`split_once`、`rfind`）来实现目标。这使得该库在其特定用途上保持了轻量和快速。其逻辑非常直接：
+1.  在 `://` 分隔符处分割 URL。
+2.  在分隔符之后的部分，查找最后一次出现的 `@`。
+3.  如果找到 `@`，则将其之前的所有内容替换为 `*`。
+4.  独立检查 `#` 片段，并对其进行百分比编码解码。
+
+**技术栈**:
+- **Rust**: 该库使用 Rust 编写，确保了内存安全和高性能。
+- **`percent-encoding`**: 用于解码 URL 片段。
+
+### 文件结构
+
+```
+.
+├── Cargo.toml   # 项目清单文件
+├── src
+│   └── lib.rs   # 核心库代码
+└── tests
+    └── main.rs  # 集成测试
+```
+
+### 相关历史
+
+你是否想过为什么 `@` 符号会用在 URL 和电子邮件地址中？它进入数字世界的旅程始于 1971 年，电子邮件的发明者 Ray Tomlinson。他需要一种方法来区分用户名和用户所在的主机名。他选择了 `@`，因为在当时它是一个在名字和编程语言中不常见的字符，并且它很好地表达了“在”的含义。这个约定后来被其他网络协议采纳，包括用于包含用户信息的 URL 语法，就像在 FTP 或 HTTP 身份验证中看到的那样 (`ftp://user:password@host`)。因此，这个库帮助隐藏的小小符号，其历史可以追溯到网络通信的黎明时期。
+
+<+ ../about.md >

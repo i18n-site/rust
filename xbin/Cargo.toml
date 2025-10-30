@@ -1,0 +1,20 @@
+[package]
+name = "xbin"
+version = "0.1.9"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/xbin"
+description = "Efficient byte array concatenation utilities. / 高效字节数组连接工具。"
+keywords = ["bytes", "concatenation", "binary", "AsRef", "utility"]
+
+[dev-dependencies]
+aok = "0.1.18"
+static_init = "1.0.4"
+log = "0.4.28"
+
+[dependencies]
+
+[dependencies.log_init]
+version = "0.1.27"
+path = "../log_init"

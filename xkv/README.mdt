@@ -1,0 +1,12 @@
+# xkv
+
+use global static vars connect redis / [kvrocks](https://kvrocks.apache.org) with [fred](https://crates.io/crates/fred)
+
+使用全局静态变量通过 [fred](https://crates.io/crates/fred) 连接 redis / [kvrocks](https://kvrocks.apache.org)。
+
+
+```rust
+<+ ./demo/src/main.rs>
+```
+
+<+ ../about.md >

@@ -1,0 +1,9 @@
+# reload_self
+
+监听 `SIGHUP` 信号以触发进程重载，并返回一个 CancellationToken。
+
+```rust
+<+ ./test/src/main.rs>
+```
+
+<+ ../about.md >

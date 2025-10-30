@@ -1,0 +1,30 @@
+[package]
+name = "b255"
+version = "0.1.5"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/b255"
+description = "b255"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+encode = [ ]
+decode = [ ]
+
+[dependencies]
+thiserror = "2.0.17"
+
+[dev-dependencies]
+aok = "0.1.18"
+log = "0.4.28"
+static_init = "1.0.4"
+
+[dev-dependencies.log_init]
+path = "../log_init"
+version = "0.1.27"

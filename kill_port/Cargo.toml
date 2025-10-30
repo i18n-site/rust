@@ -1,0 +1,33 @@
+[package]
+name = "kill_port"
+version = "0.1.2"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/kill_port"
+description = "A utility to find and terminate processes by port. 一个通过端口查找并终止进程的工具。"
+keywords = [ "kill", "port", "process", "network" ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+
+[dev-dependencies]
+anyhow = "1.0.100"
+log = "0.4.28"
+static_init = "1.0.4"
+
+[dev-dependencies.log_init]
+path = "../log_init"
+version = "0.1.27"
+
+[dependencies]
+listeners = "0.3.0"
+log = "0.4.28"
+
+[dependencies.nix]
+version = "0.30.1"
+features = [ "signal" ]

@@ -1,0 +1,18 @@
+[package]
+name = "set_header"
+version = "0.1.10"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/set_header"
+description = "axum set header middleware"
+
+[dependencies]
+anyhow = "1.0.100"
+axum = "0.8.6"
+parking_lot = "0.12.5"
+tracing = "0.1.41"
+
+[dependencies.amid]
+version = "0.1.11"
+path = "../amid"

@@ -1,0 +1,7 @@
+# hsec : human readable seconds
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >

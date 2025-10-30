@@ -1,0 +1,28 @@
+[package]
+name = "uper_tests"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+static_init = "1.0.4"
+
+[dependencies.aok]
+version = "0.1.18"
+path = "../../aok"
+
+[dependencies.loginit]
+version = "0.1.18"
+path = "../../loginit"
+
+[dependencies.tokio]
+version = "1.48.0"
+features = [ "rt", "macros", "rt-multi-thread" ]
+
+[dependencies.uper]
+version = "0.1.10"
+path = ".."
+features = [ "conf" ]
+
+[dependencies.upgrade_host]
+version = "0.1.1"
+path = "../../upgrade_host"

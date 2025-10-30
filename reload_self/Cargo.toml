@@ -1,0 +1,33 @@
+[package]
+name = "reload_self"
+version = "0.1.2"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/reload_self"
+description = "reload_self"
+keywords = []
+
+[features]
+default = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+aok = "0.1.18"
+nix = { version = "0.30.1", features = ["process"] }
+tokio = { version = "1.48.0", features = ["rt", "signal"] }
+tokio-util = "0.7.16"
+tracing = "0.1.41"
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.48.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

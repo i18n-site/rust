@@ -1,0 +1,23 @@
+[package]
+name = "axum_graceful_restart_tests"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = "0.8.6"
+
+[dependencies.aok]
+version = "0.1.18"
+path = "../../aok"
+
+[dependencies.axum_graceful_restart]
+version = "0.1.5"
+path = ".."
+
+[dependencies.loginit]
+version = "0.1.18"
+path = "../../loginit"
+
+[dependencies.tokio]
+version = "1.48.0"
+features = [ "rt", "macros", "rt-multi-thread", "signal" ]

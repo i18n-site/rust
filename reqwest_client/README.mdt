@@ -1,0 +1,199 @@
+[English](#english) | [中文](#中文)
+
+<a id="english"></a>
+
+# reqwest_client
+
+## Overview
+
+`reqwest_client` is a utility crate for the Rust programming language, designed to streamline the creation of `reqwest::Client` instances. It offers a standardized client builder with sensible defaults and specializes in providing robust, rotating proxy support configured effortlessly through environment variables. This crate is ideal for applications requiring resilient and flexible HTTP/S client configurations.
+
+## Core Capabilities
+
+- **Standardized Client Builder**: Provides a base `client()` function that configures a `reqwest::ClientBuilder` with practical defaults, including a common user-agent (`curl/8.1.1`), connection timeout, and automatic handling of `gzip`, `brotli`, and `zstd` compression.
+- **Effortless Proxy Configuration**: Set up multiple proxy clients simply by defining environment variables. The crate reads a list of proxy IPs, along with port, credentials, and protocol, to initialize a pool of ready-to-use clients.
+- **Round-Robin Proxy Rotation**: Includes a `proxy_iter()` function that returns a closure. Each call to this closure provides the next `reqwest::Client` from the pool in a round-robin fashion, making it trivial to distribute requests across different proxy IPs.
+
+## Cargo Features
+
+This crate uses feature flags to allow users to enable only the functionality they need, keeping the library lightweight.
+
+-   `default`: By default, no features are enabled. You get access to the basic `client()` builder function.
+-   `client`: Enables a globally shared, lazily-initialized `reqwest::Client` instance named `CLIENT`. This is a convenient, ready-to-use client with default settings.
+-   `proxy`: Enables the `proxy()` function, which allows you to apply a `reqwest::Proxy` to the client builder.
+-   `proxy_from_env`: Enables the main functionality of this crate. It allows you to create a pool of proxy clients from environment variables and access them via the `proxy_iter()` function. This feature automatically enables the `proxy` feature.
+
+To use the proxy rotation, you would add this to your `Cargo.toml`:
+```toml
+reqwest_client = { version = "0.1", features = ["proxy_from_env"] }
+```
+
+## Usage
+
+First, configure your proxy settings using environment variables. For example, in your `.env` file or shell:
+
+```bash
+IPV6_PROXY_IP_LI="ip1 ip2 ip3"
+IPV6_PROXY_PORT=8080
+IPV6_PROXY_USER="user"
+IPV6_PROXY_PASSWD="password"
+IPV6_PROXY_PROTOCOL="http"
+```
+
+Then, use the `proxy_iter()` to get a client for your requests. The iterator will cycle through the clients configured from the IPs you provided.
+
+```rust
+use aok::{OK, Void};
+use tracing::info;
+
+#[tokio::test]
+async fn test_async() -> Void {
+  // Get a closure that provides a client on each call.
+  let client = reqwest_client::proxy_iter()();
+  
+  // Make a request using one of the proxy clients.
+  let r = client.get("https://ifconfig.me/ip").send().await?;
+  info!("{}", r.text().await?);
+
+  OK
+}
+```
+
+This example demonstrates how to fetch your public IP address through one of the configured proxies. Each time `reqwest_client::proxy_iter()()` is invoked, it provides a client from the pool, effectively rotating the outgoing IP address.
+
+## Design Philosophy
+
+The core design of `reqwest_client` is to abstract away the complexity of managing and rotating proxies for HTTP/S requests. In many applications, such as web scraping, data aggregation, or interacting with rate-limited APIs, it's crucial to distribute requests across multiple IP addresses.
+
+This crate addresses that need by:
+1.  **Centralizing Configuration**: It relies on environment variables for configuration, following the twelve-factor app methodology. This keeps sensitive credentials and settings out of the codebase.
+2.  **Lazy Initialization**: Using `static_init::dynamic`, the pool of proxy clients is initialized lazily on first access, ensuring minimal startup overhead.
+3.  **Simple Interface**: By providing a simple `proxy_iter()` function, the crate offers a powerful round-robin mechanism without exposing the underlying implementation details. This allows developers to focus on their application logic rather than on proxy management.
+
+## Technology Stack
+
+- **Rust**: The programming language used for its performance, safety, and concurrency features.
+- **`reqwest`**: A high-level, ergonomic HTTP client library for Rust.
+- **`tokio`**: The asynchronous runtime for network applications.
+- **`genv`**: A utility for reading and parsing environment variables with default fallbacks.
+- **`static_init`**: Used for one-time, lazy initialization of static variables.
+
+## File Structure
+
+```
+.
+├── Cargo.toml      # Package metadata and dependencies
+├── src
+│   ├── lib.rs      # Main module, provides the basic client builder and feature flags
+│   ├── proxy.rs    # Logic for applying a single proxy to a client builder
+│   └── proxy_from_env.rs # Logic for creating and iterating through a pool of proxy clients from environment variables
+└── tests
+    └── main.rs     # Integration tests
+```
+
+## A Little Story: The Origin of cURL
+
+This crate defaults to using a `curl` user-agent string. The story of cURL is a testament to the power of incremental, open-source development. It began in 1996 when Swedish developer Daniel Stenberg needed to automate fetching currency exchange rates for an IRC bot. He started with an existing tool called `httpget`.
+
+Over time, he added support for more protocols, and the project evolved. On March 20, 1998, he renamed it `cURL`, short for "Client for URL." The real breakthrough came in August 2000 with the release of `libcurl`, a library that allowed any application to use cURL's powerful transfer capabilities. PHP was one of the first major adopters, which helped `libcurl` mature and gain widespread popularity. Today, cURL and `libcurl` are foundational pieces of software, embedded in billions of devices worldwide—from cars and TVs to mobile phones and servers—a remarkable journey from a simple script for an IRC bot.
+
+---
+
+<a id="中文"></a>
+
+# reqwest_client
+
+## 概述
+
+`reqwest_client` 是一个为 Rust 编程语言设计的辅助 Crate，旨在简化 `reqwest::Client` 实例的创建过程。它提供了一个具有合理默认值的标准化客户端构建器，并专注于通过环境变量轻松配置强大且支持轮换的代理功能。该 Crate 非常适合需要弹性及灵活 HTTP/S 客户端配置的应用程序。
+
+## 核心能力
+
+- **标准化客户端构建器**：提供一个基础的 `client()` 函数，该函数配置一个 `reqwest::ClientBuilder`，其中包含实用的默认设置，例如通用的用户代理（`curl/8.1.1`）、连接超时以及对 `gzip`、`brotli` 和 `zstd` 压缩格式的自动处理。
+- **轻松的代理配置**：只需定义环境变量即可设置多个代理客户端。该 Crate 会读取代理 IP 列表以及端口、凭据和协议，以初始化一个即用型客户端池。
+- **轮询式代理轮换**：包含一个 `proxy_iter()` 函数，该函数返回一个闭包。每次调用此闭包都会以轮询方式从池中提供下一个 `reqwest::Client`，从而轻松地将请求分发到不同的代理 IP。
+
+## Cargo 功能特性
+
+本 Crate 使用功能标志（feature flags）来让用户只启用他们需要的功能，从而保持库的轻量化。
+
+-   `default`: 默认情况下，不启用任何功能。您可以使用基础的 `client()` 构建器函数。
+-   `client`: 启用一个名为 `CLIENT` 的全局共享、延迟初始化的 `reqwest::Client` 实例。这是一个方便、开箱即用的具有默认设置的客户端。
+-   `proxy`: 启用 `proxy()` 函数，允许您将 `reqwest::Proxy` 应用于客户端构建器。
+-   `proxy_from_env`: 启用本 Crate 的核心功能。它允许您从环境变量创建一个代理客户端池，并通过 `proxy_iter()` 函数访问它们。此功能会自动启用 `proxy` 功能。
+
+要使用代理轮换功能，您需要将以下内容添加到您的 `Cargo.toml` 中：
+```toml
+reqwest_client = { version = "0.1", features = ["proxy_from_env"] }
+```
+
+## 使用方法
+
+首先，使用环境变量配置您的代理设置。例如，在您的 `.env` 文件或 shell 中：
+
+```bash
+IPV6_PROXY_IP_LI="ip1 ip2 ip3"
+IPV6_PROXY_PORT=8080
+IPV6_PROXY_USER="user"
+IPV6_PROXY_PASSWD="password"
+IPV6_PROXY_PROTOCOL="http"
+```
+
+然后，使用 `proxy_iter()` 为您的请求获取客户端。迭代器将循环遍历根据您提供的 IP 配置的客户端。
+
+```rust
+use aok::{OK, Void};
+use tracing::info;
+
+#[tokio::test]
+async fn test_async() -> Void {
+  // 获取一个每次调用都提供一个客户端的闭包
+  let client = reqwest_client::proxy_iter()();
+  
+  // 使用其中一个代理客户端发出请求
+  let r = client.get("https://ifconfig.me/ip").send().await?;
+  info!("{}", r.text().await?);
+
+  OK
+}
+```
+
+此示例演示了如何通过配置的代理之一获取您的公共 IP 地址。每次调用 `reqwest_client::proxy_iter()()` 时，它都会从池中提供一个客户端，从而有效地轮换传出请求的 IP 地址。
+
+## 设计哲学
+
+`reqwest_client` 的核心设计理念是抽象化管理和轮换 HTTP/S 请求代理的复杂性。在许多应用场景中，例如网络爬虫、数据聚合或与有速率限制的 API 交互时，将请求分散到多个 IP 地址至关重要。
+
+该 Crate 通过以下方式满足了这一需求：
+1.  **集中化配置**：它依赖环境变量进行配置，遵循了十二因子应用方法论。这使得敏感凭据和设置可以置于代码库之外。
+2.  **延迟初始化**：使用 `static_init::dynamic`，代理客户端池在首次访问时被延迟初始化，确保了最小的启动开销。
+3.  **简洁的接口**：通过提供一个简单的 `proxy_iter()` 函数，该 Crate 提供了一个强大的轮询机制，而无需暴露底层实现细节。这使开发人员能够专注于他们的应用逻辑，而不是代理管理。
+
+## 技术栈
+
+- **Rust**：因其性能、安全性和并发特性而被选用的编程语言。
+- **`reqwest`**：一个为 Rust 设计的高级、符合人体工程学的 HTTP 客户端库。
+- **`tokio`**：用于网络应用程序的异步运行时。
+- **`genv`**：一个用于读取和解析环境变量并支持默认回退的工具。
+- **`static_init`**：用于静态变量的一次性、延迟初始化。
+
+## 文件结构
+
+```
+.
+├── Cargo.toml      # 包元数据和依赖项
+├── src
+│   ├── lib.rs      # 主模块，提供基础客户端构建器和功能标志
+│   ├── proxy.rs    # 将单个代理应用于客户端构建器的逻辑
+│   └── proxy_from_env.rs # 从环境变量创建并迭代代理客户端池的逻辑
+└── tests
+    └── main.rs     # 集成测试
+```
+
+## 一个小故事：cURL 的起源
+
+该 Crate 默认使用 `curl` 的用户代理字符串。cURL 的故事证明了渐进式开源开发的力量。它始于 1996 年，当时瑞典开发者 Daniel Stenberg 需要为一个 IRC 机器人自动获取货币汇率。他从一个名为 `httpget` 的现有工具开始。
+
+随着时间的推移，他添加了对更多协议的支持，项目也随之演变。1998 年 3 月 20 日，他将其重命名为 `cURL`，即“Client for URL”的缩写。真正的突破发生在 2000 年 8 月，随着 `libcurl` 的发布，这个库允许任何应用程序使用 cURL 强大的传输能力。PHP 是首批主要采用者之一，这帮助 `libcurl` 成熟并获得了广泛的普及。如今，cURL 和 `libcurl` 已成为基础软件，嵌入在全球数十亿台设备中——从汽车、电视到手机和服务器——这是一段从一个简单的 IRC 机器人脚本开始的非凡旅程。
+
+<+ ../about.md >

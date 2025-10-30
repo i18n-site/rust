@@ -1,0 +1,57 @@
+[package]
+name = "volo_boot"
+version = "0.1.3"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/volo_boot"
+description = "Simplifies bootstrapping for volo-grpc and volo-http services. / 简化 volo-grpc 和 volo-http 服务的启动。"
+keywords = [ "volo", "grpc", "http", "rpc", "boot" ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ "grpc", "http" ]
+grpc = [ "dep:volo-grpc" ]
+http = [ "dep:http_grpc", "dep:volo-http" ]
+
+[dependencies]
+log = "0.4.28"
+static_init = "1.0.4"
+volo = "0.11.1"
+
+[dependencies.err_exit]
+version = "0.1.6"
+path = "../err_exit"
+
+[dependencies.http_grpc]
+version = "0.1.21"
+path = "../http_grpc"
+optional = true
+
+[dependencies.volo-http]
+version = "0.4.3"
+optional = true
+
+[dependencies.genv]
+version = "0.1.17"
+path = "../genv"
+
+[dependencies.log_init]
+version = "0.1.27"
+path = "../log_init"
+
+[dependencies.static_]
+version = "0.1.15"
+path = "../static_"
+
+[dependencies.volo-grpc]
+version = "0.11.7"
+features = [ "zstd" ]
+optional = true
+
+[dependencies.xerr]
+version = "0.1.16"
+path = "../xerr"

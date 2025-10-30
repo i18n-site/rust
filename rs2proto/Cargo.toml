@@ -1,0 +1,23 @@
+[package]
+name = "rs2proto"
+version = "0.1.1"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/rs2proto"
+description = "rs2proto"
+keywords = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = []
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1.0.41"
+syn = { version = "2.0.108", features = ["full"] }

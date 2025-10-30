@@ -1,0 +1,289 @@
+# reqwest_proxy
+
+[English](#english) | [中文](#中文)
+
+---
+
+## English
+
+<a name="english"></a>
+
+### Table of Contents
+
+- [Project Significance](#project-significance)
+- [Features](#features)
+- [Design Philosophy](#design-philosophy)
+- [Usage](#usage)
+- [Tech Stack](#tech-stack)
+- [File Structure](#file-structure)
+- [A Little Story](#a-little-story)
+
+---
+
+### Project Significance
+
+Applications often require routing traffic through proxies to ensure reliable network access across restricted regions. `reqwest_proxy` is a middleware for the Rust `reqwest` ecosystem that enables this.
+
+It allows applications to route HTTP/HTTPS requests through specified proxy protocols. By abstracting connection details, it helps developers build applications that operate consistently across different network environments.
+
+### Features
+
+- **Protocol Support**: Implements **Shadowsocks** and **Hysteria2**.
+- **Seamless Integration**: Designed as a `reqwest-middleware` component for easy integration into projects using `reqwest`.
+- **Unified API**: Provides a single entry point, `Proxy::from_url`, to configure different proxy types from a URL string.
+- **Asynchronous**: Built on `tokio` for non-blocking I/O.
+
+### Design Philosophy
+
+The design is centered on abstracting protocol-specific implementations behind a unified interface.
+
+The core component is the `Proxy` enum, which functions as the middleware. The call flow is as follows:
+
+1.  A proxy server URL (e.g., `ss://...` or `hysteria2://...`) is provided.
+2.  The `Proxy::from_url` function parses the URL, identifies the protocol, and initializes the corresponding client connector.
+3.  The resulting `Proxy` instance is attached to the `reqwest_middleware::ClientBuilder`.
+4.  When a request is sent, the middleware intercepts it, establishing a connection to the destination through the proxy server via a configured `hyper::Client`.
+
+This design allows developers to switch proxy protocols by changing the configuration URL, with no changes to application logic.
+
+### Usage
+
+This example, based on `tests/main.rs`, demonstrates integrating `reqwest_proxy` with `reqwest_middleware::ClientBuilder`.
+
+First, enable the required features in `Cargo.toml`:
+```toml
+[dependencies]
+reqwest_proxy = { version = "0.1", features = ["full"] }
+```
+
+Next, use the `Proxy` middleware in the application:
+```rust
+use anyhow::Result;
+use reqwest_middleware::{ClientBuilder, ClientWithMiddleware};
+use reqwest_proxy::Proxy;
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    // 1. Define the proxy server URL.
+    //    This example uses Shadowsocks; Hysteria2 is also supported.
+    let proxy_url = "ss://aes-256-gcm:password@your-server-address:port";
+
+    // 2. Create a Proxy middleware instance from the URL.
+    let proxy_middleware = Proxy::from_url(proxy_url)?;
+
+    // 3. Build a reqwest client and attach the middleware.
+    //    Disabling the system proxy ensures traffic routes through the specified proxy.
+    let client: ClientWithMiddleware = ClientBuilder::new(
+        reqwest::Client::builder().no_proxy().build()?
+    ).with(proxy_middleware).build();
+
+    // 4. Use the client to send requests.
+    //    The traffic will be automatically proxied.
+    let test_url = "https://ifconfig.me/ip";
+    match client.get(test_url).send().await {
+        Ok(res) => {
+            let status = res.status();
+            let ip = res.text().await?;
+            // The IP printed should be that of the proxy server.
+            println!("Request to {test_url}: Status={status}, IP={ip}");
+        }
+        Err(e) => {
+            eprintln!("Request to {test_url} failed: {e}");
+        }
+    }
+
+    Ok(())
+}
+```
+
+### Tech Stack
+
+*   **`reqwest`**: An ergonomic HTTP client for Rust.
+*   **`reqwest-middleware`**: A framework for creating middleware for `reqwest`.
+*   **`tokio`**: An asynchronous runtime for network applications.
+*   **`hyper`**: A low-level HTTP library that powers `reqwest`.
+*   **`shadowsocks-rust`**: A Rust implementation of the Shadowsocks protocol.
+*   **`hysteria2`**: The core library for the Hysteria2 protocol.
+*   **`thiserror`**: A library for deriving error types.
+
+### File Structure
+
+The `src` directory is organized for modularity and feature-based compilation:
+```
+src
+├── error.rs       # Defines custom error types for the library.
+├── hysteria2.rs   # Implements the Hysteria2 protocol connector.
+├── lib.rs         # Main library entry point, assembling the public API.
+├── macro_conn.rs  # Macro to reduce boilerplate for connection types.
+├── macro_enums.rs # Macro that generates enums for unifying protocols.
+├── middleware.rs  # Contains the primary `ProxyMiddleware` logic.
+├── shadowsocks.rs # Implements the Shadowsocks protocol connector.
+├── stream.rs      # Provides a unified `Stream` wrapper for `hyper`.
+├── traits.rs      # Defines common traits for protocol implementations.
+└── util.rs        # Utility functions.
+```
+
+### A Little Story
+
+The development of proxy protocols is a response to evolving network filtering techniques. As network surveillance advanced, so did the need for traffic obfuscation.
+
+**Shadowsocks**, created in 2012 by the programmer "clowwindy," was a significant step. It introduced a lightweight, encrypted SOCKS5 proxy protocol designed to be less distinguishable from regular HTTPS traffic, making it harder for automated systems to detect. Its open-source nature allowed a community to maintain and evolve it after the original author ceased development.
+
+Later, protocols like **Hysteria2** emerged, built on the QUIC transport protocol. It focuses on maximizing throughput and minimizing latency, even on networks with high packet loss, while masquerading as standard HTTP/3 traffic. The progression from Shadowsocks to Hysteria2 shows continued innovation in the field, moving from simple obfuscation to performance-oriented designs.
+
+---
+
+## 中文
+
+<a name="中文"></a>
+
+### 目录
+
+- [项目意义](#项目意义-1)
+- [功能特性](#功能特性-1)
+- [设计思路](#设计思路-1)
+- [使用演示](#使用演示-1)
+- [技术栈](#技术栈-1)
+- [文件结构](#文件结构-1)
+- [相关故事](#相关故事-1)
+
+---
+
+### 项目意义
+
+应用程序常需通过代理路由流量，以确保在受限区域内网络的可靠访问。`reqwest_proxy` 是为 Rust `reqwest` 生态系统提供的中间件，旨在实现此功能。
+
+它允许应用程序通过指定的代理协议路由 HTTP/HTTPS 请求。通过抽象连接细节，它帮助开发者构建在不同网络环境中表现一致的应用程序。
+
+### 功能特性
+
+- **协议支持**: 实现 **Shadowsocks** 和 **Hysteria2** 协议。
+- **无缝集成**: 设计为 `reqwest-middleware` 组件，便于集成到使用 `reqwest` 的项目中。
+- **统一接口**: 提供 `Proxy::from_url` 入口点，可通过 URL 字符串配置不同类型的代理。
+- **异步**: 基于 `tokio` 构建，用于非阻塞 I/O。
+
+### 设计思路
+
+设计的核心是将特定协议的实现抽象在统一的接口之后。
+
+`Proxy` 枚举是核心组件，作为中间件运行。其调用流程如下：
+
+1.  提供代理服务器的 URL (例如 `ss://...` 或 `hysteria2://...`)。
+2.  `Proxy::from_url` 函数解析 URL，识别协议，并初始化相应的客户端连接器。
+3.  生成的 `Proxy` 实例被附加到 `reqwest_middleware::ClientBuilder`。
+4.  发送请求时，中间件会拦截该请求，并通过已配置的 `hyper::Client` 经由代理服务器建立到目标的连接。
+
+此设计允许开发者通过更改配置 URL 来切换代理协议，而无需修改应用程序逻辑。
+
+### 使用演示
+
+此示例基于 `tests/main.rs`，演示了如何将 `reqwest_proxy` 与 `reqwest_middleware::ClientBuilder` 集成。
+
+首先，在 `Cargo.toml` 中启用所需的功能：
+```toml
+[dependencies]
+reqwest_proxy = { version = "0.1", features = ["full"] }
+```
+
+接下来，在应用程序中使用 `Proxy` 中间件：
+```rust
+use anyhow::Result;
+use reqwest_middleware::{ClientBuilder, ClientWithMiddleware};
+use reqwest_proxy::Proxy;
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    // 1. 定义代理服务器 URL。
+    //    此示例使用 Shadowsocks；也支持 Hysteria2。
+    let proxy_url = "ss://aes-256-gcm:password@your-server-address:port";
+
+    // 2. 从 URL 创建 Proxy 中间件实例。
+    let proxy_middleware = Proxy::from_url(proxy_url)?;
+
+    // 3. 构建 reqwest 客户端并附加中间件。
+    //    禁用系统代理可确保流量通过指定的代理路由。
+    let client: ClientWithMiddleware = ClientBuilder::new(
+        reqwest::Client::builder().no_proxy().build()?
+    ).with(proxy_middleware).build();
+
+    // 4. 使用客户端发送请求。
+    //    流量将被自动代理。
+    let test_url = "https://ifconfig.me/ip";
+    match client.get(test_url).send().await {
+        Ok(res) => {
+            let status = res.status();
+            let ip = res.text().await?;
+            // 打印出的 IP 应为代理服务器的 IP。
+            println!("请求 {test_url}: Status={status}, IP={ip}");
+        }
+        Err(e) => {
+            eprintln!("请求 {test_url} 失败: {e}");
+        }
+    }
+
+    Ok(())
+}
+```
+
+### 技术栈
+
+*   **`reqwest`**: Rust 的 HTTP 客户端。
+*   **`reqwest-middleware`**: 用于为 `reqwest` 创建中间件的框架。
+*   **`tokio`**: 用于网络应用程序的异步运行时。
+*   **`hyper`**: 为 `reqwest` 提供支持的底层 HTTP 库。
+*   **`shadowsocks-rust`**: Shadowsocks 协议的 Rust 实现。
+*   **`hysteria2`**: Hysteria2 协议的核心库。
+*   **`thiserror`**: 用于派生错误类型的库。
+
+### 文件结构
+
+`src` 目录为实现模块化和基于功能的编译而组织：
+```
+src
+├── error.rs       # 定义库的自定义错误类型。
+├── hysteria2.rs   # 实现 Hysteria2 协议连接器。
+├── lib.rs         # 主库入口点，组装公共 API。
+├── macro_conn.rs  # 用于减少连接类型样板代码的宏。
+├── macro_enums.rs # 生成枚举以统一协议的宏。
+├── middleware.rs  # 包含 `ProxyMiddleware` 的主要逻辑。
+├── shadowsocks.rs # 实现 Shadowsocks 协议连接器。
+├── stream.rs      # 为 `hyper` 提供统一的 `Stream` 包装器。
+├── traits.rs      # 定义协议实现的通用 trait。
+└── util.rs        # 工具函数。
+```
+
+### 相关故事
+
+代理协议的开发是为了应对不断演进的网络过滤技术。随着网络审查技术的发展，流量混淆的需求也随之增加。
+
+**Shadowsocks** 由程序员 "clowwindy" 于2012年创建，是此领域的一项重要进展。它引入了轻量级、加密的 SOCKS5 代理协议，其设计使其流量特征与普通 HTTPS 流量难以区分，从而增加了自动化系统检测的难度。其开源属性使得社区能够在原作者停止开发后继续维护和发展。
+
+随后，出现了基于 QUIC 传输协议构建的 **Hysteria2** 等协议。它专注于最大化吞吐量和最小化延迟，即使在有高丢包率的网络上也能保持性能，同时将流量伪装成标准的 HTTP/3 流量。从 Shadowsocks 到 Hysteria2 的演进，展示了该领域从简单的流量混淆到以性能为导向的设计的持续创新。
+
+## About
+
+This project is an open-source component of [i18n.site ⋅ Internationalization Solution](https://i18n.site).
+
+* [i18 : MarkDown Command Line Translation Tool](https://i18n.site/i18)
+
+  The translation perfectly maintains the Markdown format.
+
+  It recognizes file changes and only translates the modified files.
+
+  The translated Markdown content is editable; if you modify the original text and translate it again, manually edited translations will not be overwritten (as long as the original text has not been changed).
+
+* [i18n.site : MarkDown Multi-language Static Site Generator](https://i18n.site/i18n.site)
+
+  Optimized for a better reading experience
+
+## 关于
+
+本项目为 [i18n.site ⋅ 国际化解决方案](https://i18n.site) 的开源组件。
+
+* [i18 : MarkDown 命令行翻译工具](https://i18n.site/i18)
+
+  翻译能够完美保持 Markdown 的格式。能识别文件的修改，仅翻译有变动的文件。
+
+  Markdown 翻译内容可编辑；如果你修改原文并再次机器翻译，手动修改过的翻译不会被覆盖 （ 如果这段原文没有被修改 ）。
+
+* [i18n.site : MarkDown 多语言静态站点生成器](https://i18n.site/i18n.site) 为阅读体验而优化。

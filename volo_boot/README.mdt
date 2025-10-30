@@ -1,0 +1,165 @@
+# volo_boot
+
+[English](#en) | [中文](#cn)
+
+<a id="en"></a>
+
+## volo_boot (English)
+
+- [Introduction](#introduction)
+- [Usage](#usage)
+  - [gRPC Server](#grpc-server)
+  - [HTTP Server](#http-server)
+- [Design Philosophy](#design-philosophy)
+- [A Little Story](#a-little-story)
+
+### Introduction
+
+`volo_boot` is a utility crate designed to simplify the bootstrapping of `volo-grpc` and `volo-http` services. It abstracts away common boilerplate code, allowing developers to focus on business logic.
+
+### Usage
+
+#### gRPC Server
+
+To start a gRPC server, use the `volo_boot::grpc` function. It initializes the service with reasonable defaults, such as Zstd compression.
+
+**Example:**
+
+```rust
+// main.rs
+use volo_boot::grpc;
+
+// Define your gRPC service (e.g., using Prost)
+// ...
+
+#[volo::main]
+async fn main() {
+    // Your service implementation
+    let api_server = YourApiService::new(); 
+
+    // Start the gRPC server
+    grpc(api_server, |s| s).await.unwrap();
+}
+```
+
+The server address is configured via the `GRPC` environment variable, defaulting to `0.0.0.0:3333`.
+
+#### HTTP Server
+
+To start an HTTP server that can handle gRPC-over-HTTP, use the `volo_boot::http` function. This is particularly useful for web clients.
+
+**Example:**
+
+```rust
+// main.rs
+use volo_boot::http;
+
+// Define your gRPC service that implements http_grpc::Grpc
+// ...
+
+#[volo::main]
+async fn main() {
+    // Start the HTTP server
+    http::<YourApiService>(|r| r).await.unwrap();
+}
+```
+
+The server address is configured via the `HTTP` environment variable, defaulting to `0.0.0.0:3334`.
+
+### Design Philosophy
+
+The core idea of `volo_boot` is to provide simple, single-function entry points for starting services.
+
+- **`grpc(api_server, init)`**: This function takes a user-defined gRPC service and a closure for customizing the `volo_grpc::Server`. It handles address binding (via `env_addr`) and applies common configurations like compression.
+
+- **`http(init)`**: This function is generic over a type that implements `http_grpc::Grpc`. It sets up an HTTP router that forwards POST requests on the root path (`/`) to the gRPC service. It also uses a closure for router customization and handles address binding.
+
+This approach minimizes setup code in `main.rs` and promotes configuration via environment variables, aligning with twelve-factor app principles.
+
+### A Little Story
+
+gRPC, developed by Google, is the spiritual successor to a system named Stubby. Stubby was used internally at Google for years to connect the vast number of microservices that power its infrastructure. When Google decided to release an open-source version, they redesigned it based on the lessons learned from Stubby and built it on top of HTTP/2, giving birth to gRPC. The "g" in gRPC doesn't officially stand for anything, and Google has playfully offered a new meaning for each release, such as "good," "green," or "goofy." This naming quirk reflects a bit of the fun-loving culture behind a powerful technology.
+
+---
+
+<a id="cn"></a>
+
+## volo_boot (中文)
+
+- [项目介绍](#项目介绍)
+- [使用演示](#使用演示)
+  - [gRPC 服务](#grpc-服务)
+  - [HTTP 服务](#http-服务)
+- [设计思路](#设计思路)
+- [技术小史](#技术小史)
+
+### 项目介绍
+
+`volo_boot` 是为简化 `volo-grpc` 和 `volo-http` 服务启动而设计的工具库。它抽象了常见的样板代码，使开发者能专注于业务逻辑。
+
+### 使用演示
+
+#### gRPC 服务
+
+使用 `volo_boot::grpc` 函数启动 gRPC 服务。它会使用预设的优化配置（如 Zstd 压缩）来初始化服务。
+
+**代码演示:**
+
+```rust
+// main.rs
+use volo_boot::grpc;
+
+// 定义 gRPC 服务 (例如，使用 Prost)
+// ...
+
+#[volo::main]
+async fn main() {
+    // 您的服务实现
+    let api_server = YourApiService::new(); 
+
+    // 启动 gRPC 服务
+    grpc(api_server, |s| s).await.unwrap();
+}
+```
+
+服务地址通过 `GRPC` 环境变量配置，默认为 `0.0.0.0:3333`。
+
+#### HTTP 服务
+
+使用 `volo_boot::http` 函数启动能处理 gRPC-over-HTTP 的 HTTP 服务，对 Web 客户端尤其有用。
+
+**代码演示:**
+
+```rust
+// main.rs
+use volo_boot::http;
+
+// 定义实现了 http_grpc::Grpc 的 gRPC 服务
+// ...
+
+#[volo::main]
+async fn main() {
+    // 启动 HTTP 服务
+    http::<YourApiService>(|r| r).await.unwrap();
+}
+```
+
+服务地址通过 `HTTP` 环境变量配置，默认为 `0.0.0.0:3334`。
+
+### 设计思路
+
+`volo_boot` 的核心思想是提供简单、统一的函数入口来启动服务。
+
+- **`grpc(api_server, init)`**: 此函数接收用户定义的 gRPC 服务和用于自定义 `volo_grpc::Server` 的闭包。它处理地址绑定（通过 `env_addr`）并应用压缩等通用配置。
+
+- **`http(init)`**: 此函数泛型约束于实现了 `http_grpc::Grpc` 的类型。它设置 HTTP 路由，将根路径 (`/`) 的 POST 请求转发给 gRPC 服务。它同样使用闭包进行路由定制，并处理地址绑定。
+
+这种方法最大限度地减少了 `main.rs` 中的设置代码，并提倡通过环境变量进行配置，与十二因子应用原则保持一致。
+
+### 技术小史
+
+gRPC 由 Google 开发，是其内部系统 Stubby 的精神继承者。多年来，Stubby 在 Google 内部被用于连接驱动其基础设施的大量微服务。当 Google 决定发布开源版本时，他们根据从 Stubby 中学到的经验教训对其进行了重新设计，并将其构建在 HTTP/2 之上，gRPC 由此诞生。gRPC 中的“g”官方并未定义代表什么，Google 在每个版本中都会开玩笑地赋予它新的含义，如“good”、“green”或“goofy”。这个命名的趣闻也从侧面反映了这项强大技术背后充满乐趣的工程师文化。
+
+---
+
+<+ ../about.md >

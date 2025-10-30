@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package api;
+
+// 定义搜索服务
+service SearchService
+{
+  // 搜索方法
+  rpc Search(SearchReq) returns (SearchRes);
+  // 删除文档
+  rpc Rm(RmReq) returns (Void);
+  // 添加文档
+  rpc Add(Doc) returns (Void);
+}
+
+// 文档消息
+message Doc
+{
+  uint64 id = 1;
+  uint64 ts = 2;
+  uint64 uid = 3;
+  uint64 org_id = 4;
+  uint64 repo_id = 5;
+  repeated string tag_li = 6;
+  string title = 7;
+  string txt = 8;
+}
+
+// 搜索请求消息
+message SearchReq
+{
+  // 搜索查询字符串
+  string query = 1;
+  // 用户 ID
+  uint64 uid = 2;
+  // 组织 ID
+  uint64 org_id = 3;
+  // 仓库 ID 列表
+  repeated uint64 repo_id_li = 4;
+  // 标签列表
+  repeated string tag_li = 5;
+  // 开始时间戳 (可选)
+  optional uint64 ts_begin = 6;
+  // 结束时间戳 (可选)
+  optional uint64 ts_end = 7;
+  // 返回结果数量限制
+  uint64 limit = 8;
+  // 结果偏移量
+  uint64 offset = 9;
+  // 片段最大字符数
+  uint64 snippet_max_num_chars = 10;
+}
+
+// 单个搜索结果条目
+message SearchResItem
+{
+  // 匹配的文档
+  Doc doc = 1;
+  // 内容摘要及高亮
+  string snippet = 2;
+}
+
+// 搜索响应消息
+message SearchRes
+{
+  // 匹配的文档列表
+  repeated SearchResItem li = 1;
+  // 当 offset = 0 时，返回的总匹配数
+  uint64 count = 2;
+}
+
+// 删除请求消息
+message RmReq
+{
+  uint64 id = 1;
+}
+
+message Void { }

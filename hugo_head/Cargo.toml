@@ -1,0 +1,39 @@
+[package]
+name = "hugo_head"
+version = "0.1.4"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/hugo_head"
+description = "hugo_head"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+
+[dependencies]
+aok = "0.1.18"
+located_yaml = "0.2.1"
+taplo = "0.14.0"
+
+[dependencies.tran_trait]
+version = "0.3.2"
+path = "../tran_trait"
+
+[dependencies.txt_li]
+version = "0.1.45"
+path = "../txt_li"
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tran_fmt]
+path = "../tran_fmt"
+version = "0.1.8"

@@ -1,0 +1,29 @@
+[package]
+name = "uri_to_host_port"
+version = "0.1.4"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/parse"
+description = "A lightweight, robust Rust utility to parse a URI and extract its host and port / 一个轻量、健壮的 Rust 工具，用于解析 URI 并提取其主机和端口"
+keywords = [ "uri", "url", "parser", "host", "port" ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+
+[dev-dependencies]
+anyhow = "1.0.100"
+log = "0.4.28"
+static_init = "1.0.4"
+
+[dev-dependencies.log_init]
+path = "../log_init"
+version = "0.1.27"
+
+[dependencies]
+hyper = "1.7.0"
+thiserror = "2.0.17"

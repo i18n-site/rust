@@ -1,0 +1,15 @@
+# xtld : extract tld from domain
+
+usage:
+
+```rust
+<+ ./tests/main.rs>
+```
+
+out:
+
+```
+<+ ./out.txt>
+```
+
+<+ ../about.md >

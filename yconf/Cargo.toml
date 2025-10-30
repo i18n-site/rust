@@ -1,0 +1,33 @@
+[dependencies]
+aok = "0.1.18"
+serde = "1.0.228"
+serde_yaml = "0.9.34"
+thiserror = "2.0.17"
+
+[dependencies.ifs]
+version = "0.1.47"
+path = "../ifs"
+default-features = false
+features = [ "fs" ]
+
+[package]
+name = "yconf"
+version = "0.1.5"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/yconf"
+description = "yconf"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

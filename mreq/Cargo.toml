@@ -1,0 +1,50 @@
+[dependencies]
+aok = "0.1.18"
+bytes = "1.10.1"
+reqwest = "0.12.24"
+static_init = "1.0.4"
+thiserror = "2.0.17"
+tracing = "0.1.41"
+
+[dependencies.genv]
+version = "0.1.17"
+path = "../genv"
+
+[dependencies.header_map]
+version = "0.1.4"
+path = "../header_map"
+
+[dependencies.citer]
+version = "0.1.12"
+path = "../citer"
+
+[dependencies.ireq]
+version = "0.1.31"
+path = "../ireq"
+features = [ "proxy" ]
+
+[dependencies.xerr]
+version = "0.1.16"
+path = "../xerr"
+
+[package]
+name = "mreq"
+version = "0.1.17"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/mreq"
+description = "mreq"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

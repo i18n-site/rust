@@ -1,0 +1,23 @@
+{
+  "name": "@3-/ed25519_ph",
+  "version": "0.1.4",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i18n-site/rust.git"
+  },
+  "homepage": "https://github.com/i18n-site/rust/tree/main/ed25519_ph",
+  "keywords": [],
+  "author": "i18n.site@gmail.com",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./mod.js",
+    "./*": "./*"
+  },
+  "files": [
+    "./*"
+  ],
+  "devDependencies": {},
+  "peerDependencies": {},
+  "scripts": {},
+  "type": "module"
+}

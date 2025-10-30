@@ -1,0 +1,90 @@
+[package]
+name = "uper"
+version = "0.1.10"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/uper"
+description = "uper"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ "conf" ]
+conf = [ "dep:confer", "dep:confdir" ]
+
+[dependencies]
+aok = "0.1.18"
+coarsetime = "0.1.36"
+const-str = "0.7.0"
+current_platform = "0.2.0"
+defer-lite = "1.0.0"
+kanal = "0.1.1"
+self-replace = "1.5.0"
+tar = "0.4.44"
+
+[dependencies.clap_args]
+version = "0.1.7"
+path = "../clap_args"
+
+[dependencies.clap]
+version = "4.5.50"
+features = [ "string" ]
+
+[dependencies.pbar]
+version = "0.1.8"
+path = "../pbar"
+
+[dependencies.sver]
+version = "0.1.10"
+path = "../sver"
+
+[dependencies.zstd]
+version = "0.13.3"
+features = [ "bindgen" ]
+
+[dependencies.upgrade_verify]
+version = "0.1.3"
+path = "../upgrade_verify"
+
+[dependencies.vb]
+version = "0.1.8"
+path = "../vb"
+
+[dependencies.down]
+version = "0.1.3"
+path = "../down"
+
+[dependencies.idoh]
+version = "0.1.5"
+path = "../idoh"
+
+[dependencies.riter]
+version = "0.1.1"
+path = "../riter"
+
+[dependencies.ver_from_txt]
+version = "0.1.9"
+path = "../ver_from_txt"
+
+[dependencies.xerr]
+version = "0.1.16"
+path = "../xerr"
+
+[dependencies.confer]
+version = "0.1.12"
+path = "../confer"
+features = [ "fs" ]
+optional = true
+
+[dependencies.confdir]
+version = "0.1.4"
+path = "../confdir"
+optional = true
+
+[dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

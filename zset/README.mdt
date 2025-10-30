@@ -1,0 +1,507 @@
+[English](#english) | [中文](#chinese)
+
+<a id="english"></a>
+
+# zset: A Thread-Safe Sorted Set for Rust
+
+## Table of Contents
+
+- [Project Significance](#project-significance)
+- [Usage Demo](#usage-demo)
+  - [Basic Operations](#basic-operations)
+  - [Range Queries](#range-queries)
+  - [Set Operations (Union & Intersection)](#set-operations-union--intersection)
+  - [Concurrent Operations](#concurrent-operations)
+  - [Using Floating-Point Scores](#using-floating-point-scores)
+  - [Other Operations](#other-operations)
+- [API and Time Complexity](#api-and-time-complexity)
+- [Design and Technology Stack](#design-and-technology-stack)
+- [File Structure](#file-structure)
+- [A Little Story: The Power of Sorted Sets](#a-little-story-the-power-of-sorted-sets)
+
+## Project Significance
+
+`zset` is a high-performance, thread-safe sorted set data structure implemented in Rust, inspired by Redis's well-known `ZSET`. It maps members to scores and maintains them in ascending order based on these scores. If scores are equal, it preserves the insertion order.
+
+This data structure is particularly useful for applications requiring real-time, ordered data management, such as:
+- **Leaderboards:** Ranking players in a game.
+- **Real-time Analytics:** Tracking trending topics or products.
+- **Priority Queues:** Managing tasks with varying priorities.
+- **Rate Limiting:** Throttling requests based on timestamps.
+
+Built with a focus on concurrency and performance, `zset` leverages modern Rust libraries to provide safe and efficient access across multiple threads.
+
+## Usage Demo
+
+Here’s a demonstration of the core API, with examples adapted from the project's test suite.
+
+### Basic Operations
+
+```rust
+use zset::{Api, Zset};
+
+// Create a new Zset
+let zset = Zset::<&str, &str, i32>::new();
+
+// Add members with scores. Returns `true` if the member was updated.
+assert!(!zset.add("one", 1)); // false (new member)
+assert!(!zset.add("two", 2)); // false (new member)
+assert!(zset.add("one", 10)); // true (updated score)
+assert_eq!(zset.len(), 2);
+
+// Get score and rank (0-based)
+assert_eq!(zset.score(&"two"), Some(2));
+assert_eq!(zset.rank(&"two"), Some(0)); // "two" has the lowest score
+
+// Remove a member
+assert!(zset.rm(&"one"));
+assert_eq!(zset.len(), 1);
+```
+
+### Range Queries
+
+You can retrieve ranges of members by rank, with or without their scores.
+
+```rust
+use zset::{Api, Zset};
+
+let zset = Zset::<&str, &str, i32>::new();
+zset.add("a", 1);
+zset.add("b", 2);
+zset.add("c", 3);
+zset.add("d", 4);
+zset.add("e", 5);
+
+// Get members in rank range 0..3
+let members: Vec<&str> = zset.range(0..3).iter().map(|v| **v).collect();
+assert_eq!(members, vec!["a", "b", "c"]);
+
+// Get members and scores in rank range 1..=3
+let items: Vec<(&str, i32)> = zset
+  .range_with_scores(1..=3)
+  .iter()
+  .map(|(m, s)| (**m, *s))
+  .collect();
+assert_eq!(items, vec![("b", 2), ("c", 3), ("d", 4)]);
+```
+
+### Set Operations (Union & Intersection)
+
+`zset` supports union and intersection operations, which are useful for combining or comparing different sorted sets. The scores of common members are aggregated.
+
+```rust
+use zset::{Api, Zset};
+
+let zset1 = Zset::<String, String, i32>::new();
+zset1.add("a".to_string(), 1);
+zset1.add("b".to_string(), 2);
+
+let zset2 = Zset::<String, String, i32>::new();
+zset2.add("b".to_string(), 3);
+zset2.add("c".to_string(), 4);
+
+// Union: combines two sets. Common members' scores are summed.
+let zset_union = &zset1 | &zset2;
+assert_eq!(zset_union.len(), 3);
+assert_eq!(zset_union.score(&"a".to_string()), Some(1));
+assert_eq!(zset_union.score(&"b".to_string()), Some(5)); // 2 + 3
+assert_eq!(zset_union.score(&"c".to_string()), Some(4));
+
+// Intersection: creates a set with only common members. Scores are summed.
+let zset_intersection = &zset1 & &zset2;
+assert_eq!(zset_intersection.len(), 1);
+assert_eq!(zset_intersection.score(&"b".to_string()), Some(5)); // 2 + 3
+```
+
+### Concurrent Operations
+
+`zset` is designed for thread safety, allowing you to share it across threads using `Arc`.
+
+```rust
+use std::{sync::{Arc, Barrier}, thread};
+use zset::{Api, Zset};
+
+let zset = Arc::new(Zset::<String, String, i32>::new());
+let barrier = Arc::new(Barrier::new(10));
+let mut handles = vec![];
+
+for i in 0..10 {
+    let zset_clone = zset.clone();
+    let barrier_clone = barrier.clone();
+    handles.push(thread::spawn(move || {
+        barrier_clone.wait();
+        zset_clone.add(format!("member-{}", i), i);
+    }));
+}
+
+for handle in handles {
+    handle.join().unwrap();
+}
+
+assert_eq!(zset.len(), 10);
+assert_eq!(zset.rank(&"member-5".to_string()), Some(5));
+```
+
+### Using Floating-Point Scores
+
+To use floats as scores (e.g., `f64`), you must wrap them in a type that provides a total ordering, such as `ordered_float::OrderedFloat`, because standard floats do not implement `Ord`.
+
+```rust
+use ordered_float::OrderedFloat;
+use zset::{Api, Zset};
+
+// Use OrderedFloat<f64> as the score type
+let zset = Zset::<&str, &str, OrderedFloat<f64>>::new();
+
+zset.add("player1", OrderedFloat(99.5));
+zset.add("player2", OrderedFloat(101.2));
+zset.add("player3", OrderedFloat(99.9));
+
+// "player1" has the lowest score and thus the lowest rank
+assert_eq!(zset.rank(&"player1"), Some(0));
+assert_eq!(zset.rank(&"player3"), Some(1));
+assert_eq!(zset.rank(&"player2"), Some(2));
+```
+
+### Other Operations
+
+```rust
+use zset::{Api, Zset};
+use std::sync::Arc;
+
+let zset = Zset::<&str, &str, i32>::new();
+zset.add("a", 1);
+zset.add("b", 2);
+zset.add("c", 3);
+zset.add("d", 4);
+zset.add("e", 5);
+
+// Check if empty
+assert!(!zset.is_empty());
+
+// Get member by rank
+assert_eq!(zset.get(2).map(|m| *m), Some("c"));
+let (member, score) = zset.get_with_score(3).unwrap();
+assert_eq!(*member, "d");
+assert_eq!(score, 4);
+
+// Remove a range of members by rank
+assert_eq!(zset.rm_range_by_rank(1..=2), 2); // Removes "b" and "c"
+assert_eq!(zset.len(), 3);
+assert_eq!(zset.get(1).map(|m| *m), Some("d")); // "d" is now at rank 1
+
+// card is an alias for len
+assert_eq!(zset.card(), 3);
+```
+
+## API and Time Complexity
+
+Here is a summary of the public API provided by `zset` and the time complexity of each function.
+
+| Function | Description | Time Complexity |
+|---|---|---|
+| `add` | Adds or updates a member. | O(log N) |
+| `rm` | Removes a member. | O(log N) |
+| `score` | Gets the score of a member. | O(1) |
+| `rank` | Gets the rank of a member. | O(log N) |
+| `len` | Returns the number of members. | O(1) |
+| `is_empty` | Checks if the set is empty. | O(1) |
+| `get` | Gets the member at a given rank. | O(log N) |
+| `get_with_score` | Gets the member and score at a given rank. | O(log N) |
+| `range` | Gets a range of members by rank. | O(log N + K) |
+| `range_with_scores` | Gets a range of members and scores by rank. | O(log N + K) |
+| `rm_range_by_rank` | Removes a range of members by rank. | O(K * log N) |
+| `card` | Alias for `len`. | O(1) |
+
+## Design and Technology Stack
+
+`zset`'s architecture is designed for a balance of fast lookups and ordered traversal in a concurrent environment.
+
+- **Core Data Structures**:
+  1.  **`DashMap<K, ScoreMember<K, M, S>>`**: A concurrent hash map that stores the mapping from a member's key to its score and other metadata. This provides average O(1) time complexity for score lookups.
+  2.  **`RwLock<OrderedSkipList<ScoreMember<K, M, S>>>`**: An ordered skip list wrapped in a `parking_lot::RwLock`. This structure maintains a sorted collection of members for efficient rank and range queries.
+      -   **Search/Insert/Remove**: O(log N)
+      -   The `RwLock` ensures that multiple threads can read the sorted data simultaneously, while write operations acquire an exclusive lock.
+
+- **Technology Stack**:
+  - **`dashmap`**: For highly concurrent hash map operations.
+  - **`parking_lot`**: Provides more efficient and performant `RwLock` implementations compared to the standard library.
+  - **`skiplist`**: Provides the `OrderedSkipList` data structure.
+
+## File Structure
+
+```
+zset/
+├── src/
+│   ├── lib.rs          # Public API and module exports.
+│   ├── zset_impl.rs    # Core implementation of the Zset data structure.
+│   ├── score_member.rs # Internal struct for storing score-member pairs.
+│   └── arc_m.rs        # Wrapper for handling member ownership.
+├── tests/
+│   └── main.rs         # Integration tests.
+├── Cargo.toml          # Project manifest and dependencies.
+└── README.mdt          # This documentation file.
+```
+
+## A Little Story: The Power of Sorted Sets
+
+The sorted set data structure was popularized by **Redis**, an in-memory data store created by Salvatore Sanfilippo (also known as "antirez"). While building his startup, Sanfilippo needed a tool to analyze real-time web logs and couldn't find a database that met his performance needs. He decided to build his own, which eventually became Redis.
+
+He introduced the Sorted Set (`ZSET`) as a unique and powerful data type not commonly found in other databases. Its genius lies in its dual-structure implementation: a hash table for fast O(1) access to scores and a skip list for O(log N) ordered operations. This combination made it incredibly efficient for solving complex problems like leaderboards, which were previously difficult to scale.
+
+This `zset` project brings that same powerful concept to the Rust ecosystem. It uses an `OrderedSkipList` for the ordered component, which is the same type of data structure that Redis uses, adhering to the same fundamental design principle: combining a hash map with a sorted structure to deliver a versatile and performant tool for developers.
+
+---
+
+<a id="chinese"></a>
+
+# zset：一个用于 Rust 的线程安全排序集
+
+## 目录
+
+- [项目的意义](#项目的意义)
+- [用法演示](#用法演示)
+  - [基本操作](#基本操作)
+  - [范围查询](#范围查询)
+  - [集合操作 (并集与交集)](#集合操作-并集与交集)
+  - [并发操作](#并发操作)
+  - [使用浮点数分数](#使用浮点数分数)
+  - [其他操作](#其他操作)
+- [API 与时间复杂度](#api-与时间复杂度)
+- [设计与技术栈](#设计与技术栈)
+- [文件结构](#文件结构)
+- [一个小故事：排序集的力量](#一个小故事排序集的力量)
+
+## 项目的意义
+
+`zset` 是一个在 Rust 中实现的高性能、线程安全的排序集数据结构，其灵感来源于 Redis 著名的 `ZSET`。它将成员映射到分数，并根据这些分数维持升序排列。如果分数相同，它会保持插入顺序。
+
+该数据结构对于需要实时、有序数据管理的应用尤其有用，例如：
+- **排行榜：** 在游戏中对玩家进行排名。
+- **实时分析：** 追踪热门话题或产品。
+- **优先队列：** 管理具有不同优先级的任务。
+- **速率限制：** 基于时间戳对请求进行节流。
+
+`zset` 以并发性和性能为核心，利用现代 Rust 库在多线程间提供安全而高效的访问。
+
+## 用法演示
+
+以下是核心 API 的演示，示例改编自项目的测试套件。
+
+### 基本操作
+
+```rust
+use zset::{Api, Zset};
+
+// 创建一个新的 Zset
+let zset = Zset::<&str, &str, i32>::new();
+
+// 添加成员及分数。如果成员被更新，则返回 `true`。
+assert!(!zset.add("one", 1)); // false (新成员)
+assert!(!zset.add("two", 2)); // false (新成员)
+assert!(zset.add("one", 10)); // true (分数已更新)
+assert_eq!(zset.len(), 2);
+
+// 获取分数和排名 (0-based)
+assert_eq!(zset.score(&"two"), Some(2));
+assert_eq!(zset.rank(&"two"), Some(0)); // "two" 的分数最低
+
+// 移除成员
+assert!(zset.rm(&"one"));
+assert_eq!(zset.len(), 1);
+```
+
+### 范围查询
+
+您可以按排名范围检索成员，无论是否附带分数。
+
+```rust
+use zset::{Api, Zset};
+
+let zset = Zset::<&str, &str, i32>::new();
+zset.add("a", 1);
+zset.add("b", 2);
+zset.add("c", 3);
+zset.add("d", 4);
+zset.add("e", 5);
+
+// 获取排名范围 0..3 内的成员
+let members: Vec<&str> = zset.range(0..3).iter().map(|v| **v).collect();
+assert_eq!(members, vec!["a", "b", "c"]);
+
+// 获取排名范围 1..=3 内的成员和分数
+let items: Vec<(&str, i32)> = zset
+  .range_with_scores(1..=3)
+  .iter()
+  .map(|(m, s)| (**m, *s))
+  .collect();
+assert_eq!(items, vec![("b", 2), ("c", 3), ("d", 4)]);
+```
+
+### 集合操作 (并集与交集)
+
+`zset` 支持并集和交集操作，可用于合并或比较不同的排序集。共同成员的分数会被累加。
+
+```rust
+use zset::{Api, Zset};
+
+let zset1 = Zset::<String, String, i32>::new();
+zset1.add("a".to_string(), 1);
+zset1.add("b".to_string(), 2);
+
+let zset2 = Zset::<String, String, i32>::new();
+zset2.add("b".to_string(), 3);
+zset2.add("c".to_string(), 4);
+
+// 并集: 合并两个集合。共同成员的分数会被相加。
+let zset_union = &zset1 | &zset2;
+assert_eq!(zset_union.len(), 3);
+assert_eq!(zset_union.score(&"a".to_string()), Some(1));
+assert_eq!(zset_union.score(&"b".to_string()), Some(5)); // 2 + 3
+assert_eq!(zset_union.score(&"c".to_string()), Some(4));
+
+// 交集: 创建一个只包含共同成员的集合。分数同样相加。
+let zset_intersection = &zset1 & &zset2;
+assert_eq!(zset_intersection.len(), 1);
+assert_eq!(zset_intersection.score(&"b".to_string()), Some(5)); // 2 + 3
+```
+
+### 并发操作
+
+`zset` 专为线程安全而设计，允许您使用 `Arc` 在线程间共享它。
+
+```rust
+use std::{sync::{Arc, Barrier}, thread};
+use zset::{Api, Zset};
+
+let zset = Arc::new(Zset::<String, String, i32>::new());
+let barrier = Arc::new(Barrier::new(10));
+let mut handles = vec![];
+
+for i in 0..10 {
+    let zset_clone = zset.clone();
+    let barrier_clone = barrier.clone();
+    handles.push(thread::spawn(move || {
+        barrier_clone.wait();
+        zset_clone.add(format!("member-{}", i), i);
+    }));
+}
+
+for handle in handles {
+    handle.join().unwrap();
+}
+
+assert_eq!(zset.len(), 10);
+assert_eq!(zset.rank(&"member-5".to_string()), Some(5));
+```
+
+### 使用浮点数分数
+
+要将浮点数（如 `f64`）用作分数，你必须将其包装在一个提供全序的类型中，例如 `ordered_float::OrderedFloat`，因为标准浮点类型没有实现 `Ord` trait。
+
+```rust
+use ordered_float::OrderedFloat;
+use zset::{Api, Zset};
+
+// 使用 OrderedFloat<f64> 作为分数类型
+let zset = Zset::<&str, &str, OrderedFloat<f64>>::new();
+
+zset.add("player1", OrderedFloat(99.5));
+zset.add("player2", OrderedFloat(101.2));
+zset.add("player3", OrderedFloat(99.9));
+
+// "player1" 的分数最低，因此排名也最低
+assert_eq!(zset.rank(&"player1"), Some(0));
+assert_eq!(zset.rank(&"player3"), Some(1));
+assert_eq!(zset.rank(&"player2"), Some(2));
+```
+
+### 其他操作
+
+```rust
+use zset::{Api, Zset};
+use std::sync::Arc;
+
+let zset = Zset::<&str, &str, i32>::new();
+zset.add("a", 1);
+zset.add("b", 2);
+zset.add("c", 3);
+zset.add("d", 4);
+zset.add("e", 5);
+
+// 检查是否为空
+assert!(!zset.is_empty());
+
+// 按排名获取成员
+assert_eq!(zset.get(2).map(|m| *m), Some("c"));
+let (member, score) = zset.get_with_score(3).unwrap();
+assert_eq!(*member, "d");
+assert_eq!(score, 4);
+
+// 按排名范围删除成员
+assert_eq!(zset.rm_range_by_rank(1..=2), 2); // 删除 "b" 和 "c"
+assert_eq!(zset.len(), 3);
+assert_eq!(zset.get(1).map(|m| *m), Some("d")); // "d" 现在位于排名 1
+
+// card 是 len 的别名
+assert_eq!(zset.card(), 3);
+```
+
+## API 与时间复杂度
+
+下表总结了 `zset` 提供的公共 API 及各函数的时间复杂度。
+
+| 函数 | 描述 | 时间复杂度 |
+|---|---|---|
+| `add` | 添加或更新一个成员。 | O(log N) |
+| `rm` | 移除一个成员。 | O(log N) |
+| `score` | 获取一个成员的分数。 | O(1) |
+| `rank` | 获取一个成员的排名。 | O(log N) |
+| `len` | 返回成员数量。 | O(1) |
+| `is_empty` | 检查集合是否为空。 | O(1) |
+| `get` | 按排名获取成员。 | O(log N) |
+| `get_with_score` | 按排名获取成员和分数。 | O(log N) |
+| `range` | 按排名获取成员范围。 | O(log N + K) |
+| `range_with_scores` | 按排名获取成员和分数的范围。 | O(log N + K) |
+| `rm_range_by_rank` | 按排名删除成员范围。 | O(K * log N) |
+| `card` | `len` 的别名。 | O(1) |
+
+## 设计与技术栈
+
+`zset` 的架构旨在并发环境中实现快速查找和有序遍历的平衡。
+
+- **核心数据结构**：
+  1.  **`DashMap<K, ScoreMember<K, M, S>>`**：一个并发哈希映射，存储从成员键到其分数及其他元数据的映射。这为分数查找提供了平均 O(1) 的时间复杂度。
+  2.  **`RwLock<OrderedSkipList<ScoreMember<K, M, S>>>`**：一个包裹在 `parking_lot::RwLock` 中的有序跳表。该结构维护一个有序的成员集合，以支持高效的排名和范围查询。
+      -   **搜索/插入/删除**：O(log N)
+      -   `RwLock` 确保多个线程可以同时读取排序数据，而写操作则会获取独占锁。
+
+- **技术栈**：
+  - **`dashmap`**：用于高并发的哈希映射操作。
+  - **`parking_lot`**：提供比标准库更高效、性能更好的 `RwLock` 实现。
+  - **`skiplist`**：提供了 `OrderedSkipList` 数据结构。
+
+## 文件结构
+
+```
+zset/
+├── src/
+│   ├── lib.rs          # 公共 API 和模块导出。
+│   ├── zset_impl.rs    # Zset 数据结构的核心实现。
+│   ├── score_member.rs # 用于存储分数-成员对的内部结构体。
+│   └── arc_m.rs        # 用于处理成员所有权的包装器。
+├── tests/
+│   └── main.rs         # 集成测试。
+├── Cargo.toml          # 项目清单和依赖项。
+└── README.mdt          # 本文档文件。
+```
+
+## 一个小故事：排序集的力量
+
+排序集（Sorted Set）这一数据结构因 **Redis** 而得以普及。Redis 是由 Salvatore Sanfilippo（化名 "antirez"）创建的一款内存数据存储。在创建自己的初创公司时，Sanfilippo 需要一个工具来分析实时网络日志，但找不到能满足其性能需求的数据库。于是，他决定自己动手构建一个，这最终演变成了 Redis。
+
+他引入了排序集（`ZSET`）作为一种独特而强大的数据类型，这在其他数据库中并不常见。其精妙之处在于它的双重结构实现：一个用于快速 O(1) 分数访问的哈希表，以及一个用于 O(log N) 有序操作的跳表（skip list）。这种组合使其在解决像排行榜这类以往难以扩展的复杂问题时极为高效。
+
+这个 `zset` 项目将同样强大的理念带入了 Rust 生态系统。它使用 `OrderedSkipList` 作为其有序组件，这与 Redis 使用的数据结构类型相同，遵循了相同的基础设计原则：将哈希映射与有序结构相结合，为开发者提供一个功能多样且性能卓越的工具。
+
+<+ ../about.md >

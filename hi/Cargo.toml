@@ -1,0 +1,41 @@
+[package]
+name = "hi"
+version = "0.1.18"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/hi"
+description = "hi with mail & wxpusher"
+
+[package.metadata.cargo-machete]
+ignored = [ "static_init" ]
+
+[dependencies]
+futures = "0.3.31"
+sonic-rs = "0.5.5"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dependencies.genv]
+version = "0.1.17"
+path = "../genv"
+
+[dependencies.xsmtp]
+version = "0.1.19"
+path = "../xsmtp"
+
+[dependencies.aok]
+version = "0.1.18"
+
+[dependencies.ireq]
+version = "0.1.31"
+
+[dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+
+[dependencies.wxpush]
+version = "0.1.16"
+
+[dependencies.xstr]
+version = "0.1.11"

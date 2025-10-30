@@ -1,0 +1,43 @@
+[package]
+name = "down"
+version = "0.1.3"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/down"
+description = "down"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+
+[dependencies]
+aok = "0.1.18"
+bytes = "1.10.1"
+coarsetime = "0.1.36"
+indexmap = "2.12.0"
+kanal = "0.1.1"
+parking_lot = "0.12.5"
+tracing = "0.1.41"
+
+[dependencies.ireq]
+version = "0.1.31"
+path = "../ireq"
+features = [ "proxy" ]
+
+[dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+
+[dev-dependencies.xerr]
+path = "../xerr"
+version = "0.1.16"

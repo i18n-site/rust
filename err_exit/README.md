@@ -1,0 +1,125 @@
+[English](#en) | [中文](#cn)
+
+<a id="en"></a>
+
+# err_exit
+
+A macro for exiting processes with formatted error messages.
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Usage](#usage)
+- [Design Philosophy](#design-philosophy)
+- [A Little Story](#a-little-story)
+
+## Introduction
+
+`err_exit` offers a macro to terminate the current process after printing a formatted error message to the standard error stream. This is designed for handling fatal errors in command-line applications where immediate termination is the intended action.
+
+## Usage
+
+Incorporate `err_exit` into your project and utilize the macro as shown:
+
+```rust
+use err_exit::err_exit;
+
+fn main() {
+    let item = "file";
+    err_exit!("Failed to read {}", item);
+}
+```
+
+This code will output `❌ Failed to read file` to `stderr` and then exit the process with a status code of `1`.
+
+## Design Philosophy
+
+The `err_exit!` macro is implemented using `macro_rules!`. It accepts format arguments, akin to `eprintln!`, directs the formatted string to standard error prefixed with a "❌" emoji, and subsequently calls `std::process::exit(1)` to halt the process.
+
+This design provides a direct and explicit mechanism for handling unrecoverable errors, bypassing more complex error handling structures like `Result` and `?` which are better suited for recoverable errors. The goal is to offer a clear and concise tool for situations where the program cannot and should not continue.
+
+## A Little Story
+
+In the early days of computing, command-line utilities in Unix-like systems established a convention: exit with a status of 0 on success, and a non-zero value on failure. This allowed for the powerful composition of tools using shell scripts, where one program's failure could halt a chain of commands. Error messages were typically sent to a separate stream, `stderr`, to avoid polluting the standard output (`stdout`) intended for data.
+
+Rust, a modern systems programming language, inherits these principles. While its `Result` enum and `?` operator provide a robust system for handling errors that can be propagated and managed, not all errors are recoverable. For a command-line tool, a missing configuration file or a critical failed connection might be a point of no return.
+
+The `err_exit` macro is a nod to this long-standing practice of immediate and clear termination. It encapsulates the "print-and-die" pattern into a reusable, idiomatic Rust macro. It's a simple tool for a simple, yet critical, task: stopping execution when there's nothing left to do but report failure. This approach, while seemingly basic, is a testament to a design philosophy that values clarity and predictability in failure scenarios.
+
+---
+
+<a id="cn"></a>
+
+# err_exit
+
+用于输出格式化错误信息并退出进程的宏。
+
+## 目录
+
+- [简介](#简介)
+- [使用](#使用)
+- [设计思路](#设计思路)
+- [相关故事](#相关故事)
+
+## 简介
+
+`err_exit` 提供宏，可在标准错误流打印格式化错误信息后终止当前进程。该工具专为处理命令行应用中的致命错误而设计，适用于需要立即终止的场景。
+
+## 使用
+
+将 `err_exit` 集成到项目中，并如下使用宏：
+
+```rust
+use err_exit::err_exit;
+
+fn main() {
+    let item = "文件";
+    err_exit!("读取{}失败", item);
+}
+```
+
+此代码将向 `stderr` 输出 `❌ 读取文件失败`，然后以状态码 `1` 退出进程。
+
+## 设计思路
+
+`err_exit!` 宏通过 `macro_rules!` 实现。它接受类似 `eprintln!` 的格式化参数，将带有 "❌" 表情符号前缀的格式化字符串定向到标准错误，随后调用 `std::process::exit(1)` 停止进程。
+
+此设计为处理不可恢复错误提供了直接且明确的机制，绕过了更复杂的错误处理结构（如 `Result` 和 `?`），后者更适用于可恢复错误。其目标是为程序无法也不应继续运行的情况，提供清晰简洁的工具。
+
+## 相关故事
+
+在计算早期，类 Unix 系统中的命令行工具建立了一个惯例：成功时以状态 0 退出，失败时以非零值退出。这允许通过 Shell 脚本对工具进行强大组合，其中一个程序的失败可以中止一连串命令。错误信息通常被发送到独立流 `stderr`，以避免污染用于数据的标准输出 `stdout`。
+
+Rust 作为现代系统编程语言，继承了这些原则。虽然其 `Result` 枚举和 `?` 运算符为处理可传播和可管理的错误提供了强大系统，但并非所有错误都是可恢复的。对于命令行工具，配置文件缺失或关键连接失败可能意味着无法挽回。
+
+`err_exit` 宏正是对这种立即明确终止的悠久实践的致敬。它将“打印并退出”模式封装成可重用且符合 Rust 习惯的宏。这是一个用于简单但关键任务的简单工具：在除了报告失败之外无事可做时停止执行。这种方法看似基础，却证明了一种在失败场景中重视清晰性和可预见性的设计哲学。
+
+---
+
+## About
+
+This project is an open-source component of [i18n.site ⋅ Internationalization Solution](https://i18n.site).
+
+* [i18 : MarkDown Command Line Translation Tool](https://i18n.site/i18)
+
+  The translation perfectly maintains the Markdown format.
+
+  It recognizes file changes and only translates the modified files.
+
+  The translated Markdown content is editable; if you modify the original text and translate it again, manually edited translations will not be overwritten (as long as the original text has not been changed).
+
+* [i18n.site : MarkDown Multi-language Static Site Generator](https://i18n.site/i18n.site)
+
+  Optimized for a better reading experience
+
+## 关于
+
+本项目为 [i18n.site ⋅ 国际化解决方案](https://i18n.site) 的开源组件。
+
+* [i18 : MarkDown 命令行翻译工具](https://i18n.site/i18)
+
+  翻译能够完美保持 Markdown 的格式。能识别文件的修改，仅翻译有变动的文件。
+
+  Markdown 翻译内容可编辑；如果你修改原文并再次机器翻译，手动修改过的翻译不会被覆盖 （ 如果这段原文没有被修改 ）。
+
+* [i18n.site : MarkDown 多语言静态站点生成器](https://i18n.site/i18n.site) 为阅读体验而优化。

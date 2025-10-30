@@ -1,0 +1,265 @@
+# parse
+
+[English](#english) | [中文](#chinese)
+
+<a id="english"></a>
+
+---
+
+## English
+
+### Table of Contents
+- [Project Significance](#project-significance)
+- [Technology Stack](#technology-stack)
+- [Design and Architecture](#design-and-architecture)
+- [File Structure](#file-structure)
+- [Usage](#usage)
+- [A Little History of the URL](#a-little-history-of-the-url)
+
+<a id="project-significance"></a>
+### Project Significance
+
+In network programming and web service development, accurately parsing the host and port from a URI is a frequent and fundamental requirement. While seemingly simple, this task involves handling various edge cases: different schemes (http, https), explicit vs. default ports, IP addresses, and invalid inputs.
+
+`uri_to_host_port` is a lightweight, robust Rust utility crate designed to solve this specific problem. It provides a single, efficient function that reliably extracts the host and port from any URI-like input, ensuring that developers can handle network addresses with confidence and clarity. The crate prioritizes performance and provides clear, debuggable errors for invalid inputs.
+
+<a id="technology-stack"></a>
+### Technology Stack
+
+- **[hyper](https://hyper.rs/)**: A fast and correct HTTP library for Rust, used here for its powerful and battle-tested `Uri` parsing capabilities.
+- **[thiserror](https://github.com/dtolnay/thiserror)**: A library for deriving the `std::error::Error` trait, used to create structured and descriptive custom error types with minimal boilerplate.
+
+<a id="design-and-architecture"></a>
+### Design and Architecture
+
+The core logic resides in the `parse` function within `src/lib.rs`. The design philosophy is centered around type safety, performance, and ergonomic error handling.
+
+1.  **Function Signature**:
+    ```rust
+    pub fn parse(
+      uri: impl TryInto<Uri> + std::fmt::Debug + Clone,
+    ) -> Result<(String, u16), Error>
+    ```
+    The function is generic over its input `uri`, requiring it to be convertible into a `hyper::Uri`. The `Debug` and `Clone` trait bounds are crucial for the error handling strategy: `Debug` allows the original input to be captured in error messages, and `Clone` enables lazy string formatting, which avoids performance overhead on the success path.
+
+2.  **Conversion and Validation**: The input `uri` is first passed to `try_into()` to attempt conversion into a `hyper::Uri`. If this fails, it immediately returns an `Error::InvalidUri`, capturing the problematic input.
+
+3.  **Host Extraction**: It then attempts to extract the host from the `Uri` object. If the host is missing (e.g., a relative path like `/index.html`), it returns an `Error::MissingHost`.
+
+4.  **Port Resolution**: If a port is explicitly provided in the URI, it is used. Otherwise, the function intelligently defaults the port based on the URI scheme: `443` for "https" and `80` for all other cases.
+
+5.  **Custom Errors**: The `src/error.rs` module defines a clear `Error` enum (`InvalidUri`, `MissingHost`) using `thiserror`, ensuring that consumers of the library can programmatically inspect and handle failure modes.
+
+<a id="file-structure"></a>
+### File Structure
+
+```
+.
+├── Cargo.toml      # Package manifest file with metadata
+├── README.mdt      # This readme template
+├── src
+│   ├── error.rs    # Custom error type definitions using `thiserror`
+│   └── lib.rs      # Core library logic and the main function
+└── tests
+    └── main.rs     # Integration tests covering various success and failure cases
+```
+
+<a id="usage"></a>
+### Usage
+
+Here is a demonstration of how to use the `parse` function, with examples taken from `tests/main.rs`.
+
+```rust
+use uri_to_host_port::parse;
+
+// Test with http and default port
+let (host, port) = parse("http://example.com").unwrap();
+assert_eq!(host, "example.com");
+assert_eq!(port, 80);
+
+// Test with https and default port
+let (host, port) = parse("https://example.com").unwrap();
+assert_eq!(host, "example.com");
+assert_eq!(port, 443);
+
+// Test with an explicit port
+let (host, port) = parse("http://example.com:8080").unwrap();
+assert_eq!(host, "example.com");
+assert_eq!(port, 8080);
+
+// Test with an IP address
+let (host, port) = parse("http://127.0.0.1:3000").unwrap();
+assert_eq!(host, "127.0.0.1");
+assert_eq!(port, 3000);
+
+// Test with an invalid URI
+let invalid_uri = "this is not a valid uri";
+let result = parse(invalid_uri);
+assert!(result.is_err());
+// The error message includes the problematic input for easy debugging.
+assert_eq!(
+  result.unwrap_err().to_string(),
+  format!("Invalid URI: "{}"", invalid_uri)
+);
+
+// Test with a URI that has no host
+let no_host_uri = "/path/only";
+let result = parse(no_host_uri);
+assert!(result.is_err());
+assert_eq!(
+  result.unwrap_err().to_string(),
+  format!("URI is missing a host: "{}"", no_host_uri)
+);
+```
+
+<a id="a-little-history-of-the-url"></a>
+### A Little History of the URL
+
+The Uniform Resource Locator (URL) was invented by Sir Tim Berners-Lee in 1994 while he was working at CERN, the European Organization for Nuclear Research. It was a foundational component of his creation of the World Wide Web. Before the URL, there was no standardized way to address a document or resource on the internet. His vision was to create a global "Hypertext" system where any document could link to any other, and for that, he needed a universal addressing scheme.
+
+The first URL specification was published as RFC 1738. Interestingly, the concept has evolved over time, leading to the more general term URI (Uniform Resource Identifier) and the WHATWG's modern "URL Standard," which aims to unify the various specifications and align them with how browsers are actually implemented. The simple act of typing a web address into a browser is a direct interaction with this elegant and powerful invention that transformed our world.
+
+<a id="chinese"></a>
+
+---
+
+## 中文
+
+### 目录
+- [项目意义](#项目意义)
+- [技术栈](#技术栈)
+- [设计与架构](#设计与架构)
+- [文件结构](#文件结构)
+- [使用示例](#使用示例)
+- [关于 URL 的小故事](#关于-URL-的小故事)
+
+<a id="项目意义"></a>
+### 项目意义
+
+在网络编程和 Web 服务开发中，从 URI 中准确地解析出主机和端口是一项频繁且基础的需求。这个任务看似简单，却涉及处理各种边界情况：不同的协议（http、https）、显式指定或默认的端口、IP 地址以及无效输入。
+
+`uri_to_host_port` 是一个轻量级、健壮的 Rust 工具包，专为解决这一特定问题而设计。它提供了一个高效的函数，能够可靠地从任何类似 URI 的输入中提取主机和端口，确保开发者能够自信而清晰地处理网络地址。该工具包优先考虑性能，并为无效输入提供清晰、可调试的错误信息。
+
+<a id="技术栈"></a>
+### 技术栈
+
+- **[hyper](https://hyper.rs/)**: 一个快速、正确的 Rust HTTP 库，本项目利用其强大且经过实战检验的 `Uri` 解析能力。
+- **[thiserror](https://github.com/dtolnay/thiserror)**: 一个用于派生 `std::error::Error` trait 的库，用于以最少的样板代码创建结构化和描述性的自定义错误类型。
+
+<a id="设计与架构"></a>
+### 设计与架构
+
+核心逻辑位于 `src/lib.rs` 中的 `parse` 函数。其设计理念围绕类型安全、高性能和人性化的错误处理。
+
+1.  **函数签名**:
+    ```rust
+    pub fn parse(
+      uri: impl TryInto<Uri> + std::fmt::Debug + Clone,
+    ) -> Result<(String, u16), Error>
+    ```
+    该函数对其输入 `uri` 使用了泛型，要求它能被转换成 `hyper::Uri`。`Debug` 和 `Clone` 这两个 trait 约束对于错误处理策略至关重要：`Debug` 允许在错误消息中捕获原始输入，而 `Clone` 则支持惰性字符串格式化，从而避免了在成功路径上的性能开销。
+
+2.  **转换与验证**: 输入的 `uri` 首先会通过 `try_into()` 尝试转换为 `hyper::Uri`。如果失败，将立即返回一个 `Error::InvalidUri`，并捕获有问题的输入。
+
+3.  **主机提取**: 接着，它会尝试从 `Uri` 对象中提取主机。如果主机缺失（例如，像 `/index.html` 这样的相对路径），则返回 `Error::MissingHost`。
+
+4.  **端口解析**: 如果 URI 中显式提供了端口，则使用该端口。否则，函数会根据 URI 的协议智能地设置默认端口： "https" 对应 `443`，其他所有情况对应 `80`。
+
+5.  **自定义错误**: `src/error.rs` 模块使用 `thiserror` 定义了一个清晰的 `Error` 枚举（`InvalidUri`、`MissingHost`），确保库的使用者可以以编程方式检查和处理各种失败模式。
+
+<a id="文件结构"></a>
+### 文件结构
+
+```
+.
+├── Cargo.toml      # 包清单文件，包含元数据
+├── README.mdt      # 本 README 模板
+├── src
+│   ├── error.rs    # 使用 `thiserror` 定义的自定义错误类型
+│   └── lib.rs      # 核心库逻辑和主函数
+└── tests
+    └── main.rs     # 集成测试，覆盖各种成功和失败的场景
+```
+
+<a id="使用示例"></a>
+### 使用示例
+
+以下是如何使用 `parse` 函数的演示，示例取自 `tests/main.rs`。
+
+```rust
+use uri_to_host_port::parse;
+
+// 测试 http 和默认端口
+let (host, port) = parse("http://example.com").unwrap();
+assert_eq!(host, "example.com");
+assert_eq!(port, 80);
+
+// 测试 https 和默认端口
+let (host, port) = parse("https://example.com").unwrap();
+assert_eq!(host, "example.com");
+assert_eq!(port, 443);
+
+// 测试显式端口
+let (host, port) = parse("http://example.com:8080").unwrap();
+assert_eq!(host, "example.com");
+assert_eq!(port, 8080);
+
+// 测试 IP 地址
+let (host, port) = parse("http://127.0.0.1:3000").unwrap();
+assert_eq!(host, "127.0.0.1");
+assert_eq!(port, 3000);
+
+// 测试无效的 URI
+let invalid_uri = "this is not a valid uri";
+let result = parse(invalid_uri);
+assert!(result.is_err());
+// 错误消息包含有问题的输入，便于调试
+assert_eq!(
+  result.unwrap_err().to_string(),
+  format!("Invalid URI: "{}"", invalid_uri)
+);
+
+// 测试没有主机的 URI
+let no_host_uri = "/path/only";
+let result = parse(no_host_uri);
+assert!(result.is_err());
+assert_eq!(
+  result.unwrap_err().to_string(),
+  format!("URI is missing a host: "{}"", no_host_uri)
+);
+```
+
+<a id="关于-URL-的小故事"></a>
+### 关于 URL 的小故事
+
+统一资源定位符（URL）由蒂姆·伯纳斯-李爵士于 1994 年在欧洲核子研究组织（CERN）工作时发明。它是他创建万维网时的基础组件之一。在 URL 出现之前，没有标准化的方法来指定互联网上的文档或资源。他的愿景是创建一个全球性的“超文本”系统，任何文档都可以链接到任何其他文档，为此，他需要一个通用的地址方案。
+
+第一个 URL 规范作为 RFC 1738 发布。有趣的是，这个概念随着时间的推移而演变，催生了更通用的术语 URI（统一资源标识符）以及 WHATWG 的现代“URL 标准”，后者旨在统一各种规范，并使它们与浏览器的实际实现保持一致。在浏览器中输入网址这个简单的动作，就是与这项改变了我们世界的优雅而强大的发明直接互动。
+
+## About
+
+This project is an open-source component of [i18n.site ⋅ Internationalization Solution](https://i18n.site).
+
+* [i18 : MarkDown Command Line Translation Tool](https://i18n.site/i18)
+
+  The translation perfectly maintains the Markdown format.
+
+  It recognizes file changes and only translates the modified files.
+
+  The translated Markdown content is editable; if you modify the original text and translate it again, manually edited translations will not be overwritten (as long as the original text has not been changed).
+
+* [i18n.site : MarkDown Multi-language Static Site Generator](https://i18n.site/i18n.site)
+
+  Optimized for a better reading experience
+
+## 关于
+
+本项目为 [i18n.site ⋅ 国际化解决方案](https://i18n.site) 的开源组件。
+
+* [i18 : MarkDown 命令行翻译工具](https://i18n.site/i18)
+
+  翻译能够完美保持 Markdown 的格式。能识别文件的修改，仅翻译有变动的文件。
+
+  Markdown 翻译内容可编辑；如果你修改原文并再次机器翻译，手动修改过的翻译不会被覆盖 （ 如果这段原文没有被修改 ）。
+
+* [i18n.site : MarkDown 多语言静态站点生成器](https://i18n.site/i18n.site) 为阅读体验而优化。

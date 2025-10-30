@@ -1,0 +1,77 @@
+[package]
+name = "proxy_fetch"
+version = "0.1.13"
+edition = "2021"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/proxy_fetch"
+description = "A smart proxy management library for Rust, engineered for high-availability and fault-tolerant network requests. / 一个为 Rust 设计的智能代理管理库，专为高可用和容错的网络请求而构建。"
+keywords = [ "proxy", "fetch", "async", "http", "resilience" ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+
+[dependencies]
+base64 = "0.22.1"
+bytes = "1.10.1"
+futures = "0.3.31"
+reqwest-middleware = "0.4.2"
+thiserror = "2.0.17"
+url = "2.5.7"
+aok = "0.1.18"
+static_init = "1.0.4"
+log = "0.4.28"
+
+[dependencies.reqwest_proxy]
+version = "0.1.7"
+path = "../reqwest_proxy"
+features = [ "hysteria2", "shadowsocks" ]
+
+[dependencies.genv]
+path = "../genv"
+version = "0.1.17"
+
+[dependencies.log_init]
+path = "../log_init"
+version = "0.1.27"
+
+[dependencies.reqwest_client]
+version = "0.1.13"
+path = "../reqwest_client"
+features = [ "client" ]
+
+[dependencies.biased]
+version = "0.1.5"
+path = "../biased"
+
+[dependencies.url_fmt]
+version = "0.1.3"
+path = "../url_fmt"
+
+[dependencies.zset]
+version = "0.1.17"
+path = "../zset"
+
+[dependencies.reqwest]
+version = "0.12.24"
+features = [ "zstd", "brotli" ]
+
+[dependencies.tokio]
+version = "1.48.0"
+features = [ "full" ]
+
+[dependencies.xerr]
+version = "0.1.16"
+path = "../xerr"
+
+[dev-dependencies.rustls]
+version = "0.23.34"
+features = [ "aws-lc-rs", "ring" ]
+
+[dev-dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

@@ -1,0 +1,33 @@
+[package]
+name = "md_title"
+version = "0.1.12"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/md_title"
+description = "md_title"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = [ ]
+
+[dependencies]
+aok = "0.1.18"
+html2text = "0.16.0"
+htmlize = "1.0.6"
+
+[dependencies.xerr]
+version = "0.1.16"
+path = "../xerr"
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

@@ -1,0 +1,30 @@
+[package]
+name = "svg2webp"
+version = "0.1.13"
+edition = "2024"
+repository = "https://github.com/i18n-site/rust/tree/main/svg2webp"
+license = "MIT"
+description = "convert svg to webp"
+
+[dependencies]
+image-webp = "0.2.4"
+resvg = "0.45.1"
+thiserror = "2.0.17"
+tiny-skia = "0.11.4"
+usvg = "0.45.1"
+
+[dev-dependencies]
+static_init = "1.0.4"
+
+[dev-dependencies.aok]
+path = "../aok"
+version = "0.1.18"
+
+[dev-dependencies.ifs]
+path = "../ifs"
+features = [ "fs" ]
+version = "0.1.47"
+
+[dev-dependencies.loginit]
+path = "../loginit"
+version = "0.1.18"

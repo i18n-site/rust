@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@3-/aiapi": "^0.1.36",
+    "opencc-rust": "^1.1.3"
+  }
+}

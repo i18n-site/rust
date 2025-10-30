@@ -1,0 +1,29 @@
+[package]
+name = "mdli"
+version = "0.1.28"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/mdli"
+description = "mdli"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = []
+
+[dependencies]
+aok = "0.1.18"
+located_yaml = "0.2.1"
+taplo = "0.14.0"
+
+[dependencies.pos_lines]
+version = "0.1.10"
+path = "../pos_lines"
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"

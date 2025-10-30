@@ -1,0 +1,22 @@
+[package]
+name = "restart_signal"
+version = "0.1.2"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/restart_signal"
+description = "A simple, cross-platform utility to gracefully handle process termination signals (SIGHUP, SIGTERM, SIGINT, SIGQUIT). 一个简洁、跨平台的工具库，用于优雅地处理进程终止信号 (SIGHUP, SIGTERM, SIGINT, SIGQUIT)。"
+keywords = ["signal", "shutdown", "graceful", "termination", "process"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = []
+
+
+[dependencies]
+crossfire = "2.1.6"
+signal-hook = "0.3.18"
+xerr = { version = "0.1.16", path = "../xerr" }

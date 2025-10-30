@@ -1,0 +1,49 @@
+[package]
+name = "change"
+version = "0.2.19"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/change"
+description = "scan dir find changed files, ignore files in .gitignore"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = [ ]
+
+[dependencies]
+aok = "0.1.18"
+ignore = "0.4.24"
+
+[dependencies.pc]
+version = "0.1.13"
+path = "../pc"
+
+[dependencies.serde]
+version = "1.0.228"
+features = [ "derive" ]
+
+[dependencies.burl]
+version = "0.1.5"
+path = "../burl"
+
+[dependencies.ifs]
+version = "0.1.47"
+path = "../ifs"
+features = [ "fs", "unix_path" ]
+
+[dependencies.set_mtime]
+version = "0.1.8"
+path = "../set_mtime"
+
+[dependencies.xxhash-rust]
+version = "0.8.15"
+features = [ "xxh3" ]
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"

@@ -1,0 +1,49 @@
+[package]
+name = "token_send"
+version = "0.1.4"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/token_send"
+description = "token_send"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+
+[dependencies]
+sonic-rs = "0.5.5"
+
+[dependencies.s_]
+version = "0.1.6"
+path = "../s_"
+
+[dependencies.aerr]
+version = "0.2.8"
+path = "../aerr"
+
+[dependencies.api_token]
+version = "0.1.1"
+path = "../api_token"
+
+[dependencies.axum]
+version = "0.8.6"
+features = [ "tracing", "macros" ]
+
+[dependencies.hi]
+version = "0.1.18"
+path = "../hi"
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

@@ -1,0 +1,48 @@
+[package]
+name = "pgw"
+version = "0.2.17"
+edition = "2024"
+description = "auto reconnect tokio postgres"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/pgw"
+
+[features]
+default = []
+global = ["dep:static_init"]
+
+[dependencies]
+futures = "0.3.31"
+ring = "0.17.14"
+rustls = "0.23.34"
+tokio-rustls = "0.26.4"
+tracing = "0.1.41"
+x509-certificate = "0.25.0"
+
+[dependencies.tlsinit]
+version = "0.1.7"
+path = "../tlsinit"
+
+[dependencies.static_init]
+version = "1.0.4"
+optional = true
+
+[dependencies.tokio-postgres]
+package = "tokio-postgres-fork"
+version = "0.7.13"
+features = ["array-impls"]
+
+[dependencies.hidden_password]
+version = "0.1.5"
+path = "../hidden_password"
+
+[dependencies.tokio]
+version = "1.48.0"
+features = ["macros", "rt", "rt-multi-thread", "sync"]
+
+[dev-dependencies]
+anyhow = "1.0.100"
+static_init = "1.0.4"
+
+[dev-dependencies.loginit]
+version = "0.1.18"

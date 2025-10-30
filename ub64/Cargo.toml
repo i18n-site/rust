@@ -1,0 +1,40 @@
+[package]
+name = "ub64"
+version = "0.1.14"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+description = "urlsafe base64 encode / decode"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[dependencies]
+base64 = "0.22.1"
+
+[dependencies.intbin]
+version = "0.2.3"
+optional = true
+
+[dependencies.vbyte]
+version = "0.1.0"
+optional = true
+
+[features]
+u64 = [ "dep:intbin" ]
+u64li = [ "dep:vbyte" ]
+default = [ ]
+
+[dev-dependencies]
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.aok]
+path = "../aok"
+version = "0.1.18"
+
+[dev-dependencies.loginit]
+path = "../loginit"
+version = "0.1.18"

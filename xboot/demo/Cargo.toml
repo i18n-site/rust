@@ -1,0 +1,23 @@
+[package]
+name = "xboot_demo"
+version = "0.1.0"
+edition = "2024"
+
+[package.metadata.cargo-machete]
+ignored = [ "linkme" ]
+
+[dependencies]
+linkme = "0.3.35"
+tracing = "0.1.41"
+
+[dependencies.aok]
+version = "0.1.18"
+path = "../../aok"
+
+[dependencies.static_]
+version = "0.1.15"
+path = "../../static_"
+
+[dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time" ]

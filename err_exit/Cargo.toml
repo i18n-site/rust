@@ -1,0 +1,16 @@
+[package]
+name = "err_exit"
+version = "0.1.6"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/err_exit"
+description = "Exits process with formatted error message. / 输出格式化错误信息并退出进程。"
+keywords = ["cli", "error", "exit", "macro", "process"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = []

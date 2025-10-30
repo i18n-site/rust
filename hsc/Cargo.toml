@@ -1,0 +1,64 @@
+[package]
+name = "hsc"
+version = "0.1.8"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/hsc"
+description = "blake then ed25519 sign cli"
+
+[lib]
+name = "hsc"
+path = "src/lib.rs"
+
+[[bin]]
+name = "hsc"
+path = "src/main.rs"
+
+[dependencies]
+aok = "0.1.17"
+base64 = "0.22.1"
+rand = "0.9.0"
+
+[dependencies.blake3]
+version = "1.5.5"
+features = [ "traits-preview" ]
+
+[dependencies.ed25519-dalek]
+version = "2.1.1"
+features = [ "signature", "rand_core" ]
+
+[dependencies.cmdv]
+version = "0.1.11"
+path = "../cmdv"
+
+[dependencies.cget]
+version = "0.1.5"
+path = "../cget"
+
+[dependencies.clap]
+version = "4.5.28"
+features = [ "cargo" ]
+
+[dependencies.genv]
+version = "0.1.15"
+path = "../genv"
+
+[dependencies.ifs]
+version = "0.1.44"
+path = "../ifs"
+default-features = false
+features = [ "hash" ]
+
+[dependencies.tokio]
+version = "1.43.0"
+features = [ "fs", "macros", "rt", "rt-multi-thread", "time", "io-util" ]
+
+[dev-dependencies]
+aok = "0.1.17"
+loginit = "0.1.18"
+static_init = "1.0.3"
+
+[dev-dependencies.tokio]
+version = "1.43.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

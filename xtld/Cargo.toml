@@ -1,0 +1,14 @@
+[package]
+name = "xtld"
+version = "0.1.6"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/xtld"
+description = "extract tld from domain"
+
+[dependencies]
+psl = "2.1.155"
+
+[dependencies.xstr]
+version = "0.1.11"

@@ -1,0 +1,40 @@
+[package]
+name = "axum_graceful_restart"
+version = "0.1.5"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/axum_graceful_restart"
+description = "Enables graceful shutdown and zero-downtime restarts for Axum applications. 为 Axum 应用提供优雅停机与零停机重启功能。"
+keywords = ["axum", "graceful-shutdown", "zero-downtime", "restart", "http"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+
+[dependencies]
+aok = "0.1.18"
+axum = "0.8.6"
+kill_port = { version = "0.1.2", path = "../kill_port" }
+tracing = "0.1.41"
+
+[dependencies.socket2]
+version = "0.6.1"
+features = [ "all" ]
+
+[dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "signal" ]
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "sync" ]

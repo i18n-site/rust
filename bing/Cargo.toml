@@ -1,0 +1,38 @@
+[package]
+name = "bing"
+version = "0.1.4"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/bing"
+description = "bing"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+
+[dependencies]
+anyhow = "1"
+static_init = "1.0.4"
+txtfmt = { version = "0.1.2", path = "../txtfmt" }
+
+[dependencies.sts]
+version = "0.1.23"
+path = "../sts"
+
+[dependencies.tantivy]
+version = "0.25"
+features = [ "mmap", "zstd-compression" ]
+default-features = false
+
+[dev-dependencies]
+tracing-subscriber = "0.3"
+static_init = "1.0.4"
+
+[dev-dependencies.loginit]
+path = "../loginit"
+version = "0.1.18"

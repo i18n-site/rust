@@ -1,0 +1,23 @@
+[package]
+name = "ft"
+version = "0.1.24"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/ft"
+description = "ft"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[features]
+default = []
+
+[dependencies]
+lang = "0.2.26"

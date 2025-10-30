@@ -1,0 +1,7 @@
+# ub64: urlsafe base64 encode / decode
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >

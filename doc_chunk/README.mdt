@@ -1,0 +1,7 @@
+# doc_chunk
+
+```rust
+<+ ./src/lib.rs>
+```
+
+<+ ../about.md >

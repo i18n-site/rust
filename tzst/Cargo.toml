@@ -1,0 +1,33 @@
+[dependencies]
+tar = "0.4.44"
+tracing = "0.1.41"
+zstd = { version = "0.13.3", features = ["bindgen"] }
+
+[package]
+name = "tzst"
+version = "0.1.20"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/tzst"
+description = "tzst"
+
+[dev-dependencies]
+aok = "0.1.18"
+gxhash = "3.5.0"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.48.0"
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = []
+w = []
+r = []
+zst = []

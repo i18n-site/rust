@@ -1,0 +1,20 @@
+[package]
+name = "genv"
+version = "0.1.17"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/main/genv"
+description = "global static var from environment"
+
+[dependencies]
+const-str = "0.7.0"
+log = "0.4.28"
+
+[dependencies.err_exit]
+version = "0.1.6"
+path = "../err_exit"
+
+[dependencies.static_init]
+version = "1.0.4"
+features = [ "parking_lot" ]

@@ -1,0 +1,36 @@
+[package]
+name = "header_host"
+version = "0.1.5"
+edition = "2024"
+license = "MulanPSL-2.0"
+repository = "https://github.com/i18n-site/rust.git"
+homepage = "https://github.com/i18n-site/rust/tree/dev/header_host"
+description = "x-forwarded-host or host from http HeaderMap"
+keywords = [ ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = [ "--cfg", "docsrs" ]
+
+[features]
+default = [ ]
+tld = [ "dep:xtld" ]
+
+[dependencies]
+aok = "0.1.18"
+http = "1.3.1"
+
+[dependencies.xtld]
+version = "0.1.6"
+path = "../xtld"
+optional = true
+
+[dev-dependencies]
+aok = "0.1.18"
+loginit = "0.1.18"
+static_init = "1.0.4"
+tracing = "0.1.41"
+
+[dev-dependencies.tokio]
+version = "1.48.0"
+features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
