@@ -17,7 +17,7 @@ pub fn level_color(level: Level) -> ColoredString {
     Level::Info => level.to_string().green(),
     Level::Debug => level.to_string().blue(),
     Level::Trace => level.to_string().magenta(),
-    _ => level.to_string(),
+    _ => level.to_string().into(),
   }
 }
 
