@@ -90,7 +90,7 @@ version = "0.23.35"
 features = [ "aws-lc-rs" ]
 
 [dev-dependencies.log_init]
-version = "0.1.27"
+version = "0.1.28"
 path = "../log_init"
 
 [dev-dependencies.url_fmt]
