@@ -12,7 +12,7 @@ ignored = [ "static_init" ]
 
 [dependencies]
 futures = "0.3.31"
-sonic-rs = "0.5.5"
+sonic-rs = "0.5.6"
 static_init = "1.0.4"
 tracing = "0.1.41"
 

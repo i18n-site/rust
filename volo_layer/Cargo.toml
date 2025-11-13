@@ -19,4 +19,4 @@ rustdoc-args = ["--cfg", "docsrs"]
 coarsetime = "0.1.36"
 tracing = "0.1.41"
 volo = "0.11.1"
-volo-grpc = "0.11.7"
+volo-grpc = "0.11.8"

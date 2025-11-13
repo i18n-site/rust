@@ -25,5 +25,5 @@ path = "../log_init"
 version = "0.1.27"
 
 [dependencies]
-hyper = "1.7.0"
+hyper = "1.8.0"
 thiserror = "2.0.17"

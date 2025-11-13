@@ -27,7 +27,7 @@ version = "0.1.6"
 path = "../err_exit"
 
 [dependencies.http_grpc]
-version = "0.1.21"
+version = "0.1.30"
 optional = true
 
 [dependencies.volo-http]
@@ -47,7 +47,7 @@ version = "0.1.15"
 path = "../static_"
 
 [dependencies.volo-grpc]
-version = "0.11.7"
+version = "0.11.8"
 features = ["zstd"]
 optional = true
 

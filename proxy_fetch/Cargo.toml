@@ -69,7 +69,7 @@ version = "0.1.16"
 path = "../xerr"
 
 [dev-dependencies.rustls]
-version = "0.23.34"
+version = "0.23.35"
 features = [ "aws-lc-rs", "ring" ]
 
 [dev-dependencies.tokio]

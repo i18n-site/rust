@@ -29,7 +29,7 @@ version = "0.2.21"
 path = "../aiapi"
 
 [dependencies.clap]
-version = "4.5.50"
+version = "4.5.51"
 features = [ "derive" ]
 
 [dependencies.pbar]
