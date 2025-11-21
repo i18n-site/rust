@@ -9,7 +9,7 @@ description = "axum set header middleware"
 
 [dependencies]
 anyhow = "1.0.100"
-axum = "0.8.6"
+axum = "0.8.7"
 parking_lot = "0.12.5"
 tracing = "0.1.41"
 

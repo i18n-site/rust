@@ -31,7 +31,7 @@ version = "0.1.1"
 path = "../api_token"
 
 [dependencies.axum]
-version = "0.8.6"
+version = "0.8.7"
 features = [ "tracing", "macros" ]
 
 [dependencies.hi]

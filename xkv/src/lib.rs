@@ -77,6 +77,7 @@ env!(
   SENTINEL_NAME,
   SENTINEL_PASSWORD,
   SENTINEL_USER,
+  SENTINEL_PORT,
   RESP
 );
 
@@ -132,7 +133,13 @@ pub async fn conn(prefix: impl AsRef<str>) -> Result<Client> {
   let server = if let Some(sentinel_name) = map.get(SENTINEL_NAME).cloned() {
     Server::sentinel(
       sentinel_name,
-      server_li(host_port, 26379),
+      server_li(
+        host_port,
+        map
+          .get(SENTINEL_PORT)
+          .map(|i| i.parse().unwrap())
+          .unwrap_or(26379),
+      ),
       map.get(SENTINEL_USER).cloned(),
       map.get(SENTINEL_PASSWORD).cloned(),
     )

@@ -19,7 +19,7 @@ default-features = false
 features = [ "fs", "cp" ]
 
 [dependencies.indexmap]
-version = "2.12.0"
+version = "2.12.1"
 features = [ "serde" ]
 
 [dependencies.li_pos]
