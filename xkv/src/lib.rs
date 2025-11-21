@@ -137,7 +137,10 @@ pub async fn conn(prefix: impl AsRef<str>) -> Result<Client> {
         host_port,
         map
           .get(SENTINEL_PORT)
-          .map(|i| i.parse().unwrap())
+          .map(|i| {
+            i.parse()
+              .unwrap_or_else(|_| err_exit!("INVALID ENV SENTINEL_PORT={}", i))
+          })
           .unwrap_or(26379),
       ),
       map.get(SENTINEL_USER).cloned(),
