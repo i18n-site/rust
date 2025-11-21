@@ -17,7 +17,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 aok = "0.1.18"
-bytes = "1.10.1"
+bytes = "1.11.0"
 tonic = { version = "0.14.2", features = ["gzip"] }
 
 [dev-dependencies]

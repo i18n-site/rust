@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/preq"
 description = "ipv6 proxyed reqwest"
 
 [dependencies]
-bytes = "1.10.1"
+bytes = "1.11.0"
 tracing = "0.1.41"
 
 [dependencies.reqwest_client]

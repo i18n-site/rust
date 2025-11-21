@@ -29,7 +29,7 @@ version = "0.2.21"
 path = "../aiapi"
 
 [dependencies.clap]
-version = "4.5.51"
+version = "4.5.53"
 features = [ "derive" ]
 
 [dependencies.pbar]
@@ -51,7 +51,7 @@ path = "../xerr"
 
 [dev-dependencies]
 aok = "0.1.18"
-log_init = "0.1.27"
+log_init = "0.1.28"
 static_init = "1.0.4"
 
 [dev-dependencies.tokio]

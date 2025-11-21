@@ -17,7 +17,7 @@ default = [ ]
 
 [dependencies]
 aok = "0.1.18"
-axum = "0.8.6"
+axum = "0.8.7"
 kill_port = { version = "0.1.2", path = "../kill_port" }
 tracing = "0.1.41"
 

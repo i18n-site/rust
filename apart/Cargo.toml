@@ -9,4 +9,4 @@ description = "from_request_parts for axum"
 
 [dependencies]
 anyhow = "1.0.100"
-axum = "0.8.6"
+axum = "0.8.7"
