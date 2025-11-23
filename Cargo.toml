@@ -147,7 +147,6 @@ members = [
   "upn",
   "v6proxy",
   "varurl",
-  "vb",
   "ver_count",
   "ver_from_txt",
   "ver_incr",
