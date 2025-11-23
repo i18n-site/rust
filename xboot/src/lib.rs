@@ -19,10 +19,7 @@ pub async fn init() -> Result<()> {
 }
 
 #[macro_export]
-macro_rules! add {
-  ($init:expr) => {
-    $crate::gensym! {$crate::add! {$init}}
-  };
+macro_rules! _add {
   ($id:expr, $init:expr) => {
     $crate::paste! {
     fn [<xboot_init_ $id>]() -> $crate::Task {
@@ -34,5 +31,12 @@ macro_rules! add {
     #[$crate::distributed_slice($crate::ASYNC)]
     static [<ASYNC_INIT_ $id>]: $crate::AsyncFn = [<xboot_init_ $id>];
     }
+  };
+}
+
+#[macro_export]
+macro_rules! add {
+  ($init:expr) => {
+    $crate::gensym! {$crate::_add! {$init}}
   };
 }
