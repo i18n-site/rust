@@ -23,7 +23,7 @@ version = "0.1.10"
 path = "../async_wrap"
 
 [dependencies.xboot]
-version = "0.1.28"
+version = "0.1.29"
 path = "../xboot"
 
 [dev-dependencies]
