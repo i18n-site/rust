@@ -201,7 +201,6 @@ members = [
   "uri_to_host_port",
   "kill_port",
   "restart_signal",
-  "js0",
   "need",
   "rs2proto",
   "volo_boot",
