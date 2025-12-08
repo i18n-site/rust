@@ -22,6 +22,7 @@ coarsetime = "0.1.36"
 const-str = "0.7.0"
 current_platform = "0.2.0"
 defer-lite = "1.0.0"
+down = "0.1.5"
 kanal = "0.1.1"
 self-replace = "1.5.0"
 tar = "0.4.44"
@@ -53,10 +54,6 @@ path = "../upgrade_verify"
 [dependencies.vb]
 version = "0.2.5"
 
-[dependencies.down]
-version = "0.1.3"
-path = "../down"
-
 [dependencies.idoh]
 version = "0.1.15"
 
@@ -65,7 +62,7 @@ version = "0.1.1"
 path = "../riter"
 
 [dependencies.ver_from_txt]
-version = "0.1.11"
+version = "0.1.12"
 
 [dependencies.xerr]
 version = "0.1.16"

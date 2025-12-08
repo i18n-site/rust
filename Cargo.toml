@@ -37,7 +37,6 @@ members = [
   "doc_chunk",
   "doc_pyramid",
   "dot_hide",
-  "down",
   "drop",
   "dstr",
   "ed25519_ph",

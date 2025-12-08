@@ -14,7 +14,7 @@ pub struct Site {
 }
 
 #[derive(Error, Debug)]
-pub enum ReqError {
+pub enum Error {
   #[error("{0} {1}")]
   Status(StatusCode, String),
 }
@@ -39,7 +39,7 @@ macro_rules! req {
       let status = res.status();
       let r = res.$func().await?;
       if status != StatusCode::OK {
-        Err(ReqError::Status(status, format!("{url} {:?}", r)))?
+        Err(Error::Status(status, format!("{url} {:?}", r)))?
       } else {
         Ok(r)
       }
@@ -150,7 +150,7 @@ impl Site {
       }
       ifs::w(path)?
     } else {
-      return Err(ReqError::Status(status, res.text().await?).into());
+      return Err(Error::Status(status, res.text().await?).into());
     };
 
     let bar = Arc::new(RwLock::new(Bar {

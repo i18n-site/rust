@@ -83,7 +83,7 @@ impl Uper {
       }
       let ver = self.ver;
       if downed == size
-        && let Some(verfiy_dir) = upgrade_verify::check(vb::e(ver.0), path, pk)?
+        && let Some(verfiy_dir) = upgrade_verify::check(vb::e_li(ver.0), path, pk)?
       {
         xerr::log!(std::fs::remove_file(path));
         let tar_zst = verfiy_dir.join("tar.zst");
