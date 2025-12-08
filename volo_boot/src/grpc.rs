@@ -1,3 +1,4 @@
+use anyhow::Result;
 use volo::Service;
 use volo_grpc::{
   RecvEntryMessage, Request, Response, SendEntryMessage, Status,
@@ -6,9 +7,9 @@ use volo_grpc::{
   server::{NamedService, Server, ServiceBuilder},
 };
 
-use crate::{Result, env_addr};
+use crate::env_addr;
 
-pub async fn grpc<S, T, U>(api_server: S, init: impl Fn(Server) -> Server) -> Result
+pub async fn grpc<S, T, U>(api_server: S, init: impl Fn(Server) -> Server) -> Result<()>
 where
   S: 'static
     + Service<ServerContext, Request<T>, Response = Response<U>>

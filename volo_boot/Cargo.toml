@@ -18,6 +18,7 @@ grpc = [ "dep:volo-grpc" ]
 http = [ "dep:http_grpc", "dep:volo-http" ]
 
 [dependencies]
+anyhow = "1.0.100"
 log = "0.4.29"
 static_init = "1.0.4"
 volo = "0.12.0"
