@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/preq1"
 description = "preq1"
 
 [package.metadata.cargo-machete]
-ignored = [ "static_init" ]
+ignored = ["static_init"]
 
 [dependencies]
 bytes = "1.11.0"
@@ -17,7 +17,8 @@ tracing = "0.1.43"
 
 [dependencies.reqwest]
 version = "0.12.24"
-features = [ "zstd", "gzip" ]
+features = ["zstd", "gzip", "rustls-tls"]
+default-features = false
 
 [dev-dependencies.aok]
 path = "../aok"
@@ -29,4 +30,4 @@ version = "0.1.18"
 
 [dev-dependencies.tokio]
 version = "1.48.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
