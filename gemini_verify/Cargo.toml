@@ -25,7 +25,7 @@ reqwest = "0.12.24"
 thiserror = "2.0.17"
 
 [dependencies.aiapi]
-version = "0.2.21"
+version = "0.2.22"
 path = "../aiapi"
 
 [dependencies.clap]
