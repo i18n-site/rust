@@ -17,7 +17,7 @@ default = [ ]
 
 [dev-dependencies]
 anyhow = "1.0.100"
-log = "0.4.28"
+log = "0.4.29"
 static_init = "1.0.4"
 
 [dev-dependencies.log_init]

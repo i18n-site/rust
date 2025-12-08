@@ -18,10 +18,10 @@ default = [ ]
 [dependencies]
 aok = "0.1.18"
 base64 = "0.22.1"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dependencies.vb]
-version = "0.1.8"
+version = "0.2.5"
 
 [dependencies.sver]
 version = "0.1.10"

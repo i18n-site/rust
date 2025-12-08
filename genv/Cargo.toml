@@ -9,7 +9,7 @@ description = "global static var from environment"
 
 [dependencies]
 const-str = "0.7.0"
-log = "0.4.28"
+log = "0.4.29"
 
 [dependencies.err_exit]
 version = "0.1.6"

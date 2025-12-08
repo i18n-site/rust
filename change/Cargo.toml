@@ -46,4 +46,4 @@ features = [ "xxh3" ]
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.41"
+tracing = "0.1.43"

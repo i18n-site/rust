@@ -18,7 +18,7 @@ grpc = [ "dep:volo-grpc" ]
 http = [ "dep:http_grpc", "dep:volo-http" ]
 
 [dependencies]
-log = "0.4.28"
+log = "0.4.29"
 static_init = "1.0.4"
 volo = "0.12.0"
 
@@ -27,7 +27,7 @@ version = "0.1.6"
 path = "../err_exit"
 
 [dependencies.http_grpc]
-version = "0.1.30"
+version = "0.1.31"
 optional = true
 
 [dependencies.volo-http]

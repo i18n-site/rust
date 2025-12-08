@@ -16,7 +16,7 @@ default = [ ]
 
 [dependencies]
 aok = "0.1.18"
-log = "0.4.28"
+log = "0.4.29"
 
 [dependencies.async_wrap]
 version = "0.1.10"

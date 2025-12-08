@@ -9,7 +9,7 @@ description = "log error util"
 
 [dependencies]
 anyhow = "1.0.100"
-log = "0.4.28"
+log = "0.4.29"
 
 [dev-dependencies.log_init]
 path = "../log_init"

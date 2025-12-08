@@ -28,10 +28,10 @@ features = [ "digest" ]
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dev-dependencies.vb]
-version = "0.1.8"
+version = "0.2.5"
 
 [dev-dependencies.tokio]
 version = "1.48.0"

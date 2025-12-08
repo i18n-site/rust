@@ -16,7 +16,7 @@ futures = "0.3.31"
 ring = "0.17.14"
 rustls = "0.23.35"
 tokio-rustls = "0.26.4"
-tracing = "0.1.41"
+tracing = "0.1.43"
 x509-certificate = "0.25.0"
 
 [dependencies.tlsinit]

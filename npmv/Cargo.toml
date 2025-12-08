@@ -20,7 +20,7 @@ flate2 = "1.1.5"
 serde = "1.0.228"
 sonic-rs = "0.5.6"
 tar = "0.4.44"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dependencies.ifs]
 version = "0.1.47"
@@ -45,7 +45,7 @@ features = [ "fs" ]
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dev-dependencies.tokio]
 version = "1.48.0"

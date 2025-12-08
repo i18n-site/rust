@@ -17,7 +17,7 @@ default = [ ]
 aok = "0.1.18"
 axum = "0.8.7"
 futures = "0.3.31"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dependencies.genv]
 version = "0.1.17"
@@ -28,14 +28,14 @@ version = "0.5.2"
 features = [ "log", "timeout" ]
 
 [dependencies.tower-http]
-version = "0.6.6"
+version = "0.6.7"
 features = [ "compression-br", "compression-zstd" ]
 
 [dev-dependencies]
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dev-dependencies.tokio]
 version = "1.48.0"

@@ -10,4 +10,4 @@ description = "utils for string"
 [dev-dependencies]
 aok = "0.1.18"
 loginit = "0.1.18"
-tracing = "0.1.41"
+tracing = "0.1.43"

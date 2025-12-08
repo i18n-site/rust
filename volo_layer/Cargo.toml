@@ -17,6 +17,6 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 coarsetime = "0.1.36"
-tracing = "0.1.41"
+tracing = "0.1.43"
 volo = "0.12.0"
 volo-grpc = "0.12.0"

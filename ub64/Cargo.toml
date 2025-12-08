@@ -29,7 +29,7 @@ default = [ ]
 
 [dev-dependencies]
 static_init = "1.0.4"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dev-dependencies.aok]
 path = "../aok"

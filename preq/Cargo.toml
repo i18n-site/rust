@@ -9,7 +9,7 @@ description = "ipv6 proxyed reqwest"
 
 [dependencies]
 bytes = "1.11.0"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dependencies.reqwest_client]
 version = "0.1.13"
@@ -25,7 +25,7 @@ version = "0.12.24"
 features = [ "zstd" ]
 
 [dev-dependencies]
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dev-dependencies.aok]
 path = "../aok"

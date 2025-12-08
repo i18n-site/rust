@@ -24,7 +24,7 @@ thiserror = "2.0.17"
 url = "2.5.7"
 aok = "0.1.18"
 static_init = "1.0.4"
-log = "0.4.28"
+log = "0.4.29"
 
 [dependencies.reqwest_proxy]
 version = "0.1.7"

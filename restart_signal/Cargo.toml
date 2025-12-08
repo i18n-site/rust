@@ -17,6 +17,6 @@ default = []
 
 
 [dependencies]
-crossfire = "2.1.7"
+crossfire = "2.1.8"
 signal-hook = "0.3.18"
 xerr = { version = "0.1.16", path = "../xerr" }

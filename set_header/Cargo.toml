@@ -11,7 +11,7 @@ description = "axum set header middleware"
 anyhow = "1.0.100"
 axum = "0.8.7"
 parking_lot = "0.12.5"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dependencies.amid]
 version = "0.1.11"

@@ -14,7 +14,7 @@ all-features = true
 aok = "0.1.18"
 digest = "0.10.7"
 pipe = "0.4.0"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dependencies.dirs]
 version = "6.0.0"

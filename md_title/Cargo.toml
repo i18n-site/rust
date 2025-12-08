@@ -15,7 +15,7 @@ default = [ ]
 
 [dependencies]
 aok = "0.1.18"
-html2text = "0.16.4"
+html2text = "0.16.5"
 htmlize = "1.0.6"
 
 [dependencies.xerr]
@@ -26,7 +26,7 @@ path = "../xerr"
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.41"
+tracing = "0.1.43"
 
 [dev-dependencies.tokio]
 version = "1.48.0"
