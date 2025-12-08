@@ -145,7 +145,6 @@ members = [
   "v6proxy",
   "varurl",
   "ver_count",
-  "ver_from_txt",
   "ver_incr",
   "verfs",
   "volo_layer",

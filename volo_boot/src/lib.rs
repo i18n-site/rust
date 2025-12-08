@@ -44,5 +44,3 @@ pub fn env_addr(name: &str, default: u16) -> SocketAddr {
   log::info!("{name} {addr}");
   addr
 }
-
-pub type Result<T = (), E = Box<dyn std::error::Error + Send + Sync>> = std::result::Result<T, E>;
