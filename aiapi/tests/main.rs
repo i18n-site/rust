@@ -23,7 +23,7 @@ async fn test_qwen_chat() -> Void {
     temperature: 0.0,
   };
   for (name, model, conf) in [
-    ("gemini", "gemini-2.5-pro", conf),
+    ("gemini", "gemini-3-pro-preview", conf),
     // (
     //   "groq",
     //   aiapi::ConfQroq::new("", 0.0, aiapi::ReasoningEffort::None),

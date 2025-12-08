@@ -125,7 +125,7 @@ impl crate::AiApi for Gemini {
           Some(ThinkingConfig {
             thinking_budget: match conf.reasoning_effort() {
               ReasoningEffort::None => {
-                if model == "gemini-2.5-pro" {
+                if model == "gemini-3-pro-preview" {
                   128
                 } else {
                   0
