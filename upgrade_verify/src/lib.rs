@@ -1,5 +1,9 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
+mod error;
+
+pub use error::{Error, Result};
+
 use std::{
   env,
   fs::{self, File},
@@ -8,7 +12,6 @@ use std::{
   path::{Path, PathBuf},
 };
 
-use aok::Result;
 use ed25519_dalek::{Signature, VerifyingKey};
 use sha3::{Digest, Sha3_512};
 

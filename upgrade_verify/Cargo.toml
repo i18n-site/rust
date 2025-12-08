@@ -6,33 +6,32 @@ license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
 homepage = "https://github.com/i18n-site/rust/tree/dev/upgrade_verify"
 description = "upgrade_verify"
-keywords = [ ]
+keywords = []
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = [ "--cfg", "docsrs" ]
+rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
-default = [ ]
+default = []
 
 [dependencies]
-aok = "0.1.18"
 sha3 = "0.10.8"
 tar = "0.4.44"
+thiserror = "2.0.17"
 
 [dependencies.ed25519-dalek]
 version = "2.2.0"
-features = [ "digest" ]
+features = ["digest"]
 
 [dev-dependencies]
 aok = "0.1.18"
-loginit = "0.1.18"
+log_init = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
 
 [dev-dependencies.vb]
 version = "0.2.5"
 
 [dev-dependencies.tokio]
 version = "1.48.0"
-features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
+features = ["macros", "rt", "rt-multi-thread", "time", "sync"]
