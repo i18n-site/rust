@@ -1,6 +1,6 @@
 [package]
 name = "xrpc"
-version = "0.1.39"
+version = "0.1.40"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -22,7 +22,7 @@ volo-http = [ "dep:volo-http", "volo", "dep:dashmap", "dep:pilota" ]
 volo = [ ]
 
 [dev-dependencies]
-log = "0.4.28"
+log = "0.4.29"
 static_init = "1.0.4"
 
 [dev-dependencies.log_init]
@@ -33,7 +33,7 @@ version = "0.1.28"
 anyhow = "1.0.100"
 bytes = "1.11.0"
 coarsetime = "0.1.36"
-http = "1.3.1"
+http = "1.4.0"
 
 [dependencies.dashmap]
 version = "6.1.0"
