@@ -21,7 +21,6 @@ fred = "10.1.0"
 
 [dependencies.vb]
 version = "0.1.8"
-path = "../vb"
 
 [dependencies.b255]
 version = "0.1.5"

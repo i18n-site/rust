@@ -31,7 +31,6 @@ static_init = "1.0.4"
 tracing = "0.1.41"
 
 [dev-dependencies.vb]
-path = "../vb"
 version = "0.1.8"
 
 [dev-dependencies.tokio]

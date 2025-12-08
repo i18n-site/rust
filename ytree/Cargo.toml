@@ -68,7 +68,6 @@ features = [ "derive" ]
 
 [dependencies.vb]
 version = "0.1.8"
-path = "../vb"
 optional = true
 
 [dependencies.xerr]

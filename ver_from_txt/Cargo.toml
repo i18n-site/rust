@@ -22,7 +22,6 @@ tracing = "0.1.41"
 
 [dependencies.vb]
 version = "0.1.8"
-path = "../vb"
 
 [dependencies.sver]
 version = "0.1.10"

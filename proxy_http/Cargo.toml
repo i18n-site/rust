@@ -34,7 +34,7 @@ thiserror = "2.0.17"
 
 [dependencies.clap_args]
 version = "0.1.7"
-path = "../clap_args"
+
 features = [ "macro" ]
 
 [dependencies.rustls]
