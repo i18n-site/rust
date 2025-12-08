@@ -65,7 +65,7 @@ version = "0.1.1"
 path = "../riter"
 
 [dependencies.ver_from_txt]
-version = "0.1.9"
+version = "0.1.11"
 
 [dependencies.xerr]
 version = "0.1.16"
