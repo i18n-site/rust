@@ -30,8 +30,9 @@ where
     .build();
 
   init(Server::new())
-      .add_service(srv)
-      // .layer_front(volo_layer::Log)
-      .run(addr)
-      .await
+    .add_service(srv)
+    // .layer_front(volo_layer::Log)
+    .run(addr)
+    .await
+    .map_err(|e| anyhow::anyhow!(e))
 }
