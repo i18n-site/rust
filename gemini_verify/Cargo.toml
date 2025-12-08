@@ -37,7 +37,7 @@ version = "0.1.8"
 path = "../pbar"
 
 [dependencies.reqwest_client]
-version = "0.1.13"
+version = "0.1.14"
 path = "../reqwest_client"
 features = [ "proxy_from_env", "client" ]
 
