@@ -136,8 +136,6 @@ members = [
   "txtfmt",
   "tzst",
   "ub64",
-  "uper",
-  "uper/tests",
   "upgrade_host",
   "upgrade_verify",
   "upn",
