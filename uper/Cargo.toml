@@ -20,10 +20,10 @@ conf = ["dep:confer", "dep:confdir"]
 aok = "0.1.18"
 coarsetime = "0.1.36"
 const-str = "0.7.0"
+crossfire = "2.1.8"
 current_platform = "0.2.0"
 defer-lite = "1.0.0"
 down = "0.1.5"
-kanal = "0.1.1"
 self-replace = "1.5.0"
 tar = "0.4.44"
 
@@ -41,7 +41,6 @@ path = "../pbar"
 
 [dependencies.sver]
 version = "0.1.10"
-path = "../sver"
 
 [dependencies.zstd]
 version = "0.13.3"

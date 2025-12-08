@@ -2,7 +2,7 @@ use aok::Result;
 use idoh::Answer;
 use ver_from_txt::{VerUrlLi, ver_from_txt};
 
-fn extract(project: &str, pre_ver: &[u64; 3], li: Vec<Answer>) -> Result<Option<Option<VerUrlLi>>> {
+fn extract(project: &str, pre_ver: &[u64; 3], li: &[Answer]) -> Result<Option<Option<VerUrlLi>>> {
   for i in li {
     if i.r#type == idoh::record_type::TXT {
       return Ok(Some(ver_from_txt(project, pre_ver, &i.data)?));

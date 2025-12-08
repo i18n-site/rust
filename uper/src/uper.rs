@@ -5,10 +5,10 @@ use std::{
 };
 
 use aok::{OK, Result, Void};
+use crossfire::mpsc::RxUnbounded;
 use current_platform::CURRENT_PLATFORM as TARGET;
 use defer_lite::defer;
 use down::down;
-use kanal::AsyncReceiver;
 use pbar::pbar;
 use self_replace::self_replace;
 use sver::Ver;
@@ -16,7 +16,7 @@ use ver_from_txt::VerUrlLi;
 
 #[derive(Debug)]
 pub struct Uper {
-  pub recv: AsyncReceiver<u64>,
+  pub recv: RxUnbounded<u64>,
   pub path: PathBuf,
   pub project: String,
   pub channel: String,
