@@ -11,7 +11,7 @@ version = "0.1.17"
 path = "../genv"
 
 [dependencies.header_map]
-version = "0.1.4"
+version = "0.1.5"
 path = "../header_map"
 
 [dependencies.citer]
@@ -20,7 +20,6 @@ path = "../citer"
 
 [dependencies.ireq]
 version = "0.1.32"
-
 features = [ "proxy" ]
 
 [dependencies.xerr]
