@@ -2,7 +2,6 @@
 
 ```rust
 #![cfg_attr(docsrs, feature(doc_cfg))]
-#![feature(doc_cfg)]
 
 use reqwest::{Client, RequestBuilder};
 use serde::{Deserialize, Serialize};
