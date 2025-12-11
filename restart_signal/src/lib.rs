@@ -21,8 +21,8 @@ pub fn restart_signal() -> impl std::future::Future<Output = ()> {
       // Quit from keyboard (Ctrl+\).
       // 来自键盘的退出 (Ctrl+\)。
       signal_const::SIGQUIT,
-      // Hangup detected on controlling terminal or death of controlling process.
-      // 控制终端挂起或控制进程终止。
+      // Signal sent by systemctl reload
+      // systemctl reload 发送的信号
       #[cfg(feature = "sighup")]
       signal_const::SIGHUP,
     ])) {
