@@ -15,8 +15,9 @@ pub static TZ: jiff::tz::TimeZone = jiff::tz::TimeZone::try_system().unwrap();
 pub fn init() {
   // Check if we're in a systemd environment (unix systems with INVOCATION_ID)
   #[cfg(all(unix, feature = "systemd"))]
-  if env::var("INVOCATION_ID").is_ok()
-    && let Ok(journald) = logforth_append_journald::Journald::new() {
+  if env::var("INVOCATION_ID").is_ok() {
+    // journald is inherently unbuffered (uses UnixDatagram which doesn't buffer)
+    if let Ok(journald) = logforth_append_journald::Journald::new() {
       logforth::starter_log::builder()
         .dispatch(|d| {
           d.filter(EnvFilterBuilder::from_default_env().build())
@@ -25,6 +26,7 @@ pub fn init() {
         .apply();
       return;
     }
+  }
     // If journald fails, fall back to stdout
 
   // Fallback to stdout logging
