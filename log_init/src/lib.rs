@@ -33,7 +33,7 @@ pub static HOME_DIR: String = path_end(
 );
 
 pub fn init() {
-  let stdout_appender = || {
+  let stdout = || {
     #[cfg(feature = "stdout")]
     {
       append::Stdout::default().with_layout(layout::Text::default())
@@ -49,37 +49,34 @@ pub fn init() {
       let d = d.filter(EnvFilterBuilder::from_default_env().build());
 
       match env::var("LOGS_DIRECTORY") {
-        Ok(logs_dir) => {
-          let process_name = get_process_name();
-          let _ = std::fs::create_dir_all(&logs_dir);
+        Ok(dir) => {
+          let name = get_name();
+          let _ = std::fs::create_dir_all(&dir);
 
-          match create_file_appender(&logs_dir, &process_name) {
-            Ok(appender) => d.append(appender),
+          match create_file(&dir, &name) {
+            Ok(app) => d.append(app),
             Err(e) => {
               eprintln!("File logging failed: {}, using stdout", e);
-              d.append(stdout_appender())
+              d.append(stdout())
             }
           }
         }
-        Err(_) => d.append(stdout_appender()),
+        Err(_) => d.append(stdout()),
       }
     })
     .apply();
 }
 
-fn create_file_appender(
-  logs_dir: &str,
-  process_name: &str,
-) -> Result<impl logforth::Append, Box<dyn std::error::Error>> {
-  let appender = FileBuilder::new(logs_dir, process_name)
+fn create_file(dir: &str, name: &str) -> Result<impl logforth::Append, Box<dyn std::error::Error>> {
+  let app = FileBuilder::new(dir, name)
     .layout(layout::Text::default())
     .build()?;
-  Ok(appender)
+  Ok(app)
 }
 
-fn get_process_name() -> String {
+fn get_name() -> String {
   env::current_exe()
     .ok()
-    .and_then(|path| path.file_stem().map(|s| s.to_string_lossy().to_string()))
+    .and_then(|p| p.file_stem().map(|s| s.to_string_lossy().to_string()))
     .unwrap_or_else(|| "app".to_string())
 }
