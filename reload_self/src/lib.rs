@@ -44,11 +44,13 @@ pub fn listen() -> Result<CancellationToken, std::io::Error> {
       .stdin(Stdio::null())
       .stdout(Stdio::inherit())
       .stderr(Stdio::inherit())
-      .process_group(0); // 创建新的进程组，脱离父进程但继承输出
+      .pre_exec(|| {
+        // 创建新的会话，完全脱离控制终端和父进程
+        unsafe { libc::setsid() };
+        Ok(())
+      });
 
-    let result = command.spawn();
-
-    match result {
+    match command.spawn() {
       Ok(child) => {
         info!("成功启动新的子进程，PID: {} ; 母进程开始关闭。", child.id());
         token_for_task.cancel();
