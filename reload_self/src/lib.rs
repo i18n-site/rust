@@ -1,7 +1,7 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 use std::{
-  env, fs,
+  env,
   os::unix::process::CommandExt,
   process::{Command, Stdio},
 };
@@ -16,15 +16,6 @@ pub use tokio_util::sync::CancellationToken;
 
 /// 监听 `SIGHUP` 信号以触发进程重载，并返回一个 CancellationToken。
 pub fn listen() -> Result<CancellationToken, std::io::Error> {
-  // 检查是否有 PID_FILE 环境变量，如果有则写入 PID 到文件
-  if let Ok(pid_file_path) = env::var("PID_FILE") {
-    let pid = std::process::id().to_string();
-    match fs::write(&pid_file_path, &pid) {
-      Ok(_) => info!("PID {pid} -> {pid_file_path}"),
-      Err(e) => error!("{pid_file_path}: {e}"),
-    }
-  }
-
   let mut stream = signal(SignalKind::hangup())?;
 
   let token = CancellationToken::new();
