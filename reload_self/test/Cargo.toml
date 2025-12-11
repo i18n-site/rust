@@ -17,7 +17,7 @@ version = "0.1.18"
 path = "../../aok"
 
 [dependencies.reload_self]
-version = "0.1.5"
+version = "0.1.7"
 path = ".."
 
 [dependencies.tokio]
