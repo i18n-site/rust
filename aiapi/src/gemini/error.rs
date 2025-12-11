@@ -38,7 +38,7 @@ pub struct Error {
   pub code: u16,
   pub message: String,
   pub status: String,
-  pub details: Vec<Detail>,
+  pub details: Option<Vec<Detail>>,
 }
 
 #[derive(Deserialize, Debug)]

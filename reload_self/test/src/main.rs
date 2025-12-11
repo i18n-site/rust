@@ -1,12 +1,12 @@
 use std::time::Duration;
 
 use aok::{OK, Void};
+use log::info;
 use reload_self::{self, CancellationToken};
-use tracing::info;
 
 #[static_init::constructor(0)]
 extern "C" fn _loginit() {
-  loginit::init();
+  log_init::init();
 }
 
 /// 模拟一个长时间运行的主任务

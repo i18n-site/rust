@@ -8,7 +8,7 @@ use tokio::{
   task,
 };
 pub use tokio_util::sync::CancellationToken;
-use tracing::{error, info};
+use log::{error, info};
 
 /// 监听 `SIGHUP` 信号以触发进程重载，并返回一个 CancellationToken。
 pub fn listen() -> Result<CancellationToken> {

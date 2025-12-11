@@ -204,7 +204,7 @@ impl crate::AiApi for Gemini {
         return Err(Error::Gemini(err));
       }
       Err(err) => {
-        log::error!("{err}")
+        log::error!("{text} {err}")
       }
     };
     Err(Error::Response { status, text })

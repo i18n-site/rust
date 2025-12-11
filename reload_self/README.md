@@ -7,7 +7,7 @@ use std::time::Duration;
 
 use aok::{Void, OK};
 use reload_self::{self, CancellationToken};
-use tracing::info;
+use log::info;
 
 #[static_init::constructor(0)]
 extern "C" fn _loginit() {
