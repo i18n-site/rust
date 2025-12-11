@@ -7,6 +7,7 @@ use std::{
 };
 
 use log::{error, info};
+use nix::unistd;
 use tokio::{
   signal::unix::{SignalKind, signal},
   task,
@@ -39,16 +40,18 @@ pub fn listen() -> Result<CancellationToken, std::io::Error> {
 
     let mut command = Command::new(current_exe);
 
-    command
-      .args(&args[1..])
-      .stdin(Stdio::null())
-      .stdout(Stdio::inherit())
-      .stderr(Stdio::inherit())
-      .pre_exec(|| {
-        // 创建新的会话，完全脱离控制终端和父进程
-        unsafe { libc::setsid() };
-        Ok(())
-      });
+    unsafe {
+      command
+        .args(&args[1..])
+        .stdin(Stdio::null())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .pre_exec(|| {
+          // 创建新的会话，完全脱离控制终端和父进程
+          unistd::setsid().map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+          Ok(())
+        });
+    }
 
     match command.spawn() {
       Ok(child) => {
