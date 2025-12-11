@@ -2,6 +2,7 @@
 
 use std::{
   env,
+  os::unix::process::CommandExt,
   process::{Command, Stdio},
 };
 
