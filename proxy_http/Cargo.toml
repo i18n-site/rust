@@ -23,7 +23,7 @@ static_init = "1.0.4"
 
 [dev-dependencies.log_init]
 path = "../log_init"
-version = "0.1.30"
+version = "0.1.31"
 
 [dependencies]
 base64 = "0.22.1"
@@ -60,7 +60,7 @@ version = "0.1.19"
 features = [ "server-auto", "tokio" ]
 
 [dependencies.log_init]
-version = "0.1.30"
+version = "0.1.31"
 path = "../log_init"
 
 [dependencies.reqwest]

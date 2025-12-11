@@ -22,7 +22,7 @@ static_init = "1.0.4"
 
 [dev-dependencies.log_init]
 path = "../log_init"
-version = "0.1.30"
+version = "0.1.31"
 
 [dependencies]
 percent-encoding = "2.3.2"
