@@ -14,5 +14,5 @@ static_init = "1.0.4"
 log = "0.4.29"
 
 [dependencies.log_init]
-version = "0.1.29"
+version = "0.1.30"
 path = "../log_init"

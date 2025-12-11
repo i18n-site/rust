@@ -24,7 +24,7 @@ static_init = "1.0.4"
 
 [dev-dependencies.log_init]
 path = "../log_init"
-version = "0.1.29"
+version = "0.1.30"
 
 [dependencies]
 num-traits = "0.2.19"
