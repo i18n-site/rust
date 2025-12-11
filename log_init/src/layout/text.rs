@@ -37,24 +37,11 @@ impl logforth::Layout for Text {
   ) -> Result<Vec<u8>, logforth::Error> {
     let level = record.level();
 
-    let file = if let Some(file) = record.file() {
-      if crate::ROOT.len() > 1
-        && let Some(f) = file.strip_prefix(crate::ROOT.as_str())
-      {
-        f.into()
-      } else if let Some(f) = file.strip_prefix(crate::HOME_DIR.as_str()) {
-        format!("~/{f}")
-      } else {
-        file.into()
-      }
-    } else {
-      record.target().into()
-    };
-
+    let file = record.file().unwrap_or(record.target());
     let file_line = if let Some(line) = record.line() {
       format!("{file}:{line}")
     } else {
-      file
+      file.into()
     };
 
     let msg = record.payload();
