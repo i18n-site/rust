@@ -27,7 +27,7 @@ log = "0.4.29"
 
 [dev-dependencies.log_init]
 path = "../log_init"
-version = "0.1.28"
+version = "0.1.29"
 
 [dev-dependencies.aok]
 version = "0.1.18"

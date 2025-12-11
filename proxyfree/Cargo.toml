@@ -23,7 +23,7 @@ static_init = "1.0.4"
 
 [dev-dependencies.log_init]
 path = "../log_init"
-version = "0.1.28"
+version = "0.1.29"
 
 [dev-dependencies.tokio]
 version = "1.48.0"
