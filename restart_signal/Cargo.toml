@@ -1,6 +1,6 @@
 [package]
 name = "restart_signal"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -14,7 +14,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
 default = []
-
+sighup = []
 
 [dependencies]
 crossfire = "2.1.8"
