@@ -1,3 +1,5 @@
+use std::env;
+
 use aok::{OK, Void};
 use log::{debug, error, info, warn};
 
@@ -15,5 +17,32 @@ fn test_stdout_logging() -> Void {
   debug!("This is a debug message");
 
   println!("✓ Stdout logging test completed");
+  OK
+}
+
+#[test]
+fn test_journald_detection() -> Void {
+  println!("Testing journald detection...");
+
+  match env::var("INVOCATION_ID") {
+    Ok(invocation_id) => {
+      println!("✓ INVOCATION_ID found: {}", invocation_id);
+      println!("  Running in systemd environment - journald logging should be active");
+
+      // Test logging that should go to journald
+      info!("Journald logging test message: {}", 789012);
+      warn!("Journald logging warning");
+    }
+    Err(_) => {
+      println!("✓ INVOCATION_ID not found");
+      println!("  Not running in systemd environment - stdout logging should be active");
+
+      // Test logging that should go to stdout
+      info!("Stdout fallback logging test message: {}", 456789);
+      warn!("Stdout fallback logging warning");
+    }
+  }
+
+  println!("✓ Journald detection test completed");
   OK
 }

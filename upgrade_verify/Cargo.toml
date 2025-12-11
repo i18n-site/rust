@@ -26,7 +26,7 @@ features = ["digest"]
 
 [dev-dependencies]
 aok = "0.1.18"
-log_init = "0.1.28"
+log_init = "0.1.30"
 static_init = "1.0.4"
 
 [dev-dependencies.vb]
