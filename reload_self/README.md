@@ -6,7 +6,7 @@
 use std::time::Duration;
 
 use aok::{OK, Void};
-use crossfire::{spsc::bounded_async, AsyncRx};
+use crossfire::{AsyncRx, spsc::bounded_async};
 use log::info;
 use reload_self::{self, CancellationToken};
 
