@@ -32,6 +32,12 @@ features = [ "kv" ]
 version = "0.29.1"
 features = [ "starter-log" ]
 
+[dependencies.logforth-append-file]
+version = "0.3.0"
+
+[dependencies.logforth-core]
+version = "0.3.1"
+
 [dependencies.path_end]
 version = "0.1.1"
 path = "../path_end"
