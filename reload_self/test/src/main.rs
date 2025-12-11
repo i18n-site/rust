@@ -11,7 +11,7 @@ extern "C" fn _loginit() {
 }
 
 /// 模拟一个长时间运行的主任务
-async fn run_main_task(token: CancellationToken, recv: crossfire::spsc::AsyncRx<()>) {
+async fn run_main_task(token: CancellationToken, recv: AsyncRx<()>) {
   let pid = std::process::id();
   info!("[{pid}] 主任务已启动");
 
