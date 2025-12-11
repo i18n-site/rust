@@ -18,7 +18,7 @@ default = [ ]
 [dev-dependencies]
 anyhow = "1.0.100"
 log = "0.4.29"
-reqwest = "0.12.24"
+reqwest = "0.12.25"
 static_init = "1.0.4"
 
 [dev-dependencies.log_init]
@@ -65,7 +65,7 @@ version = "0.1.28"
 path = "../log_init"
 
 [dependencies.reqwest]
-version = "0.12.24"
+version = "0.12.25"
 features = [ "zstd", "brotli" ]
 
 [dependencies.tokio]

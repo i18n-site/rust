@@ -16,7 +16,7 @@ static_init = "1.0.4"
 tracing = "0.1.43"
 
 [dependencies.reqwest]
-version = "0.12.24"
+version = "0.12.25"
 features = ["zstd", "gzip", "rustls-tls"]
 default-features = false
 

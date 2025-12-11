@@ -25,7 +25,7 @@ version = "0.1.17"
 path = "../genv"
 
 [dependencies.reqwest]
-version = "0.12.24"
+version = "0.12.25"
 features = [ "zstd" ]
 
 [dev-dependencies]

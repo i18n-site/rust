@@ -1,7 +1,7 @@
 [dependencies]
 aok = "0.1.18"
 bytes = "1.11.0"
-reqwest = "0.12.24"
+reqwest = "0.12.25"
 static_init = "1.0.4"
 thiserror = "2.0.17"
 tracing = "0.1.43"

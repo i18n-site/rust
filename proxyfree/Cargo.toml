@@ -36,7 +36,7 @@ log = "0.4.29"
 thiserror = "2.0.17"
 
 [dependencies.reqwest]
-version = "0.12.24"
+version = "0.12.25"
 features = [ "json", "rustls-tls", "socks" ]
 
 [dependencies.tokio]
