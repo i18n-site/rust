@@ -1,6 +1,6 @@
 [package]
 name = "restart_signal"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2024"
 license = "MulanPSL-2.0"
 repository = "https://github.com/i18n-site/rust.git"
@@ -17,6 +17,6 @@ default = []
 sighup = []
 
 [dependencies]
-crossfire = "2.1.8"
+event-listener = "5.4.1"
 signal-hook = "0.3.18"
 xerr = { version = "0.1.16", path = "../xerr" }
