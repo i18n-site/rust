@@ -48,7 +48,7 @@ pub fn listen() -> Result<CancellationToken, std::io::Error> {
         .stderr(Stdio::inherit())
         .pre_exec(|| {
           // 创建新的会话，完全脱离控制终端和父进程
-          unistd::setsid().map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+          unistd::setsid().map_err(std::io::Error::other)?;
           Ok(())
         });
     }
