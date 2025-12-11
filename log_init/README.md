@@ -53,7 +53,7 @@ pub fn init() {
 
       match env::var("LOGS_DIRECTORY") {
         Ok(dir) => {
-          let name = get_name();
+          let name = format!("{}.log", exe_name());
           let _ = std::fs::create_dir_all(&dir);
 
           match create_file(&dir, &name) {
@@ -77,7 +77,7 @@ fn create_file(dir: &str, name: &str) -> Result<impl logforth::Append, Box<dyn s
   Ok(app)
 }
 
-fn get_name() -> String {
+fn exe_name() -> String {
   env::current_exe()
     .ok()
     .and_then(|p| p.file_stem().map(|s| s.to_string_lossy().to_string()))
