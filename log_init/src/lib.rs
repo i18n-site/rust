@@ -56,7 +56,7 @@ pub fn init() {
           match create_file(&dir, &name) {
             Ok(app) => d.append(app),
             Err(e) => {
-              eprintln!("File logging failed: {}, using stdout", e);
+              eprintln!("logging file failed: {}, using stdout", e);
               d.append(stdout())
             }
           }
