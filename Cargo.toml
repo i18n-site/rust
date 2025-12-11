@@ -192,7 +192,6 @@ members = [
   "reqwest_proxy",
   "uri_to_host_port",
   "kill_port",
-  "restart_signal",
   "need",
   "rs2proto",
   "volo_boot",
