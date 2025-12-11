@@ -35,16 +35,11 @@ pub fn listen() -> Result<CancellationToken, std::io::Error> {
 
     let mut command = process::Command::new(current_exe);
     command.args(&args[1..]);
-
-    // 在 Unix 上，使用 pre_exec 设置会话 ID，让子进程脱离父进程
-    let result = unsafe {
-      command
-        .pre_exec(|| {
-          nix::unistd::setsid()?;
-          Ok(())
-        })
-        .spawn()
-    };
+    
+    // 启动新进程，子进程继承父进程的进程组和会话
+    // 这样可以保持与 systemd 的连接，确保日志能正常输出到 journalctl
+    // systemd 会管理进程树，通常能确保子进程在父进程退出后继续运行
+    let result = command.spawn();
 
     match result {
       Ok(child) => {
