@@ -2,7 +2,6 @@
 
 use std::{env, os::unix::process::CommandExt, process};
 
-use aok::Result;
 use log::{error, info};
 use tokio::{
   signal::unix::{SignalKind, signal},
@@ -11,7 +10,7 @@ use tokio::{
 pub use tokio_util::sync::CancellationToken;
 
 /// 监听 `SIGHUP` 信号以触发进程重载，并返回一个 CancellationToken。
-pub fn listen() -> Result<CancellationToken> {
+pub fn listen() -> Result<CancellationToken, std::io::Error> {
   let mut stream = signal(SignalKind::hangup())?;
 
   let token = CancellationToken::new();
