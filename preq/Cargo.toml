@@ -9,7 +9,6 @@ description = "ipv6 proxyed reqwest"
 
 [dependencies]
 bytes = "1.11.0"
-tracing = "0.1.43"
 
 [dependencies.reqwest_client]
 version = "0.1.14"
@@ -25,7 +24,6 @@ default-features = false
 
 [dev-dependencies]
 log = "0.4.29"
-tracing = "0.1.43"
 
 [dev-dependencies.log_init]
 path = "../log_init"

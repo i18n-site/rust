@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-kanal = "0.1.1"
+crossfire = "2.1.8"
 log = "0.4.29"
 static_init = "1.0.4"
 
@@ -22,4 +22,4 @@ path = ".."
 
 [dependencies.tokio]
 version = "1.48.0"
-features = [ "rt", "macros", "rt-multi-thread", "time" ]
+features = ["rt", "macros", "rt-multi-thread", "time"]

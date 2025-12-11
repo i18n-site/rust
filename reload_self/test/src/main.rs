@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 use aok::{OK, Void};
+use crossfire::{spsc::bounded_async, AsyncRx};
 use log::info;
 use reload_self::{self, CancellationToken};
 
@@ -10,7 +11,7 @@ extern "C" fn _loginit() {
 }
 
 /// 模拟一个长时间运行的主任务
-async fn run_main_task(token: CancellationToken, recv: kanal::AsyncReceiver<()>) {
+async fn run_main_task(token: CancellationToken, recv: crossfire::spsc::AsyncRx<()>) {
   let pid = std::process::id();
   info!("[{pid}] 主任务已启动");
 
@@ -44,7 +45,7 @@ kill -SIGHUP {pid}
 "#,
   );
 
-  let (send, recv) = kanal::bounded_async(1);
+  let (send, recv) = bounded_async(1);
 
   tokio::spawn(async move {
     loop {
