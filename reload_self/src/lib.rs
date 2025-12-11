@@ -1,6 +1,9 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-use std::{env, process};
+use std::{
+  env,
+  process::{Command, Stdio},
+};
 
 use log::{error, info};
 use tokio::{
@@ -33,8 +36,12 @@ pub fn listen() -> Result<CancellationToken, std::io::Error> {
 
     info!("启动新的子进程: {} {:?}", current_exe.display(), &args[1..]);
 
-    let mut command = process::Command::new(current_exe);
-    command.args(&args[1..]);
+    let mut command = Command::new(current_exe);
+
+    command
+      .args(&args[1..])
+      .stdout(Stdio::inherit())
+      .stderr(Stdio::inherit());
 
     // 启动新进程，子进程继承父进程的进程组和会话
     // 这样可以保持与 systemd 的连接，确保日志能正常输出到 journalctl
