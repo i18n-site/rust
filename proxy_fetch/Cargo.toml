@@ -36,7 +36,7 @@ path = "../genv"
 version = "0.1.17"
 
 [dependencies.log_init]
-path = "../log_init"
+
 version = "0.1.32"
 
 [dependencies.reqwest_client]

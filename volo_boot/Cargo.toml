@@ -36,7 +36,7 @@ optional = true
 
 [dependencies.log_init]
 version = "0.1.32"
-path = "../log_init"
+
 
 [dependencies.static_]
 version = "0.1.15"

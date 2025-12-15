@@ -24,7 +24,7 @@ log = "0.4.29"
 static_init = "1.0.4"
 
 [dev-dependencies.log_init]
-path = "../log_init"
+
 version = "0.1.32"
 
 [dev-dependencies.tokio]
