@@ -201,7 +201,6 @@ members = [
   # "i18n.site",
   # "i18n_bgu",
   # "i18n_js",
-  # "idns",
   # "minjs",
 ]
 # "cget/test_cget",
