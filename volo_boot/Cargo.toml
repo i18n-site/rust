@@ -40,7 +40,7 @@ version = "0.1.32"
 
 [dependencies.static_]
 version = "0.1.15"
-path = "../static_"
+
 
 [dependencies.volo-grpc]
 version = "0.12.0"

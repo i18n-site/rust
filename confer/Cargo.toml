@@ -18,8 +18,8 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
-const-str = { version = "0.7.0", optional = true, features = ["case"] }
-tracing = "0.1.43"
+const-str = { version = "0.7.1", optional = true, features = ["case"] }
+tracing = "0.1.44"
 
 [dev-dependencies]
 aok = "0.1.18"

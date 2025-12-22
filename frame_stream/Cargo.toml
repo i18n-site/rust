@@ -17,7 +17,7 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
-axum = { version = "0.8.7", optional = true }
+axum = { version = "0.8.8", optional = true }
 bytes = "1.11.0"
 futures-lite = "2.6.1"
 kanal = "0.1.1"

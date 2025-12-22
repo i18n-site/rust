@@ -20,7 +20,7 @@ gxhash = "3.5.0"
 serde_yaml = "0.9.34"
 
 [dependencies.aws-sdk-s3]
-version = "1.117.0"
+version = "1.118.0"
 features = [ "behavior-version-latest" ]
 
 [dependencies.ifs]
@@ -36,7 +36,7 @@ features = [ "derive" ]
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.tokio]
 version = "1.48.0"

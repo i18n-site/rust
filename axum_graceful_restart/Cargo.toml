@@ -17,9 +17,9 @@ default = [ ]
 
 [dependencies]
 aok = "0.1.18"
-axum = "0.8.7"
-kill_port = { version = "0.1.2", path = "../kill_port" }
-tracing = "0.1.43"
+axum = "0.8.8"
+
+tracing = "0.1.44"
 
 [dependencies.socket2]
 version = "0.6.1"
@@ -33,7 +33,7 @@ features = [ "macros", "rt", "rt-multi-thread", "signal" ]
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.tokio]
 version = "1.48.0"

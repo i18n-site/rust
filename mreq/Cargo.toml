@@ -16,7 +16,7 @@ path = "../header_map"
 
 [dependencies.citer]
 version = "0.1.12"
-path = "../citer"
+
 
 [dependencies.ireq]
 version = "0.1.32"

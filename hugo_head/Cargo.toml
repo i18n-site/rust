@@ -32,7 +32,7 @@ path = "../txt_li"
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.tran_fmt]
 path = "../tran_fmt"

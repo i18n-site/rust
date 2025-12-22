@@ -16,7 +16,7 @@ verify = [ ]
 ico_li = [ ]
 
 [dependencies]
-bitcode = "0.6.7"
+bitcode = "0.6.9"
 
 [dependencies.derive_more]
 version = "2.1.0"
