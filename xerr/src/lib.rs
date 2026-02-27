@@ -1,12 +1,12 @@
 pub use anyhow;
-pub use log as tracing;
+pub use log;
 
 #[macro_export]
 macro_rules! ignore {
   ($expr:expr) => {{
     let r = (async move || Ok::<_, $crate::anyhow::Error>($expr))();
     if let Err(err) = r.await {
-      $crate::tracing::error!("{}", err);
+      $crate::log::error!("{}", err);
     }
   }};
 }
@@ -18,7 +18,7 @@ macro_rules! ok_or {
     match result {
       Ok(r) => r,
       Err(err) => {
-        $crate::tracing::error!("{}", err);
+        $crate::log::error!("{}", err);
         $default
       }
     }
@@ -29,12 +29,12 @@ macro_rules! ok_or {
 macro_rules! log {
   ($result:expr) => {{
     if let Err(err) = $result {
-      $crate::tracing::error!("{}", err);
+      $crate::log::error!("{}", err);
     }
   }};
   ($($result:expr),+$(,)?) => {{
     $(
-      $crate::tracing!($result);
+      $crate::log!($result);
     )+
   }}
 }
@@ -45,7 +45,7 @@ macro_rules! is_ok {
     match $result {
       Ok(_) => true,
       Err(err) => {
-        $crate::tracing::error!("{}", err);
+        $crate::log::error!("{}", err);
         false
       }
     }
@@ -58,7 +58,7 @@ macro_rules! ok {
     match $result {
       Ok(r) => Ok(r),
       Err(err) => {
-        $crate::tracing::error!("{}", err);
+        $crate::log::error!("{}", err);
         Err(err)
       }
     }
