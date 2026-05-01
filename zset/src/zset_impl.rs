@@ -41,11 +41,17 @@ macro_rules! with_range_iter {
     let list = $self.list.read();
     let len = list.len();
     let range = resolve_range($range, len);
-    let iter = list.range(
-      std::ops::Bound::Included(range.start),
-      std::ops::Bound::Excluded(range.end),
-    );
-    $closure(iter)
+    if range.is_empty() {
+      $closure(std::iter::empty::<&ScoreMember<K, M, S>>())
+    } else {
+      let start_item = list.get_by_index(range.start).unwrap();
+      if range.end < len {
+        let end_item = list.get_by_index(range.end).unwrap();
+        $closure(list.range(start_item..end_item))
+      } else {
+        $closure(list.range(start_item..))
+      }
+    }
   }};
 }
 
@@ -112,7 +118,7 @@ where
           return false; // Score is the same, no update needed
         }
         // O(log N) removal
-        list.remove_first(&*item);
+        list.take(&*item);
         // Now update the score in the map and insert the new ScoreMember
         item.score = score.clone();
         let new_item = item.clone();
@@ -135,7 +141,7 @@ where
     if let Some((_, sm)) = self.map.remove(member.borrow()) {
       let mut list = self.list.write();
       // O(log N) removal
-      list.remove_first(&sm).is_some()
+      list.take(&sm).is_some()
     } else {
       false
     }
@@ -187,7 +193,7 @@ where
     self
       .map
       .get(member.borrow())
-      .and_then(|r| self.list.read().index(r.value()))
+      .and_then(|r| self.list.read().rank(r.value()))
   }
 
   /// Returns the number of members in the zset.
@@ -388,7 +394,7 @@ where
     for mut item in self.map.iter_mut() {
       if let Some(score2) = rhs.score(item.key()) {
         let mut list = self.list.write();
-        list.remove_first(&*item);
+        list.take(&*item);
         item.score = item.score.clone() + score2;
         list.insert(item.clone());
       }

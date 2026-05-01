@@ -1,5 +1,3 @@
-#![feature(const_trait_impl)]
-
 use std::sync::Arc;
 
 use rustls::{ClientConfig, RootCertStore};
