@@ -211,7 +211,7 @@ where
   }
 
   let li: Vec<(Id, S)> = q!(format!("SELECT id,v FROM {table} WHERE id IN ({})", id_set));
-  Ok(HashMap::from_iter(li.into_iter()))
+  Ok(HashMap::from_iter(li))
 }
 
 pub async fn id_v_str<Id: IdType>(
