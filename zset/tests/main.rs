@@ -403,7 +403,7 @@ fn test_card() {
 #[test]
 #[ignore] // This test is slow and is meant for stress testing.
 fn test_concurrent_stress() {
-  use rand::Rng;
+  use rand::RngExt;
 
   let zset: Arc<Zset<String, String, i32>> = Arc::new(Zset::new());
   let num_threads = 50;
