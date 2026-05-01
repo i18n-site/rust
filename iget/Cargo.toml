@@ -29,7 +29,7 @@ path = "../aok"
 
 [dependencies.reqwest]
 version = "0.13"
-features = [ "rustls-tls", "rustls-tls-native-roots", "stream" ]
+features = [ "rustls", "stream" ]
 default-features = false
 
 [dependencies.tokio]

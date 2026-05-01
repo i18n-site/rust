@@ -19,7 +19,7 @@ version = "0.1.15"
 
 [dependencies.reqwest]
 version = "0.13.3"
-features = [ "zstd", "rustls-tls" ]
+features = [ "zstd", "rustls" ]
 default-features = false
 
 [dev-dependencies]

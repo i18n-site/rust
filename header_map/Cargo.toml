@@ -2,7 +2,7 @@
 aok = "0.1.18"
 
 reqwest = { version = "0.13.3", default-features = false, features = [
-  "rustls-tls",
+  "rustls",
 ] }
 
 [dependencies.xerr]
