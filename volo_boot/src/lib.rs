@@ -18,7 +18,7 @@ pub use grpc::grpc;
 
 pub async fn init() {
   log_init::init();
-  match static_::init!().await {
+  match static_::xboot::init().await {
     Ok(()) => (),
     Err(err) => err_exit!("static init error: {err}"),
   }
