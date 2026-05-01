@@ -3,7 +3,7 @@ use std::net::IpAddr;
 use aok::OK;
 use mail_builder::{MessageBuilder, headers::address::Address};
 use mail_send::SmtpClientBuilder;
-use rand::{Rng, RngExt, SeedableRng, rngs::StdRng};
+use rand::{RngExt, SeedableRng, rngs::StdRng};
 use thiserror::Error;
 use tokio::sync::RwLock;
 

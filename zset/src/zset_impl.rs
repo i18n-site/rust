@@ -37,22 +37,23 @@ fn resolve_range(range: impl RangeBounds<usize>, len: usize) -> Range<usize> {
 }
 
 macro_rules! with_range_iter {
-  ($self:expr, $range:expr, $closure:expr) => {{
+  ($self:expr, $range:expr, $iter:ident, $body:expr) => {{
     let list = $self.list.read();
     let len = list.len();
     let range = resolve_range($range, len);
-    let iter: Box<dyn Iterator<Item = &ScoreMember<K, M, S>> + '_> = if range.is_empty() {
-      Box::new(std::iter::empty())
-    } else {
+    let mut iter: Box<dyn Iterator<Item = &ScoreMember<K, M, S>> + '_> =
+      Box::new(std::iter::empty());
+    if !range.is_empty() {
       let start_item = list.get_by_index(range.start).unwrap();
       if range.end < len {
         let end_item = list.get_by_index(range.end).unwrap();
-        Box::new(list.range(start_item..end_item))
+        iter = Box::new(list.range(start_item..end_item));
       } else {
-        Box::new(list.range(start_item..))
+        iter = Box::new(list.range(start_item..));
       }
-    };
-    $closure(iter)
+    }
+    let $iter = iter;
+    $body
   }};
 }
 
@@ -226,7 +227,7 @@ where
   /// - O(log N + K) where N is the number of elements and K is the size of the range.
   /// - O(log N + K)，其中 N 是元素数量，K 是范围的大小。
   fn range(&self, range: impl RangeBounds<usize>) -> Vec<Arc<M>> {
-    with_range_iter!(self, range, |iter| {
+    with_range_iter!(self, range, iter, {
       iter.map(|item| item.member.inner.clone()).collect()
     })
   }
@@ -238,7 +239,7 @@ where
   /// - O(log N + K) where N is the number of elements and K is the size of the range.
   /// - O(log N + K)，其中 N 是元素数量，K 是范围的大小。
   fn range_with_scores(&self, range: impl RangeBounds<usize>) -> Vec<(Arc<M>, S)> {
-    with_range_iter!(self, range, |iter| {
+    with_range_iter!(self, range, iter, {
       iter
         .map(|item| (item.member.inner.clone(), item.score.clone()))
         .collect()
