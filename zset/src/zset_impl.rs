@@ -6,7 +6,7 @@ use std::{
 
 use dashmap::DashMap;
 use parking_lot::RwLock;
-use skiplist::ordered_skiplist::OrderedSkipList;
+use skiplist::OrderedSkipList;
 
 use crate::{Api, Key, Member, Score, score_member::ScoreMember};
 
@@ -216,9 +216,7 @@ where
   /// - O(log N + K) where N is the number of elements and K is the size of the range.
   /// - O(log N + K)，其中 N 是元素数量，K 是范围的大小。
   fn range(&self, range: impl RangeBounds<usize>) -> Vec<Arc<M>> {
-    with_range_iter!(self, range, |iter: skiplist::ordered_skiplist::Iter<
-      ScoreMember<K, M, S>,
-    >| {
+    with_range_iter!(self, range, |iter| {
       iter.map(|item| item.member.inner.clone()).collect()
     })
   }
@@ -230,9 +228,7 @@ where
   /// - O(log N + K) where N is the number of elements and K is the size of the range.
   /// - O(log N + K)，其中 N 是元素数量，K 是范围的大小。
   fn range_with_scores(&self, range: impl RangeBounds<usize>) -> Vec<(Arc<M>, S)> {
-    with_range_iter!(self, range, |iter: skiplist::ordered_skiplist::Iter<
-      ScoreMember<K, M, S>,
-    >| {
+    with_range_iter!(self, range, |iter| {
       iter
         .map(|item| (item.member.inner.clone(), item.score.clone()))
         .collect()
