@@ -2,7 +2,7 @@ use std::{cell::UnsafeCell, ops::Deref};
 
 #[cfg(feature = "rand")]
 pub fn random() -> usize {
-  use rand::{Rng, SeedableRng, rngs::StdRng};
+  use rand::{RngExt, SeedableRng, rngs::StdRng};
   let mut rng = StdRng::from_rng(&mut rand::rng());
   rng.random::<u64>() as usize
 }
