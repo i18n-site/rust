@@ -27,7 +27,7 @@ pub fn restore<S: AsRef<str>>(
 ) -> String {
   let mut r = String::new();
   let mut pre = 0;
-  for (pos, i) in line_pos.borrow().iter().zip(li.into_iter()) {
+  for (pos, i) in line_pos.borrow().iter().zip(li) {
     let pos = pos as usize;
     while pre < pos {
       r.push('\n');

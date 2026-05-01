@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::RngExt;
 
 pub fn iter<T>(li: &[T]) -> impl Iterator<Item = &T> {
   let offset = rand::rng().random_range(0..li.len());
