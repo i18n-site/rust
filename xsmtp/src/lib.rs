@@ -1,10 +1,9 @@
-#![feature(const_trait_impl)]
 use std::net::IpAddr;
 
 use aok::OK;
 use mail_builder::{MessageBuilder, headers::address::Address};
 use mail_send::SmtpClientBuilder;
-use rand::{Rng, SeedableRng, rngs::StdRng};
+use rand::{Rng, RngExt, SeedableRng, rngs::StdRng};
 use thiserror::Error;
 use tokio::sync::RwLock;
 
@@ -92,7 +91,12 @@ pub async fn send(
   txt: impl AsRef<str>,
   htm: impl AsRef<str>,
 ) -> aok::Result<()> {
-  let ip_li = idns::ip(&*SMTP_HOST).await?;
+  let host = &*SMTP_HOST;
+  let addr = format!("{}:{}", host, *SMTP_PORT);
+  let ip_li = tokio::net::lookup_host(&addr)
+    .await?
+    .map(|s| s.ip())
+    .collect();
   send_with_ipli(from_name, to, subject, txt, htm, ip_li).await
 }
 

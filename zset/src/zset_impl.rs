@@ -41,17 +41,18 @@ macro_rules! with_range_iter {
     let list = $self.list.read();
     let len = list.len();
     let range = resolve_range($range, len);
-    if range.is_empty() {
-      $closure(std::iter::empty::<&ScoreMember<K, M, S>>())
+    let iter: Box<dyn Iterator<Item = &ScoreMember<K, M, S>> + '_> = if range.is_empty() {
+      Box::new(std::iter::empty())
     } else {
       let start_item = list.get_by_index(range.start).unwrap();
       if range.end < len {
         let end_item = list.get_by_index(range.end).unwrap();
-        $closure(list.range(start_item..end_item))
+        Box::new(list.range(start_item..end_item))
       } else {
-        $closure(list.range(start_item..))
+        Box::new(list.range(start_item..))
       }
-    }
+    };
+    $closure(iter)
   }};
 }
 
