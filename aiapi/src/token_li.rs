@@ -3,7 +3,7 @@ use std::{
   sync::atomic::{AtomicUsize, Ordering},
 };
 
-use rand::Rng;
+use rand::RngExt;
 use reqwest::StatusCode;
 use tokio::sync::Semaphore;
 

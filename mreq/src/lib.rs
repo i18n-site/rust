@@ -53,7 +53,7 @@ impl Mreq {
   ) -> Result<Bytes> {
     let mut host_iter = CIter::new(&self.host_li[..], self.pos);
 
-    if let Some(host) = host_iter.next() {
+    if let Some((_, host)) = host_iter.next() {
       let url_suffix = format!("/{}", url_suffix.into());
       let url = format!("{}://{host}{url_suffix}", &*MREQ_PROTOCOL);
       let mut req = Request::new(method, url.parse()?);
@@ -103,7 +103,7 @@ impl Mreq {
                     .collect::<Vec<_>>()
                     .join("\n");
                   let msg = r.text().await.unwrap_or_default();
-                  if let Some(host) = host_iter.next() {
+                  if let Some((_, host)) = host_iter.next() {
                     tracing::warn!("\n⚠ {} {}\n{}\n{}", status, url, headers, msg);
                     req.url_mut().set_host(Some(host))?;
                   } else {
@@ -122,13 +122,13 @@ impl Mreq {
             }
             Err(err) => {
               tracing::warn!("{} {}", req.url(), err);
-              if let Some(host_path) = host_iter.next() {
+              if let Some((_, host_path)) = host_iter.next() {
                 let url = req.url_mut();
                 let host = if let Some(p) = host_path.find('/')
                   && (1 + p) < host_path.len()
                 {
-                  url.set_path(&format!("{}{url_suffix}", &host[p + 1..]));
-                  &host[..p]
+                  url.set_path(&format!("{}{url_suffix}", &host_path[p + 1..]));
+                  &host_path[..p]
                 } else {
                   url.set_path(&url_suffix);
                   host_path.as_ref()
