@@ -1,4 +1,4 @@
-use rand::{Rng, SeedableRng, rngs::StdRng};
+use rand::{RngExt, SeedableRng, rngs::StdRng};
 
 use crate::{
   ico::{IcoPosLi, ico},
@@ -6,7 +6,7 @@ use crate::{
 };
 
 pub fn make<S: AsRef<str>>(width: u32, height: u32, ico_li: impl AsRef<[S]>) -> (String, IcoPosLi) {
-  let mut rng = StdRng::from_os_rng();
+  let mut rng = rand::rng();
 
   let layer_count = random_int(3, 4) as _;
   let segment_count = rng.random::<u32>() % 10 + 5;
@@ -233,7 +233,7 @@ pub fn generate_closed_path(
 }
 
 fn random_int(base: u8, offset: u8) -> u8 {
-  let mut rng = StdRng::from_os_rng();
+  let mut rng = rand::rng();
   let n = rng.random::<u8>() % base;
 
   n + offset

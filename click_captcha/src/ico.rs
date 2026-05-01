@@ -1,6 +1,6 @@
 use std::cmp::min;
 
-use rand::{Rng, SeedableRng, rngs::StdRng, seq::index::sample};
+use rand::{RngExt, SeedableRng, rngs::StdRng, seq::index::sample};
 
 use crate::{N, Pos, PosLi, random_pos::random_pos};
 
@@ -11,7 +11,7 @@ pub struct IcoPosLi {
 }
 
 pub fn ico<S: AsRef<str>>(width: u32, height: u32, ico_li: impl AsRef<[S]>) -> (IcoPosLi, String) {
-  let mut rng = StdRng::from_os_rng();
+  let mut rng = rand::rng();
 
   let ico_li = ico_li.as_ref();
 

@@ -12,10 +12,12 @@ bytes = "1.11.1"
 
 [dependencies.reqwest_client]
 version = "0.1.14"
+path = "../reqwest_client"
 features = [ "proxy_from_env" ]
 
 [dependencies.preq1]
 version = "0.1.15"
+path = "../preq1"
 
 [dependencies.reqwest]
 version = "0.13.3"

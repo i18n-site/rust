@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use rand::{Rng, SeedableRng, rngs::StdRng};
+use rand::{RngExt, SeedableRng, rngs::StdRng};
 
 pub fn random_pos(container_width: u32, container_height: u32, size_li: &[u32]) -> Vec<(u32, u32)> {
   let max_size = *size_li.iter().max().unwrap();
@@ -8,7 +8,7 @@ pub fn random_pos(container_width: u32, container_height: u32, size_li: &[u32]) 
   let grid_height = container_height / max_size;
 
   let mut selected_coords = Vec::new();
-  let mut rng = StdRng::from_os_rng();
+  let mut rng = rand::rng();
 
   let mut taken_grids = HashSet::new();
 
