@@ -8,6 +8,7 @@ static_init = "1.0.4"
 tar = "0.4.45"
 base64 = "0.22.1"
 sha1 = "0.11.0"
+hex = "0.4.3"
 
 [dependencies.reqwest]
 version = "0.13.3"

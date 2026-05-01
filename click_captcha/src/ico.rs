@@ -1,6 +1,6 @@
 use std::cmp::min;
 
-use rand::{RngExt, SeedableRng, rngs::StdRng, seq::index::sample};
+use rand::{RngExt, seq::index::sample};
 
 use crate::{N, Pos, PosLi, random_pos::random_pos};
 

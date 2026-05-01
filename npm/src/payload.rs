@@ -60,7 +60,7 @@ pub fn payload(pkg_name: &str, package_json: &Path, tgz: &Path) -> Result<Payloa
   // Calculate SHA1 checksum
   let mut hasher = Sha1::new();
   hasher.update(&tarbuffer);
-  let shasum = format!("{:x}", hasher.finalize());
+  let shasum = hex::encode(hasher.finalize());
 
   // Prepare package data
   let mut dist_tags = HashMap::new();

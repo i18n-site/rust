@@ -1,4 +1,4 @@
-use rand::{RngExt, SeedableRng, rngs::StdRng};
+use rand::RngExt;
 
 use crate::{
   ico::{IcoPosLi, ico},

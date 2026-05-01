@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use rand::{RngExt, SeedableRng, rngs::StdRng};
+use rand::RngExt;
 
 pub fn random_pos(container_width: u32, container_height: u32, size_li: &[u32]) -> Vec<(u32, u32)> {
   let max_size = *size_li.iter().max().unwrap();

@@ -32,7 +32,7 @@ pub async fn send(title: impl AsRef<str>, txt: impl AsRef<str>, url: impl AsRef<
         tracing::error!("{api} {err}");
         n -= 1;
         if n == 0 {
-          return Err(err);
+          return Err(err.into());
         }
       }
     }
