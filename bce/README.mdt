@@ -1,6 +1,6 @@
 # bce
 
-bincode encode
+bitcode encode
 
 ```rust
 <+ ./tests/main.rs>

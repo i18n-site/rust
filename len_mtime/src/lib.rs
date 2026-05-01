@@ -68,7 +68,7 @@ impl<'a> LenMtime<'a> {
     if !rel_bin.is_empty() {
       let mut batch = self.db.0.batch();
       for (rel, file) in rel_bin {
-        if let Ok(bin) = xerr::ok!(bce::e(file)) {
+        if let Ok(bin) = xerr::ok!(bce::e(&file)) {
           batch.insert(&self.table, rel, bin);
         }
       }

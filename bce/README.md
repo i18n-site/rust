@@ -1,6 +1,6 @@
 # bce
 
-bincode encode
+bitcode encode
 
 ```rust
 use aok::{Result, OK};
