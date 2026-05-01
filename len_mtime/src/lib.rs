@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use aok::Result;
-use bincode::{Decode, Encode};
+use bitcode::{Decode, Encode};
 use bytes::Bytes;
 use gxhash::HashMap;
 use trait_len::Len;

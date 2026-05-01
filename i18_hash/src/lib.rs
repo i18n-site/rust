@@ -5,7 +5,7 @@ use std::{
 };
 
 use aok::Result;
-use bincode::{Decode, Encode};
+use bitcode::{Decode, Encode};
 use gxhash::{HashMap, HashMapExt};
 use lang::{Lang, LANG_CODE};
 use set_mtime::set_mtime;

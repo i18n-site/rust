@@ -1,6 +1,6 @@
 [dependencies]
 aok = "0.1.17"
-bincode = "2.0.0"
+bitcode = "0.6.9"
 bytes = "1.10.1"
 gxhash = "3.4.1"
 
