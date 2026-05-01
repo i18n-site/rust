@@ -1,12 +1,12 @@
 pub use anyhow;
-pub use log;
+pub use log as logger;
 
 #[macro_export]
 macro_rules! ignore {
   ($expr:expr) => {{
     let r = (async move || Ok::<_, $crate::anyhow::Error>($expr))();
     if let Err(err) = r.await {
-      $crate::log::error!("{}", err);
+      $crate::logger::error!("{}", err);
     }
   }};
 }
@@ -18,7 +18,7 @@ macro_rules! ok_or {
     match result {
       Ok(r) => r,
       Err(err) => {
-        $crate::log::error!("{}", err);
+        $crate::logger::error!("{}", err);
         $default
       }
     }
@@ -29,7 +29,7 @@ macro_rules! ok_or {
 macro_rules! log {
   ($result:expr) => {{
     if let Err(err) = $result {
-      $crate::log::error!("{}", err);
+      $crate::logger::error!("{}", err);
     }
   }};
   ($($result:expr),+$(,)?) => {{
@@ -45,7 +45,7 @@ macro_rules! is_ok {
     match $result {
       Ok(_) => true,
       Err(err) => {
-        $crate::log::error!("{}", err);
+        $crate::logger::error!("{}", err);
         false
       }
     }
@@ -58,7 +58,7 @@ macro_rules! ok {
     match $result {
       Ok(r) => Ok(r),
       Err(err) => {
-        $crate::log::error!("{}", err);
+        $crate::logger::error!("{}", err);
         Err(err)
       }
     }

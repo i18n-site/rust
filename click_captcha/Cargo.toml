@@ -31,7 +31,7 @@ version = "0.10.1"
 optional = true
 
 [dependencies.svg2webp]
-version = "0.1.13"
+version = "0.1.14"
 path = "../svg2webp"
 optional = true
 
