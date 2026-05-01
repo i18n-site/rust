@@ -5,7 +5,6 @@ members = [
   "_tmpl_wasm",
   "addr_of",
   "aerr",
-  "aier",
   "amid",
   "aok",
   "apart",
