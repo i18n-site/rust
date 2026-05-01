@@ -10,7 +10,7 @@ const PADDING_CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvw
 /// Generate random padding - optimized version.
 /// 生成随机填充 - 优化版本。
 pub(crate) fn generate_padding() -> String {
-  use rand::Rng;
+  use rand::RngExt;
   let mut rng = rand::rng();
   let padding_len = rng.random_range(PADDING_MIN_LEN..PADDING_MIN_LEN + PADDING_MAX_EXTRA);
   let mut padding = String::with_capacity(padding_len as usize);

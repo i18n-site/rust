@@ -1,5 +1,5 @@
 use bytes::{BufMut, Bytes, BytesMut};
-use rand::RngCore;
+use rand::Rng;
 
 use super::put_varint::put_varint;
 

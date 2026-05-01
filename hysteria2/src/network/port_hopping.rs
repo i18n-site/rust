@@ -1,7 +1,7 @@
 use std::net::{IpAddr, SocketAddr};
 
 use quinn::{Connection, Endpoint};
-use rand::Rng;
+use rand::RngExt;
 use tracing::warn;
 
 use crate::{Result, config::Config};
