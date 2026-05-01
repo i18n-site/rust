@@ -8,9 +8,9 @@ repository = "https://github.com/i18n-site/rust.git"
 description = "log error util"
 
 [dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.102"
 log = "0.4.29"
 
 [dev-dependencies.log_init]
 
-version = "0.1.32"
+version = "0.1.34"

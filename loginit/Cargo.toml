@@ -9,14 +9,14 @@ description = "init log for tracing use tracing_subscriber"
 
 [dependencies]
 atty = { version = "0.2.14", optional = true }
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dependencies.tracing-stackdriver]
 version = "0.10.0"
 optional = true
 
 [dependencies.tracing-subscriber]
-version = "0.3.22"
+version = "0.3.23"
 features = ["env-filter"]
 
 [features]

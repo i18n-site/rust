@@ -9,4 +9,4 @@ description = "Simplified error handling with anyhow. throw! macro returns direc
 keywords = ["error-handling", "anyhow", "result", "macro", "throw"]
 
 [dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.102"

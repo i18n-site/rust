@@ -15,8 +15,8 @@ default = [ ]
 
 [dependencies]
 aok = "0.1.18"
-axum = "0.8.8"
-futures = "0.3.31"
+axum = "0.8.9"
+futures = "0.3.32"
 tracing = "0.1.44"
 
 [dependencies.genv]
@@ -24,7 +24,7 @@ version = "0.1.17"
 path = "../genv"
 
 [dependencies.tower]
-version = "0.5.2"
+version = "0.5.3"
 features = [ "log", "timeout" ]
 
 [dependencies.tower-http]
@@ -38,5 +38,5 @@ static_init = "1.0.4"
 tracing = "0.1.44"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

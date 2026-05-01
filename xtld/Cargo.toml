@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/xtld"
 description = "extract tld from domain"
 
 [dependencies]
-psl = "2.1.168"
+psl = "2.1.206"
 
 [dependencies.xstr]
 version = "0.1.11"

@@ -1,7 +1,7 @@
 [dependencies]
-bincode = "2.0.1"
+bincode = "3.0.0"
 aok = "0.1.18"
-bytes = "1.11.0"
+bytes = "1.11.1"
 gxhash = "3.5.0"
 
 [dependencies.bce]
@@ -13,7 +13,7 @@ version = "0.2.12"
 path = "../trait_len"
 
 [dependencies.fjall]
-version = "2.11.2"
+version = "3.1.4"
 
 [dependencies.ifs]
 version = "0.1.47"
@@ -41,8 +41,8 @@ all-features = true
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

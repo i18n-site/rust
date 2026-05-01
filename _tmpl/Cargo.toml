@@ -16,7 +16,7 @@ rustdoc-args = [ "--cfg", "docsrs" ]
 default = [ ]
 
 [dev-dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.102"
 log = "0.4.29"
 static_init = "1.0.4"
 

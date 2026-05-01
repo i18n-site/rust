@@ -11,10 +11,10 @@ description = "text processing utilities"
 all-features = true
 
 [dependencies]
-roaring = { version = "0.11.2", features = ["simd"] }
+roaring = { version = "0.11.4", features = ["simd"] }
 
 [dependencies.daachorse]
-version = "1.0.0"
+version = "2.1.1"
 optional = true
 
 [dependencies.static_init]

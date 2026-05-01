@@ -2,7 +2,7 @@
 aok = "0.1.18"
 cfapi = "0.11.0"
 serde_yaml = "0.9.34"
-thiserror = "2.0.17"
+thiserror = "2.0.18"
 
 [dependencies.genv]
 version = "0.1.17"
@@ -30,5 +30,5 @@ path = "../genv"
 version = "0.1.17"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

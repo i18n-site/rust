@@ -1,9 +1,9 @@
 [dependencies]
-rustls-native-certs = "0.8.2"
+rustls-native-certs = "0.8.3"
 static_init = "1.0.4"
 
 [dependencies.rustls]
-version = "0.23.35"
+version = "0.23.40"
 features = [ "ring" ]
 
 [package]
@@ -26,14 +26,14 @@ install_default = [ ]
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tokio-postgres = "0.7.15"
+tokio-postgres = "0.7.17"
 tokio-postgres-tls = "0.12.0"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.genv]
 path = "../genv"
 version = "0.1.17"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

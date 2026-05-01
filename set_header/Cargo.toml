@@ -8,10 +8,10 @@ homepage = "https://github.com/i18n-site/rust/tree/main/set_header"
 description = "axum set header middleware"
 
 [dependencies]
-anyhow = "1.0.100"
-axum = "0.8.7"
+anyhow = "1.0.102"
+axum = "0.8.9"
 parking_lot = "0.12.5"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dependencies.amid]
 version = "0.1.11"

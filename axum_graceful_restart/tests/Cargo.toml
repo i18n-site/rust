@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-axum = "0.8.8"
+axum = "0.8.9"
 
 [dependencies.aok]
 version = "0.1.18"
@@ -19,5 +19,5 @@ version = "0.1.18"
 path = "../../loginit"
 
 [dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "rt", "macros", "rt-multi-thread", "signal" ]

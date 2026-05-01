@@ -17,12 +17,12 @@ default = [ ]
 
 [dependencies]
 aok = "0.1.18"
-sonic-rs = "0.5.6"
+sonic-rs = "0.5.8"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dependencies.ireq]
-version = "0.1.32"
+version = "0.1.34"
 
 
 [dependencies.xerr]
@@ -33,8 +33,8 @@ path = "../xerr"
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

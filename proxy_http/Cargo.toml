@@ -16,28 +16,28 @@ rustdoc-args = [ "--cfg", "docsrs" ]
 default = [ ]
 
 [dev-dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.102"
 log = "0.4.29"
-reqwest = "0.12.25"
+reqwest = "0.13.3"
 static_init = "1.0.4"
 
 [dev-dependencies.log_init]
 
-version = "0.1.32"
+version = "0.1.34"
 
 [dependencies]
 base64 = "0.22.1"
 log = "0.4.29"
-mimalloc = "0.1.48"
+mimalloc = "0.1.50"
 static_init = "1.0.4"
-thiserror = "2.0.17"
+thiserror = "2.0.18"
 
 [dependencies.clap_args]
 version = "0.1.8"
 features = [ "macro" ]
 
 [dependencies.rustls]
-version = "0.23.35"
+version = "0.23.40"
 features = [ "aws-lc-rs", "ring" ]
 
 [dependencies.aok]
@@ -52,23 +52,23 @@ path = "../genv"
 version = "0.1.3"
 
 [dependencies.hyper]
-version = "1.8.1"
+version = "1.9.0"
 features = [ "http1", "server" ]
 
 [dependencies.hyper-util]
-version = "0.1.19"
+version = "0.1.20"
 features = [ "server-auto", "tokio" ]
 
 [dependencies.log_init]
-version = "0.1.32"
+version = "0.1.34"
 
 
 [dependencies.reqwest]
-version = "0.12.25"
+version = "0.13.3"
 features = [ "zstd", "brotli" ]
 
 [dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "rt", "rt-multi-thread", "macros", "net" ]
 
 [dependencies.xerr]

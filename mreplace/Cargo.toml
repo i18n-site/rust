@@ -8,8 +8,8 @@ homepage = "https://github.com/i18n-site/rust/tree/main/mreplace"
 description = "use daachorse::CharwiseDoubleArrayAhoCorasick for multiple string replace"
 
 [dependencies]
-const-str = { version = "0.7.0", optional = true }
-daachorse = "1.0.0"
+const-str = { version = "1.1.0", optional = true }
+daachorse = "2.1.1"
 
 [dev-dependencies.static_init]
 version = "1.0.4"

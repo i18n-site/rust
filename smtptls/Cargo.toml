@@ -16,13 +16,13 @@ rustdoc-args = [ "--cfg", "docsrs" ]
 default = [ ]
 
 [dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.102"
 aok = "0.1.18"
 base64 = "0.22.1"
-rustls = "0.23.35"
-thiserror = "2.0.17"
+rustls = "0.23.40"
+thiserror = "2.0.18"
 tokio-rustls = "0.26.4"
-x509-parser = "0.18.0"
+x509-parser = "0.18.1"
 
 [dependencies.sts]
 version = "0.1.23"
@@ -33,19 +33,19 @@ version = "0.1.7"
 path = "../tlsinit"
 
 [dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "io-util", "net", "time" ]
 
 [dev-dependencies]
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.genv]
 path = "../genv"
 version = "0.1.17"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

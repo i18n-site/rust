@@ -17,11 +17,11 @@ default = [ ]
 
 [dependencies]
 base64 = "0.22.1"
-bytes = "1.11.0"
-futures = "0.3.31"
-reqwest-middleware = "0.4.2"
-thiserror = "2.0.17"
-url = "2.5.7"
+bytes = "1.11.1"
+futures = "0.3.32"
+reqwest-middleware = "0.5.1"
+thiserror = "2.0.18"
+url = "2.5.8"
 aok = "0.1.18"
 static_init = "1.0.4"
 log = "0.4.29"
@@ -37,7 +37,7 @@ version = "0.1.17"
 
 [dependencies.log_init]
 
-version = "0.1.32"
+version = "0.1.34"
 
 [dependencies.reqwest_client]
 version = "0.1.14"
@@ -57,11 +57,11 @@ version = "0.1.17"
 path = "../zset"
 
 [dependencies.reqwest]
-version = "0.12.25"
+version = "0.13.3"
 features = [ "zstd", "brotli" ]
 
 [dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "full" ]
 
 [dependencies.xerr]
@@ -69,9 +69,9 @@ version = "0.1.16"
 path = "../xerr"
 
 [dev-dependencies.rustls]
-version = "0.23.35"
+version = "0.23.40"
 features = [ "aws-lc-rs", "ring" ]
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

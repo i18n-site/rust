@@ -12,7 +12,7 @@ all-features = true
 
 [dependencies]
 num-traits = "0.2.19"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [features]
 default = [ ]

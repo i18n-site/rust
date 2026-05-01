@@ -15,15 +15,15 @@ all-features = true
 
 [dependencies]
 aok = "0.1.18"
-filetime = "0.2.26"
+filetime = "0.2.27"
 num-traits = "0.2.19"
 
 [dev-dependencies]
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

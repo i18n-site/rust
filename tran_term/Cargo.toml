@@ -18,14 +18,14 @@ yml = [ "dep:saphyr", "dep:lang" ]
 
 [dependencies]
 aok = "0.1.18"
-daachorse = "1.0.0"
+daachorse = "2.1.1"
 static_init = "1.0.4"
-thiserror = "2.0.17"
-unicode-segmentation = "1.12.0"
+thiserror = "2.0.18"
+unicode-segmentation = "1.13.2"
 unicode_categories = "0.1.1"
 
 [dependencies.htmlize]
-version = "1.0.6"
+version = "1.1.0"
 features = [ "unescape" ]
 
 [dependencies.lang]
@@ -44,8 +44,8 @@ path = "../tag_replace"
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

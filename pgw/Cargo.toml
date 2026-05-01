@@ -12,11 +12,11 @@ default = []
 global = ["dep:static_init"]
 
 [dependencies]
-futures = "0.3.31"
+futures = "0.3.32"
 ring = "0.17.14"
-rustls = "0.23.35"
+rustls = "0.23.40"
 tokio-rustls = "0.26.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 x509-certificate = "0.25.0"
 
 [dependencies.tlsinit]
@@ -37,11 +37,11 @@ version = "0.1.5"
 path = "../hidden_password"
 
 [dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = ["macros", "rt", "rt-multi-thread", "sync"]
 
 [dev-dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.102"
 static_init = "1.0.4"
 
 [dev-dependencies.loginit]

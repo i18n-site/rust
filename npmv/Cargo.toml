@@ -16,11 +16,11 @@ cache = [ "dep:sts", "dep:ifs" ]
 
 [dependencies]
 aok = "0.1.18"
-flate2 = "1.1.5"
+flate2 = "1.1.9"
 serde = "1.0.228"
-sonic-rs = "0.5.6"
-tar = "0.4.44"
-tracing = "0.1.43"
+sonic-rs = "0.5.8"
+tar = "0.4.45"
+tracing = "0.1.44"
 
 [dependencies.ifs]
 version = "0.1.47"
@@ -29,7 +29,7 @@ features = [ "fs" ]
 optional = true
 
 [dependencies.reqwest]
-version = "0.12.25"
+version = "0.13.3"
 features = [ "stream" ]
 
 [dependencies.sts]
@@ -38,15 +38,15 @@ path = "../sts"
 optional = true
 
 [dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "fs" ]
 
 [dev-dependencies]
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

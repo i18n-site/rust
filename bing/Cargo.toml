@@ -25,7 +25,7 @@ version = "0.1.23"
 path = "../sts"
 
 [dependencies.tantivy]
-version = "0.25"
+version = "0.26"
 features = [ "mmap", "zstd-compression" ]
 default-features = false
 

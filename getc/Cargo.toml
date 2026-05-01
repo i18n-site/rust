@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/getc"
 description = "get comment from source code"
 
 [dependencies]
-daachorse = "1.0.0"
+daachorse = "2.1.1"
 
 [dependencies.txt_li]
 version = "0.1.45"

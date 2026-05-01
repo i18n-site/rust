@@ -8,13 +8,13 @@ homepage = "https://github.com/i18n-site/rust/tree/main/wxpush"
 description = "api for https://wxpusher.zjiecode.com"
 
 [dependencies]
-anyhow = "1.0.100"
-serde_with = "3.16.1"
-sonic-rs = "0.5.6"
-thiserror = "2.0.17"
+anyhow = "1.0.102"
+serde_with = "3.18.0"
+sonic-rs = "0.5.8"
+thiserror = "2.0.18"
 
 [dependencies.reqwest]
-version = "0.12.25"
+version = "0.13.3"
 features = ["json"]
 
 [dependencies.serde]
@@ -26,8 +26,8 @@ version = "0.1.11"
 path = "../xstr"
 
 [dev-dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.102"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

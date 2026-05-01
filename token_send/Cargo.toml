@@ -16,7 +16,7 @@ rustdoc-args = [ "--cfg", "docsrs" ]
 default = [ ]
 
 [dependencies]
-sonic-rs = "0.5.6"
+sonic-rs = "0.5.8"
 
 [dependencies.s_]
 version = "0.1.6"
@@ -31,7 +31,7 @@ version = "0.1.1"
 path = "../api_token"
 
 [dependencies.axum]
-version = "0.8.7"
+version = "0.8.9"
 features = [ "tracing", "macros" ]
 
 [dependencies.hi]
@@ -42,8 +42,8 @@ path = "../hi"
 aok = "0.1.18"
 loginit = "0.1.18"
 static_init = "1.0.4"
-tracing = "0.1.43"
+tracing = "0.1.44"
 
 [dev-dependencies.tokio]
-version = "1.48.0"
+version = "1.52.1"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
