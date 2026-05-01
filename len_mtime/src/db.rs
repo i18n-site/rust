@@ -18,7 +18,7 @@ impl Db {
   pub fn table<'a>(&'a self, table: &'a str) -> Result<Table<'a>, fjall::Error> {
     Ok(Table {
       db: &self.0,
-      table: self.0.keyspace(table, KeyspaceCreateOptions::default())?,
+      table: self.0.keyspace(table, KeyspaceCreateOptions::default)?,
     })
   }
 

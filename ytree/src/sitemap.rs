@@ -49,7 +49,7 @@ pub fn loads(iter: impl IntoIterator<Item = String>) -> LangTree {
       }
       buf = String::new();
       if let Ok(l) = xerr::ok!(burl::d(i))
-        && let Ok(l) = xerr::ok!(vb::diffd(&l))
+        && let Ok(l) = xerr::ok!(vb::d_diff(&l))
       {
         lang = Some(l);
         continue;
@@ -89,7 +89,7 @@ pub fn dumps(lang_rel: HashMap<Vec<u8>, Vec<String>>) -> String {
 }
 
 pub fn lang_li_e(lang_li: &RoaringBitmap) -> Vec<u8> {
-  vb::diffe(lang_li.iter().map(|i| i as u64).collect::<Vec<_>>())
+  vb::e_diff(lang_li.iter().map(|i| i as u64).collect::<Vec<_>>())
 }
 
 impl LangRelTs {

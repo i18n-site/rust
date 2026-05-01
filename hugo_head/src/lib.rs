@@ -40,7 +40,7 @@ pub fn parse<P: Parse, S: Into<String>>(iter: impl IntoIterator<Item = S>) -> Re
             }
           }
           // 没找到闭合标记
-          P::parse(&mut txt_li, buf.into_iter())?;
+          P::parse(&mut txt_li, buf)?;
           break 'out;
         }
       }

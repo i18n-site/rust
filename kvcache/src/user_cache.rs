@@ -67,7 +67,14 @@ pub const SPLIT: &[u8] = b":";
 pub fn user_prefix(prefix: impl AsRef<[u8]>, kind: impl AsRef<[u8]>, user_id: u64) -> Box<[u8]> {
   let prefix = prefix.as_ref();
   let kind = b255::encode(kind.as_ref());
-  concat!(prefix, b255::encode(vb::e([user_id])), SPLIT, kind, SPLIT).into()
+  concat!(
+    prefix,
+    b255::encode(vb::e_li([user_id])),
+    SPLIT,
+    kind,
+    SPLIT
+  )
+  .into()
 }
 
 impl<'a> UserCache<'a> {
@@ -81,8 +88,14 @@ impl<'a> UserCache<'a> {
     let prefix = prefix.as_ref();
     let global: Box<[u8]> = concat!(prefix, kind, SPLIT).into();
 
-    let user: Box<[u8]> =
-      concat!(prefix, b255::encode(vb::e([user_id])), SPLIT, kind, SPLIT).into();
+    let user: Box<[u8]> = concat!(
+      prefix,
+      b255::encode(vb::e_li([user_id])),
+      SPLIT,
+      kind,
+      SPLIT
+    )
+    .into();
     Self { global, user, kv }
   }
 
