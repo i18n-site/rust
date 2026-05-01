@@ -10,10 +10,8 @@ pub fn text_url(s: impl AsRef<str>) -> bool {
     match c {
       '.' => has_dot = true,
       '(' => has_left_paren = true,
-      ')' => {
-        if has_left_paren {
-          return false;
-        }
+      ')' if has_left_paren => {
+        return false;
       }
       _ => {}
     }
