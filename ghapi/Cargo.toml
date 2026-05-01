@@ -1,7 +1,7 @@
 [dependencies]
 aok = "0.1.18"
 futures = "0.3.32"
-reqwest = "0.13.3"
+reqwest = { version = "0.13.3", features = ["form"] }
 serde = "1.0.228"
 sonic-rs = "0.5.8"
 tracing = "0.1.44"

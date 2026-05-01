@@ -17,7 +17,7 @@ tracing = "0.1.44"
 
 [dependencies.reqwest]
 version = "0.13.3"
-features = ["zstd", "gzip", "rustls"]
+features = ["zstd", "gzip", "rustls", "form"]
 default-features = false
 
 [dev-dependencies.aok]

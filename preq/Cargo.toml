@@ -21,7 +21,7 @@ path = "../preq1"
 
 [dependencies.reqwest]
 version = "0.13.3"
-features = [ "zstd", "rustls" ]
+features = [ "zstd", "rustls", "form" ]
 default-features = false
 
 [dev-dependencies]
