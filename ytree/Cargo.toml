@@ -68,6 +68,7 @@ features = [ "derive" ]
 
 [dependencies.vb]
 version = "0.2.7"
+features = [ "diff" ]
 optional = true
 
 [dependencies.xerr]

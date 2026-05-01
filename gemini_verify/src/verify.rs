@@ -1,6 +1,6 @@
 use aiapi::{AiApi, Conf, Gemini};
 use aok::{OK, Void};
-use rand::Rng;
+use rand::RngExt;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
