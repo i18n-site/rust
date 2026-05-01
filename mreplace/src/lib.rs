@@ -1,5 +1,3 @@
-#![feature(slice_index_methods)]
-
 pub use daachorse::{CharwiseDoubleArrayAhoCorasick, errors::Result};
 
 pub struct Mreplace {

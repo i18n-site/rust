@@ -1,4 +1,3 @@
-#![feature(fundamental)]
 #![feature(macro_metavar_expr)]
 
 use tokio_postgres::types::ToSql;

@@ -1,5 +1,3 @@
-#![feature(const_trait_impl)]
-
 use std::{
   io::{BufRead, BufReader, Cursor},
   path::Path,

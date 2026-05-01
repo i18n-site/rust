@@ -1,5 +1,3 @@
-#![feature(type_alias_impl_trait)]
-
 #[cfg(feature = "w")]
 pub mod w;
 

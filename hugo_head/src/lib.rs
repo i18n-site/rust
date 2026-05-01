@@ -1,5 +1,3 @@
-#![feature(trait_alias)]
-
 use tran_trait::Parse;
 mod toml;
 mod yaml;
