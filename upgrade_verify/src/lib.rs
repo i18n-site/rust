@@ -6,7 +6,7 @@ use std::{
   env,
   fs::{self, File},
   io,
-  io::{BufReader, Write},
+  io::{BufReader, Read, Write},
   path::{Path, PathBuf},
 };
 
@@ -50,8 +50,15 @@ pub fn check<P: AsRef<Path>>(
   let file = File::open(tar_zst)?;
   let mut reader = BufReader::new(file);
   let mut hasher = Sha3_512::new();
-  hasher.write_all(version.as_ref())?;
-  io::copy(&mut reader, &mut hasher)?;
+  hasher.update(version.as_ref());
+  let mut buf = [0u8; 8192];
+  loop {
+    let count = reader.read(&mut buf)?;
+    if count == 0 {
+      break;
+    }
+    hasher.update(&buf[..count]);
+  }
   let sign = fs::read(sign)?;
   if let Ok(sign) = sign.try_into() {
     let public_key = VerifyingKey::from_bytes(&pk)?;
