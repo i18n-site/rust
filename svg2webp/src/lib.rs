@@ -1,5 +1,7 @@
 mod error;
 pub use error::Error;
+use zenwebp::{EncodeRequest, LossyConfig, PixelLayout};
+
 /// 将 SVG 转换为 WebP 格式。
 ///
 /// - `svg`: SVG 字符串或数据。
