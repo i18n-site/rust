@@ -1,14 +1,5 @@
 mod error;
 pub use error::Error;
-use zenwebp::{EncodeRequest, LossyConfig, PixelLayout};
-
-/// # [English]
-/// Convert SVG to WebP format.
-///
-/// - `svg`: SVG string or data.
-/// - `quality`: Encoding quality (0 to 100). 0 is the smallest size, 100 is the best quality. Default is usually 75.
-///
-/// # [中文]
 /// 将 SVG 转换为 WebP 格式。
 ///
 /// - `svg`: SVG 字符串或数据。
@@ -22,7 +13,7 @@ pub fn svg2webp(svg: impl AsRef<str>, quality: u8) -> Result<Box<[u8]>, Error> {
 
   let mut pixmap = tiny_skia::Pixmap::new(width, height).ok_or(Error::PixmapNew)?;
 
-  // 设置白色背景 / Set white background
+  // 设置白色背景
   pixmap.fill(tiny_skia::Color::WHITE);
 
   resvg::render(&rtree, usvg::Transform::default(), &mut pixmap.as_mut());
