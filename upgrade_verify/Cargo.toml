@@ -30,7 +30,7 @@ log_init = "0.1.34"
 static_init = "1.0.4"
 
 [dev-dependencies.vb]
-version = "0.2.7"
+version = "0.1.8"
 
 [dev-dependencies.tokio]
 version = "1.52.1"

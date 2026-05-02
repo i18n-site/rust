@@ -35,3 +35,34 @@ impl Ed25519Ph {
     )
   }
 }
+
+#[cfg(test)]
+mod tests {
+  use ed25519_dalek::SigningKey;
+
+  use super::*;
+
+  #[test]
+  fn test_ed25519_ph() {
+    let sk_bytes = [1u8; 32];
+    let mut ph = Ed25519Ph::new(&sk_bytes).unwrap();
+    ph.update(b"hello");
+    ph.update(b"world");
+    let sig = ph.finish().unwrap();
+    assert_eq!(sig.len(), 64);
+
+    let sk = SigningKey::from_bytes(&sk_bytes);
+    let pk = sk.verifying_key();
+    let mut hasher = Sha3_512::new();
+    hasher.update(b"helloworld");
+    let expected_sig = sk.sign_prehashed(hasher, None).unwrap();
+    assert_eq!(sig, expected_sig.to_bytes().to_vec());
+
+    pk.verify_prehashed(
+      Sha3_512::new_with_prefix(b"helloworld"),
+      None,
+      &expected_sig,
+    )
+    .unwrap();
+  }
+}
