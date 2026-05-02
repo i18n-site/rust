@@ -1,10 +1,12 @@
 [package]
 name = "svg2webp"
-version = "0.1.16"
+version = "0.1.17"
 edition = "2024"
 repository = "https://github.com/i18n-site/rust/tree/main/svg2webp"
 license = "MIT"
-description = "convert svg to webp"
+description = "Convert SVG to WebP / 将 SVG 转换为 WebP"
+keywords = ["svg", "webp", "converter", "graphics", "resvg"]
+categories = ["multimedia::images", "graphics", "rendering", "web-programming", "encoding"]
 
 [dependencies]
 resvg = "0.47.0"
