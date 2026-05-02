@@ -23,7 +23,6 @@ members = [
   "cget",
   "change",
   "ckv",
-  "click_captcha",
   "cmdv",
   "cmp_len_str",
   "cnfj",
