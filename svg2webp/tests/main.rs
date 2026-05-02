@@ -19,6 +19,7 @@ fn test() -> Result<()> {
     <path d="M6,98l27-9v-13l-26-4l27-8v-20l-27-5l28-8v-11v11l49,10l-24,8l-26-5v20l50,8l-24,9l-27-5v13l51,8" stroke-width="2"/>
   </g>
 </svg>"##,
+    75.0,
   )?;
   ifs::w("svg.webp")?.write_all(&img)?;
   OK

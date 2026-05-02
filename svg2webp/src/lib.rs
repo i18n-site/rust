@@ -1,4 +1,4 @@
-use image_webp::{ColorType, WebPEncoder};
+use zenwebp::{EncodeRequest, LossyConfig, PixelLayout};
 use thiserror::Error;
 use tiny_skia::PremultipliedColorU8;
 
@@ -16,7 +16,7 @@ pub enum Error {
 
 pub fn svg2webp(
   svg: impl AsRef<str>,
-  // quality: f32
+  quality: f32,
 ) -> Result<Box<[u8]>, Error> {
   let opt = usvg::Options::default();
   // let fontdb = usvg::fontdb::Database::new();, &fontdb
@@ -34,15 +34,11 @@ pub fn svg2webp(
       resvg::render(&rtree, usvg::Transform::default(), &mut pixmap.as_mut());
       let img = pixmap.data();
 
-      let mut webp = Vec::new();
-      let encoder = WebPEncoder::new(&mut webp);
-      if encoder
-        .encode(img, width, height, ColorType::Rgba8)
-        .is_err()
-      {
-        return Err(Error::Encode);
-      }
-      return Ok(webp.into());
+      let config = LossyConfig::new().with_quality(quality);
+      let webp = EncodeRequest::lossy(&config, img, PixelLayout::Rgba8, width, height)
+        .encode()
+        .map_err(|_| Error::Encode)?;
+      return Ok(webp.into_boxed_slice());
     }
   } else {
     return Err(Error::ReSvg);
