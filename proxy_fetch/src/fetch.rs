@@ -102,7 +102,7 @@ impl Fetch {
       match proxy!(&proxy) {
         Err(err) => {
           score = score_err(score);
-          eprintln!("{} score {} {}", &proxy.name, -score, err);
+          eprintln!("{} score {} {}", proxy.name, -score, err);
           self.proxy_zset.add(proxy, score);
           Err(err)
         }
@@ -112,7 +112,7 @@ impl Fetch {
           'out: {
             if matches!(status, StatusCode::OK) {
               let cost = start.elapsed().as_secs();
-              println!("{status} score {} cost {cost}s {}", -score, &proxy.name);
+              println!("{status} score {} cost {cost}s {}", -score, proxy.name);
               if score > 0 {
                 score /= 2;
               } else {

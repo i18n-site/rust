@@ -32,7 +32,7 @@ pub enum Error {
 impl fmt::Display for Error {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     match self {
-      Error::Publish(c) => write!(f, "{} → {} : {}", &*NPM_REGISTRY, c.name, c.msg),
+      Error::Publish(c) => write!(f, "{} → {} : {}", *NPM_REGISTRY, c.name, c.msg),
     }
   }
 }
@@ -158,7 +158,7 @@ pub async fn publish(
   let payload = to_string(&payload)?;
 
   let client = client()?;
-  let url = format!("https://{}/{}", &*NPM_REGISTRY, name.replace('/', "%2f"));
+  let url = format!("https://{}/{}", *NPM_REGISTRY, name.replace('/', "%2f"));
 
   let mut retry = 9;
 
@@ -185,7 +185,7 @@ pub async fn publish(
           .into(),
         );
       } else if let Ok(text) = xerr::ok!(response.text().await) {
-        eprintln!("{} {} → {} : {}", &*NPM_REGISTRY, status, name, text);
+        eprintln!("{} {} → {} : {}", *NPM_REGISTRY, status, name, text);
         if status == reqwest::StatusCode::FORBIDDEN && text.contains(" published ") {
           return Ok(State::VerLow);
         }

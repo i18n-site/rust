@@ -55,7 +55,7 @@ impl Mreq {
 
     if let Some((_, host)) = host_iter.next() {
       let url_suffix = format!("/{}", url_suffix.into());
-      let url = format!("{}://{host}{url_suffix}", &*MREQ_PROTOCOL);
+      let url = format!("{}://{host}{url_suffix}", *MREQ_PROTOCOL);
       let mut req = Request::new(method, url.parse()?);
       *req.headers_mut() = self.headers.clone();
       build(&mut req);

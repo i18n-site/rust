@@ -5,14 +5,41 @@ mod error;
 use std::{
   env,
   fs::{self, File},
-  io,
-  io::{BufReader, Read, Write},
+  io::{BufReader, Read},
   path::{Path, PathBuf},
 };
 
 use ed25519_dalek::{Signature, VerifyingKey};
 pub use error::{Error, Result};
 use sha3::{Digest, Sha3_512};
+
+#[derive(Default)]
+struct Sha512Wrapper(Sha3_512);
+
+impl ed25519_dalek::ed25519::signature::digest::OutputSizeUser for Sha512Wrapper {
+  type OutputSize = ed25519_dalek::ed25519::signature::digest::consts::U64;
+}
+
+impl ed25519_dalek::ed25519::signature::digest::HashMarker for Sha512Wrapper {}
+
+impl ed25519_dalek::ed25519::signature::digest::Update for Sha512Wrapper {
+  fn update(&mut self, data: &[u8]) {
+    self.0.update(data);
+  }
+}
+
+impl ed25519_dalek::ed25519::signature::digest::FixedOutput for Sha512Wrapper {
+  fn finalize_into(
+    self,
+    out: &mut ed25519_dalek::ed25519::signature::digest::generic_array::GenericArray<
+      u8,
+      Self::OutputSize,
+    >,
+  ) {
+    let hash_result = self.0.finalize();
+    out.copy_from_slice(&hash_result);
+  }
+}
 
 pub fn check<P: AsRef<Path>>(
   version: impl AsRef<[u8]>,
@@ -63,7 +90,7 @@ pub fn check<P: AsRef<Path>>(
   if let Ok(sign) = sign.try_into() {
     let public_key = VerifyingKey::from_bytes(&pk)?;
     let sign = Signature::from_bytes(&sign);
-    public_key.verify_prehashed(hasher, None, &sign)?;
+    public_key.verify_prehashed(Sha512Wrapper(hasher), None, &sign)?;
     return Ok(Some(dir));
   }
   Ok(None)

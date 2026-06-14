@@ -2,6 +2,34 @@ use ed25519_dalek::SigningKey;
 use sha3::{Digest, Sha3_512};
 use wasm_bindgen::prelude::{JsError, wasm_bindgen};
 
+#[derive(Default)]
+struct Sha512Wrapper(Sha3_512);
+
+impl ed25519_dalek::ed25519::signature::digest::OutputSizeUser for Sha512Wrapper {
+  type OutputSize = ed25519_dalek::ed25519::signature::digest::consts::U64;
+}
+
+impl ed25519_dalek::ed25519::signature::digest::HashMarker for Sha512Wrapper {}
+
+impl ed25519_dalek::ed25519::signature::digest::Update for Sha512Wrapper {
+  fn update(&mut self, data: &[u8]) {
+    self.0.update(data);
+  }
+}
+
+impl ed25519_dalek::ed25519::signature::digest::FixedOutput for Sha512Wrapper {
+  fn finalize_into(
+    self,
+    out: &mut ed25519_dalek::ed25519::signature::digest::generic_array::GenericArray<
+      u8,
+      Self::OutputSize,
+    >,
+  ) {
+    let hash_result = self.0.finalize();
+    out.copy_from_slice(&hash_result);
+  }
+}
+
 #[wasm_bindgen]
 pub struct Ed25519Ph {
   hasher: Sha3_512,
@@ -29,7 +57,7 @@ impl Ed25519Ph {
     Ok(
       self
         .sk
-        .sign_prehashed(self.hasher, None)?
+        .sign_prehashed(Sha512Wrapper(self.hasher), None)?
         .to_bytes()
         .to_vec(),
     )
@@ -55,11 +83,11 @@ mod tests {
     let pk = sk.verifying_key();
     let mut hasher = Sha3_512::new();
     hasher.update(b"helloworld");
-    let expected_sig = sk.sign_prehashed(hasher, None).unwrap();
+    let expected_sig = sk.sign_prehashed(Sha512Wrapper(hasher), None).unwrap();
     assert_eq!(sig, expected_sig.to_bytes().to_vec());
 
     pk.verify_prehashed(
-      Sha3_512::new_with_prefix(b"helloworld"),
+      Sha512Wrapper(Sha3_512::new_with_prefix(b"helloworld")),
       None,
       &expected_sig,
     )
