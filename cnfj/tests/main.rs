@@ -94,7 +94,7 @@ fn test_f2j() {
 #[test]
 fn test_benchmark() {
   use std::time::Instant;
-  
+
   // Benchmark 1: No conversion needed (borrowed case)
   let no_conv_text = "你好世界，今天天气非常晴朗，我们一起去公园散步吧。".repeat(10);
   let start = Instant::now();
@@ -102,7 +102,7 @@ fn test_benchmark() {
     let _ = f2j(&no_conv_text);
   }
   let duration_no_conv = start.elapsed();
-  
+
   // Benchmark 2: With conversion (owned case)
   let conv_text = "我有一隻貓，牠的名字叫小白，牠非常可愛，天天吃麵包。".repeat(10);
   let start = Instant::now();
@@ -110,9 +110,8 @@ fn test_benchmark() {
     let _ = f2j(&conv_text);
   }
   let duration_conv = start.elapsed();
-  
+
   println!("\n=== Benchmark Results ===");
   println!("No conversion (10k runs): {:?}", duration_no_conv);
   println!("With conversion (10k runs): {:?}", duration_conv);
 }
-

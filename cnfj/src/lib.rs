@@ -1,7 +1,6 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-use std::borrow::Cow;
-use std::sync::LazyLock;
+use std::{borrow::Cow, sync::LazyLock};
 
 use daachorse::{CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind};
 
@@ -75,4 +74,3 @@ pub fn f2j(text: &str) -> Cow<'_, str> {
 pub fn j2f(text: &str) -> Cow<'_, str> {
   replace_with_dict(text, &J2F_AC, &f::F)
 }
-
