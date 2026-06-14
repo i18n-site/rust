@@ -19,7 +19,7 @@ aok = "0.1.18"
 flate2 = "1.1.9"
 serde = "1.0.228"
 sonic-rs = "0.5.8"
-tar = "0.4.45"
+tar = "0.4.46"
 tracing = "0.1.44"
 
 [dependencies.ifs]
@@ -29,7 +29,7 @@ features = [ "fs" ]
 optional = true
 
 [dependencies.reqwest]
-version = "0.13.3"
+version = "0.13.4"
 features = [ "stream" ]
 
 [dependencies.sts]
@@ -38,7 +38,7 @@ path = "../sts"
 optional = true
 
 [dependencies.tokio]
-version = "1.52.1"
+version = "1.52.3"
 features = [ "fs" ]
 
 [dev-dependencies]
@@ -48,5 +48,5 @@ static_init = "1.0.4"
 tracing = "0.1.44"
 
 [dev-dependencies.tokio]
-version = "1.52.1"
+version = "1.52.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

@@ -14,7 +14,7 @@ all-features = true
 roaring = { version = "0.11.4", features = ["simd"] }
 
 [dependencies.daachorse]
-version = "2.1.1"
+version = "3.0.2"
 optional = true
 
 [dependencies.static_init]

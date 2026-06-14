@@ -19,7 +19,7 @@ http = [ "dep:http_grpc", "dep:volo-http" ]
 
 [dependencies]
 anyhow = "1.0.102"
-log = "0.4.29"
+log = "0.4.32"
 volo = "0.12.3"
 
 [dependencies.err_exit]
@@ -35,7 +35,7 @@ version = "0.5.5"
 optional = true
 
 [dependencies.log_init]
-version = "0.1.34"
+version = "0.1.36"
 
 
 [dependencies.static_]

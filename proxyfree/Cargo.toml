@@ -18,27 +18,27 @@ default = [ ]
 [dev-dependencies]
 anyhow = "1.0.102"
 aok = "0.1.18"
-log = "0.4.29"
+log = "0.4.32"
 static_init = "1.0.4"
 
 [dev-dependencies.log_init]
 
-version = "0.1.34"
+version = "0.1.36"
 
 [dev-dependencies.tokio]
-version = "1.52.1"
+version = "1.52.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]
 
 [dependencies]
 crossbeam-skiplist = "0.1.3"
 futures = "0.3.32"
-log = "0.4.29"
+log = "0.4.32"
 thiserror = "2.0.18"
 
 [dependencies.reqwest]
-version = "0.13.3"
+version = "0.13.4"
 features = [ "json", "rustls", "socks" ]
 
 [dependencies.tokio]
-version = "1.52.1"
+version = "1.52.3"
 features = [ "full", "net", "rt" ]

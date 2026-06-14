@@ -5,13 +5,13 @@ flate2 = "1.1.9"
 serde = "1.0.228"
 sonic-rs = "0.5.8"
 static_init = "1.0.4"
-tar = "0.4.45"
+tar = "0.4.46"
 base64 = "0.22.1"
 sha1 = "0.11.0"
 hex = "0.4.3"
 
 [dependencies.reqwest]
-version = "0.13.3"
+version = "0.13.4"
 
 [dependencies.genv]
 version = "0.1.17"
@@ -40,5 +40,5 @@ static_init = "1.0.4"
 tracing = "0.1.44"
 
 [dev-dependencies.tokio]
-version = "1.52.1"
+version = "1.52.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

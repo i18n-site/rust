@@ -11,8 +11,8 @@ keywords = [ "bytes", "concatenation", "binary", "AsRef", "utility" ]
 [dev-dependencies]
 aok = "0.1.18"
 static_init = "1.0.4"
-log = "0.4.29"
+log = "0.4.32"
 
 [dependencies.log_init]
-version = "0.1.34"
+version = "0.1.36"
 

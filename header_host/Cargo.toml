@@ -18,7 +18,7 @@ tld = [ "dep:xtld" ]
 
 [dependencies]
 aok = "0.1.18"
-http = "1.4.0"
+http = "1.4.2"
 
 [dependencies.xtld]
 version = "0.1.6"
@@ -32,5 +32,5 @@ static_init = "1.0.4"
 tracing = "0.1.44"
 
 [dev-dependencies.tokio]
-version = "1.52.1"
+version = "1.52.3"
 features = [ "macros", "rt", "rt-multi-thread", "time", "sync" ]

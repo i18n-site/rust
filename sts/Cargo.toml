@@ -8,7 +8,7 @@ homepage = "https://github.com/i18n-site/rust/tree/main/sts"
 description = "shortcut for timestamp"
 
 [dependencies]
-chrono = "0.4.44"
+chrono = "0.4.45"
 coarsetime = "0.1.37"
 num-traits = "0.2.19"
 

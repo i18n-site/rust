@@ -9,12 +9,12 @@ description = "api for https://wxpusher.zjiecode.com"
 
 [dependencies]
 anyhow = "1.0.102"
-serde_with = "3.18.0"
+serde_with = "3.21.0"
 sonic-rs = "0.5.8"
 thiserror = "2.0.18"
 
 [dependencies.reqwest]
-version = "0.13.3"
+version = "0.13.4"
 features = ["json"]
 
 [dependencies.serde]
@@ -29,5 +29,5 @@ path = "../xstr"
 anyhow = "1.0.102"
 
 [dev-dependencies.tokio]
-version = "1.52.1"
+version = "1.52.3"
 features = ["macros", "rt", "rt-multi-thread", "time", "sync"]

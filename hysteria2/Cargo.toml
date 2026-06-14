@@ -21,7 +21,7 @@ quinn = "0.11.9"
 url = { version = "2.5.8", features = ["serde"] }
 thiserror = "2.0.18"
 bytes = "1.11.1"
-http = "1.4.0"
+http = "1.4.2"
 anyhow = "1.0.102"
 rustls = "0.23.40"
 tokio-rustls = "0.26.4"

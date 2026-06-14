@@ -17,5 +17,5 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 anyhow = "1.0.102"
-tokio = { version = "1.52.1", features = ["rt"] }
+tokio = { version = "1.52.3", features = ["rt"] }
 tracing = "0.1.44"
