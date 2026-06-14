@@ -1,3 +1,5 @@
+.cursor/
+.codegraph/
 bun.lock
 Cargo.lock
 rustc-ice-*.txt

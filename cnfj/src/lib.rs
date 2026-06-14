@@ -1,6 +1,9 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-use daachorse::CharwiseDoubleArrayAhoCorasick;
+use std::borrow::Cow;
+use std::sync::LazyLock;
+
+use daachorse::{CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind};
 
 pub mod f;
 pub mod j;
@@ -17,43 +20,56 @@ const F2J_F: &[&str] = &concat_array!(f::F, f2j::F);
 const F2J_J: &[&str] = &concat_array!(j::J, f2j::J);
 
 #[cfg(feature = "f2j")]
-#[static_init::dynamic]
-static F2J_AC: CharwiseDoubleArrayAhoCorasick<usize> =
-  daachorse::CharwiseDoubleArrayAhoCorasickBuilder::new()
-    .match_kind(daachorse::MatchKind::LeftmostLongest)
+static F2J_AC: LazyLock<CharwiseDoubleArrayAhoCorasick<usize>> = LazyLock::new(|| {
+  CharwiseDoubleArrayAhoCorasickBuilder::new()
+    .match_kind(MatchKind::LeftmostLongest)
     .build(F2J_F)
-    .unwrap();
+    .unwrap()
+});
 
 #[cfg(feature = "j2f")]
-#[static_init::dynamic]
-static J2F_AC: CharwiseDoubleArrayAhoCorasick<usize> =
-  daachorse::CharwiseDoubleArrayAhoCorasickBuilder::new()
-    .match_kind(daachorse::MatchKind::LeftmostLongest)
+static J2F_AC: LazyLock<CharwiseDoubleArrayAhoCorasick<usize>> = LazyLock::new(|| {
+  CharwiseDoubleArrayAhoCorasickBuilder::new()
+    .match_kind(MatchKind::LeftmostLongest)
     .build(j::J)
-    .unwrap();
+    .unwrap()
+});
 
-pub fn replace_with_dict(
-  text: &str,
+pub fn replace_with_dict<'a>(
+  text: &'a str,
   pma: &CharwiseDoubleArrayAhoCorasick<usize>,
   dict: &[&'static str],
-) -> String {
-  let mut result = String::new();
-  let mut last_end = 0;
-  for m in pma.leftmost_find_iter(text) {
-    result.push_str(&text[last_end..m.start()]);
-    result.push_str(dict[m.value()]);
-    last_end = m.end();
+) -> Cow<'a, str> {
+  let mut matches = pma.leftmost_find_iter(text);
+
+  if let Some(m) = matches.next() {
+    let mut result = String::with_capacity(text.len());
+    result.push_str(&text[0..m.start()]);
+    let val = unsafe { *dict.get_unchecked(m.value()) };
+    result.push_str(val);
+    let mut last_end = m.end();
+
+    for m in matches {
+      result.push_str(&text[last_end..m.start()]);
+      let val = unsafe { *dict.get_unchecked(m.value()) };
+      result.push_str(val);
+      last_end = m.end();
+    }
+
+    result.push_str(&text[last_end..]);
+    Cow::Owned(result)
+  } else {
+    Cow::Borrowed(text)
   }
-  result.push_str(&text[last_end..]);
-  result
 }
 
 #[cfg(feature = "f2j")]
-pub fn f2j(text: impl AsRef<str>) -> String {
-  replace_with_dict(text.as_ref(), &F2J_AC, F2J_J)
+pub fn f2j(text: &str) -> Cow<'_, str> {
+  replace_with_dict(text, &F2J_AC, F2J_J)
 }
 
 #[cfg(feature = "j2f")]
-pub fn j2f(text: impl AsRef<str>) -> String {
-  replace_with_dict(text.as_ref(), &J2F_AC, &f::F)
+pub fn j2f(text: &str) -> Cow<'_, str> {
+  replace_with_dict(text, &J2F_AC, &f::F)
 }
+
