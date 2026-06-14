@@ -44,19 +44,22 @@ pub fn replace_with_dict<'a>(
 
   if let Some(m) = matches.next() {
     let mut result = String::with_capacity(text.len());
-    result.push_str(&text[0..m.start()]);
+    // SAFETY: matches are guaranteed to be within bounds and on char boundaries.
+    result.push_str(unsafe { text.get_unchecked(0..m.start()) });
     let val = unsafe { *dict.get_unchecked(m.value()) };
     result.push_str(val);
     let mut last_end = m.end();
 
     for m in matches {
-      result.push_str(&text[last_end..m.start()]);
+      // SAFETY: matches are guaranteed to be within bounds and on char boundaries.
+      result.push_str(unsafe { text.get_unchecked(last_end..m.start()) });
       let val = unsafe { *dict.get_unchecked(m.value()) };
       result.push_str(val);
       last_end = m.end();
     }
 
-    result.push_str(&text[last_end..]);
+    // SAFETY: last_end is guaranteed to be within bounds.
+    result.push_str(unsafe { text.get_unchecked(last_end..) });
     Cow::Owned(result)
   } else {
     Cow::Borrowed(text)
