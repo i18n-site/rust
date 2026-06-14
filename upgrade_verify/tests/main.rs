@@ -8,7 +8,7 @@ extern "C" fn _loginit() {
 #[test]
 fn test() -> Void {
   upgrade_verify::check(
-    vb::e([0, 2, 1]),
+    vb::e_li([0, 2, 1]),
     "/var/folders/4x/n5x1dwrj39v_hl53vyprqcn80000gn/T/i18/0.2.1/node_modules.tar",
     std::fs::read("/Users/z/host/conf/env/upgrade/pk")?
       .try_into()
