@@ -2,8 +2,8 @@ use cnfj::{f2j, j2f};
 
 fn get_test_cases() -> Vec<(&'static str, &'static str)> {
   vec![
-    // === No Conversion Needed ===
-    // Empty, ASCII, and characters that are the same in both Traditional and Simplified
+    // === 不需要转换 ===
+    // 空、ASCII 以及繁简相同的字符
     ("", ""),
     ("abc 123", "abc 123"),
     ("你好世界", "你好世界"),
@@ -11,9 +11,9 @@ fn get_test_cases() -> Vec<(&'static str, &'static str)> {
     ("公里", "公里"),
     ("游泳", "游泳"),
     ("名著", "名著"),
-    ("皇后", "皇后"), // 后 is not converted to 後 in this context
-    ("瞭望", "瞭望"), // 瞭 is the same
-    // === Common Word Mappings ===
+    ("皇后", "皇后"), // 此处 后 不转换为 後
+    ("瞭望", "瞭望"), // 瞭 保持不变
+    // === 常见词语映射 ===
     ("家裡", "家里"),
     ("後面", "后面"),
     ("旅遊", "旅游"),
@@ -29,7 +29,7 @@ fn get_test_cases() -> Vec<(&'static str, &'static str)> {
     ("電視", "电视"),
     ("電腦", "电脑"),
     ("項目", "项目"),
-    // === Context-Dependent Mappings (Polyphonic Characters) ===
+    // === 上下文相关映射（多音字/多义字） ===
     // 乾/干
     ("乾淨", "干净"),
     ("乾涸", "干涸"),
@@ -44,9 +44,9 @@ fn get_test_cases() -> Vec<(&'static str, &'static str)> {
     ("頭髮", "头发"),
     // 著/着
     ("著急", "着急"),
-    ("著名", "著名"), // No conversion for this '著'
-    ("只有", "只有"), // No conversion for this '只'
-    // === Phrases and Sentences ===
+    ("著名", "著名"), // 此处 著 不做转换
+    ("只有", "只有"), // 此处 只 不做转换
+    // === 短语和句子 ===
     ("憂鬱的烏龜", "忧郁的乌龟"),
     ("我只愛你", "我只爱你"),
     ("我是一個正體字。", "我是一个正体字。"),
@@ -56,12 +56,6 @@ fn get_test_cases() -> Vec<(&'static str, &'static str)> {
     ("滑鼠和鍵盤", "滑鼠和键盘"),
   ]
 }
-
-// #[test]
-// fn test() {
-//   dbg!(j2f("面包"));
-//   dbg!(f2j("麺包"));
-// }
 
 #[test]
 fn test_j2f() {
