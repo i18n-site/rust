@@ -4,7 +4,6 @@ use std::{borrow::Cow, sync::LazyLock};
 
 #[cfg(feature = "f2j")]
 use concat_array::concat_array;
-
 use daachorse::{CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind};
 
 pub(crate) mod f;
