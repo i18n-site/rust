@@ -1,12 +1,18 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-use std::{borrow::Cow, sync::LazyLock};
+use std::borrow::Cow;
+#[cfg(any(feature = "f2j", feature = "j2f"))]
+use std::sync::LazyLock;
 
 #[cfg(feature = "f2j")]
 use concat_array::concat_array;
-use daachorse::{CharwiseDoubleArrayAhoCorasick, CharwiseDoubleArrayAhoCorasickBuilder, MatchKind};
+use daachorse::CharwiseDoubleArrayAhoCorasick;
+#[cfg(any(feature = "f2j", feature = "j2f"))]
+use daachorse::{CharwiseDoubleArrayAhoCorasickBuilder, MatchKind};
 
+#[cfg(any(feature = "f2j", feature = "j2f"))]
 pub(crate) mod f;
+#[cfg(any(feature = "f2j", feature = "j2f"))]
 pub(crate) mod j;
 
 #[cfg(feature = "f2j")]
