@@ -64,7 +64,6 @@ members = [
   "is_line_break",
   "iver",
   "jarg",
-  "kvcache",
   "len_mtime",
   "li_pos",
   "lineiter",
