@@ -142,7 +142,6 @@ members = [
   "wxpush",
   "x_read_ip",
   "xerr",
-  "xhash",
   "xsmtp",
   "xstr",
   "xtld",
